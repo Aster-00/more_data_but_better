@@ -18,9 +18,21 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 | R08 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only, LahjatBERT settings | 42 | 69.00 | 75.43 | 65.67 | `repro_lahjatbert_baseline_seed42` |
 | R08 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only, LahjatBERT settings | 43 | 68.81 | 76.03 | 64.83 | `repro_lahjatbert_baseline_seed43` |
 | R08 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only, LahjatBERT settings | 44 | 68.32 | 73.22 | 65.97 | `repro_lahjatbert_baseline_seed44` |
+| R09 | 2026-10-06 | `UBC-NLP/MARBERTv2` | D1, real only | 42 | 70.00 | 69.76 | 72.54 | `baseline_real_only_marbertv2_seed42` |
+| R09 | 2026-10-06 | `UBC-NLP/MARBERTv2` | D1, real only | 43 | 69.62 | 70.99 | 70.74 | `baseline_real_only_marbertv2_seed43` |
+| R09 | 2026-10-06 | `UBC-NLP/MARBERTv2` | D1, real only | 44 | 70.70 | 72.06 | 71.57 | `baseline_real_only_marbertv2_seed44` |
+| R10 | 2026-10-06 | `aubmindlab/bert-base-arabertv02-twitter` | D1, real only | 42 | 70.80 | 70.14 | 74.77 | `baseline_real_only_arabertv02_twitter_seed42` |
+| R10 | 2026-10-06 | `aubmindlab/bert-base-arabertv02-twitter` | D1, real only | 43 | 70.83 | 69.69 | 75.32 | `baseline_real_only_arabertv02_twitter_seed43` |
+| R10 | 2026-10-06 | `aubmindlab/bert-base-arabertv02-twitter` | D1, real only | 44 | 69.92 | 67.62 | 75.26 | `baseline_real_only_arabertv02_twitter_seed44` |
+| R10 | 2026-10-06 | TF-IDF + logistic regression | D1, real only | 42 | 62.52 | 64.71 | 62.64 | `baseline_real_only_tfidf_lr_seed42` |
+| R10 | 2026-10-06 | TF-IDF + logistic regression | D1, real only | 43 | 62.59 | 67.21 | 61.66 | `baseline_real_only_tfidf_lr_seed43` |
+| R10 | 2026-10-06 | TF-IDF + logistic regression | D1, real only | 44 | 62.62 | 65.56 | 62.54 | `baseline_real_only_tfidf_lr_seed44` |
 
 **R05–R07 mean ± std:** macro F1 **71.34 ± 1.03**, precision 71.67 ± 2.54, recall 72.98 ± 0.40.
 **R08 mean ± std:** macro F1 **68.71 ± 0.35**, precision 74.89 ± 1.48, recall 65.49 ± 0.59.
+**R09 (MARBERTv2) mean ± std:** macro F1 **70.11 ± 0.55**, precision 70.94 ± 1.15, recall 71.62 ± 0.90.
+**R10 (AraBERTv02-Twitter) mean ± std:** macro F1 **70.52 ± 0.52**, precision 69.15 ± 1.34, recall 75.12 ± 0.30.
+**R10 (TF-IDF + LR) mean ± std:** macro F1 **62.58 ± 0.05**, precision 65.83 ± 1.27, recall 62.28 ± 0.54.
 
 ## Run notes
 
@@ -48,12 +60,24 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 - Validation F1 still rose from epoch 2 to 3 in every seed (≈82.2 → ≈82.9), yet R08 scores lower on dev than the 2-epoch R05–R07. Whether the third epoch itself hurts dev is untested (dev was only scored on the selected checkpoint); if it does, geolocation-labelled validation is a poor guide for model selection.
 - The logs record commit `ad08dd5`, not `3c35ac9` (the commit made before the run): the commit is read after training, and docs-only commits landed meanwhile. `git diff 3c35ac9 ad08dd5 -- src configs` is empty, so the code is the same.
 
+**R09: MARBERTv2 real-only baseline.**
+- Config: `configs/baseline_real_only_marbertv2.json`, seeds 42/43/44. Identical to R05–R07 (`configs/baseline_real_only.json`) except the model: `UBC-NLP/MARBERT` → `UBC-NLP/MARBERTv2`. Commit `60b1cdd` (committed before the run; matches the logs). About 7.1 min per run. Every seed picked epoch 2.
+- **Result:** 70.11 ± 0.55, 1.2 points below MARBERT v1 (R05–R07, 71.34 ± 1.03). That is inside the seed spread and the ~2-point noise level of the 120-sentence dev set, so v2 is **not shown to be better or worse** than v1 here.
+- Per dialect, v2 is clearly better on Algeria (69.4 vs 62.0, the weakest dialect so far) and worse on Sudan (63.3 vs 72.2) and Egypt (80.2 vs 86.4). With 120 sentences each per-dialect number rests on few positives, so these are leads, not findings.
+- Validation macro F1 (geolocation-labelled split) ≈80.6–81.1 at the chosen epoch.
+
+**R10: AraBERTv02-Twitter and TF-IDF + LR real-only baselines.**
+- AraBERT config: `configs/baseline_real_only_arabertv02_twitter.json`, identical to R09 except the model. Commit `60b1cdd`. About 6.6 min per run. Raw text is fed to the model: aubmindlab's recommended `ArabertPreprocessor` is **not** applied, because the leaderboard feeds raw text and normalization must be an explicit step (CLAUDE.md). Whether the preprocessor would help is untested.
+- **AraBERT result:** 70.52 ± 0.52, level with MARBERTv2 (70.11) and within noise of MARBERT v1 (71.34). It has the highest recall of our trained models (75.1) and lower precision (69.2). Seed 42 picked epoch 1, seeds 43/44 epoch 2.
+- TF-IDF + LR config: `configs/baseline_real_only_tfidf_lr.json`, script `src/training/train_tfidf.py`. Character 2–5-grams (within word boundaries, max 300k) + word 1–2-grams (whitespace tokens), sublinear TF, min_df 2, no lowercasing or normalization (~324k features); one liblinear logistic regression per dialect, C = 1.0, threshold 0.3. Same D1 data and seeded 90/10 split as the transformers; settings fixed in advance, not tuned on validation or dev. Commit `21461f8`. About 30 s per run on CPU.
+- **TF-IDF + LR result:** 62.58 ± 0.05, about 8 points below the three transformers. Its spread is tiny because the seed only changes the train/validation split (the solver is deterministic). It is weakest on Algeria (46.9) and Sudan (53.8). It cannot be submitted to the leaderboard (the Space only loads Hub transformers), so it is a dev-only reference.
+- The first TF-IDF attempt (commit `60b1cdd`) crashed at full data size: joblib hands large arrays to worker processes as read-only memory maps and liblinear needs writable input (`WRITEBACKIFCOPY base is read-only`). The 500-record smoke test was too small to trigger it. Fixed in `21461f8` (`parallel_config(max_nbytes=None)`); no results came from the failed attempt.
+- **Overall (R05–R10):** the three transformer classifiers are within ~1.2 points of each other on dev, below the noise level, so the choice of main classifier cannot be settled by dev score alone. TF-IDF + LR is clearly weaker.
+
 ## Next runs
 
 | ID | Model | What | Why |
 |---|---|---|---|
-| R09 | `UBC-NLP/MARBERTv2` | Real-only baseline, 3 seeds | The thesis classifier is v2, not v1 |
-| R10 | `aubmindlab/bert-base-arabertv02-twitter`, TF-IDF + LR | Real-only baseline, 3 seeds | The other two classifiers |
 | G01 | `QCRI/Fanar-1-9B-Instruct` | Generator feasibility: 4-bit load, 20 sentences (`scripts/check_generators.py`) | VRAM peak, tokens/s, is the output dialectal? Runs automatically once the download finishes and the GPU is free |
 | G02 | `google/gemma-2-9b-it` | Same | Same |
 | G03 | `humain-ai/ALLaM-7B-Instruct-preview` | Same | Same |
@@ -90,6 +114,6 @@ Checked on the Hub on 2026-10-06. About 6.7 GB of the 8 GB of VRAM is free.
 | Scorer (fidelity) | `CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi` or `-did-madar-corpus26` | ~110M | yes | Variant not decided |
 | Scorer (dialectness) | `VARabi/Sentence-ALDi` | ~110M | yes | |
 | Scorer (diversity) | `intfloat/multilingual-e5-large` | 560M | yes | |
-| Classifier | `UBC-NLP/MARBERTv2` | ~163M | yes | Main classifier (R05–R07 used v1) |
+| Classifier | `UBC-NLP/MARBERTv2` | ~163M | yes | Main classifier (R05–R07 used v1; R09 used v2) |
 | Classifier | `aubmindlab/bert-base-arabertv02-twitter` | 135M | yes | |
 | Classifier | TF-IDF + logistic regression | — | CPU | |

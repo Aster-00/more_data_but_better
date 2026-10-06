@@ -1,0 +1,148 @@
+{
+  "config": {
+    "run_name": "baseline_real_only_arabertv02_twitter_seed44",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert.jsonl",
+    "text_field": "text",
+    "model": "aubmindlab/bert-base-arabertv02-twitter",
+    "seed": 44,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 52546,
+  "n_val": 5838,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4015643091778777,
+      "val_macro_f1": 76.80195733912272,
+      "val_micro_f1": 76.79081184951517,
+      "val_macro": {
+        "precision": 65.614686717478,
+        "recall": 92.89393278209324,
+        "f1": 76.80195733912272,
+        "accuracy": 80.11590727418066
+      },
+      "seconds": 194
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3260931099182395,
+      "val_macro_f1": 77.61278288235121,
+      "val_micro_f1": 77.60153074510603,
+      "val_macro": {
+        "precision": 67.15444057296003,
+        "recall": 92.20991227965202,
+        "f1": 77.61278288235121,
+        "accuracy": 81.1741083323817
+      },
+      "seconds": 193
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 77.61278288235121,
+  "git_commit": "60b1cddea168a1e38a63c7748a8a1f6913aeb7c4",
+  "data_sha256": "d299edd78f3d1b56cd0bfa4569e0044e130552a31f15e132ad04559a5ea08b4b",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\baseline_real_only_arabertv02_twitter.json",
+  "total_seconds": 396,
+  "dev": {
+    "macro": {
+      "precision": 67.62432716033122,
+      "recall": 75.26320814218636,
+      "f1": 69.91981450607037,
+      "accuracy": 76.875
+    },
+    "micro_f1": 71.24352331606218,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 80.0,
+        "recall": 45.714285714285715,
+        "f1": 58.18181818181818,
+        "accuracy": 80.83333333333333,
+        "gold_positives": 35,
+        "predicted_positives": 20
+      },
+      "Egypt": {
+        "precision": 68.62745098039215,
+        "recall": 89.74358974358975,
+        "f1": 77.77777777777779,
+        "accuracy": 83.33333333333334,
+        "gold_positives": 39,
+        "predicted_positives": 51
+      },
+      "Jordan": {
+        "precision": 61.76470588235294,
+        "recall": 84.0,
+        "f1": 71.1864406779661,
+        "accuracy": 71.66666666666667,
+        "gold_positives": 50,
+        "predicted_positives": 68
+      },
+      "Palestine": {
+        "precision": 65.51724137931035,
+        "recall": 89.0625,
+        "f1": 75.49668874172185,
+        "accuracy": 69.16666666666667,
+        "gold_positives": 64,
+        "predicted_positives": 87
+      },
+      "Sudan": {
+        "precision": 71.42857142857143,
+        "recall": 71.42857142857143,
+        "f1": 71.42857142857143,
+        "accuracy": 80.0,
+        "gold_positives": 42,
+        "predicted_positives": 42
+      },
+      "Syria": {
+        "precision": 55.88235294117647,
+        "recall": 82.6086956521739,
+        "f1": 66.66666666666666,
+        "accuracy": 68.33333333333333,
+        "gold_positives": 46,
+        "predicted_positives": 68
+      },
+      "Tunisia": {
+        "precision": 63.63636363636363,
+        "recall": 66.66666666666666,
+        "f1": 65.11627906976744,
+        "accuracy": 87.5,
+        "gold_positives": 21,
+        "predicted_positives": 22
+      },
+      "Yemen": {
+        "precision": 74.13793103448276,
+        "recall": 72.88135593220339,
+        "f1": 73.50427350427351,
+        "accuracy": 74.16666666666667,
+        "gold_positives": 59,
+        "predicted_positives": 58
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

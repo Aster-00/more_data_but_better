@@ -1,6 +1,9 @@
 model,seeds,macro_f1,macro_f1_std,macro_precision,macro_precision_std,macro_recall,macro_recall_std,micro_f1,micro_f1_std,f1_Algeria,f1_Egypt,f1_Jordan,f1_Palestine,f1_Sudan,f1_Syria,f1_Tunisia,f1_Yemen
 Mohamedelzeftawy__LahjatBERT_cl_cardinality,1,72.68,0.0,68.98,0.0,80.64,0.0,73.07,0.0,59.26,83.72,71.21,71.05,69.77,66.1,77.27,83.08
 baseline_real_only,3,71.34,1.03,71.67,2.54,72.98,0.4,71.54,0.76,62.01,86.4,67.08,72.34,72.15,68.41,71.01,71.3
+baseline_real_only_arabertv02_twitter,3,70.52,0.52,69.15,1.34,75.12,0.3,71.99,0.66,57.61,78.66,70.86,76.04,70.5,68.04,66.18,76.25
 Mohamedelzeftawy__LahjatBERT_cl_aldi,1,70.27,0.0,71.35,0.0,71.32,0.0,70.93,0.0,58.18,83.72,67.92,69.57,75.95,69.9,65.22,71.7
+baseline_real_only_marbertv2,3,70.11,0.55,70.94,1.15,71.62,0.9,69.81,0.32,69.4,80.16,67.47,70.25,63.31,69.21,73.98,67.07
 repro_lahjatbert_baseline,3,68.71,0.35,74.89,1.48,65.49,0.59,69.12,0.35,54.77,87.21,64.5,69.81,67.92,65.53,69.99,69.98
 Mohamedelzeftawy__LahjatBERT_baseline,1,67.41,0.0,73.66,0.0,63.66,0.0,67.86,0.0,55.56,86.08,65.35,65.6,69.57,63.92,63.41,69.81
+baseline_real_only_tfidf_lr,3,62.58,0.05,65.83,1.27,62.28,0.54,63.91,0.07,46.94,78.69,60.42,66.2,53.76,63.61,61.7,69.29
