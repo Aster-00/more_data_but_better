@@ -1,0 +1,512 @@
+{
+  "provenance": {
+    "git_commit": "415027212cc494b19568655b11b3a9aa445e30fe",
+    "python": "3.12.10",
+    "args": {
+      "nadi_dir": "MLADI\\train",
+      "labels": "LahjatBERT_-main\\data\\stage_1_and_gpt_with_ids.csv",
+      "dev": "MLADI\\dev\\NADI2024_subtask1_dev2.tsv",
+      "out": "data\\processed\\nadi_lahjatbert.jsonl",
+      "stats_out": "results\\data_stats\\nadi_lahjatbert_stats.json",
+      "no_urls": "False",
+      "no_mentions": "False",
+      "limit": "None"
+    },
+    "input_sha256": {
+      "NADI2020": "a3105a32e45bc7277051c4396262b13d7d2aeb487e2444b13223e197cf32ce5a",
+      "NADI2021": "99d0a86c9be22c19774f8660a95175796fd2474e0158fe63d1788c555ad55c16",
+      "NADI2023": "eb4f6d14a72993ab52b064d079df6d0d12cb9807d5da504d53238d4e4fdb6f3a",
+      "labels": "adae70cb06118ad997d3eea23866559f92059b349175ae31e6f5436fc4152c2e"
+    }
+  },
+  "nadi": {
+    "per_file": {
+      "NADI2020": {
+        "rows": 20370,
+        "countries": {
+          "Algeria": 1491,
+          "Bahrain": 210,
+          "Egypt": 4473,
+          "Iraq": 2556,
+          "Jordan": 426,
+          "Kuwait": 420,
+          "Lebanon": 639,
+          "Libya": 1070,
+          "Morocco": 1070,
+          "Oman": 1098,
+          "Palestine": 420,
+          "Qatar": 234,
+          "Saudi_Arabia": 2312,
+          "Sudan": 210,
+          "Syria": 1070,
+          "Tunisia": 750,
+          "UAE": 1070,
+          "Yemen": 851
+        },
+        "n_provinces": 97,
+        "provinces_per_country": {
+          "Algeria": 7,
+          "Bahrain": 1,
+          "Egypt": 21,
+          "Iraq": 12,
+          "Jordan": 2,
+          "Kuwait": 2,
+          "Lebanon": 3,
+          "Libya": 5,
+          "Morocco": 5,
+          "Oman": 6,
+          "Palestine": 2,
+          "Qatar": 2,
+          "Saudi_Arabia": 10,
+          "Sudan": 1,
+          "Syria": 5,
+          "Tunisia": 4,
+          "UAE": 5,
+          "Yemen": 4
+        },
+        "duplicate_texts_within_file": 149,
+        "text": {
+          "n": 20370,
+          "chars": {
+            "mean": 80.87,
+            "median": 63.0,
+            "p95": 231,
+            "min": 8,
+            "max": 690
+          },
+          "words": {
+            "mean": 13.23,
+            "median": 10.0,
+            "p95": 36,
+            "min": 1,
+            "max": 91
+          },
+          "le_3_words": 1284,
+          "with_url": 4697,
+          "with_raw_url": 4697,
+          "with_mention": 1203,
+          "with_NUM": 0,
+          "with_hashtag": 2127,
+          "with_emoji": 115,
+          "with_latin_word": 1859,
+          "with_persian_kurdish_urdu_letters": 729,
+          "mostly_non_arabic_letters": 199,
+          "no_letters_after_stripping": 0
+        }
+      },
+      "NADI2021": {
+        "rows": 20398,
+        "countries": {
+          "Algeria": 1809,
+          "Bahrain": 215,
+          "Egypt": 4283,
+          "Iraq": 2729,
+          "Jordan": 429,
+          "Kuwait": 429,
+          "Lebanon": 644,
+          "Libya": 1286,
+          "Morocco": 858,
+          "Oman": 1501,
+          "Palestine": 428,
+          "Qatar": 215,
+          "Saudi_Arabia": 2140,
+          "Sudan": 215,
+          "Syria": 1287,
+          "Tunisia": 859,
+          "UAE": 642,
+          "Yemen": 429
+        },
+        "n_provinces": 96,
+        "provinces_per_country": {
+          "Algeria": 9,
+          "Bahrain": 1,
+          "Egypt": 20,
+          "Iraq": 13,
+          "Jordan": 2,
+          "Kuwait": 2,
+          "Lebanon": 3,
+          "Libya": 6,
+          "Morocco": 4,
+          "Oman": 7,
+          "Palestine": 2,
+          "Qatar": 1,
+          "Saudi_Arabia": 10,
+          "Sudan": 1,
+          "Syria": 6,
+          "Tunisia": 4,
+          "UAE": 3,
+          "Yemen": 2
+        },
+        "duplicate_texts_within_file": 26,
+        "text": {
+          "n": 20398,
+          "chars": {
+            "mean": 50.59,
+            "median": 39.0,
+            "p95": 121,
+            "min": 8,
+            "max": 287
+          },
+          "words": {
+            "mean": 9.66,
+            "median": 8.0,
+            "p95": 23,
+            "min": 1,
+            "max": 61
+          },
+          "le_3_words": 1782,
+          "with_url": 3235,
+          "with_raw_url": 0,
+          "with_mention": 1431,
+          "with_NUM": 0,
+          "with_hashtag": 1338,
+          "with_emoji": 72,
+          "with_latin_word": 733,
+          "with_persian_kurdish_urdu_letters": 199,
+          "mostly_non_arabic_letters": 119,
+          "no_letters_after_stripping": 0
+        }
+      },
+      "NADI2023": {
+        "rows": 18000,
+        "countries": {
+          "Algeria": 1000,
+          "Bahrain": 1000,
+          "Egypt": 1000,
+          "Iraq": 1000,
+          "Jordan": 1000,
+          "Kuwait": 1000,
+          "Lebanon": 1000,
+          "Libya": 1000,
+          "Morocco": 1000,
+          "Oman": 1000,
+          "Palestine": 1000,
+          "Qatar": 1000,
+          "Saudi_Arabia": 1000,
+          "Sudan": 1000,
+          "Syria": 1000,
+          "Tunisia": 1000,
+          "UAE": 1000,
+          "Yemen": 1000
+        },
+        "n_provinces": 0,
+        "provinces_per_country": {},
+        "duplicate_texts_within_file": 42,
+        "text": {
+          "n": 18000,
+          "chars": {
+            "mean": 76.12,
+            "median": 68.0,
+            "p95": 134,
+            "min": 9,
+            "max": 296
+          },
+          "words": {
+            "mean": 14.45,
+            "median": 13.0,
+            "p95": 26,
+            "min": 2,
+            "max": 59
+          },
+          "le_3_words": 99,
+          "with_url": 5052,
+          "with_raw_url": 147,
+          "with_mention": 9986,
+          "with_NUM": 1783,
+          "with_hashtag": 3052,
+          "with_emoji": 0,
+          "with_latin_word": 1375,
+          "with_persian_kurdish_urdu_letters": 395,
+          "mostly_non_arabic_letters": 139,
+          "no_letters_after_stripping": 0
+        }
+      }
+    },
+    "cross_file_text_overlap": {
+      "NADI2020&NADI2021": 162,
+      "NADI2020&NADI2023": 1,
+      "NADI2021&NADI2023": 2
+    },
+    "pooled_countries": {
+      "Algeria": 4300,
+      "Bahrain": 1425,
+      "Egypt": 9756,
+      "Iraq": 6285,
+      "Jordan": 1855,
+      "Kuwait": 1849,
+      "Lebanon": 2283,
+      "Libya": 3356,
+      "Morocco": 2928,
+      "Oman": 3599,
+      "Palestine": 1848,
+      "Qatar": 1449,
+      "Saudi_Arabia": 5452,
+      "Sudan": 1425,
+      "Syria": 3357,
+      "Tunisia": 2609,
+      "UAE": 2712,
+      "Yemen": 2280
+    },
+    "pooled_imbalance_max_over_min": 6.85,
+    "texts_with_conflicting_country_labels": 66
+  },
+  "join": {
+    "label_rows": 58767,
+    "unique_keys": 58385,
+    "duplicate_keys": 320,
+    "duplicate_key_copies": {
+      "2": 287,
+      "3": 19,
+      "4": 10,
+      "5": 1,
+      "6": 1,
+      "10": 2
+    },
+    "label_rows_by_source": {
+      "NADI2020": 20532,
+      "NADI2021": 20238,
+      "NADI2023": 17997
+    },
+    "label_rows_key_not_in_nadi": 0,
+    "nadi_tweets": 58768,
+    "nadi_tweets_key_missing_from_labels": 383,
+    "of_which_text_shared_with_other_tweet": 381,
+    "unique_texts": 58386,
+    "unique_texts_labelled": 58384,
+    "unlabelled_tweets": 2,
+    "unlabelled_tweet_ids": [
+      "NADI2020:TRAIN_1500",
+      "NADI2020:TRAIN_11466"
+    ],
+    "groups_label_rows_ne_tweets": 1,
+    "groups_with_label_conflict": 21
+  },
+  "cleaning": {
+    "steps": [
+      "urls",
+      "mentions"
+    ],
+    "unescaped_quoted_texts": 364,
+    "records_changed": {
+      "urls": 4819,
+      "mentions": 1202
+    },
+    "replacements": {
+      "urls": 4914,
+      "mentions": 1517
+    },
+    "texts_identical_after_cleaning": 268,
+    "distinct_texts_after_cleaning": 58218
+  },
+  "labels": {
+    "unique_texts": 58384,
+    "cardinality_histogram": {
+      "0": 2271,
+      "1": 13065,
+      "2": 11421,
+      "3": 6096,
+      "4": 3480,
+      "5": 584,
+      "6": 487,
+      "7": 1638,
+      "8": 619,
+      "9": 270,
+      "10": 206,
+      "11": 1031,
+      "12": 4785,
+      "13": 324,
+      "14": 231,
+      "15": 3370,
+      "16": 241,
+      "17": 623,
+      "18": 7642
+    },
+    "cardinality_buckets": {
+      "0": 2271,
+      "1": 13065,
+      "2": 11421,
+      "3-5": 10160,
+      "6-11": 4251,
+      "12-17": 9574,
+      "18": 7642
+    },
+    "all_18": {
+      "n": 7642,
+      "aldi_ge_0_5": 275,
+      "aldi_lt_0_11": 6037,
+      "le_3_words": 208,
+      "with_persian_kurdish_urdu_letters": 105
+    },
+    "zero_labels": {
+      "n": 2271,
+      "aldi_ge_0_5": 1571,
+      "aldi_lt_0_11": 11,
+      "le_3_words": 267,
+      "with_persian_kurdish_urdu_letters": 215
+    },
+    "per_dialect_positive": {
+      "Algeria": 13659,
+      "Bahrain": 22031,
+      "Egypt": 21751,
+      "Iraq": 21560,
+      "Jordan": 22820,
+      "Kuwait": 23028,
+      "Lebanon": 21801,
+      "Libya": 16493,
+      "Morocco": 12562,
+      "Oman": 22642,
+      "Palestine": 27254,
+      "Qatar": 22450,
+      "Saudi_Arabia": 27499,
+      "Sudan": 15830,
+      "Syria": 23767,
+      "Tunisia": 13765,
+      "UAE": 22933,
+      "Yemen": 21780
+    },
+    "per_dialect_positive_rate": {
+      "Algeria": 0.234,
+      "Bahrain": 0.3773,
+      "Egypt": 0.3726,
+      "Iraq": 0.3693,
+      "Jordan": 0.3909,
+      "Kuwait": 0.3944,
+      "Lebanon": 0.3734,
+      "Libya": 0.2825,
+      "Morocco": 0.2152,
+      "Oman": 0.3878,
+      "Palestine": 0.4668,
+      "Qatar": 0.3845,
+      "Saudi_Arabia": 0.471,
+      "Sudan": 0.2711,
+      "Syria": 0.4071,
+      "Tunisia": 0.2358,
+      "UAE": 0.3928,
+      "Yemen": 0.373
+    },
+    "aldi": {
+      "mean": 0.61,
+      "median": 0.689898,
+      "p95": 0.974955,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "aldi_bins": {
+      "[0.77,1.00]": 23936,
+      "[0.44,0.77)": 17683,
+      "[0.11,0.44)": 9077,
+      "[0.00,0.11)": 7688
+    },
+    "mean_aldi_by_cardinality_bucket": {
+      "0": 0.6535,
+      "1": 0.723,
+      "2": 0.8755,
+      "3-5": 0.7208,
+      "6-11": 0.5227,
+      "12-17": 0.4436,
+      "18": 0.08
+    },
+    "geo_label_marked_valid_rate": {
+      "Algeria": 0.7642,
+      "Bahrain": 0.8028,
+      "Egypt": 0.893,
+      "Iraq": 0.7632,
+      "Jordan": 0.834,
+      "Kuwait": 0.8664,
+      "Lebanon": 0.7858,
+      "Libya": 0.7041,
+      "Morocco": 0.7056,
+      "Oman": 0.746,
+      "Palestine": 0.8566,
+      "Qatar": 0.8509,
+      "Saudi_Arabia": 0.8852,
+      "Sudan": 0.8035,
+      "Syria": 0.7694,
+      "Tunisia": 0.7183,
+      "UAE": 0.7544,
+      "Yemen": 0.7083
+    },
+    "geo_label_marked_valid_rate_overall": 0.7981,
+    "single_label_agrees_with_geo_label": 0.6755,
+    "top_pairs_cardinality_2": {
+      "Egypt+Palestine": 2697,
+      "Lebanon+Syria": 1184,
+      "Algeria+Morocco": 953,
+      "Egypt+Sudan": 905,
+      "Kuwait+Saudi_Arabia": 791,
+      "Libya+Tunisia": 586,
+      "Algeria+Tunisia": 510,
+      "Jordan+Palestine": 481,
+      "Qatar+Saudi_Arabia": 367,
+      "Oman+Saudi_Arabia": 361,
+      "Jordan+Syria": 354,
+      "Bahrain+Saudi_Arabia": 283,
+      "Oman+UAE": 270,
+      "Saudi_Arabia+Yemen": 234,
+      "Iraq+Kuwait": 212
+    }
+  },
+  "dev": {
+    "rows": 120,
+    "dialects": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ],
+    "per_dialect_positive": {
+      "Algeria": 35,
+      "Egypt": 39,
+      "Jordan": 50,
+      "Palestine": 64,
+      "Sudan": 42,
+      "Syria": 46,
+      "Tunisia": 21,
+      "Yemen": 59
+    },
+    "cardinality_histogram": {
+      "0": 13,
+      "1": 23,
+      "2": 31,
+      "3": 18,
+      "4": 6,
+      "5": 8,
+      "6": 6,
+      "7": 3,
+      "8": 12
+    },
+    "exact_overlap_with_training_texts": 0,
+    "text": {
+      "n": 120,
+      "chars": {
+        "mean": 67.54,
+        "median": 58.0,
+        "p95": 127,
+        "min": 11,
+        "max": 280
+      },
+      "words": {
+        "mean": 12.94,
+        "median": 11.0,
+        "p95": 24,
+        "min": 3,
+        "max": 54
+      },
+      "le_3_words": 9,
+      "with_url": 0,
+      "with_raw_url": 1,
+      "with_mention": 0,
+      "with_NUM": 0,
+      "with_hashtag": 22,
+      "with_emoji": 0,
+      "with_latin_word": 8,
+      "with_persian_kurdish_urdu_letters": 1,
+      "mostly_non_arabic_letters": 1,
+      "no_letters_after_stripping": 0
+    }
+  }
+}
