@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "Country label (MLADI leaderboard order) -> names used inside prompts. 'en' is the English dialect name, 'ar' the Arabic name, 'demonym' the English adjective. Used by every prompt template.",
+  "dialects": {
+    "Algeria":      {"en": "Algerian Arabic",      "ar": "اللهجة الجزائرية", "demonym": "Algerian"},
+    "Bahrain":      {"en": "Bahraini Arabic",      "ar": "اللهجة البحرينية", "demonym": "Bahraini"},
+    "Egypt":        {"en": "Egyptian Arabic",      "ar": "اللهجة المصرية",   "demonym": "Egyptian"},
+    "Iraq":         {"en": "Iraqi Arabic",         "ar": "اللهجة العراقية",  "demonym": "Iraqi"},
+    "Jordan":       {"en": "Jordanian Arabic",     "ar": "اللهجة الأردنية",  "demonym": "Jordanian"},
+    "Kuwait":       {"en": "Kuwaiti Arabic",       "ar": "اللهجة الكويتية",  "demonym": "Kuwaiti"},
+    "Lebanon":      {"en": "Lebanese Arabic",      "ar": "اللهجة اللبنانية", "demonym": "Lebanese"},
+    "Libya":        {"en": "Libyan Arabic",        "ar": "اللهجة الليبية",   "demonym": "Libyan"},
+    "Morocco":      {"en": "Moroccan Arabic",      "ar": "اللهجة المغربية",  "demonym": "Moroccan"},
+    "Oman":         {"en": "Omani Arabic",         "ar": "اللهجة العمانية",  "demonym": "Omani"},
+    "Palestine":    {"en": "Palestinian Arabic",   "ar": "اللهجة الفلسطينية","demonym": "Palestinian"},
+    "Qatar":        {"en": "Qatari Arabic",        "ar": "اللهجة القطرية",   "demonym": "Qatari"},
+    "Saudi_Arabia": {"en": "Saudi Arabic",         "ar": "اللهجة السعودية",  "demonym": "Saudi"},
+    "Sudan":        {"en": "Sudanese Arabic",      "ar": "اللهجة السودانية", "demonym": "Sudanese"},
+    "Syria":        {"en": "Syrian Arabic",        "ar": "اللهجة السورية",   "demonym": "Syrian"},
+    "Tunisia":      {"en": "Tunisian Arabic",      "ar": "اللهجة التونسية",  "demonym": "Tunisian"},
+    "UAE":          {"en": "Emirati Arabic",       "ar": "اللهجة الإماراتية","demonym": "Emirati"},
+    "Yemen":        {"en": "Yemeni Arabic",        "ar": "اللهجة اليمنية",   "demonym": "Yemeni"}
+  }
+}

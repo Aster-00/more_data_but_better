@@ -1,0 +1,22 @@
+{
+  "id": "controlled_v1",
+  "version": 1,
+  "condition": "controlled",
+  "description": "Controlled generation (condition 3): the prompt fixes dialect, topic, script (Arabic script vs Arabizi), sentence length (word range) and amount of code-switching. The factor VALUES come from the generation config; this file holds only the wording. Placeholders: {dialect_name} {dialect_name_ar} {demonym} {article} {n_sentences} {topic} {script_instruction} {length_instruction} {code_switching_instruction} {few_shot_block}.",
+  "system": "You are a native speaker of {dialect_name} ({dialect_name_ar}) who writes casual posts on social media.",
+  "user": "{few_shot_block}Write {n_sentences} tweet-like sentence(s) in {dialect_name}, exactly as {article} {demonym} person would write on social media. Use the dialect, not Modern Standard Arabic.\nRequirements:\n- Topic: {topic}.\n- {script_instruction}\n- {length_instruction}\n- {code_switching_instruction}\nOutput only the sentence(s), one per line, with no numbering, quotes, translation or explanation.",
+  "few_shot_header": "Here are some real posts written by {demonym} speakers:",
+  "few_shot_item": "- {text}",
+  "options": {
+    "script": {
+      "arabic": "Script: write in Arabic script.",
+      "arabizi": "Script: write in Arabizi (Latin letters with numerals such as 3, 7, 2, 5 for Arabic sounds), the way young people type on their phones. Do not use Arabic script."
+    },
+    "length": "Length: between {min_words} and {max_words} words.",
+    "code_switching": {
+      "none": "Language mixing: use only Arabic words; no {foreign_language} or English words.",
+      "light": "Language mixing: include one or two {foreign_language} words, as people naturally do on social media.",
+      "heavy": "Language mixing: mix {foreign_language} and Arabic freely, switching between the two languages within the sentence."
+    }
+  }
+}

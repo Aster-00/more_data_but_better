@@ -1,0 +1,16 @@
+{
+  "cache_dir": "F:/Thesis/models",
+  "checks": {
+    "parse_ok":          {"enabled": true},
+    "exact_dup_within":  {"enabled": true},
+    "near_dup_within":   {"enabled": true, "threshold": 0.8, "ngram": 5},
+    "dup_against_real":  {"enabled": true, "threshold": 0.8, "ngram": 5, "reference": "data/processed/nadi_lahjatbert.jsonl"},
+    "dup_against_dev":   {"enabled": true, "threshold": 0.8, "ngram": 5, "reference": "MLADI/dev/NADI2024_subtask1_dev2.tsv"},
+    "script":            {"enabled": true, "min_share": 0.7, "default_script": "arabic"},
+    "length":            {"enabled": true, "min_words": 2, "max_words": 60},
+    "did_nadi":          {"enabled": true, "mode": "top1", "min_prob": 0.0},
+    "did_madar":         {"enabled": false, "mode": "top1", "min_prob": 0.0},
+    "aldi":              {"enabled": true, "min_score": 0.3}
+  },
+  "_notes": "PLACEHOLDER thresholds for smoke tests. Calibrate on D1 / dev with src.quality.measure before real use: e.g. the DID top-1 agreement on real single-label D1 texts is the ceiling a synthetic set can reach. did_madar is off by default because it cannot cover Bahrain, Kuwait and the UAE; switch it on as an ablation."
+}

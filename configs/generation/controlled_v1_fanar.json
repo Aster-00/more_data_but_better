@@ -1,0 +1,48 @@
+{
+  "set_name": "controlled_v1_fanar",
+  "condition": "controlled",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/controlled_v1.json",
+  "dialects": "all",
+  "per_dialect": 500,
+  "sentences_per_request": 1,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 64,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "few_shot": {"k": 0, "source": "data/processed/nadi_lahjatbert.jsonl", "max_cardinality": 1, "min_aldi": 0.5, "min_words": 4},
+  "label_mode": "target_only",
+  "controls": {
+    "topics": [
+      "daily life and family",
+      "food and cooking",
+      "weather",
+      "work and studies",
+      "football and sports",
+      "traffic and transport",
+      "prices and shopping",
+      "health and tiredness",
+      "religion and holidays",
+      "TV series, music and celebrities",
+      "politics and news",
+      "phones, internet and technology",
+      "friends and relationships",
+      "travel and the hometown",
+      "complaints about services and officials"
+    ],
+    "scripts": ["arabic", "arabizi"],
+    "lengths": {"short": [3, 7], "medium": [8, 15], "long": [16, 30]},
+    "code_switching": ["none", "light", "heavy"],
+    "foreign_language": {"default": "English", "Algeria": "French", "Morocco": "French", "Tunisia": "French"}
+  },
+  "output": "data/synthetic/controlled_v1_fanar.jsonl",
+  "_notes": "DRAFT factor values, PENDING user decisions: topic list, length buckets, whether Arabizi is included (and at what share), per_dialect, label_mode, few_shot.k. The grid is 15 x 2 x 3 x 3 = 270 combinations per dialect."
+}
