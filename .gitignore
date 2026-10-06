@@ -2,3 +2,6 @@ MLADI/*
 LahjatBERT_-main/*
 /data/
 __pycache__/
+.venv/
+results/runs/*/model/
+.env
