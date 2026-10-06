@@ -2,7 +2,7 @@
 
 A running record of decisions made during chats with Claude. Newest entries at the bottom.
 
-Each decision has a permanent ID (D-001, D-002, …) and a timestamp (local time, UTC+3). IDs are never reused or renumbered. The exact time of D-001 to D-004 was not recorded: D-001 has only a date, and D-002 to D-004 show when they were committed (`75330bf`), so they were decided at or before that time.
+Each decision has a permanent ID (D-001, D-002, …) and a timestamp (local time, UTC+3). IDs are never reused or renumbered. The exact time of D-001 to D-004 and D-006 was not recorded: D-001 and D-006 have only a date, and D-002 to D-004 show when they were committed (`75330bf`), so they were decided at or before that time.
 
 <!-- Entry format:
 ## D-NNN — YYYY-MM-DD HH:MM — Short title
@@ -34,3 +34,8 @@ Each decision has a permanent ID (D-001, D-002, …) and a timestamp (local time
 - **Decision:** Use a project venv (`.venv`, Python 3.12, torch 2.14.1+cu126, transformers 5.18, versions pinned in `requirements.txt`). Score the dev set with `src/evaluation/evaluate_dev.py`, using exactly the leaderboard's `predict_binary_outcomes` settings (raw text, max_length 128, sigmoid, threshold 0.3); macro F1 is the main metric. Train the real-only baseline with `src/training/train_classifier.py` + `configs/baseline_real_only.json`, following LahjatBERT's recipe (MARBERT, first 8 layers frozen, fp16, lr 5e-5, warmup 500, batch 24, 90/10 train/val split, early stopping), with two fixes: dropout 0.3 is passed when the model is built (LahjatBERT sets it afterwards, so their dropout stays 0.1, verified), and the best checkpoint is chosen by validation macro F1 instead of micro F1.
 - **Why:** Dev scores should predict leaderboard scores, and the official metric is macro F1. Our metric code reproduces the NADI scorer's reference numbers exactly (38.14 / 50.33 / 42.47 / 50.83).
 - **Reference numbers (dev, macro F1):** LahjatBERT_cl_cardinality 72.68, LahjatBERT_cl_aldi 70.27, LahjatBERT_baseline 67.41.
+
+## D-006 — 2026-10-06 — Keep all-18 and zero-label texts (for now)
+- **Decision:** Keep D1 as it is: the 7,642 all-18 texts, the 2,271 zero-label texts and the 268 texts that became identical after cleaning all stay in. Diacritics are not stripped.
+- **Why:** The real-only baseline trained on D1 (R05–R07, 71.34 ± 1.03 dev macro F1) already beats LahjatBERT's baseline and matches their best model. Revisit later as an ablation.
+- **Update (R08):** With LahjatBERT's own settings, D1 gives 68.71 ± 0.35, in line with their baseline (67.41). So the gain in R05–R07 comes from the training settings, not from D1; what R08 does show is that D1 is not worse than their data, which still supports keeping it.
