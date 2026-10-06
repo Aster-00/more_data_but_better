@@ -1,0 +1,60 @@
+﻿[scorers] CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi ...
+python.exe : 
+At line:1 char:342
++ ... is\models'; & .venv\Scripts\python.exe scripts\download_models.py --o ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:06,  1.53it/s]
+Fetching 11 files:  36%|███▋      | 4/11 [00:00<00:01,  6.26it/s]
+Fetching 11 files:  55%|█████▍    | 6/11 [00:01<00:01,  4.59it/s]
+Fetching 11 files:  73%|███████▎  | 8/11 [00:02<00:00,  3.38it/s]
+Fetching 11 files:  91%|█████████ | 10/11 [05:59<01:03, 63.49s/it]
+Fetching 11 files: 100%|██████████| 11/11 [06:00<00:00, 50.90s/it]
+Fetching 11 files: 100%|██████████| 11/11 [06:00<00:00, 32.81s/it]
+  ok -> F:\Thesis\models\models--CAMeL-Lab--bert-base-arabic-camelbert-mix-did-nadi\snapshots\cc503d0d5753536c644b157852932e825048635e
+[scorers] CAMeL-Lab/bert-base-arabic-camelbert-mix-did-madar-corpus26 ...
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:05,  1.70it/s]
+Fetching 11 files:  36%|███▋      | 4/11 [00:00<00:01,  6.03it/s]
+Fetching 11 files:  55%|█████▍    | 6/11 [00:01<00:00,  5.44it/s]
+Fetching 11 files:  73%|███████▎  | 8/11 [00:01<00:00,  5.03it/s]
+Fetching 11 files:  82%|████████▏ | 9/11 [00:02<00:00,  4.30it/s]
+Fetching 11 files:  91%|█████████ | 10/11 [03:13<00:45, 45.14s/it]
+Fetching 11 files: 100%|██████████| 11/11 [05:46<00:00, 72.23s/it]
+Fetching 11 files: 100%|██████████| 11/11 [05:46<00:00, 31.47s/it]
+  ok -> F:\Thesis\models\models--CAMeL-Lab--bert-base-arabic-camelbert-mix-did-madar-corpus26\snapshots\0a6f7d73d22bfe014a029d4a29f60c3c31d85ad2
+[scorers] VARabi/Sentence-ALDi ...
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:05,  1.84it/s]
+Fetching 11 files:  27%|██▋       | 3/11 [00:00<00:01,  5.33it/s]
+Fetching 11 files:  55%|█████▍    | 6/11 [00:01<00:00,  5.73it/s]
+Fetching 11 files:  64%|██████▎   | 7/11 [00:01<00:00,  4.50it/s]
+Fetching 11 files:  73%|███████▎  | 8/11 [00:01<00:00,  4.46it/s]
+Fetching 11 files:  82%|████████▏ | 9/11 [00:59<00:30, 15.08s/it]
+Fetching 11 files:  91%|█████████ | 10/11 [03:20<00:49, 49.05s/it]
+Fetching 11 files: 100%|██████████| 11/11 [10:06<00:00, 148.44s/it]
+Fetching 11 files: 100%|██████████| 11/11 [10:06<00:00, 55.17s/it] 
+  ok -> F:\Thesis\models\models--VARabi--Sentence-ALDi\snapshots\78a80ed2c7f2af01f7edb06605e167c7a99debd0
+[scorers] intfloat/multilingual-e5-large ...
+
+Fetching 32 files:   0%|          | 0/32 [00:00<?, ?it/s]
+Fetching 32 files:   3%|▎         | 1/32 [00:00<00:25,  1.23it/s]
+Fetching 32 files:   6%|▋         | 2/32 [00:01<00:13,  2.20it/s]
+Fetching 32 files:  25%|██▌       | 8/32 [00:01<00:02, 10.61it/s]
+Fetching 32 files:  34%|███▍      | 11/32 [00:01<00:02,  7.05it/s]
+Fetching 32 files:  47%|████▋     | 15/32 [00:01<00:01, 10.64it/s]
+Fetching 32 files:  56%|█████▋    | 18/32 [00:02<00:01,  7.65it/s]
+Fetching 32 files:  72%|███████▏  | 23/32 [00:02<00:00, 11.00it/s]
+Fetching 32 files:  81%|████████▏ | 26/32 [00:03<00:00,  8.27it/s]
+Fetching 32 files:  91%|█████████ | 29/32 [00:03<00:00,  9.39it/s]
+Fetching 32 files:  94%|█████████▍| 30/32 [00:15<00:00,  9.39it/s]
+Fetching 32 files:  97%|█████████▋| 31/32 [01:20<00:08,  8.07s/it]
+Fetching 32 files: 100%|██████████| 32/32 [08:07<00:00, 59.66s/it]
+Fetching 32 files: 100%|██████████| 32/32 [08:07<00:00, 15.24s/it]
+  ok -> F:\Thesis\models\models--intfloat--multilingual-e5-large\snapshots\3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3
+done

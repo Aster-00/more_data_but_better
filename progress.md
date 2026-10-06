@@ -54,6 +54,9 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 |---|---|---|---|
 | R09 | `UBC-NLP/MARBERTv2` | Real-only baseline, 3 seeds | The thesis classifier is v2, not v1 |
 | R10 | `aubmindlab/bert-base-arabertv02-twitter`, TF-IDF + LR | Real-only baseline, 3 seeds | The other two classifiers |
+| G01 | `QCRI/Fanar-1-9B-Instruct` | Generator feasibility: 4-bit load, 20 sentences (`scripts/check_generators.py`) | VRAM peak, tokens/s, is the output dialectal? Runs automatically once the download finishes and the GPU is free |
+| G02 | `google/gemma-2-9b-it` | Same | Same |
+| G03 | `humain-ai/ALLaM-7B-Instruct-preview` | Same | Same |
 
 ---
 
@@ -64,6 +67,14 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 | ID | File | SHA-256 (first 12) | Contents |
 |---|---|---|---|
 | D1 | `data/processed/nadi_lahjatbert.jsonl` | `d299edd78f3d` | 58,384 unique NADI 2020/2021/2023 texts, 18 LahjatBERT labels. Links → `URL`, mentions → `USER`, 365 quotes restored. No normalization. All-18 and zero-label texts kept. Built by `src/data/build_dataset.py`; details in `decisions.md`. |
+
+### Quality measurements (`src/quality/measure.py`, results in `results/quality/`)
+
+| ID | Date | Data | n | Exact / near dup | TTR | Distinct-2 | Self-BLEU | E5 cos. dist. | Vendi | DID-nadi top-1 agree | DID-madar top-1 agree | ALDi mean | File |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Q01 | 2026-10-06 | D1 random sample (seed 42) | 2000 | 0.05% / 0.10% | 0.514 | 0.948 | 0.063 | 0.163 | 3.77 | 61.5% (429 single-label texts) | 49.0% (406) | 0.603 | `real_d1_sample2000_seed42.json` |
+
+**Q01 notes.** Reference values for comparing synthetic sets (measure them at the same `--sample 2000`). The DID scorers agree with the LahjatBERT single label on only 62% / 49% of real tweets (kappa 0.55 / 0.38; the two scorers agree with each other with kappa 0.26), so a top-1 DID fidelity filter would also reject about 40% of real data: fidelity thresholds must be set relative to these numbers, not to 100%. Per-dialect DID-nadi agreement is 0% for Bahrain, Jordan and Palestine (small n) and 82% for Egypt.
 
 ### Model roster
 
