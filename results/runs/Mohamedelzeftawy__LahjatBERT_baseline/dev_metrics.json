@@ -1,0 +1,94 @@
+{
+  "model": "Mohamedelzeftawy/LahjatBERT_baseline",
+  "dev_file": "MLADI\\dev\\NADI2024_subtask1_dev2.tsv",
+  "dev_sha256": "5c62fcfe1a44f85e79474a83c69d1d56694fea520eacae970f18417fbee202ee",
+  "threshold": 0.3,
+  "max_length": 128,
+  "device": "cuda",
+  "git_commit": "75330bfffa44560b42d361dbc8643922d85ba6f0",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "macro": {
+    "precision": 73.65787154972381,
+    "recall": 63.65623972985686,
+    "f1": 67.41084220520852,
+    "accuracy": 77.5
+  },
+  "micro_f1": 67.85714285714286,
+  "per_dialect": {
+    "Algeria": {
+      "precision": 78.94736842105263,
+      "recall": 42.857142857142854,
+      "f1": 55.55555555555556,
+      "accuracy": 80.0,
+      "gold_positives": 35,
+      "predicted_positives": 19
+    },
+    "Egypt": {
+      "precision": 85.0,
+      "recall": 87.17948717948718,
+      "f1": 86.07594936708861,
+      "accuracy": 90.83333333333333,
+      "gold_positives": 39,
+      "predicted_positives": 40
+    },
+    "Jordan": {
+      "precision": 64.70588235294117,
+      "recall": 66.0,
+      "f1": 65.34653465346535,
+      "accuracy": 70.83333333333334,
+      "gold_positives": 50,
+      "predicted_positives": 51
+    },
+    "Palestine": {
+      "precision": 67.21311475409836,
+      "recall": 64.0625,
+      "f1": 65.60000000000001,
+      "accuracy": 64.16666666666667,
+      "gold_positives": 64,
+      "predicted_positives": 61
+    },
+    "Sudan": {
+      "precision": 88.88888888888889,
+      "recall": 57.14285714285714,
+      "f1": 69.56521739130434,
+      "accuracy": 82.5,
+      "gold_positives": 42,
+      "predicted_positives": 27
+    },
+    "Syria": {
+      "precision": 60.78431372549019,
+      "recall": 67.3913043478261,
+      "f1": 63.91752577319587,
+      "accuracy": 70.83333333333334,
+      "gold_positives": 46,
+      "predicted_positives": 51
+    },
+    "Tunisia": {
+      "precision": 65.0,
+      "recall": 61.904761904761905,
+      "f1": 63.41463414634146,
+      "accuracy": 87.5,
+      "gold_positives": 21,
+      "predicted_positives": 20
+    },
+    "Yemen": {
+      "precision": 78.72340425531915,
+      "recall": 62.71186440677966,
+      "f1": 69.81132075471697,
+      "accuracy": 73.33333333333333,
+      "gold_positives": 59,
+      "predicted_positives": 47
+    }
+  },
+  "dialects_scored": [
+    "Algeria",
+    "Egypt",
+    "Jordan",
+    "Palestine",
+    "Sudan",
+    "Syria",
+    "Tunisia",
+    "Yemen"
+  ]
+}
