@@ -5,7 +5,10 @@
     "google/gemma-2-9b-it",
     "humain-ai/ALLaM-7B-Instruct-preview",
     "facebook/nllb-200-1.3B",
-    "facebook/nllb-200-distilled-1.3B"
+    "facebook/nllb-200-distilled-1.3B",
+    "Qwen/Qwen3-8B",
+    "tiiuae/Falcon-H1-7B-Instruct",
+    "inception42/Jais-2-8B-Chat"
   ],
   "scorers": [
     "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi",

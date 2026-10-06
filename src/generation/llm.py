@@ -105,7 +105,10 @@ class Generator:
         if messages and messages[0]["role"] == "system" and not self.system_role_supported:
             system, first_user = messages[0]["content"], messages[1]
             messages = [{"role": "user", "content": system + "\n\n" + first_user["content"]}] + messages[2:]
-        return self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        # enable_thinking=False turns off Qwen3's reasoning block (<think>...</think>), which
+        # would otherwise fill the token budget; templates without that variable ignore it.
+        return self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
+                                                  enable_thinking=False)
 
     @torch.no_grad()
     def generate(self, batch_messages: list[list[dict]], sampling: Sampling, seed: int,
