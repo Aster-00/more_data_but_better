@@ -1,0 +1,11 @@
+# Install torch from the CUDA index first:
+#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126
+#   pip install -r requirements.txt
+huggingface_hub==1.33.0
+numpy==2.5.3
+python-dotenv==1.2.4
+safetensors==0.8.0
+scikit-learn==1.9.1
+tokenizers==0.23.2
+torch==2.14.1+cu126
+transformers==5.18.0
