@@ -27,6 +27,7 @@ from pathlib import Path
 
 import numpy as np
 import sklearn
+from joblib import parallel_config
 from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -80,7 +81,11 @@ def train(cfg: dict) -> dict:
         LogisticRegression(C=cfg["C"], max_iter=cfg["max_iter"], solver="liblinear",
                            random_state=cfg["seed"]),
         n_jobs=cfg["n_jobs"])
-    clf.fit(x_train, y_train[:, present])
+    # joblib passes large arrays to worker processes as read-only memory maps, which
+    # liblinear cannot use ("WRITEBACKIFCOPY base is read-only"); max_nbytes=None sends
+    # each worker its own writable copy instead.
+    with parallel_config(max_nbytes=None):
+        clf.fit(x_train, y_train[:, present])
 
     def predict(x) -> np.ndarray:
         """18-column probability matrix (columns of absent dialects stay 0)."""
