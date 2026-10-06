@@ -100,6 +100,22 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 
 **Q01 notes.** Reference values for comparing synthetic sets (measure them at the same `--sample 2000`). The DID scorers agree with the LahjatBERT single label on only 62% / 49% of real tweets (kappa 0.55 / 0.38; the two scorers agree with each other with kappa 0.26), so a top-1 DID fidelity filter would also reject about 40% of real data: fidelity thresholds must be set relative to these numbers, not to 100%. Per-dialect DID-nadi agreement is 0% for Bahrain, Jordan and Palestine (small n) and 82% for Egypt.
 
+### Scorer validation against human gold (`src/quality/validate_scorers.py`, results in `results/scorers/`)
+
+| ID | Date | Data | Scorer | Top-1 macro F1 / P / R | Mass ≥ 0.3 macro F1 / P / R | Top-1 in gold | File |
+|---|---|---|---|---|---|---|---|
+| S01 | 2026-10-06 | MLADI dev (120, 8 dialects) | CAMeLBERT DID-nadi | 22.77 / 79.62 / 15.10 | 23.78 / 86.58 / 15.63 | 48/59 = 81.4% (61 unscorable) | `S01.json` |
+| S01 | 2026-10-06 | MLADI dev (120, 8 dialects) | CAMeLBERT DID-madar | 19.07 / 59.03 / 12.79 | 19.07 / 52.81 / 13.03 | 41/65 = 63.1% (55 unscorable) | `S01.json` |
+| S01 | 2026-10-06 | MLADI dev (120, 8 dialects) | Sentence-ALDi | Spearman ρ with number of valid dialects = −0.44 (p = 4.2e-07) | | | `S01.json` |
+
+**S01 notes.** Commit `3f39088`. Checks the scorers against the human MLADI labels (label trust rule) before they are used as fidelity filters.
+- Low macro F1 is expected and not the point: both DID models are single-label, while dev sentences are valid in several dialects, so recall is capped. What matters for a fidelity filter is **precision / top-1 in gold**: when the scorer names a dev dialect, is that dialect valid?
+- **DID-nadi is clearly the better filter:** top-1 in gold 81% vs 63%, macro precision 80–87 vs 53–59. This agrees with Q01 (agreement with D1 labels: kappa 0.55 vs 0.38). Evidence for the open DID-variant question; not decided yet.
+- **Half the dev sentences cannot be checked:** the top country is outside the 8 dev dialects for 61 (nadi) / 55 (madar) of 120 sentences, e.g. Saudi_Arabia 20×, Libya 10× for nadi. Those sentences may still be valid in that country; the dev set has no label to tell.
+- **Per dialect (nadi, top-1):** Egypt is reliable (P 96, R 56); Jordan (P 50) and Syria (P 56) are weak. Levantine fidelity checks will be the least trustworthy.
+- **ALDi:** more dialectal sentences are valid in fewer dialects (mean ALDi 0.17 for sentences valid in all 8 vs 0.65–0.78 for 1–5). That fits ALDi as a proxy for how dialect-specific a sentence is.
+- E5 is an embedding model with no labelled target, so it is not validated here.
+
 ### Model roster
 
 Checked on the Hub on 2026-10-06. About 6.7 GB of the 8 GB of VRAM is free.

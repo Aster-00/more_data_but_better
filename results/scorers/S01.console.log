@@ -1,0 +1,11 @@
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|##########| 201/201 [00:00<00:00, 67015.51it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|##########| 201/201 [00:00<00:00, 33315.75it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|##########| 201/201 [00:00<00:00, 32894.58it/s]
+DID-nadi  top1      macro F1 22.77  P 79.62  R 15.10
+DID-nadi  mass>=0.3 macro F1 23.78  P 86.58  R 15.63
+DID-nadi  top-1 in gold: 48/59 = 81.36%  (unscorable 61)
+DID-madar top1      macro F1 19.07  P 59.03  R 12.79
+DID-madar mass>=0.3 macro F1 19.07  P 52.81  R 13.03
+DID-madar top-1 in gold: 41/65 = 63.08%  (unscorable 55)
+ALDi vs cardinality: Spearman -0.4424 (p=4.21e-07)  {0: {'n': 13, 'mean_aldi': 0.7201}, 1: {'n': 23, 'mean_aldi': 0.7814}, 2: {'n': 31, 'mean_aldi': 0.7805}, 3: {'n': 18, 'mean_aldi': 0.647}, 4: {'n': 6, 'mean_aldi': 0.7288}, 5: {'n': 8, 'mean_aldi': 0.6822}, 6: {'n': 6, 'mean_aldi': 0.4651}, 7: {'n': 3, 'mean_aldi': 0.492}, 8: {'n': 12, 'mean_aldi': 0.1689}}
+wrote results\scorers\S01.json
