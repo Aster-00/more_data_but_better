@@ -1,0 +1,56 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 49738.78it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERT
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+  epoch 1 step 200/2190 loss 0.5879
+  epoch 1 step 400/2190 loss 0.4835
+  epoch 1 step 600/2190 loss 0.4379
+  epoch 1 step 800/2190 loss 0.4105
+  epoch 1 step 1000/2190 loss 0.3921
+  epoch 1 step 1200/2190 loss 0.3803
+  epoch 1 step 1400/2190 loss 0.3709
+  epoch 1 step 1600/2190 loss 0.3626
+  epoch 1 step 1800/2190 loss 0.3561
+  epoch 1 step 2000/2190 loss 0.3502
+epoch 1: train loss 0.3457  val macro F1 81.81  micro F1 81.98
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:01<00:00,  1.74s/it]Writing model shards: 100%|██████████| 1/1 [00:01<00:00,  1.74s/it]
+  epoch 2 step 200/2190 loss 0.2103
+  epoch 2 step 400/2190 loss 0.2045
+  epoch 2 step 600/2190 loss 0.2027
+  epoch 2 step 800/2190 loss 0.2002
+  epoch 2 step 1000/2190 loss 0.1993
+  epoch 2 step 1200/2190 loss 0.1992
+  epoch 2 step 1400/2190 loss 0.1978
+  epoch 2 step 1600/2190 loss 0.1983
+  epoch 2 step 1800/2190 loss 0.1977
+  epoch 2 step 2000/2190 loss 0.1972
+epoch 2: train loss 0.1971  val macro F1 82.24  micro F1 82.29
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:01<00:00,  1.87s/it]Writing model shards: 100%|██████████| 1/1 [00:01<00:00,  1.87s/it]
+  epoch 3 step 200/2190 loss 0.1266
+  epoch 3 step 400/2190 loss 0.1280
+  epoch 3 step 600/2190 loss 0.1290
+  epoch 3 step 800/2190 loss 0.1288
+  epoch 3 step 1000/2190 loss 0.1274
+  epoch 3 step 1200/2190 loss 0.1269
+  epoch 3 step 1400/2190 loss 0.1259
+  epoch 3 step 1600/2190 loss 0.1261
+  epoch 3 step 1800/2190 loss 0.1254
+  epoch 3 step 2000/2190 loss 0.1250
+epoch 3: train loss 0.1242  val macro F1 82.80  micro F1 82.86
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:01<00:00,  1.78s/it]Writing model shards: 100%|██████████| 1/1 [00:01<00:00,  1.78s/it]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights:  19%|█▉        | 38/201 [00:00<00:00, 361.61it/s]Loading weights:  37%|███▋      | 75/201 [00:00<00:00, 309.48it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 837.38it/s]
+DEV  macro F1 68.81  P 76.03  R 64.83  | micro F1 68.85  (best val epoch 3)

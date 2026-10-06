@@ -1,0 +1,163 @@
+{
+  "config": {
+    "run_name": "repro_lahjatbert_baseline_seed42",
+    "condition": "real_only",
+    "note": "LahjatBERT baseline.py's effective settings: dropout 0.1 (their 0.3 never applies), micro-F1 epoch selection, 3 epochs. Everything else as baseline_real_only.json.",
+    "data": "data/processed/nadi_lahjatbert.jsonl",
+    "text_field": "text",
+    "model": "UBC-NLP/MARBERT",
+    "seed": 42,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 3,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.1,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "selection_metric": "micro",
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 52546,
+  "n_val": 5838,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.3455366813088661,
+      "val_macro_f1": 81.9219853148041,
+      "val_micro_f1": 82.04011208869201,
+      "val_macro": {
+        "precision": 75.53888933854155,
+        "recall": 89.52317595785907,
+        "f1": 81.9219853148041,
+        "accuracy": 86.03307829926536
+      },
+      "seconds": 208
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.19556054993443292,
+      "val_macro_f1": 82.16508598449526,
+      "val_micro_f1": 82.27841957091545,
+      "val_macro": {
+        "precision": 75.3929745496241,
+        "recall": 90.33563269206137,
+        "f1": 82.16508598449526,
+        "accuracy": 86.10254653420121
+      },
+      "seconds": 211
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.12313658975098775,
+      "val_macro_f1": 82.8413682675984,
+      "val_micro_f1": 82.93892269551499,
+      "val_macro": {
+        "precision": 78.09177864085355,
+        "recall": 88.24888106825537,
+        "f1": 82.8413682675984,
+        "accuracy": 87.03323055841042
+      },
+      "seconds": 214
+    }
+  ],
+  "best_epoch": 3,
+  "selection_metric": "micro",
+  "best_val_selection_score": 82.93892269551499,
+  "git_commit": "ad08dd558fbdb686ce6838ab22ffda6a80cb944c",
+  "data_sha256": "d299edd78f3d1b56cd0bfa4569e0044e130552a31f15e132ad04559a5ea08b4b",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\repro_lahjatbert_baseline.json",
+  "total_seconds": 840,
+  "dev": {
+    "macro": {
+      "precision": 75.42704306485467,
+      "recall": 65.67144418120262,
+      "f1": 69.0012300053918,
+      "accuracy": 78.4375
+    },
+    "micro_f1": 69.5139911634757,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 82.35294117647058,
+        "recall": 40.0,
+        "f1": 53.84615384615385,
+        "accuracy": 80.0,
+        "gold_positives": 35,
+        "predicted_positives": 17
+      },
+      "Egypt": {
+        "precision": 82.92682926829268,
+        "recall": 87.17948717948718,
+        "f1": 85.0,
+        "accuracy": 90.0,
+        "gold_positives": 39,
+        "predicted_positives": 41
+      },
+      "Jordan": {
+        "precision": 66.66666666666666,
+        "recall": 72.0,
+        "f1": 69.23076923076923,
+        "accuracy": 73.33333333333333,
+        "gold_positives": 50,
+        "predicted_positives": 54
+      },
+      "Palestine": {
+        "precision": 70.3125,
+        "recall": 70.3125,
+        "f1": 70.3125,
+        "accuracy": 68.33333333333333,
+        "gold_positives": 64,
+        "predicted_positives": 64
+      },
+      "Sudan": {
+        "precision": 85.18518518518519,
+        "recall": 54.761904761904766,
+        "f1": 66.66666666666666,
+        "accuracy": 80.83333333333333,
+        "gold_positives": 42,
+        "predicted_positives": 27
+      },
+      "Syria": {
+        "precision": 61.111111111111114,
+        "recall": 71.73913043478261,
+        "f1": 66.0,
+        "accuracy": 71.66666666666667,
+        "gold_positives": 46,
+        "predicted_positives": 54
+      },
+      "Tunisia": {
+        "precision": 77.77777777777779,
+        "recall": 66.66666666666666,
+        "f1": 71.7948717948718,
+        "accuracy": 90.83333333333333,
+        "gold_positives": 21,
+        "predicted_positives": 18
+      },
+      "Yemen": {
+        "precision": 77.08333333333334,
+        "recall": 62.71186440677966,
+        "f1": 69.1588785046729,
+        "accuracy": 72.5,
+        "gold_positives": 59,
+        "predicted_positives": 48
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

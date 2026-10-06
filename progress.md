@@ -15,8 +15,12 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 | R05 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only | 42 | 70.65 | 69.75 | 73.12 | `baseline_real_only_seed42` |
 | R06 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only | 43 | 72.52 | 74.55 | 72.53 | `baseline_real_only_seed43` |
 | R07 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only | 44 | 70.84 | 70.72 | 73.30 | `baseline_real_only_seed44` |
+| R08 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only, LahjatBERT settings | 42 | 69.00 | 75.43 | 65.67 | `repro_lahjatbert_baseline_seed42` |
+| R08 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only, LahjatBERT settings | 43 | 68.81 | 76.03 | 64.83 | `repro_lahjatbert_baseline_seed43` |
+| R08 | 2026-10-06 | `UBC-NLP/MARBERT` | D1, real only, LahjatBERT settings | 44 | 68.32 | 73.22 | 65.97 | `repro_lahjatbert_baseline_seed44` |
 
 **R05–R07 mean ± std:** macro F1 **71.34 ± 1.03**, precision 71.67 ± 2.54, recall 72.98 ± 0.40.
+**R08 mean ± std:** macro F1 **68.71 ± 0.35**, precision 74.89 ± 1.48, recall 65.49 ± 0.59.
 
 ## Run notes
 
@@ -31,16 +35,23 @@ Numbers are copied from each run's result folder under `results/runs/`. The gene
 **R05–R07: real-only baseline (condition 1).**
 - Config: `configs/baseline_real_only.json` (seed changed with `--seed`). First 8 of 12 layers frozen, dropout 0.3, lr 5e-5, batch 24, 2 epochs, fp16. 90/10 random train/validation split of D1. Best epoch chosen by validation macro F1. About 7.4 min per run.
 - Differences from LahjatBERT's baseline (R03): dropout 0.3 actually applied (theirs stays at 0.1 because of a bug), macro-F1 epoch selection instead of micro F1, 2 epochs instead of 3, and our own deduplicated, unnormalized D1 text.
-- **Result:** about 4 points above their baseline (71.3 vs 67.4). Even the worst seed (70.65) beats it. We are level with their best model (72.7). Why we beat the baseline is not known yet; R08 will test it.
+- **Result:** about 4 points above their baseline (71.3 vs 67.4). Even the worst seed (70.65) beats it. We are level with their best model (72.7). Why we beat the baseline is not known yet; R08 will test it. (Answered by R08: the training settings, not the data.)
 - Seed spread is about ±1 point, so differences under ~2 points between conditions are not results.
 - Weakest dialect for every model: Algeria (~62 F1).
 - ⚠️ The logs record commit `75330bf`, but the training code was not committed yet at that point.
+
+**R08: faithful reproduction of LahjatBERT's baseline.**
+- Config: `configs/repro_lahjatbert_baseline.json`, seeds 42/43/44. Same code and data (D1) as R05–R07; changed: dropout 0.3 → 0.1, epoch selection macro → micro F1, 2 → 3 epochs. 11–14 min per run.
+- **Result:** 68.71 ± 0.35, within noise of their published baseline R03 (67.41) and 2.6 points below our R05–R07 (71.34 ± 1.03). With their settings we land where they did, so our D1 preparation is not why R05–R07 beat R03; the settings are.
+- Lower recall drives the drop (65.5 vs 73.0); precision is higher (74.9 vs 71.7). Every dialect except Egypt falls; Algeria drops most (54.8 vs 62.0 mean F1).
+- Micro-F1 selection changed nothing: every seed picked epoch 3, and validation macro and micro F1 were within 0.15 of each other at every epoch. The gap therefore comes from dropout (0.1 vs 0.3) and/or the third epoch. R08 cannot separate the two.
+- Validation F1 still rose from epoch 2 to 3 in every seed (≈82.2 → ≈82.9), yet R08 scores lower on dev than the 2-epoch R05–R07. Whether the third epoch itself hurts dev is untested (dev was only scored on the selected checkpoint); if it does, geolocation-labelled validation is a poor guide for model selection.
+- The logs record commit `ad08dd5`, not `3c35ac9` (the commit made before the run): the commit is read after training, and docs-only commits landed meanwhile. `git diff 3c35ac9 ad08dd5 -- src configs` is empty, so the code is the same.
 
 ## Next runs
 
 | ID | Model | What | Why |
 |---|---|---|---|
-| R08 | `UBC-NLP/MARBERT` | LahjatBERT's exact settings (dropout 0.1, micro-F1 selection, 3 epochs), 3 seeds | Find out why R05–R07 beat R03 |
 | R09 | `UBC-NLP/MARBERTv2` | Real-only baseline, 3 seeds | The thesis classifier is v2, not v1 |
 | R10 | `aubmindlab/bert-base-arabertv02-twitter`, TF-IDF + LR | Real-only baseline, 3 seeds | The other two classifiers |
 
