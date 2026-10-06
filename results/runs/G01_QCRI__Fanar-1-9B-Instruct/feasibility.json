@@ -1,0 +1,54 @@
+{
+  "run_id": "G01",
+  "model": "QCRI/Fanar-1-9B-Instruct",
+  "n_requested": 20,
+  "batch_size": 5,
+  "max_new_tokens": 48,
+  "seed": 42,
+  "quantization": "nf4",
+  "git_commit": "6df4ec019fd551d155fb0bea7b09a0845d99550a",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "gpu": "NVIDIA GeForce RTX 3070",
+  "vram_before_load": {
+    "allocated": 0,
+    "reserved": 0,
+    "peak_allocated": 0,
+    "peak_reserved": 0,
+    "card_free": 7098,
+    "card_total": 8192
+  },
+  "status": "ok",
+  "load_seconds": 119.3,
+  "model_revision": null,
+  "system_role_supported": true,
+  "vram_after_load": {
+    "allocated": 4974,
+    "reserved": 5078,
+    "peak_allocated": 5056,
+    "peak_reserved": 5078,
+    "card_free": 1994,
+    "card_total": 8192
+  },
+  "sampling": {
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 48,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "n_generated": 20,
+  "generated_tokens": 913,
+  "generation_seconds": 17.3,
+  "tokens_per_second": 52.68,
+  "vram_peak": {
+    "allocated": 4982,
+    "reserved": 5284,
+    "peak_allocated": 5171,
+    "peak_reserved": 5284,
+    "card_free": 1772,
+    "card_total": 8192
+  },
+  "finished": "2026-10-06 20:22"
+}
