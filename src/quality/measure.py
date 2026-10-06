@@ -216,7 +216,11 @@ def measure(records: list[dict], cfg: dict, device: str, name: str) -> tuple[dic
                     "per_dialect_counts": dict(Counter(target_of(r) or "none" for r in records)),
                     "conditions": dict(Counter(r.get("condition", "real") for r in records))}
     per_record: dict = {}
-    report["duplicates"] = duplicate_measures(texts, cfg["duplicates"], Path(cfg["duplicates"]["reference"]) if cfg["duplicates"].get("reference") else None)
+    # The reference comparison is skipped when the set IS the reference (a D1 sample would match itself).
+    reference = Path(cfg["duplicates"]["reference"]) if cfg["duplicates"].get("reference") else None
+    if reference is not None and cfg.get("_data_path") and Path(cfg["_data_path"]).resolve() == reference.resolve():
+        reference = None
+    report["duplicates"] = duplicate_measures(texts, cfg["duplicates"], reference)
     report["lexical"] = lexical_summary(texts)
     if cfg["embedding"]["enabled"]:
         report["embedding"] = embedding_measures(texts, cfg["embedding"], device, cache_dir)
@@ -245,6 +249,7 @@ def main() -> None:
         cfg["embedding"]["enabled"] = cfg["fidelity"]["enabled"] = False
     started = time.time()
     records = load_records(args.data, args.sample, args.seed)
+    cfg["_data_path"] = str(args.data)
     report, per_record = measure(records, cfg, args.device, args.name)
     report.update(data=str(args.data), data_sha256=sha256(args.data), sample=args.sample, seed=args.seed,
                   config=cfg, git_commit=git_commit(), python=platform.python_version(),
