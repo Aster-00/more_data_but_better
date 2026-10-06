@@ -1,0 +1,23 @@
+  epoch 1 step 200/2190 loss 0.6247
+  epoch 1 step 400/2190 loss 0.5276
+  epoch 1 step 600/2190 loss 0.4838
+  epoch 1 step 800/2190 loss 0.4550
+  epoch 1 step 1000/2190 loss 0.4377
+  epoch 1 step 1200/2190 loss 0.4219
+  epoch 1 step 1400/2190 loss 0.4131
+  epoch 1 step 1600/2190 loss 0.4037
+  epoch 1 step 1800/2190 loss 0.3963
+  epoch 1 step 2000/2190 loss 0.3901
+epoch 1: train loss 0.3855  val macro F1 81.08  micro F1 81.21
+  epoch 2 step 200/2190 loss 0.2925
+  epoch 2 step 400/2190 loss 0.2885
+  epoch 2 step 600/2190 loss 0.2875
+  epoch 2 step 800/2190 loss 0.2881
+  epoch 2 step 1000/2190 loss 0.2866
+  epoch 2 step 1200/2190 loss 0.2855
+  epoch 2 step 1400/2190 loss 0.2856
+  epoch 2 step 1600/2190 loss 0.2851
+  epoch 2 step 1800/2190 loss 0.2840
+  epoch 2 step 2000/2190 loss 0.2837
+epoch 2: train loss 0.2827  val macro F1 81.52  micro F1 81.60
+DEV  macro F1 70.65  P 69.75  R 73.12  | micro F1 70.94  (best val epoch 2)

@@ -1,0 +1,3 @@
+epoch 1: train loss 0.3861  val macro F1 80.82  micro F1 80.96
+epoch 2: train loss 0.2815  val macro F1 81.52  micro F1 81.61
+DEV  macro F1 72.52  P 74.55  R 72.53  | micro F1 72.39  (best val epoch 2)

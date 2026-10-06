@@ -1,0 +1,147 @@
+{
+  "config": {
+    "run_name": "baseline_real_only_seed44",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert.jsonl",
+    "text_field": "text",
+    "model": "UBC-NLP/MARBERT",
+    "seed": 44,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 52546,
+  "n_val": 5838,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.3891911502570322,
+      "val_macro_f1": 79.82865099805764,
+      "val_micro_f1": 79.7644364469164,
+      "val_macro": {
+        "precision": 70.86605165149835,
+        "recall": 91.71012162281215,
+        "f1": 79.82865099805764,
+        "accuracy": 83.51985078603782
+      },
+      "seconds": 210
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.2826669693435436,
+      "val_macro_f1": 81.28186913819052,
+      "val_micro_f1": 81.3495445107241,
+      "val_macro": {
+        "precision": 73.33071305183027,
+        "recall": 91.2813600040079,
+        "f1": 81.28186913819052,
+        "accuracy": 85.2127821552282
+      },
+      "seconds": 212
+    }
+  ],
+  "best_epoch": 2,
+  "best_val_macro_f1": 81.28186913819052,
+  "git_commit": "75330bfffa44560b42d361dbc8643922d85ba6f0",
+  "data_sha256": "d299edd78f3d1b56cd0bfa4569e0044e130552a31f15e132ad04559a5ea08b4b",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\baseline_real_only.json",
+  "total_seconds": 437,
+  "dev": {
+    "macro": {
+      "precision": 70.7167258800097,
+      "recall": 73.2950642071635,
+      "f1": 70.84163583057388,
+      "accuracy": 77.91666666666667
+    },
+    "micro_f1": 71.27371273712737,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 80.0,
+        "recall": 45.714285714285715,
+        "f1": 58.18181818181818,
+        "accuracy": 80.83333333333333,
+        "gold_positives": 35,
+        "predicted_positives": 20
+      },
+      "Egypt": {
+        "precision": 80.0,
+        "recall": 92.3076923076923,
+        "f1": 85.71428571428571,
+        "accuracy": 90.0,
+        "gold_positives": 39,
+        "predicted_positives": 45
+      },
+      "Jordan": {
+        "precision": 60.317460317460316,
+        "recall": 76.0,
+        "f1": 67.2566371681416,
+        "accuracy": 69.16666666666667,
+        "gold_positives": 50,
+        "predicted_positives": 63
+      },
+      "Palestine": {
+        "precision": 65.82278481012658,
+        "recall": 81.25,
+        "f1": 72.72727272727273,
+        "accuracy": 67.5,
+        "gold_positives": 64,
+        "predicted_positives": 79
+      },
+      "Sudan": {
+        "precision": 77.77777777777779,
+        "recall": 66.66666666666666,
+        "f1": 71.7948717948718,
+        "accuracy": 81.66666666666667,
+        "gold_positives": 42,
+        "predicted_positives": 36
+      },
+      "Syria": {
+        "precision": 59.67741935483871,
+        "recall": 80.43478260869566,
+        "f1": 68.51851851851852,
+        "accuracy": 71.66666666666667,
+        "gold_positives": 46,
+        "predicted_positives": 62
+      },
+      "Tunisia": {
+        "precision": 66.66666666666666,
+        "recall": 76.19047619047619,
+        "f1": 71.11111111111111,
+        "accuracy": 89.16666666666667,
+        "gold_positives": 21,
+        "predicted_positives": 24
+      },
+      "Yemen": {
+        "precision": 75.47169811320755,
+        "recall": 67.79661016949152,
+        "f1": 71.42857142857143,
+        "accuracy": 73.33333333333333,
+        "gold_positives": 59,
+        "predicted_positives": 53
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}
