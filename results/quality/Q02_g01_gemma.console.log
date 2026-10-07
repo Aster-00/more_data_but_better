@@ -1,0 +1,151 @@
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   7%|▋         | 27/391 [00:00<00:01, 247.59it/s]Loading weights:  13%|█▎        | 52/391 [00:00<00:01, 213.20it/s]Loading weights:  19%|█▉        | 74/391 [00:00<00:01, 210.83it/s]Loading weights:  26%|██▋       | 103/391 [00:00<00:01, 236.04it/s]Loading weights:  34%|███▍      | 134/391 [00:00<00:00, 259.56it/s]Loading weights:  41%|████      | 161/391 [00:00<00:00, 255.18it/s]Loading weights:  50%|█████     | 196/391 [00:00<00:00, 279.42it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 497.45it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 11850.65it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 41841.04it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 29256.49it/s]
+{
+  "n": 20,
+  "duplicates": {
+    "n": 20,
+    "exact_duplicates": 0,
+    "exact_rate": 0.0,
+    "near_duplicates": 0,
+    "near_rate": 0.0,
+    "near_threshold": 0.8,
+    "ngram": 5,
+    "near_vs_reference": 0,
+    "near_vs_reference_rate": 0.0,
+    "reference": "data\\processed\\nadi_lahjatbert.jsonl"
+  },
+  "lexical": {
+    "n_texts": 20,
+    "n_tokens": 109,
+    "vocab": 94,
+    "mean_words": 5.45,
+    "ttr": 0.8624,
+    "distinct_1": 0.8624,
+    "distinct_2": 0.9775,
+    "mtld": 221.78,
+    "self_bleu": 0.0585
+  },
+  "embedding": {
+    "n": 20,
+    "model": "intfloat/multilingual-e5-large",
+    "mean_pairwise_cosine_distance": 0.1285,
+    "vendi_score": 2.03,
+    "vendi_score_normalized": 0.1015
+  },
+  "fidelity": {
+    "did_nadi": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.4,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 1.0
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.5
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.5
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 7,
+        "Libya": 4,
+        "Syria": 3,
+        "Saudi_Arabia": 2,
+        "Oman": 1,
+        "Palestine": 1,
+        "Tunisia": 1,
+        "UAE": 1
+      }
+    },
+    "did_madar": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-madar-corpus26",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.15,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.0
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 4,
+        "Algeria": 2,
+        "Oman": 2,
+        "Yemen": 1,
+        "Tunisia": 2,
+        "Jordan": 3,
+        "Lebanon": 1,
+        "Palestine": 2,
+        "Iraq": 2,
+        "Saudi_Arabia": 1
+      }
+    },
+    "aldi": {
+      "model": "VARabi/Sentence-ALDi",
+      "n": 20,
+      "mean": 0.6821,
+      "median": 0.692,
+      "share_ge_0_5": 0.7,
+      "histogram_0.1_bins": {
+        "0.0": 0,
+        "0.1": 1,
+        "0.2": 0,
+        "0.3": 4,
+        "0.4": 1,
+        "0.5": 1,
+        "0.6": 4,
+        "0.7": 0,
+        "0.8": 1,
+        "0.9": 8
+      }
+    },
+    "kappa": {
+      "did_nadi_vs_did_madar": {
+        "n": 20,
+        "kappa": 0.1209
+      },
+      "did_nadi_vs_target": {
+        "n": 20,
+        "kappa": 0.3182
+      },
+      "did_madar_vs_target": {
+        "n": 20,
+        "kappa": 0.086
+      }
+    }
+  },
+  "control_adherence": null
+}

@@ -1,0 +1,198 @@
+{
+  "name": "Q02_g01_qwen3",
+  "n": 20,
+  "per_dialect_counts": {
+    "Egypt": 4,
+    "Morocco": 4,
+    "Syria": 4,
+    "Saudi_Arabia": 4,
+    "Iraq": 4
+  },
+  "conditions": {
+    "open": 20
+  },
+  "duplicates": {
+    "n": 20,
+    "exact_duplicates": 0,
+    "exact_rate": 0.0,
+    "near_duplicates": 0,
+    "near_rate": 0.0,
+    "near_threshold": 0.8,
+    "ngram": 5,
+    "near_vs_reference": 0,
+    "near_vs_reference_rate": 0.0,
+    "reference": "data\\processed\\nadi_lahjatbert.jsonl"
+  },
+  "lexical": {
+    "n_texts": 20,
+    "n_tokens": 226,
+    "vocab": 146,
+    "mean_words": 11.3,
+    "ttr": 0.646,
+    "distinct_1": 0.646,
+    "distinct_2": 0.8058,
+    "mtld": 34.68,
+    "self_bleu": 0.0379
+  },
+  "embedding": {
+    "n": 20,
+    "model": "intfloat/multilingual-e5-large",
+    "mean_pairwise_cosine_distance": 0.1303,
+    "vendi_score": 2.06,
+    "vendi_score_normalized": 0.1031
+  },
+  "fidelity": {
+    "did_nadi": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.15,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.5
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.25
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.0
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 9,
+        "Saudi_Arabia": 1,
+        "Morocco": 1,
+        "Libya": 2,
+        "Oman": 1,
+        "UAE": 3,
+        "Sudan": 1,
+        "Palestine": 1,
+        "Yemen": 1
+      }
+    },
+    "did_madar": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-madar-corpus26",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.15,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.0
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 5,
+        "Saudi_Arabia": 1,
+        "Oman": 4,
+        "Tunisia": 4,
+        "Algeria": 1,
+        "Sudan": 2,
+        "Libya": 1,
+        "Jordan": 1,
+        "Lebanon": 1
+      }
+    },
+    "aldi": {
+      "model": "VARabi/Sentence-ALDi",
+      "n": 20,
+      "mean": 0.6211,
+      "median": 0.7165,
+      "share_ge_0_5": 0.7,
+      "histogram_0.1_bins": {
+        "0.0": 2,
+        "0.1": 0,
+        "0.2": 1,
+        "0.3": 0,
+        "0.4": 3,
+        "0.5": 1,
+        "0.6": 3,
+        "0.7": 3,
+        "0.8": 5,
+        "0.9": 2
+      }
+    },
+    "kappa": {
+      "did_nadi_vs_did_madar": {
+        "n": 20,
+        "kappa": 0.1329
+      },
+      "did_nadi_vs_target": {
+        "n": 20,
+        "kappa": 0.0449
+      },
+      "did_madar_vs_target": {
+        "n": 20,
+        "kappa": 0.0957
+      }
+    }
+  },
+  "control_adherence": null,
+  "data": "data\\synthetic\\g01_qwen3.jsonl",
+  "data_sha256": "2d9dd8f75473ec83bf3bc13790e52c30dacf9f8013a7d61771d833accba03eb7",
+  "sample": null,
+  "seed": 42,
+  "config": {
+    "cache_dir": "F:/Thesis/models",
+    "duplicates": {
+      "near_threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/nadi_lahjatbert.jsonl"
+    },
+    "embedding": {
+      "enabled": true,
+      "max_n": 5000,
+      "seed": 42
+    },
+    "fidelity": {
+      "enabled": true
+    },
+    "length_buckets": {
+      "short": [
+        3,
+        7
+      ],
+      "medium": [
+        8,
+        15
+      ],
+      "long": [
+        16,
+        30
+      ]
+    },
+    "_notes": "length_buckets must match the generation config used for the controlled set (PENDING decision). Self-BLEU and TTR depend on set size: compare sets at the same --sample size.",
+    "_data_path": "data\\synthetic\\g01_qwen3.jsonl"
+  },
+  "git_commit": "68d1e508c7c428d851d818ffb1a27cdcd739b9ad",
+  "python": "3.12.10",
+  "seconds": 17,
+  "finished": "2026-10-07 05:05"
+}

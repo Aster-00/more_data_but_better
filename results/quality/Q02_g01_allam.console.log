@@ -1,0 +1,148 @@
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   8%|▊         | 30/391 [00:00<00:01, 276.95it/s]Loading weights:  15%|█▍        | 58/391 [00:00<00:01, 214.77it/s]Loading weights:  21%|██        | 81/391 [00:00<00:01, 191.80it/s]Loading weights:  27%|██▋       | 106/391 [00:00<00:01, 209.13it/s]Loading weights:  33%|███▎      | 128/391 [00:00<00:01, 212.42it/s]Loading weights:  39%|███▉      | 153/391 [00:00<00:01, 221.42it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 488.85it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 50143.05it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 100244.36it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<?, ?it/s]
+{
+  "n": 20,
+  "duplicates": {
+    "n": 20,
+    "exact_duplicates": 0,
+    "exact_rate": 0.0,
+    "near_duplicates": 0,
+    "near_rate": 0.0,
+    "near_threshold": 0.8,
+    "ngram": 5,
+    "near_vs_reference": 0,
+    "near_vs_reference_rate": 0.0,
+    "reference": "data\\processed\\nadi_lahjatbert.jsonl"
+  },
+  "lexical": {
+    "n_texts": 20,
+    "n_tokens": 296,
+    "vocab": 210,
+    "mean_words": 14.8,
+    "ttr": 0.7095,
+    "distinct_1": 0.7095,
+    "distinct_2": 0.9022,
+    "mtld": 270.31,
+    "self_bleu": 0.0745
+  },
+  "embedding": {
+    "n": 20,
+    "model": "intfloat/multilingual-e5-large",
+    "mean_pairwise_cosine_distance": 0.1402,
+    "vendi_score": 2.11,
+    "vendi_score_normalized": 0.1056
+  },
+  "fidelity": {
+    "did_nadi": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.5,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.25
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.5
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.25
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 3,
+        "Oman": 5,
+        "Syria": 1,
+        "Morocco": 2,
+        "UAE": 4,
+        "Saudi_Arabia": 3,
+        "Libya": 1,
+        "Iraq": 1
+      }
+    },
+    "did_madar": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-madar-corpus26",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.25,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.25
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.25
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.0
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 3,
+        "Oman": 7,
+        "Jordan": 4,
+        "Tunisia": 1,
+        "Morocco": 2,
+        "Saudi_Arabia": 2,
+        "Sudan": 1
+      }
+    },
+    "aldi": {
+      "model": "VARabi/Sentence-ALDi",
+      "n": 20,
+      "mean": 0.2336,
+      "median": 0.0107,
+      "share_ge_0_5": 0.25,
+      "histogram_0.1_bins": {
+        "0.0": 14,
+        "0.1": 0,
+        "0.2": 0,
+        "0.3": 0,
+        "0.4": 1,
+        "0.5": 0,
+        "0.6": 1,
+        "0.7": 1,
+        "0.8": 2,
+        "0.9": 1
+      }
+    },
+    "kappa": {
+      "did_nadi_vs_did_madar": {
+        "n": 20,
+        "kappa": 0.3642
+      },
+      "did_nadi_vs_target": {
+        "n": 20,
+        "kappa": 0.4444
+      },
+      "did_madar_vs_target": {
+        "n": 20,
+        "kappa": 0.1935
+      }
+    }
+  },
+  "control_adherence": null
+}

@@ -1,0 +1,148 @@
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   9%|▉         | 36/391 [00:00<00:00, 357.52it/s]Loading weights:  21%|██        | 83/391 [00:00<00:00, 409.09it/s]Loading weights:  32%|███▏      | 124/391 [00:00<00:01, 264.10it/s]Loading weights:  42%|████▏     | 163/391 [00:00<00:00, 289.49it/s]Loading weights:  71%|███████▏  | 279/391 [00:00<00:00, 525.55it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 522.97it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 33511.75it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 33498.43it/s]
+{
+  "n": 20,
+  "duplicates": {
+    "n": 20,
+    "exact_duplicates": 0,
+    "exact_rate": 0.0,
+    "near_duplicates": 0,
+    "near_rate": 0.0,
+    "near_threshold": 0.8,
+    "ngram": 5,
+    "near_vs_reference": 0,
+    "near_vs_reference_rate": 0.0,
+    "reference": "data\\processed\\nadi_lahjatbert.jsonl"
+  },
+  "lexical": {
+    "n_texts": 20,
+    "n_tokens": 224,
+    "vocab": 191,
+    "mean_words": 11.2,
+    "ttr": 0.8527,
+    "distinct_1": 0.8527,
+    "distinct_2": 1.0,
+    "mtld": 425.74,
+    "self_bleu": 0.0233
+  },
+  "embedding": {
+    "n": 20,
+    "model": "intfloat/multilingual-e5-large",
+    "mean_pairwise_cosine_distance": 0.1306,
+    "vendi_score": 2.07,
+    "vendi_score_normalized": 0.1035
+  },
+  "fidelity": {
+    "did_nadi": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.55,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 1.0
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.25
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 3,
+        "Morocco": 4,
+        "Oman": 3,
+        "Saudi_Arabia": 5,
+        "Syria": 2,
+        "UAE": 1,
+        "Jordan": 1,
+        "Tunisia": 1
+      }
+    },
+    "did_madar": {
+      "model": "CAMeL-Lab/bert-base-arabic-camelbert-mix-did-madar-corpus26",
+      "n_scored": 20,
+      "n_target_not_covered": 0,
+      "top1_agreement": 0.4,
+      "per_dialect": {
+        "Egypt": {
+          "n": 4,
+          "top1_agreement": 0.75
+        },
+        "Iraq": {
+          "n": 4,
+          "top1_agreement": 0.0
+        },
+        "Morocco": {
+          "n": 4,
+          "top1_agreement": 1.0
+        },
+        "Saudi_Arabia": {
+          "n": 4,
+          "top1_agreement": 0.25
+        },
+        "Syria": {
+          "n": 4,
+          "top1_agreement": 0.0
+        }
+      },
+      "predicted_distribution": {
+        "Egypt": 4,
+        "Morocco": 4,
+        "Jordan": 5,
+        "Saudi_Arabia": 3,
+        "Yemen": 2,
+        "Qatar": 1,
+        "Oman": 1
+      }
+    },
+    "aldi": {
+      "model": "VARabi/Sentence-ALDi",
+      "n": 20,
+      "mean": 0.6487,
+      "median": 0.6741,
+      "share_ge_0_5": 0.75,
+      "histogram_0.1_bins": {
+        "0.0": 1,
+        "0.1": 0,
+        "0.2": 2,
+        "0.3": 0,
+        "0.4": 2,
+        "0.5": 2,
+        "0.6": 5,
+        "0.7": 1,
+        "0.8": 4,
+        "0.9": 3
+      }
+    },
+    "kappa": {
+      "did_nadi_vs_did_madar": {
+        "n": 20,
+        "kappa": 0.3123
+      },
+      "did_nadi_vs_target": {
+        "n": 20,
+        "kappa": 0.4767
+      },
+      "did_madar_vs_target": {
+        "n": 20,
+        "kappa": 0.3258
+      }
+    }
+  },
+  "control_adherence": null
+}
