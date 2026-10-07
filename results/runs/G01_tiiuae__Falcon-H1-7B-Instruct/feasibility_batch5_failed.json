@@ -1,0 +1,56 @@
+{
+  "run_id": "G01",
+  "model": "tiiuae/Falcon-H1-7B-Instruct",
+  "n_requested": 20,
+  "batch_size": 5,
+  "max_new_tokens": 48,
+  "seed": 42,
+  "quantization": "nf4",
+  "git_commit": "5451ac6775e7e13ea01d9af80a90eab77727f62c",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "gpu": "NVIDIA GeForce RTX 3070",
+  "vram_before_load": {
+    "allocated": 0,
+    "reserved": 0,
+    "peak_allocated": 0,
+    "peak_reserved": 0,
+    "card_free": 7098,
+    "card_total": 8192
+  },
+  "status": "generation_failed",
+  "load_seconds": 87.7,
+  "model_revision": null,
+  "system_role_supported": true,
+  "vram_after_load": {
+    "allocated": 4903,
+    "reserved": 4992,
+    "peak_allocated": 4958,
+    "peak_reserved": 4992,
+    "card_free": 2080,
+    "card_total": 8192
+  },
+  "sampling": {
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 48,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "error": "RuntimeError: The expanded size of the tensor (49) must match the existing size (45) at non-singleton dimension 3.  Target sizes: [5, 12, 5, 49].  Tensor sizes: [5, 1, 1, 45]",
+  "traceback": "Traceback (most recent call last):\n  File \"F:\\Thesis\\code\\scripts\\check_generators.py\", line 112, in main\n    outs = gen.generate(messages, sampling, seed=args.seed + start)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\utils\\_contextlib.py\", line 124, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\src\\generation\\llm.py\", line 125, in generate\n    out = self.model.generate(\n          ^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\utils\\_contextlib.py\", line 124, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\generation\\utils.py\", line 2976, in generate\n    result = decoding_method(\n             ^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\generation\\utils.py\", line 3204, in _sample\n    outputs = model_forward(**model_inputs, return_dict=True)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1783, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1794, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\utils\\generic.py\", line 939, in wrapper\n    output = func(self, *args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\models\\falcon_h1\\modeling_falcon_h1.py\", line 1167, in forward\n    outputs = self.model(\n              ^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1783, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1794, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\utils\\generic.py\", line 1068, in wrapper\n    output = func(self, *args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\utils\\output_capturing.py\", line 287, in wrapper\n    outputs = func(self, *args, **kwargs)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\models\\falcon_h1\\modeling_falcon_h1.py\", line 1099, in forward\n    layer_outputs = decoder_layer(\n                    ^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\modeling_layers.py\", line 110, in __call__\n    return super().__call__(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1783, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1794, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\models\\falcon_h1\\modeling_falcon_h1.py\", line 932, in forward\n    attention_hidden_states, _ = self.self_attn(\n                                 ^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1783, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1794, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\models\\falcon_h1\\modeling_falcon_h1.py\", line 232, in forward\n    attn_output, attn_weights = attention_interface(\n                                ^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\Thesis\\code\\.venv\\Lib\\site-packages\\transformers\\integrations\\sdpa_attention.py\", line 158, in sdpa_attention_forward\n    attn_output = torch.nn.functional.scaled_dot_product_attention(\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: The expanded size of the tensor (49) must match the existing size (45) at non-singleton dimension 3.  Target sizes: [5, 12, 5, 49].  Tensor sizes: [5, 1, 1, 45]\n",
+  "n_generated": 0,
+  "generated_tokens": 0,
+  "generation_seconds": 0.0,
+  "tokens_per_second": null,
+  "vram_peak": {
+    "allocated": 4911,
+    "reserved": 6158,
+    "peak_allocated": 5911,
+    "peak_reserved": 6158,
+    "card_free": 616,
+    "card_total": 8192
+  },
+  "finished": "2026-10-07 01:54"
+}
