@@ -18,7 +18,7 @@ A held-out part of the LahjatBERT data would tell us how well a model copies GPT
    - Refs: NADI 2024 [1], Keleg et al. 2025 [2], LahjatBERT [3].
 
 2. **Our runs measure the gap directly.**
-   - R05–R07: the same model scores **~81 macro F1 on a held-out 10% of the LahjatBERT data**, but **71.34 ± 1.03 on the human-labelled MLADI dev set**.
+   - R03-marbert: the same model scores **~81 macro F1 on a held-out 10% of the LahjatBERT data**, but **71.34 ± 1.03 on the human-labelled MLADI dev set**.
    - So a held-out split would overstate quality by about 10 points, because it rewards agreeing with the automatic labeller, errors included.
 
 3. **The automatic labels are visibly noisy** (our statistics, `results/data_stats/nadi_lahjatbert_stats.json`):
@@ -106,7 +106,7 @@ Point for the report: measures from the first five rows can be computed **before
 - **Evaluation:** the leaderboard's exact settings reproduced locally; the metric code matches the official scorer exactly.
 - **Baseline (condition 1, real only):** MARBERT, 3 seeds, **71.34 ± 1.03** dev macro F1.
   - That is above LahjatBERT's published baseline (67.41) and level with their best published model (72.68).
-  - It uses the same recipe with a dropout bug fixed and macro-F1 checkpoint selection. R08 is testing which change explains the gain.
+  - It uses the same recipe with a dropout bug fixed and macro-F1 checkpoint selection. R04-marbert is testing which change explains the gain.
 - **Models chosen:** 3 generators + NLLB, 3 scorers, 3 classifiers (`progress.md`).
 - **Next:** generation (open and controlled), filtering and quality measures; baselines with MARBERTv2 and AraBERT-Twitter.
 

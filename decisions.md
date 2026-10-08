@@ -37,5 +37,7 @@ Each decision has a permanent ID (D-001, D-002, …) and a timestamp (local time
 
 ## D-006 — 2026-10-06 — Keep all-18 and zero-label texts (for now)
 - **Decision:** Keep D1 as it is: the 7,642 all-18 texts, the 2,271 zero-label texts and the 268 texts that became identical after cleaning all stay in. Diacritics are not stripped.
-- **Why:** The real-only baseline trained on D1 (R05–R07, 71.34 ± 1.03 dev macro F1) already beats LahjatBERT's baseline and matches their best model. Revisit later as an ablation.
-- **Update (R08):** With LahjatBERT's own settings, D1 gives 68.71 ± 0.35, in line with their baseline (67.41). So the gain in R05–R07 comes from the training settings, not from D1; what R08 does show is that D1 is not worse than their data, which still supports keeping it.
+- **Why:** The real-only baseline trained on D1 (R03-marbert, 71.34 ± 1.03 dev macro F1) already beats LahjatBERT's baseline and matches their best model. Revisit later as an ablation.
+- **Update (R04-marbert):** With LahjatBERT's own settings, D1 gives 68.71 ± 0.35, in line with their baseline (67.41). So the gain in R03-marbert comes from the training settings, not from D1; what R04-marbert does show is that D1 is not worse than their data, which still supports keeping it.
+- **Update (R05):** Removing the zero-label and all-18 texts (D2) lowers dev macro F1 for all four classifiers (MARBERT 71.34 → 69.25, AraBERTv02-Twitter 70.52 → 69.82, MARBERTv2 70.11 → 64.89, TF-IDF + LR 62.58 → 56.54), mostly through lower recall. Keep D1. D2 is also 17% smaller, so quantity and composition are not separated yet.
+- **Update (R06/R07):** Removing only the zero-label texts changes nothing (all models within 0.9 of R03); removing only the all-18 texts costs as much as removing both. The all-18 texts are the useful ones. Keep D1.

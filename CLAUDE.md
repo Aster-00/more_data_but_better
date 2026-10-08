@@ -68,6 +68,7 @@ The supervisor's standing question is "more data vs better data", so every exper
 - All three conditions must share the same classifier, hyperparameter budget, splits and metrics. If something differs between conditions, call it out.
 - Report multi-label metrics, macro-averaged at minimum, with per-dialect breakdowns.
 - Run multiple seeds and report mean and spread. A single-seed difference is not a result.
+- befre running any model or long task tell me an estimate of how long it will take
 
 **Reproducibility**
 - Record every run in `progress.md`: what was used, what changed from the previous run, the results, and an explanation. Copy numbers from the logged files only.

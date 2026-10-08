@@ -12,7 +12,7 @@ Outputs in results/runs/<run_id>_<model>/:
 
 Usage:
   python scripts/check_generators.py --run-id G01 --model QCRI/Fanar-1-9B-Instruct
-  python scripts/check_generators.py --run-id G02 --model google/gemma-2-9b-it --n 20
+  python scripts/check_generators.py --run-id G01 --model google/gemma-2-9b-it --n 20
 """
 from __future__ import annotations
 
