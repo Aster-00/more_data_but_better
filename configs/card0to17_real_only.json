@@ -1,0 +1,21 @@
+{
+  "run_name": "card0to17_real_only_seed42",
+  "condition": "real_only",
+  "data": "data/processed/nadi_lahjatbert_card0to17.jsonl",
+  "text_field": "text",
+  "model": "UBC-NLP/MARBERT",
+  "seed": 42,
+  "val_fraction": 0.1,
+  "max_length": 128,
+  "batch_size": 24,
+  "epochs": 2,
+  "learning_rate": 5e-5,
+  "warmup_steps": 500,
+  "weight_decay": 0.01,
+  "dropout": 0.3,
+  "freeze_layers": 8,
+  "threshold": 0.3,
+  "fp16": true,
+  "patience": 2,
+  "limit": null
+}
