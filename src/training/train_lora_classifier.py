@@ -79,9 +79,11 @@ def batches(texts: list[str], labels: np.ndarray, batch_size: int, shuffle: bool
         yield [texts[i] for i in idx], labels[idx]
 
 
-def scores_on(model, tokenizer, texts: list[str], gold: np.ndarray, threshold: float) -> dict:
+def scores_on(model, tokenizer, texts: list[str], gold: np.ndarray, threshold: float,
+              eval_batch_size: int) -> dict:
     """Macro/micro scores over all 18 dialects (validation split)."""
-    probs = predict_probabilities(model, tokenizer, texts, "cuda", batch_size=32)
+    with torch.autocast("cuda", dtype=torch.bfloat16):
+        probs = predict_probabilities(model, tokenizer, texts, "cuda", batch_size=eval_batch_size)
     decisions = (probs >= threshold).astype(int)
     gold = gold.astype(int)
     return multilabel_scores({d: gold[:, i].tolist() for i, d in enumerate(DIALECTS)},
@@ -148,7 +150,7 @@ def train(cfg: dict) -> dict:
                       flush=True)
 
         # Validation macro F1 picks the epoch, as in train_classifier.py.
-        scores = scores_on(model, tokenizer, val_texts, val_labels, cfg["threshold"])
+        scores = scores_on(model, tokenizer, val_texts, val_labels, cfg["threshold"], cfg["eval_batch_size"])
         f1 = scores["macro"]["f1"]
         log["epochs"].append({"epoch": epoch, "train_loss": running_loss / micro_per_epoch,
                               "val_macro_f1": f1, "val_micro_f1": scores["micro_f1"],
@@ -183,7 +185,7 @@ def evaluate_saved(cfg: dict, threshold: float) -> dict:
     model = PeftModel.from_pretrained(load_base(cfg["model"], tokenizer.pad_token_id), model_dir)
     texts, gold = read_dev(Path("MLADI/dev/NADI2024_subtask1_dev2.tsv"))
     with torch.autocast("cuda", dtype=torch.bfloat16):
-        probs = predict_probabilities(model, tokenizer, texts, "cuda", batch_size=32)
+        probs = predict_probabilities(model, tokenizer, texts, "cuda", batch_size=cfg["eval_batch_size"])
     decisions = (probs >= threshold).astype(int)
     pred = {d: decisions[:, DIALECTS.index(d)].tolist() for d in gold}
     return multilabel_scores(gold, pred)
