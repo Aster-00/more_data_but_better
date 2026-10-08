@@ -13,6 +13,10 @@ once at the end). What differs, because a 7-9B model does not fit 8 GB of VRAM o
 Supported: architectures with an AutoModelForSequenceClassification class (Qwen3, Gemma-2 /
 Fanar). Jais-2, Falcon-H1 and Cohere/Aya have none in transformers 5.18.
 
+Runs are resumable: every `checkpoint_minutes` (default 30) and after each epoch the adapter,
+optimizer, scheduler, progress and RNG states are written to results/runs/<run_name>/checkpoint.pt.
+Starting the same command again continues from there; the file is deleted when the run finishes.
+
 Outputs in results/runs/<run_name>/:
   model/            LoRA adapter + classification head + tokenizer (gitignored)
   train_log.json    config, seed, git commit, data hash, per-epoch validation scores, dev scores
@@ -26,14 +30,17 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import os
 import platform
+import random
 import sys
 import time
 from pathlib import Path
 
 import numpy as np
 import torch
-from peft import LoraConfig, PeftModel, TaskType, get_peft_model, prepare_model_for_kbit_training
+from peft import (LoraConfig, PeftModel, TaskType, get_peft_model, get_peft_model_state_dict,
+                  prepare_model_for_kbit_training, set_peft_model_state_dict)
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer, BitsAndBytesConfig,
                           get_linear_schedule_with_warmup)
 
@@ -90,6 +97,35 @@ def scores_on(model, tokenizer, texts: list[str], gold: np.ndarray, threshold: f
                              {d: decisions[:, i].tolist() for i, d in enumerate(DIALECTS)})
 
 
+def save_checkpoint(path: Path, cfg: dict, model, optimizer, scheduler, state: dict) -> None:
+    """Write adapter, optimizer, scheduler, progress and RNG states; atomic (temp file + rename)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"cfg": cfg, "state": state,
+               "adapter": get_peft_model_state_dict(model),
+               "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
+               "rng": {"python": random.getstate(), "numpy": np.random.get_state(),
+                       "torch": torch.get_rng_state(), "cuda": torch.cuda.get_rng_state_all()}}
+    tmp = path.with_suffix(".tmp")
+    torch.save(payload, tmp)
+    os.replace(tmp, path)
+
+
+def load_checkpoint(path: Path, cfg: dict, model, optimizer, scheduler) -> dict:
+    """Restore a checkpoint written by save_checkpoint; refuse one made with a different config."""
+    payload = torch.load(path, map_location="cpu", weights_only=False)
+    if payload["cfg"] != cfg:
+        sys.exit(f"{path} was written with a different config; delete it to start over.")
+    set_peft_model_state_dict(model, payload["adapter"])
+    optimizer.load_state_dict(payload["optimizer"])
+    scheduler.load_state_dict(payload["scheduler"])
+    rng = payload["rng"]
+    random.setstate(rng["python"])
+    np.random.set_state(rng["numpy"])
+    torch.set_rng_state(rng["torch"])
+    torch.cuda.set_rng_state_all(rng["cuda"])
+    return payload["state"]
+
+
 def train(cfg: dict) -> dict:
     """QLoRA training with epoch selection on validation macro F1; saves the best adapter."""
     set_seed(cfg["seed"])
@@ -121,14 +157,32 @@ def train(cfg: dict) -> dict:
 
     log = {"config": cfg, "device": "cuda", "n_train": len(train_texts), "n_val": len(val_texts),
            "trainable_parameters": n_trainable, "epochs": []}
-    best_f1, epochs_without_gain = -1.0, 0
-    for epoch in range(1, cfg["epochs"] + 1):
+    state = {"epoch": 1, "step": 0, "running_loss": 0.0, "seconds": 0.0, "log": log,
+             "best_f1": -1.0, "epochs_without_gain": 0}
+
+    # Resume from the last periodic checkpoint if one exists (e.g. the process was killed).
+    ckpt_path = model_dir.parent / "checkpoint.pt"
+    if ckpt_path.exists():
+        state = load_checkpoint(ckpt_path, cfg, model, optimizer, scheduler)
+        log = state["log"]
+        print(f"resumed from checkpoint: epoch {state['epoch']} step {state['step']}", flush=True)
+    best_f1, epochs_without_gain = state["best_f1"], state["epochs_without_gain"]
+    every = cfg.get("checkpoint_minutes", 30) * 60
+
+    for epoch in range(state["epoch"], cfg["epochs"] + 1):
         # One pass over the training data; the seed + epoch fixes the shuffling order.
         model.train()
-        start, running_loss = time.time(), 0.0
+        resumed = epoch == state["epoch"]
+        start_step = state["step"] if resumed else 0
+        running_loss = state["running_loss"] if resumed else 0.0
+        seconds_before = state["seconds"] if resumed else 0.0
+        start = last_ckpt = time.time()
         optimizer.zero_grad(set_to_none=True)
         for step, (bt, by) in enumerate(batches(train_texts, train_labels, cfg["micro_batch_size"],
                                                 True, cfg["seed"] + epoch), 1):
+            # Batches already trained before the checkpoint are skipped (same order, same seed).
+            if step <= start_step:
+                continue
             enc = tokenizer(bt, truncation=True, padding=True, max_length=cfg["max_length"],
                             return_tensors="pt").to("cuda")
             with torch.autocast("cuda", dtype=torch.bfloat16):
@@ -143,22 +197,34 @@ def train(cfg: dict) -> dict:
                 optimizer.step()
                 scheduler.step()
                 optimizer.zero_grad(set_to_none=True)
+                # Periodic checkpoint, only right after an optimizer step (no half-accumulated gradients).
+                if time.time() - last_ckpt >= every:
+                    save_checkpoint(ckpt_path, cfg, model, optimizer, scheduler, {
+                        "epoch": epoch, "step": step, "running_loss": running_loss,
+                        "seconds": seconds_before + time.time() - start, "log": log,
+                        "best_f1": best_f1, "epochs_without_gain": epochs_without_gain})
+                    last_ckpt = time.time()
+                    print(f"  checkpoint saved at epoch {epoch} step {step}", flush=True)
             if step % 200 == 0:
-                elapsed = time.time() - start
+                done = step - start_step
+                rate = (time.time() - start) / done
                 print(f"  epoch {epoch} step {step}/{micro_per_epoch} loss {running_loss / step:.4f} "
-                      f"{elapsed / step:.2f} s/step, epoch eta {elapsed / step * (micro_per_epoch - step) / 60:.0f} min",
+                      f"{rate:.2f} s/step, epoch eta {rate * (micro_per_epoch - step) / 60:.0f} min",
                       flush=True)
 
         # Validation macro F1 picks the epoch, as in train_classifier.py.
         scores = scores_on(model, tokenizer, val_texts, val_labels, cfg["threshold"], cfg["eval_batch_size"])
         f1 = scores["macro"]["f1"]
+        epoch_seconds = seconds_before + time.time() - start
         log["epochs"].append({"epoch": epoch, "train_loss": running_loss / micro_per_epoch,
                               "val_macro_f1": f1, "val_micro_f1": scores["micro_f1"],
-                              "val_macro": scores["macro"], "seconds": round(time.time() - start)})
+                              "val_macro": scores["macro"], "seconds": round(epoch_seconds),
+                              "resumed_at_step": start_step or None})
         print(f"epoch {epoch}: train loss {running_loss / micro_per_epoch:.4f}  val macro F1 {f1:.2f}  "
-              f"micro F1 {scores['micro_f1']:.2f}  ({(time.time() - start) / 60:.1f} min)", flush=True)
+              f"micro F1 {scores['micro_f1']:.2f}  ({epoch_seconds / 60:.1f} min)", flush=True)
 
         # Keep the best adapter on disk; stop after `patience` epochs without improvement.
+        stop = False
         if f1 > best_f1:
             best_f1, epochs_without_gain = f1, 0
             model.save_pretrained(model_dir)
@@ -166,9 +232,16 @@ def train(cfg: dict) -> dict:
             log["best_epoch"] = epoch
         else:
             epochs_without_gain += 1
-            if epochs_without_gain >= cfg["patience"]:
-                print("early stopping")
-                break
+            stop = epochs_without_gain >= cfg["patience"]
+        # End-of-epoch checkpoint: a resume starts the next epoch without redoing validation.
+        save_checkpoint(ckpt_path, cfg, model, optimizer, scheduler, {
+            "epoch": epoch + 1, "step": 0, "running_loss": 0.0, "seconds": 0.0, "log": log,
+            "best_f1": best_f1, "epochs_without_gain": epochs_without_gain})
+        if stop:
+            print("early stopping")
+            break
+    # The run finished: the checkpoint (~0.5 GB) is no longer needed.
+    ckpt_path.unlink(missing_ok=True)
     log["selection_metric"] = "macro"
     log["best_val_selection_score"] = best_f1
     log["peak_vram_mib"] = round(torch.cuda.max_memory_reserved() / 2**20)

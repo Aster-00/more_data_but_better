@@ -44,6 +44,16 @@ Numbers are copied from `results/tables/dev_summary.md`, which `python -m src.ev
 
 Per-dialect F1 for every run: `results/tables/dev_summary.md`.
 
+### T: MLADI test set (leaderboard, 1,000 sentences, 11 dialects)
+
+Scores copied from the public leaderboard into `results/leaderboard.jsonl`. Metrics are macro-averaged over the 11 test dialects. Models are submitted only after being chosen on dev (best dev seed per model); every submission is listed here, good or bad.
+
+| ID | Hub repo (commit) | From run | Dev macro F1 | **Test macro F1** | Test P | Test R | Test accuracy | Rank when read |
+|---|---|---|---|---|---|---|---|---|
+| T01 | `Ammar-06/mladi-marbertv2-r03` (`48fc50e`) | R03-marbertv2, seed 44 | 70.70 | **67.71** | 63.58 | 75.36 | 77.14 | 3 |
+| T02 | `Ammar-06/mladi-arabertv02-twitter-r03` (`bce9290`) | R03-arabertv02_twitter, seed 43 | 70.83 | TODO (uploaded, not yet scored) | | | | |
+
+
 ### G01: generator feasibility, 4-bit NF4, 20 sentences, minimal prompt (2026-10-06 / 07)
 
 Script `scripts/check_generators.py`: 4 sentences each for Egypt, Morocco, Syria, Saudi_Arabia, Iraq; one English instruction naming the dialect; temperature 0.9, top-p 0.95, top-k 50, max 48 new tokens, seed 42. Not scored by a model yet; the counts below are from `samples.jsonl` (regex counts, not judgments).
