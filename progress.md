@@ -46,12 +46,28 @@ Per-dialect F1 for every run: `results/tables/dev_summary.md`.
 
 ### T: MLADI test set (leaderboard, 1,000 sentences, 11 dialects)
 
-Scores copied from the public leaderboard into `results/leaderboard.jsonl`. Metrics are macro-averaged over the 11 test dialects. Models are submitted only after being chosen on dev (best dev seed per model); every submission is listed here, good or bad.
+Test scores copied from the public leaderboard into `results/leaderboard.jsonl` (raw export: `results/leaderboard/2026-10-08T15-39_export.csv`); validation and dev scores from each run's `train_log.json` (validation = 10% held-out split of D1 at the chosen epoch). All scores are macro-averaged over the split's dialects. Models are submitted only after being chosen on dev (best dev seed per model); every submission is listed here, good or bad.
 
-| ID | Hub repo (commit) | From run | Dev macro F1 | **Test macro F1** | Test P | Test R | Test accuracy | Rank when read |
+| Model | Split | Labels | Dialects | Sentences | F1 | Precision | Recall | Accuracy |
 |---|---|---|---|---|---|---|---|---|
-| T01 | `Ammar-06/mladi-marbertv2-r03` (`48fc50e`) | R03-marbertv2, seed 44 | 70.70 | **67.71** | 63.58 | 75.36 | 77.14 | 3 |
-| T02 | `Ammar-06/mladi-arabertv02-twitter-r03` (`bce9290`) | R03-arabertv02_twitter, seed 43 | 70.83 | TODO (uploaded, not yet scored) | | | | |
+| MARBERTv2 | validation | automatic (LahjatBERT) | 18 | 5,838 | 80.67 | 73.10 | **90.10** | — |
+| | dev | human | 8 | 120 | 70.70 | 72.06 | 71.57 | — |
+| | **test (T01)** | human | 11 | 1,000 | **67.71** | **63.58** | 75.36 | 77.14 |
+| AraBERTv02-Twitter | validation | automatic | 18 | 5,838 | 79.13 | 69.99 | **91.29** | — |
+| | dev | human | 8 | 120 | 70.83 | 69.69 | 75.32 | — |
+| | **test (T02)** | human | 11 | 1,000 | **67.31** | **61.86** | 77.65 | 76.04 |
+
+Submissions:
+- **T01:** `Ammar-06/mladi-marbertv2-r03`, commit `48fc50e`, from R03-marbertv2 seed 44, `predict_binary_outcomes`. Rank 3 when read (2026-10-08).
+- **T02:** `Ammar-06/mladi-arabertv02-twitter-r03`, commit `bce9290`, from R03-arabertv02_twitter seed 43, `predict_binary_outcomes`. Rank 4 when read (2026-10-08).
+
+**T01/T02 notes.**
+- MARBERTv2 (67.71) and AraBERTv02-Twitter (67.31) are 0.4 apart on test with one submission each: within noise, so the test set does not rank the two.
+- F1 falls about 10 points from validation to dev and 3 more to test. The validation split shares its labelling scheme and source with the training data, so it overstates performance on human labels; use it for epoch selection only.
+- **Recall** falls most from validation to dev (90–91 → 72–75): the models reproduce the automatic labels' multi-dialect pattern well but miss human-valid dialects. It is similar on dev and test.
+- **Precision** holds from validation to dev (≈70–73) and drops only on test (62–64). Possible reasons, untested: the three test-only dialects (Iraq, Morocco, Saudi_Arabia), and a different mix of single- vs multi-dialect sentences in the test set. The leaderboard gives only macro scores, so per-dialect test numbers are not available to check.
+- On test both models mark too many dialects per sentence (recall 75–78 vs precision 62–64). The leaderboard fixes the threshold at 0.3, so a stricter cutoff would have to be built into the model: through training, or by lowering the output-layer bias, which acts like a higher threshold (any such shift must be chosen on dev, not test).
+- The rows are not strictly comparable: different dialect sets, label sources and sizes. Macro F1 is averaged per dialect, so it is not the harmonic mean of the macro P and R shown.
 
 
 ### G01: generator feasibility, 4-bit NF4, 20 sentences, minimal prompt (2026-10-06 / 07)
