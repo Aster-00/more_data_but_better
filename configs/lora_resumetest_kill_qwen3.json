@@ -1,9 +1,9 @@
 {
-  "run_name": "lora_real_only_fanar_seed42",
+  "run_name": "lora_resumetest_kill_qwen3_seed42",
   "condition": "real_only",
   "data": "data/processed/nadi_lahjatbert.jsonl",
   "text_field": "text",
-  "model": "QCRI/Fanar-1-9B-Instruct",
+  "model": "Qwen/Qwen3-8B",
   "seed": 42,
   "val_fraction": 0.1,
   "max_length": 128,
@@ -29,5 +29,5 @@
   "threshold": 0.3,
   "patience": 2,
   "limit": null,
-  "checkpoint_minutes": 30
+  "checkpoint_minutes": 1
 }
