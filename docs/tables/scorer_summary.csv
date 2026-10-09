@@ -1,0 +1,4 @@
+id,data,scorer,top1_macro_f1,top1_macro_p,top1_macro_r,mass03_macro_f1,mass03_macro_p,mass03_macro_r,top1_in_gold,unscorable,spearman_rho,p_value,git_commit,file
+S01,"MLADI dev (120, 8 dialects)",CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi,22.773794876105903,79.61525189786059,15.095598667943454,23.778464685056196,86.58449792960661,15.630962039526427,48/59 = 81.36%,61,,,3f39088,S01.json
+S01,"MLADI dev (120, 8 dialects)",CAMeL-Lab/bert-base-arabic-camelbert-mix-did-madar-corpus26,19.067115782980554,59.028361344537814,12.794598929610675,19.070029336850816,52.814992025518336,13.02970802341542,41/65 = 63.08%,55,,,3f39088,S01.json
+S01,"MLADI dev (120, 8 dialects)",VARabi/Sentence-ALDi,,,,,,,,,-0.4424,4.2e-07,3f39088,S01.json

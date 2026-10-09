@@ -1,0 +1,64 @@
+run,id,origin,split,folder,seeds,seed_f1,macro_f1,macro_f1_std,macro_precision,macro_precision_std,macro_recall,macro_recall_std,micro_f1,micro_f1_std,f1_Algeria,f1_Egypt,f1_Jordan,f1_Palestine,f1_Sudan,f1_Syria,f1_Tunisia,f1_Yemen,source
+R01,R01-lahjatbert_cl_cardinality,"external: published checkpoint, scored only (no training code or data)",train,Mohamedelzeftawy__LahjatBERT_cl_cardinality,0,,,,,,,,,,,,,,,,,,
+R01,R01-lahjatbert_cl_cardinality,"external: published checkpoint, scored only (no training code or data)",dev,Mohamedelzeftawy__LahjatBERT_cl_cardinality,1,72.68,72.68,0.0,68.98,0.0,80.64,0.0,73.07,0.0,59.26,83.72,71.21,71.05,69.77,66.1,77.27,83.08,"MLADI dev (120 sentences, 8 dialects)"
+R01,R01-lahjatbert_cl_cardinality,"external: published checkpoint, scored only (no training code or data)",test,Mohamedelzeftawy__LahjatBERT_cl_cardinality,0,,,,,,,,,,,,,,,,,,
+R01,R01-lahjatbert_cl_aldi,"external: published checkpoint, scored only (no training code or data)",train,Mohamedelzeftawy__LahjatBERT_cl_aldi,0,,,,,,,,,,,,,,,,,,
+R01,R01-lahjatbert_cl_aldi,"external: published checkpoint, scored only (no training code or data)",dev,Mohamedelzeftawy__LahjatBERT_cl_aldi,1,70.27,70.27,0.0,71.35,0.0,71.32,0.0,70.93,0.0,58.18,83.72,67.92,69.57,75.95,69.9,65.22,71.7,"MLADI dev (120 sentences, 8 dialects)"
+R01,R01-lahjatbert_cl_aldi,"external: published checkpoint, scored only (no training code or data)",test,Mohamedelzeftawy__LahjatBERT_cl_aldi,0,,,,,,,,,,,,,,,,,,
+R01,R01-lahjatbert_baseline,"external: published checkpoint, scored only (no training code or data)",train,Mohamedelzeftawy__LahjatBERT_baseline,0,,,,,,,,,,,,,,,,,,
+R01,R01-lahjatbert_baseline,"external: published checkpoint, scored only (no training code or data)",dev,Mohamedelzeftawy__LahjatBERT_baseline,1,67.41,67.41,0.0,73.66,0.0,63.66,0.0,67.86,0.0,55.56,86.08,65.35,65.6,69.57,63.92,63.41,69.81,"MLADI dev (120 sentences, 8 dialects)"
+R01,R01-lahjatbert_baseline,"external: published checkpoint, scored only (no training code or data)",test,Mohamedelzeftawy__LahjatBERT_baseline,0,,,,,,,,,,,,,,,,,,
+R03,R03-marbert,ours,train,baseline_real_only,3,81.52 / 81.52 / 81.28,81.44,0.14,73.95,0.61,90.72,0.64,81.52,0.15,,,,,,,,,"validation split of the training data, best epoch"
+R03,R03-marbert,ours,dev,baseline_real_only,3,70.65 / 72.52 / 70.84,71.34,1.03,71.67,2.54,72.98,0.4,71.54,0.76,62.01,86.4,67.08,72.34,72.15,68.41,71.01,71.3,"MLADI dev (120 sentences, 8 dialects)"
+R03,R03-marbert,ours,test,baseline_real_only,0,,,,,,,,,,,,,,,,,,
+R03,R03-arabertv02_twitter,ours,train,baseline_real_only_arabertv02_twitter,3,79.19 / 79.13 / 77.61,78.65,0.89,69.04,1.63,91.61,0.52,78.69,0.95,,,,,,,,,"validation split of the training data, best epoch"
+R03,R03-arabertv02_twitter,ours,dev,baseline_real_only_arabertv02_twitter,3,70.80 / 70.83 / 69.92,70.52,0.52,69.15,1.34,75.12,0.3,71.99,0.66,57.61,78.66,70.86,76.04,70.5,68.04,66.18,76.25,"MLADI dev (120 sentences, 8 dialects)"
+R03,R03-arabertv02_twitter,ours,test,baseline_real_only_arabertv02_twitter,1,67.31,67.31,0.0,61.86,0.0,77.65,0.0,,,,,,,,,,,MLADI leaderboard (11 dialects): T02 baseline_real_only_arabertv02_twitter_seed43
+R03,R03-marbertv2,ours,train,baseline_real_only_marbertv2,3,81.05 / 81.14 / 80.67,80.95,0.25,73.4,0.39,90.35,0.38,81.0,0.3,,,,,,,,,"validation split of the training data, best epoch"
+R03,R03-marbertv2,ours,dev,baseline_real_only_marbertv2,3,70.00 / 69.62 / 70.70,70.11,0.55,70.94,1.15,71.62,0.9,69.81,0.32,69.4,80.16,67.47,70.25,63.31,69.21,73.98,67.07,"MLADI dev (120 sentences, 8 dialects)"
+R03,R03-marbertv2,ours,test,baseline_real_only_marbertv2,1,67.71,67.71,0.0,63.58,0.0,75.36,0.0,,,,,,,,,,,MLADI leaderboard (11 dialects): T01 baseline_real_only_marbertv2_seed44
+R03,R03-tfidf_lr,ours,train,baseline_real_only_tfidf_lr,3,75.98 / 76.43 / 75.26,75.89,0.59,67.65,0.69,86.6,0.47,76.1,0.59,,,,,,,,,"validation split of the training data, best epoch"
+R03,R03-tfidf_lr,ours,dev,baseline_real_only_tfidf_lr,3,62.52 / 62.59 / 62.62,62.58,0.05,65.83,1.27,62.28,0.54,63.91,0.07,46.94,78.69,60.42,66.2,53.76,63.61,61.7,69.29,"MLADI dev (120 sentences, 8 dialects)"
+R03,R03-tfidf_lr,ours,test,baseline_real_only_tfidf_lr,0,,,,,,,,,,,,,,,,,,
+R04,R04-marbert,ours,train,repro_lahjatbert_baseline,3,82.84 / 82.80 / 82.91,82.85,0.06,78.3,0.19,88.0,0.23,82.94,0.08,,,,,,,,,"validation split of the training data, best epoch"
+R04,R04-marbert,ours,dev,repro_lahjatbert_baseline,3,69.00 / 68.81 / 68.32,68.71,0.35,74.89,1.48,65.49,0.59,69.12,0.35,54.77,87.21,64.5,69.81,67.92,65.53,69.99,69.98,"MLADI dev (120 sentences, 8 dialects)"
+R04,R04-marbert,ours,test,repro_lahjatbert_baseline,0,,,,,,,,,,,,,,,,,,
+R05,R05-arabertv02_twitter,ours,train,card1to17_real_only_arabertv02_twitter,3,71.57 / 71.31 / 70.65,71.18,0.48,60.71,0.4,86.59,0.66,71.92,0.37,,,,,,,,,"validation split of the training data, best epoch"
+R05,R05-arabertv02_twitter,ours,dev,card1to17_real_only_arabertv02_twitter,3,69.47 / 70.58 / 69.43,69.82,0.65,69.6,0.61,73.8,1.54,71.89,0.69,56.05,78.82,72.52,76.2,69.72,67.05,61.05,77.19,"MLADI dev (120 sentences, 8 dialects)"
+R05,R05-arabertv02_twitter,ours,test,card1to17_real_only_arabertv02_twitter,0,,,,,,,,,,,,,,,,,,
+R05,R05-marbert,ours,train,card1to17_real_only,3,73.90 / 74.22 / 74.16,74.09,0.17,65.75,0.82,85.05,1.0,75.04,0.34,,,,,,,,,"validation split of the training data, best epoch"
+R05,R05-marbert,ours,dev,card1to17_real_only,3,69.81 / 68.72 / 69.20,69.25,0.54,72.53,0.56,68.4,1.39,70.53,0.62,54.08,85.36,68.54,71.72,73.31,71.61,60.24,69.12,"MLADI dev (120 sentences, 8 dialects)"
+R05,R05-marbert,ours,test,card1to17_real_only,0,,,,,,,,,,,,,,,,,,
+R05,R05-marbertv2,ours,train,card1to17_real_only_marbertv2,3,73.11 / 73.53 / 73.68,73.44,0.29,65.53,0.95,83.78,1.02,74.44,0.35,,,,,,,,,"validation split of the training data, best epoch"
+R05,R05-marbertv2,ours,dev,card1to17_real_only_marbertv2,3,64.47 / 66.49 / 63.71,64.89,1.44,69.07,0.51,64.27,2.45,66.33,1.34,52.28,79.04,64.37,69.97,56.5,67.29,61.98,67.7,"MLADI dev (120 sentences, 8 dialects)"
+R05,R05-marbertv2,ours,test,card1to17_real_only_marbertv2,0,,,,,,,,,,,,,,,,,,
+R05,R05-tfidf_lr,ours,train,card1to17_real_only_tfidf_lr,3,66.67 / 67.47 / 66.47,66.87,0.53,61.25,0.77,75.63,0.57,68.39,0.51,,,,,,,,,"validation split of the training data, best epoch"
+R05,R05-tfidf_lr,ours,dev,card1to17_real_only_tfidf_lr,3,56.14 / 56.00 / 57.49,56.54,0.82,65.95,0.44,53.43,0.63,59.64,0.74,27.96,76.8,58.38,64.03,46.16,60.21,52.59,66.22,"MLADI dev (120 sentences, 8 dialects)"
+R05,R05-tfidf_lr,ours,test,card1to17_real_only_tfidf_lr,0,,,,,,,,,,,,,,,,,,
+R06,R06-arabertv02_twitter,ours,train,card0to17_real_only_arabertv02_twitter,3,69.77 / 69.00 / 69.69,69.49,0.42,58.67,0.87,85.88,0.82,70.2,0.32,,,,,,,,,"validation split of the training data, best epoch"
+R06,R06-arabertv02_twitter,ours,dev,card0to17_real_only_arabertv02_twitter,3,69.46 / 69.75 / 68.60,69.27,0.6,68.82,0.58,73.13,0.72,71.02,0.53,55.68,78.03,71.43,74.22,69.98,66.08,62.22,76.53,"MLADI dev (120 sentences, 8 dialects)"
+R06,R06-arabertv02_twitter,ours,test,card0to17_real_only_arabertv02_twitter,0,,,,,,,,,,,,,,,,,,
+R06,R06-marbert,ours,train,card0to17_real_only,3,72.01 / 71.76 / 73.06,72.28,0.69,63.12,0.75,84.75,1.32,73.12,0.69,,,,,,,,,"validation split of the training data, best epoch"
+R06,R06-marbert,ours,dev,card0to17_real_only,3,66.28 / 68.40 / 66.64,67.11,1.13,69.68,1.46,67.36,0.87,68.71,0.74,51.94,82.45,66.66,70.95,71.06,66.25,56.94,70.6,"MLADI dev (120 sentences, 8 dialects)"
+R06,R06-marbert,ours,test,card0to17_real_only,0,,,,,,,,,,,,,,,,,,
+R06,R06-marbertv2,ours,train,card0to17_real_only_marbertv2,3,71.41 / 71.50 / 72.02,71.64,0.33,62.58,0.24,84.08,1.16,72.51,0.34,,,,,,,,,"validation split of the training data, best epoch"
+R06,R06-marbertv2,ours,dev,card0to17_real_only_marbertv2,3,66.80 / 67.16 / 64.91,66.29,1.21,69.29,1.01,66.6,1.49,67.5,1.13,52.22,78.71,67.07,69.16,62.72,68.35,64.05,68.05,"MLADI dev (120 sentences, 8 dialects)"
+R06,R06-marbertv2,ours,test,card0to17_real_only_marbertv2,0,,,,,,,,,,,,,,,,,,
+R06,R06-tfidf_lr,ours,train,card0to17_real_only_tfidf_lr,3,65.62 / 64.68 / 65.58,65.29,0.53,60.91,0.66,72.48,0.62,66.93,0.46,,,,,,,,,"validation split of the training data, best epoch"
+R06,R06-tfidf_lr,ours,dev,card0to17_real_only_tfidf_lr,3,55.80 / 57.00 / 56.00,56.27,0.64,68.02,0.94,51.77,1.0,59.11,0.65,27.54,74.38,56.3,62.02,45.74,60.13,55.28,68.75,"MLADI dev (120 sentences, 8 dialects)"
+R06,R06-tfidf_lr,ours,test,card0to17_real_only_tfidf_lr,0,,,,,,,,,,,,,,,,,,
+R07,R07-marbert,ours,train,card1to18_real_only,3,82.43 / 82.33 / 82.45,82.4,0.07,75.16,0.23,91.29,0.51,82.47,0.07,,,,,,,,,"validation split of the training data, best epoch"
+R07,R07-marbert,ours,dev,card1to18_real_only,3,72.96 / 72.09 / 71.46,72.17,0.75,72.02,2.11,74.05,0.74,71.94,0.73,65.08,85.09,67.28,70.19,74.57,69.64,73.94,71.59,"MLADI dev (120 sentences, 8 dialects)"
+R07,R07-marbert,ours,test,card1to18_real_only,0,,,,,,,,,,,,,,,,,,
+R07,R07-arabertv02_twitter,ours,train,card1to18_real_only_arabertv02_twitter,3,80.01 / 79.73 / 79.88,79.87,0.14,70.44,0.35,92.45,0.24,79.88,0.15,,,,,,,,,"validation split of the training data, best epoch"
+R07,R07-arabertv02_twitter,ours,dev,card1to18_real_only_arabertv02_twitter,3,70.61 / 70.31 / 71.32,70.74,0.52,69.35,0.45,75.34,0.98,71.83,0.45,60.12,78.39,71.8,74.34,69.7,66.49,68.24,76.88,"MLADI dev (120 sentences, 8 dialects)"
+R07,R07-arabertv02_twitter,ours,test,card1to18_real_only_arabertv02_twitter,0,,,,,,,,,,,,,,,,,,
+R07,R07-marbertv2,ours,train,card1to18_real_only_marbertv2,3,81.88 / 81.60 / 82.33,81.94,0.37,75.1,0.56,90.28,0.25,82.0,0.32,,,,,,,,,"validation split of the training data, best epoch"
+R07,R07-marbertv2,ours,dev,card1to18_real_only_marbertv2,3,69.51 / 69.41 / 70.43,69.79,0.56,70.38,1.08,71.52,0.83,69.94,0.53,67.36,80.96,68.29,70.58,62.0,70.93,70.93,67.24,"MLADI dev (120 sentences, 8 dialects)"
+R07,R07-marbertv2,ours,test,card1to18_real_only_marbertv2,0,,,,,,,,,,,,,,,,,,
+R07,R07-tfidf_lr,ours,train,card1to18_real_only_tfidf_lr,3,76.30 / 76.54 / 76.65,76.5,0.18,68.05,0.44,87.55,0.3,76.73,0.12,,,,,,,,,"validation split of the training data, best epoch"
+R07,R07-tfidf_lr,ours,dev,card1to18_real_only_tfidf_lr,3,63.81 / 61.86 / 62.41,62.7,1.0,64.13,1.09,63.49,0.95,63.95,0.83,48.0,75.59,61.03,66.02,56.55,64.84,60.81,68.71,"MLADI dev (120 sentences, 8 dialects)"
+R07,R07-tfidf_lr,ours,test,card1to18_real_only_tfidf_lr,0,,,,,,,,,,,,,,,,,,
+R08,R08-qwen3,ours,train,lora_real_only_qwen3,1,80.05,80.05,0.0,75.21,0.0,85.6,0.0,80.23,0.0,,,,,,,,,"validation split of the training data, best epoch"
+R08,R08-qwen3,ours,dev,lora_real_only_qwen3,1,65.15,65.15,0.0,73.48,0.0,61.2,0.0,65.28,0.0,52.0,86.08,62.86,66.67,58.46,56.0,71.79,67.31,"MLADI dev (120 sentences, 8 dialects)"
+R08,R08-qwen3,ours,test,lora_real_only_qwen3,0,,,,,,,,,,,,,,,,,,

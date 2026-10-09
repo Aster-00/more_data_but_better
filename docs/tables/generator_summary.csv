@@ -1,0 +1,7 @@
+id,model,status,batch_size,peak_vram_reserved_mib,load_seconds,tokens_per_second,n_generated,max_new_tokens,hit_token_cap,foreign_script,presentation_forms,temperature,top_p,top_k,seed,git_commit,finished,folder
+G01-fanar,QCRI/Fanar-1-9B-Instruct,ok,5,5284,119.3,52.68,20,48,14,0,0,0.9,0.95,50,42,6df4ec0,2026-10-06 20:22,G01_QCRI__Fanar-1-9B-Instruct
+G01-allam,humain-ai/ALLaM-7B-Instruct-preview,ok,5,4562,19.5,46.9,20,48,0,0,0,0.9,0.95,50,42,5451ac6,2026-10-06 22:48,G03_humain-ai__ALLaM-7B-Instruct-preview
+G01-qwen3,Qwen/Qwen3-8B,ok,5,6066,116.2,41.05,20,48,2,0,0,0.9,0.95,50,42,5451ac6,2026-10-07 01:03,G01_Qwen__Qwen3-8B
+G01-gemma,google/gemma-2-9b-it,ok,5,6174,102.0,27.76,20,48,0,0,0,0.9,0.95,50,42,5451ac6,2026-10-06 21:45,G02_google__gemma-2-9b-it
+G01-jais2,inception42/Jais-2-8B-Chat,ok,5,5750,92.3,26.65,20,48,4,0,4,0.9,0.95,50,42,5451ac6,2026-10-07 03:08,G01_inception42__Jais-2-8B-Chat
+G01-falcon_h1,tiiuae/Falcon-H1-7B-Instruct,ok,1,5184,126.1,8.97,20,48,0,7,0,0.9,0.95,50,42,5451ac6,2026-10-07 01:59,G01_tiiuae__Falcon-H1-7B-Instruct

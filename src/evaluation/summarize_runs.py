@@ -5,12 +5,14 @@ configs/runs.json maps result folders to members. This script reads
 results/runs/*/train_log.json (our trained models) and results/runs/*/dev_metrics.json
 (evaluated external models), groups folders that differ only in their seed (name ends in
 _seed<N>), and writes:
-  results/tables/dev_summary.md    one table per run, one row per model
-  results/tables/dev_summary.csv   same numbers for plotting
-  results/tables/split_summary.csv three rows per model (train, dev, test), same columns:
+  docs/tables/split_summary.csv three rows per model (train, dev, test), same columns:
     train = held-out validation split of the training data (best epoch), dev = MLADI dev,
     test  = MLADI leaderboard submissions from results/leaderboard.jsonl.
     A row with no scores yet is kept with empty cells, so every model always has all three.
+    The "origin" column marks published models we only scored ("external" in configs/runs.json):
+    we have neither their training code nor data, so they cannot be retrained or built on.
+  docs/tables/split_summary.md  the same numbers for reading: one table per run, one row per model,
+    per-dialect dev F1, and every leaderboard submission with the scores of the submitted seed.
 
 Usage:
   python -m src.evaluation.summarize_runs
@@ -28,9 +30,16 @@ from typing import Callable
 
 RUNS_DIR = Path("results/runs")
 REGISTRY = Path("configs/runs.json")
-OUT_DIR = Path("results/tables")
+OUT_DIR = Path("docs/tables")
 LEADERBOARD = Path("results/leaderboard.jsonl")
 SPLITS = ("train", "dev", "test")
+ORIGIN_OURS = "ours"
+ORIGIN_EXTERNAL = "external: published checkpoint, scored only (no training code or data)"
+
+
+def origin(member: dict) -> str:
+    """Whether a model was trained by us or is a published checkpoint we can only evaluate."""
+    return ORIGIN_EXTERNAL if member.get("external") else ORIGIN_OURS
 
 
 def load_dev_scores(run_dir: Path) -> dict | None:
@@ -109,7 +118,8 @@ def main() -> None:
     rows = []
     for folder, runs in groups.items():
         member = registry["members"].get(folder, {"run": "unassigned", "model": folder})
-        row = {"run": member["run"], "id": f"{member['run']}-{member['model']}", "folder": folder,
+        row = {"run": member["run"], "id": f"{member['run']}-{member['model']}", "origin": origin(member),
+               "folder": folder,
                "seeds": len(runs), "seed_f1": " / ".join(f"{r['macro']['f1']:.2f}" for r in runs)}
         for m in ("f1", "precision", "recall"):
             row[f"macro_{m}"], row[f"macro_{m}_std"] = mean_std([r["macro"][m] for r in runs])
@@ -122,14 +132,15 @@ def main() -> None:
 
     dialects = next(iter(groups.values()))[0]["dialects_scored"]
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    write_split_summary(registry, rows, groups, dialects)
-    print(f"wrote {OUT_DIR / 'split_summary.csv'}")
+    out = write_split_summary(registry, rows, groups, dialects)
+    write_split_markdown(registry, out, dialects)
+    print(f"wrote {OUT_DIR / 'split_summary.csv'} and {OUT_DIR / 'split_summary.md'}")
 
 
 def split_row(base: dict, split: str, runs: list[dict], dialects: list[str]) -> dict:
     """One CSV row for one split of one model: mean and std over seeds, empty cells when not scored."""
     row = {**base, "split": split, "seeds": len(runs)}
-    row = {k: row[k] for k in ("run", "id", "split", "folder", "seeds")}
+    row = {k: row[k] for k in ("run", "id", "origin", "split", "folder", "seeds")}
     row["seed_f1"] = " / ".join(f"{r['macro']['f1']:.2f}" for r in runs)
     for m in ("f1", "precision", "recall"):
         row[f"macro_{m}"], row[f"macro_{m}_std"] = mean_std([r["macro"][m] for r in runs]) if runs else ("", "")
@@ -150,16 +161,17 @@ def split_row(base: dict, split: str, runs: list[dict], dialects: list[str]) -> 
 
 
 def write_split_summary(registry: dict, dev_rows: list[dict], dev_groups: dict[str, list[dict]],
-                        dialects: list[str]) -> None:
-    """Write split_summary.csv: train, dev and test rows for every model, in dev_summary order."""
+                        dialects: list[str]) -> list[dict]:
+    """Write split_summary.csv: train, dev and test rows for every model, in dev-table order."""
     train_groups = group_by_folder(load_train_scores)
     test_by_id = load_test_scores()
 
-    # Models in dev_summary order, then any model that has validation scores but no dev scores.
-    bases = [{"run": r["run"], "id": r["id"], "folder": r["folder"]} for r in dev_rows]
+    # Models in dev-table order, then any model that has validation scores but no dev scores.
+    bases = [{"run": r["run"], "id": r["id"], "origin": r["origin"], "folder": r["folder"]} for r in dev_rows]
     for folder in train_groups.keys() - {r["folder"] for r in dev_rows}:
         member = registry["members"].get(folder, {"run": "unassigned", "model": folder})
-        bases.append({"run": member["run"], "id": f"{member['run']}-{member['model']}", "folder": folder})
+        bases.append({"run": member["run"], "id": f"{member['run']}-{member['model']}",
+                      "origin": origin(member), "folder": folder})
 
     out = []
     for base in bases:
@@ -172,6 +184,72 @@ def write_split_summary(registry: dict, dev_rows: list[dict], dev_groups: dict[s
         writer = csv.DictWriter(f, fieldnames=list(out[0]))
         writer.writeheader()
         writer.writerows({k: round(v, 2) if isinstance(v, float) else v for k, v in r.items()} for r in out)
+    return out
+
+
+def pm(row: dict, key: str) -> str:
+    """A score as "mean ± std" (std left out for one seed), or "—" when the split was not scored."""
+    if row[key] == "":
+        return "—"
+    return f"{row[key]:.2f}" if row["seeds"] < 2 else f"{row[key]:.2f} ± {row[key + '_std']:.2f}"
+
+
+def fmt(v: float | None) -> str:
+    """One score with two decimals, or "—" when missing."""
+    return "—" if v is None else f"{v:.2f}"
+
+
+def write_split_markdown(registry: dict, out: list[dict], dialects: list[str]) -> None:
+    """Write split_summary.md: per run a score table and a per-dialect dev table, then the submissions."""
+    by_id: dict[str, dict[str, dict]] = defaultdict(dict)
+    for r in out:
+        by_id[r["id"]][r["split"]] = r
+    lines = ["# Scores by split", "",
+             "Generated by `python -m src.evaluation.summarize_runs` from `results/runs/*` and "
+             "`results/leaderboard.jsonl`. Do not edit by hand. Full precision: `split_summary.csv`.", "",
+             "- **Train F1:** macro F1 on the 10% validation split of the training data (automatic labels, "
+             "18 dialects), best epoch.",
+             "- **Dev:** MLADI dev, 120 human-labelled sentences, 8 dialects, threshold 0.3.",
+             "- **Test F1:** MLADI leaderboard, 1,000 sentences, 11 dialects; one submitted seed per model.",
+             "- Scores are mean ± std over seeds. *External* models are published checkpoints we only scored.", ""]
+
+    # One section per run, in the order the rows were written (run ID order, best dev F1 first).
+    for run in dict.fromkeys(r["run"] for r in out):
+        ids = [i for i, s in by_id.items() if s["dev"]["run"] == run]
+        lines += [f"## {run}: {registry['runs'].get(run, 'not in configs/runs.json')}", "",
+                  "| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |",
+                  "|---|---|---|---|---|---|---|---|---|---|"]
+        for i in ids:
+            s = by_id[i]
+            dev, label = s["dev"], i + (" *(external)*" if s["dev"]["origin"] != ORIGIN_OURS else "")
+            lines.append(f"| {label} | {dev['seeds']} | {pm(s['train'], 'macro_f1')} | **{pm(dev, 'macro_f1')}** | "
+                         f"{pm(dev, 'macro_precision')} | {pm(dev, 'macro_recall')} | {pm(dev, 'micro_f1')} | "
+                         f"{dev['seed_f1'] or '—'} | {pm(s['test'], 'macro_f1')} | `{dev['folder']}` |")
+        # Per-dialect dev F1 only for models scored on dev.
+        scored = [i for i in ids if by_id[i]["dev"]["seeds"]]
+        if scored:
+            lines += ["", "Per-dialect dev F1 (mean over seeds):", "",
+                      "| ID | " + " | ".join(dialects) + " |", "|---" * (len(dialects) + 1) + "|"]
+            lines += [f"| {i} | " + " | ".join(f"{by_id[i]['dev'][f'f1_{d}']:.1f}" for d in dialects) + " |"
+                      for i in scored]
+        lines.append("")
+
+    # Every leaderboard submission, with the validation and dev scores of the exact seed submitted.
+    lines += ["## Leaderboard submissions (test)", "",
+              "| Test ID | Model | Submitted folder | Hub repo @ commit | Train F1 | Dev F1 | Test F1 | Test P | Test R | Test accuracy | Rank when read |",
+              "|---|---|---|---|---|---|---|---|---|---|---|"]
+    if LEADERBOARD.exists():
+        with open(LEADERBOARD, encoding="utf-8") as f:
+            subs = [json.loads(line) for line in f if line.strip()]
+        for t in subs:
+            log_path = RUNS_DIR / t["run"] / "train_log.json"
+            log = json.loads(log_path.read_text(encoding="utf-8")) if log_path.exists() else {}
+            val = next((e["val_macro"]["f1"] for e in log.get("epochs", []) if e["epoch"] == log.get("best_epoch")), None)
+            dev = log.get("dev", {}).get("macro", {}).get("f1")
+            lines.append(f"| {t['test_id']} | {t['run_id']} | `{t['run']}` | `{t['repo_id']}` @ `{t['commit'][:7]}` | "
+                         f"{fmt(val)} | {fmt(dev)} | **{100 * t['f1']:.2f}** | {100 * t['precision']:.2f} | "
+                         f"{100 * t['recall']:.2f} | {100 * t['accuracy']:.2f} | {t.get('rank_at_reading', '—')} |")
+    (OUT_DIR / "split_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -1,1 +1,0 @@
-- [Decisions log](decisions-log.md) — append user's decisions to F:\Thesis\decisions.md as they're made
