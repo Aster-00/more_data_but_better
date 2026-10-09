@@ -1,0 +1,148 @@
+{
+  "config": {
+    "run_name": "card0to17_real_only_arabertv02_twitter_seed43",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert_card0to17.jsonl",
+    "text_field": "text",
+    "model": "aubmindlab/bert-base-arabertv02-twitter",
+    "seed": 43,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 45668,
+  "n_val": 5074,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4049512030056634,
+      "val_macro_f1": 67.21865983841072,
+      "val_micro_f1": 68.02863961813841,
+      "val_macro": {
+        "precision": 54.83237021330243,
+        "recall": 87.83125601707043,
+        "f1": 67.21865983841072,
+        "accuracy": 77.99894888976482
+      },
+      "seconds": 174
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.33370683712202565,
+      "val_macro_f1": 68.99829214341102,
+      "val_micro_f1": 69.82349117455873,
+      "val_macro": {
+        "precision": 57.777222286583864,
+        "recall": 86.36425367302374,
+        "f1": 68.99829214341102,
+        "accuracy": 80.17671790829064
+      },
+      "seconds": 174
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 68.99829214341102,
+  "git_commit": "c11a0b84f7c6eb8042bbd06b9a01a099dea40645",
+  "data_sha256": "128bd0bf6e0dd80acab670655027dce07b7d527aa86dba7239ef4eaee61bd0f8",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\card0to17_real_only_arabertv02_twitter.json",
+  "total_seconds": 362,
+  "dev": {
+    "macro": {
+      "precision": 69.24101907090368,
+      "recall": 73.63413068447151,
+      "f1": 69.75176335079705,
+      "accuracy": 77.08333333333333
+    },
+    "micro_f1": 71.12860892388451,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 83.33333333333334,
+        "recall": 42.857142857142854,
+        "f1": 56.60377358490566,
+        "accuracy": 80.83333333333333,
+        "gold_positives": 35,
+        "predicted_positives": 18
+      },
+      "Egypt": {
+        "precision": 71.42857142857143,
+        "recall": 89.74358974358975,
+        "f1": 79.54545454545455,
+        "accuracy": 85.0,
+        "gold_positives": 39,
+        "predicted_positives": 49
+      },
+      "Jordan": {
+        "precision": 61.19402985074627,
+        "recall": 82.0,
+        "f1": 70.08547008547008,
+        "accuracy": 70.83333333333334,
+        "gold_positives": 50,
+        "predicted_positives": 67
+      },
+      "Palestine": {
+        "precision": 65.11627906976744,
+        "recall": 87.5,
+        "f1": 74.66666666666667,
+        "accuracy": 68.33333333333333,
+        "gold_positives": 64,
+        "predicted_positives": 86
+      },
+      "Sudan": {
+        "precision": 70.0,
+        "recall": 66.66666666666666,
+        "f1": 68.29268292682927,
+        "accuracy": 78.33333333333333,
+        "gold_positives": 42,
+        "predicted_positives": 40
+      },
+      "Syria": {
+        "precision": 55.223880597014926,
+        "recall": 80.43478260869566,
+        "f1": 65.48672566371681,
+        "accuracy": 67.5,
+        "gold_positives": 46,
+        "predicted_positives": 67
+      },
+      "Tunisia": {
+        "precision": 72.22222222222221,
+        "recall": 61.904761904761905,
+        "f1": 66.66666666666666,
+        "accuracy": 89.16666666666667,
+        "gold_positives": 21,
+        "predicted_positives": 18
+      },
+      "Yemen": {
+        "precision": 75.40983606557377,
+        "recall": 77.96610169491525,
+        "f1": 76.66666666666667,
+        "accuracy": 76.66666666666667,
+        "gold_positives": 59,
+        "predicted_positives": 61
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

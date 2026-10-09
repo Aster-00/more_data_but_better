@@ -1,0 +1,148 @@
+{
+  "config": {
+    "run_name": "card1to18_real_only_marbertv2_seed43",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert_card1to18.jsonl",
+    "text_field": "text",
+    "model": "UBC-NLP/MARBERTv2",
+    "seed": 43,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 50502,
+  "n_val": 5611,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.40617106060658953,
+      "val_macro_f1": 80.42736557619497,
+      "val_micro_f1": 80.5325083204425,
+      "val_macro": {
+        "precision": 72.1779024377313,
+        "recall": 90.9668745599083,
+        "f1": 80.42736557619497,
+        "accuracy": 83.55214954751578
+      },
+      "seconds": 202
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3070837395845286,
+      "val_macro_f1": 81.59959617923353,
+      "val_micro_f1": 81.6936906662186,
+      "val_macro": {
+        "precision": 74.70015935136567,
+        "recall": 90.02994795779532,
+        "f1": 81.59959617923353,
+        "accuracy": 84.89772074694548
+      },
+      "seconds": 203
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 81.59959617923353,
+  "git_commit": "c11a0b84f7c6eb8042bbd06b9a01a099dea40645",
+  "data_sha256": "5e3e642f6fb96510a53c3fa48b4d63456de04e49620746d58665fef45bc1a878",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\card1to18_real_only_marbertv2.json",
+  "total_seconds": 415,
+  "dev": {
+    "macro": {
+      "precision": 69.12706580112592,
+      "recall": 71.63246749067378,
+      "f1": 69.41354493409064,
+      "accuracy": 76.77083333333333
+    },
+    "micro_f1": 69.49384404924761,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 83.33333333333334,
+        "recall": 57.14285714285714,
+        "f1": 67.79661016949152,
+        "accuracy": 84.16666666666667,
+        "gold_positives": 35,
+        "predicted_positives": 24
+      },
+      "Egypt": {
+        "precision": 73.91304347826086,
+        "recall": 87.17948717948718,
+        "f1": 80.0,
+        "accuracy": 85.83333333333333,
+        "gold_positives": 39,
+        "predicted_positives": 46
+      },
+      "Jordan": {
+        "precision": 62.71186440677966,
+        "recall": 74.0,
+        "f1": 67.88990825688074,
+        "accuracy": 70.83333333333334,
+        "gold_positives": 50,
+        "predicted_positives": 59
+      },
+      "Palestine": {
+        "precision": 63.63636363636363,
+        "recall": 76.5625,
+        "f1": 69.50354609929079,
+        "accuracy": 64.16666666666667,
+        "gold_positives": 64,
+        "predicted_positives": 77
+      },
+      "Sudan": {
+        "precision": 70.96774193548387,
+        "recall": 52.38095238095239,
+        "f1": 60.273972602739725,
+        "accuracy": 75.83333333333333,
+        "gold_positives": 42,
+        "predicted_positives": 31
+      },
+      "Syria": {
+        "precision": 63.793103448275865,
+        "recall": 80.43478260869566,
+        "f1": 71.15384615384616,
+        "accuracy": 75.0,
+        "gold_positives": 46,
+        "predicted_positives": 58
+      },
+      "Tunisia": {
+        "precision": 62.96296296296296,
+        "recall": 80.95238095238095,
+        "f1": 70.83333333333334,
+        "accuracy": 88.33333333333333,
+        "gold_positives": 21,
+        "predicted_positives": 27
+      },
+      "Yemen": {
+        "precision": 71.69811320754717,
+        "recall": 64.40677966101694,
+        "f1": 67.85714285714286,
+        "accuracy": 70.0,
+        "gold_positives": 59,
+        "predicted_positives": 53
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

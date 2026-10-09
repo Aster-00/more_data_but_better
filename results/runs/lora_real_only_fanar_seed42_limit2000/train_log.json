@@ -1,0 +1,152 @@
+{
+  "config": {
+    "run_name": "lora_real_only_fanar_seed42_limit2000",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert.jsonl",
+    "text_field": "text",
+    "model": "QCRI/Fanar-1-9B-Instruct",
+    "seed": 42,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "micro_batch_size": 4,
+    "grad_accum": 6,
+    "eval_batch_size": 4,
+    "epochs": 1,
+    "learning_rate": 0.0001,
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "threshold": 0.3,
+    "patience": 2,
+    "limit": 2000,
+    "checkpoint_minutes": 30
+  },
+  "device": "cuda",
+  "n_train": 1800,
+  "n_val": 200,
+  "trainable_parameters": 54082560,
+  "head": "AutoModelForSequenceClassification",
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.554294822042187,
+      "val_macro_f1": 86.66701910223611,
+      "val_micro_f1": 86.71444321940463,
+      "val_macro": {
+        "precision": 86.88446806678313,
+        "recall": 86.67271066972914,
+        "f1": 86.66701910223611,
+        "accuracy": 86.61111111111111
+      },
+      "seconds": 625,
+      "resumed_at_step": null
+    }
+  ],
+  "best_epoch": 1,
+  "selection_metric": "macro",
+  "best_val_selection_score": 86.66701910223611,
+  "peak_vram_mib": 7892,
+  "git_commit": "8631275eb6f2a98c817903c411f883e95939a93e",
+  "data_sha256": "d299edd78f3d1b56cd0bfa4569e0044e130552a31f15e132ad04559a5ea08b4b",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\lora_real_only_fanar.json",
+  "train_seconds": 778,
+  "dev": {
+    "macro": {
+      "precision": 69.36269304370654,
+      "recall": 51.716165930759246,
+      "f1": 57.36806149552332,
+      "accuracy": 72.1875
+    },
+    "micro_f1": 58.47589424572317,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 81.25,
+        "recall": 37.142857142857146,
+        "f1": 50.98039215686274,
+        "accuracy": 79.16666666666666,
+        "gold_positives": 35,
+        "predicted_positives": 16
+      },
+      "Egypt": {
+        "precision": 65.78947368421053,
+        "recall": 64.1025641025641,
+        "f1": 64.93506493506493,
+        "accuracy": 77.5,
+        "gold_positives": 39,
+        "predicted_positives": 38
+      },
+      "Jordan": {
+        "precision": 53.84615384615385,
+        "recall": 56.00000000000001,
+        "f1": 54.90196078431373,
+        "accuracy": 61.66666666666667,
+        "gold_positives": 50,
+        "predicted_positives": 52
+      },
+      "Palestine": {
+        "precision": 63.013698630136986,
+        "recall": 71.875,
+        "f1": 67.15328467153284,
+        "accuracy": 62.5,
+        "gold_positives": 64,
+        "predicted_positives": 73
+      },
+      "Sudan": {
+        "precision": 73.68421052631578,
+        "recall": 33.33333333333333,
+        "f1": 45.90163934426229,
+        "accuracy": 72.5,
+        "gold_positives": 42,
+        "predicted_positives": 19
+      },
+      "Syria": {
+        "precision": 57.77777777777777,
+        "recall": 56.52173913043478,
+        "f1": 57.14285714285714,
+        "accuracy": 67.5,
+        "gold_positives": 46,
+        "predicted_positives": 45
+      },
+      "Tunisia": {
+        "precision": 73.33333333333333,
+        "recall": 52.38095238095239,
+        "f1": 61.111111111111114,
+        "accuracy": 88.33333333333333,
+        "gold_positives": 21,
+        "predicted_positives": 15
+      },
+      "Yemen": {
+        "precision": 86.20689655172413,
+        "recall": 42.3728813559322,
+        "f1": 56.81818181818182,
+        "accuracy": 68.33333333333333,
+        "gold_positives": 59,
+        "predicted_positives": 29
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  },
+  "total_seconds": 830
+}

@@ -1,0 +1,151 @@
+{
+  "config": {
+    "run_name": "card1to18_real_only_tfidf_lr_seed43",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert_card1to18.jsonl",
+    "dev": "MLADI/dev/NADI2024_subtask1_dev2.tsv",
+    "text_field": "text",
+    "model": "tfidf_char2-5_word1-2_logreg",
+    "seed": 43,
+    "val_fraction": 0.1,
+    "char_ngrams": [
+      2,
+      5
+    ],
+    "word_ngrams": [
+      1,
+      2
+    ],
+    "min_df": 2,
+    "max_features": 300000,
+    "C": 1.0,
+    "max_iter": 1000,
+    "n_jobs": 8,
+    "threshold": 0.3,
+    "limit": null
+  },
+  "n_train": 50502,
+  "n_val": 5611,
+  "n_features": 314927,
+  "dialects_fitted": [
+    "Algeria",
+    "Bahrain",
+    "Egypt",
+    "Iraq",
+    "Jordan",
+    "Kuwait",
+    "Lebanon",
+    "Libya",
+    "Morocco",
+    "Oman",
+    "Palestine",
+    "Qatar",
+    "Saudi_Arabia",
+    "Sudan",
+    "Syria",
+    "Tunisia",
+    "UAE",
+    "Yemen"
+  ],
+  "val_macro_f1": 76.54063048770382,
+  "val_micro_f1": 76.81055433398912,
+  "val_macro": {
+    "precision": 68.2719309603118,
+    "recall": 87.29456270342169,
+    "f1": 76.54063048770382,
+    "accuracy": 80.16000316837957
+  },
+  "fit_seconds": 57,
+  "dev": {
+    "macro": {
+      "precision": 62.99081327802896,
+      "recall": 62.9905634677132,
+      "f1": 61.86378259126834,
+      "accuracy": 72.29166666666666
+    },
+    "micro_f1": 63.1578947368421,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 60.86956521739131,
+        "recall": 40.0,
+        "f1": 48.275862068965516,
+        "accuracy": 75.0,
+        "gold_positives": 35,
+        "predicted_positives": 23
+      },
+      "Egypt": {
+        "precision": 69.56521739130434,
+        "recall": 82.05128205128204,
+        "f1": 75.29411764705883,
+        "accuracy": 82.5,
+        "gold_positives": 39,
+        "predicted_positives": 46
+      },
+      "Jordan": {
+        "precision": 54.83870967741935,
+        "recall": 68.0,
+        "f1": 60.71428571428571,
+        "accuracy": 63.33333333333333,
+        "gold_positives": 50,
+        "predicted_positives": 62
+      },
+      "Palestine": {
+        "precision": 61.64383561643836,
+        "recall": 70.3125,
+        "f1": 65.69343065693431,
+        "accuracy": 60.83333333333333,
+        "gold_positives": 64,
+        "predicted_positives": 73
+      },
+      "Sudan": {
+        "precision": 69.23076923076923,
+        "recall": 42.857142857142854,
+        "f1": 52.94117647058824,
+        "accuracy": 73.33333333333333,
+        "gold_positives": 42,
+        "predicted_positives": 26
+      },
+      "Syria": {
+        "precision": 54.6875,
+        "recall": 76.08695652173914,
+        "f1": 63.63636363636363,
+        "accuracy": 66.66666666666666,
+        "gold_positives": 46,
+        "predicted_positives": 64
+      },
+      "Tunisia": {
+        "precision": 59.09090909090909,
+        "recall": 61.904761904761905,
+        "f1": 60.46511627906976,
+        "accuracy": 85.83333333333333,
+        "gold_positives": 21,
+        "predicted_positives": 22
+      },
+      "Yemen": {
+        "precision": 74.0,
+        "recall": 62.71186440677966,
+        "f1": 67.88990825688074,
+        "accuracy": 70.83333333333334,
+        "gold_positives": 59,
+        "predicted_positives": 50
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  },
+  "git_commit": "c11a0b84f7c6eb8042bbd06b9a01a099dea40645",
+  "data_sha256": "5e3e642f6fb96510a53c3fa48b4d63456de04e49620746d58665fef45bc1a878",
+  "dev_sha256": "5c62fcfe1a44f85e79474a83c69d1d56694fea520eacae970f18417fbee202ee",
+  "python": "3.12.10",
+  "sklearn": "1.9.1",
+  "config_file": "configs\\card1to18_real_only_tfidf_lr.json",
+  "total_seconds": 58
+}

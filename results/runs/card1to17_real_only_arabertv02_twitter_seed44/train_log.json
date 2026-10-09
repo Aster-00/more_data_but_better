@@ -1,0 +1,148 @@
+{
+  "config": {
+    "run_name": "card1to17_real_only_arabertv02_twitter_seed44",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert_card1to17.jsonl",
+    "text_field": "text",
+    "model": "aubmindlab/bert-base-arabertv02-twitter",
+    "seed": 44,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 43624,
+  "n_val": 4847,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4101273106909034,
+      "val_macro_f1": 70.05331105449949,
+      "val_micro_f1": 70.93002843801565,
+      "val_macro": {
+        "precision": 60.221250295668355,
+        "recall": 84.47858617150514,
+        "f1": 70.05331105449949,
+        "accuracy": 81.01918712605736
+      },
+      "seconds": 165
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3376934046808905,
+      "val_macro_f1": 70.6493544328538,
+      "val_micro_f1": 71.51089689857501,
+      "val_macro": {
+        "precision": 60.302377399819164,
+        "recall": 85.82914514015272,
+        "f1": 70.6493544328538,
+        "accuracy": 81.301148476721
+      },
+      "seconds": 164
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 70.6493544328538,
+  "git_commit": "3dcac61d7f983a8a39e2d980e74caffdf61c61df",
+  "data_sha256": "47bedd182435fed19778de5317cff3a012ec0a0aaa9f2ae36e28430ef41d8c4e",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\card1to17_real_only_arabertv02_twitter.json",
+  "total_seconds": 342,
+  "dev": {
+    "macro": {
+      "precision": 69.84523870275426,
+      "recall": 72.66181103999476,
+      "f1": 69.42803574951245,
+      "accuracy": 77.91666666666666
+    },
+    "micro_f1": 71.80851063829788,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 82.35294117647058,
+        "recall": 40.0,
+        "f1": 53.84615384615385,
+        "accuracy": 80.0,
+        "gold_positives": 35,
+        "predicted_positives": 17
+      },
+      "Egypt": {
+        "precision": 72.3404255319149,
+        "recall": 87.17948717948718,
+        "f1": 79.06976744186046,
+        "accuracy": 85.0,
+        "gold_positives": 39,
+        "predicted_positives": 47
+      },
+      "Jordan": {
+        "precision": 63.63636363636363,
+        "recall": 84.0,
+        "f1": 72.41379310344827,
+        "accuracy": 73.33333333333333,
+        "gold_positives": 50,
+        "predicted_positives": 66
+      },
+      "Palestine": {
+        "precision": 67.81609195402298,
+        "recall": 92.1875,
+        "f1": 78.1456953642384,
+        "accuracy": 72.5,
+        "gold_positives": 64,
+        "predicted_positives": 87
+      },
+      "Sudan": {
+        "precision": 76.47058823529412,
+        "recall": 61.904761904761905,
+        "f1": 68.42105263157895,
+        "accuracy": 80.0,
+        "gold_positives": 42,
+        "predicted_positives": 34
+      },
+      "Syria": {
+        "precision": 56.71641791044776,
+        "recall": 82.6086956521739,
+        "f1": 67.2566371681416,
+        "accuracy": 69.16666666666667,
+        "gold_positives": 46,
+        "predicted_positives": 67
+      },
+      "Tunisia": {
+        "precision": 63.1578947368421,
+        "recall": 57.14285714285714,
+        "f1": 60.0,
+        "accuracy": 86.66666666666667,
+        "gold_positives": 21,
+        "predicted_positives": 19
+      },
+      "Yemen": {
+        "precision": 76.27118644067797,
+        "recall": 76.27118644067797,
+        "f1": 76.27118644067797,
+        "accuracy": 76.66666666666667,
+        "gold_positives": 59,
+        "predicted_positives": 59
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

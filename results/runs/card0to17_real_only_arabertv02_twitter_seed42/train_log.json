@@ -1,0 +1,148 @@
+{
+  "config": {
+    "run_name": "card0to17_real_only_arabertv02_twitter_seed42",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert_card0to17.jsonl",
+    "text_field": "text",
+    "model": "aubmindlab/bert-base-arabertv02-twitter",
+    "seed": 42,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 45668,
+  "n_val": 5074,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4050839170696105,
+      "val_macro_f1": 68.95368085155006,
+      "val_micro_f1": 69.58363220275301,
+      "val_macro": {
+        "precision": 59.52866709355552,
+        "recall": 82.85250547353486,
+        "f1": 68.95368085155006,
+        "accuracy": 80.49971532431131
+      },
+      "seconds": 174
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3361108712989032,
+      "val_macro_f1": 69.7664086855135,
+      "val_micro_f1": 70.35760959961982,
+      "val_macro": {
+        "precision": 59.513174724765854,
+        "recall": 84.94036868783977,
+        "f1": 69.7664086855135,
+        "accuracy": 80.87745806508124
+      },
+      "seconds": 174
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 69.7664086855135,
+  "git_commit": "c11a0b84f7c6eb8042bbd06b9a01a099dea40645",
+  "data_sha256": "128bd0bf6e0dd80acab670655027dce07b7d527aa86dba7239ef4eaee61bd0f8",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\card0to17_real_only_arabertv02_twitter.json",
+  "total_seconds": 362,
+  "dev": {
+    "macro": {
+      "precision": 69.07283012457316,
+      "recall": 73.44123318648926,
+      "f1": 69.45984057674923,
+      "accuracy": 77.39583333333334
+    },
+    "micro_f1": 71.48488830486203,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 82.35294117647058,
+        "recall": 40.0,
+        "f1": 53.84615384615385,
+        "accuracy": 80.0,
+        "gold_positives": 35,
+        "predicted_positives": 17
+      },
+      "Egypt": {
+        "precision": 71.42857142857143,
+        "recall": 89.74358974358975,
+        "f1": 79.54545454545455,
+        "accuracy": 85.0,
+        "gold_positives": 39,
+        "predicted_positives": 49
+      },
+      "Jordan": {
+        "precision": 62.68656716417911,
+        "recall": 84.0,
+        "f1": 71.7948717948718,
+        "accuracy": 72.5,
+        "gold_positives": 50,
+        "predicted_positives": 67
+      },
+      "Palestine": {
+        "precision": 64.36781609195403,
+        "recall": 87.5,
+        "f1": 74.17218543046357,
+        "accuracy": 67.5,
+        "gold_positives": 64,
+        "predicted_positives": 87
+      },
+      "Sudan": {
+        "precision": 76.31578947368422,
+        "recall": 69.04761904761905,
+        "f1": 72.5,
+        "accuracy": 81.66666666666667,
+        "gold_positives": 42,
+        "predicted_positives": 38
+      },
+      "Syria": {
+        "precision": 55.223880597014926,
+        "recall": 80.43478260869566,
+        "f1": 65.48672566371681,
+        "accuracy": 67.5,
+        "gold_positives": 46,
+        "predicted_positives": 67
+      },
+      "Tunisia": {
+        "precision": 63.1578947368421,
+        "recall": 57.14285714285714,
+        "f1": 60.0,
+        "accuracy": 86.66666666666667,
+        "gold_positives": 21,
+        "predicted_positives": 19
+      },
+      "Yemen": {
+        "precision": 77.04918032786885,
+        "recall": 79.66101694915254,
+        "f1": 78.33333333333333,
+        "accuracy": 78.33333333333333,
+        "gold_positives": 59,
+        "predicted_positives": 61
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

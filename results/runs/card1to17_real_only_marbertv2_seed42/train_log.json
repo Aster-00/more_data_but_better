@@ -1,0 +1,148 @@
+{
+  "config": {
+    "run_name": "card1to17_real_only_marbertv2_seed42",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert_card1to17.jsonl",
+    "text_field": "text",
+    "model": "UBC-NLP/MARBERTv2",
+    "seed": 42,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "batch_size": 24,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "warmup_steps": 500,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "freeze_layers": 8,
+    "threshold": 0.3,
+    "fp16": true,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 43624,
+  "n_val": 4847,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4203461271160507,
+      "val_macro_f1": 72.08054837594301,
+      "val_micro_f1": 72.9482946265518,
+      "val_macro": {
+        "precision": 63.29213376565926,
+        "recall": 84.18944010736305,
+        "f1": 72.08054837594301,
+        "accuracy": 83.19120647364922
+      },
+      "seconds": 178
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3199987985251105,
+      "val_macro_f1": 73.10916540491276,
+      "val_micro_f1": 74.05630983628227,
+      "val_macro": {
+        "precision": 64.84096220518173,
+        "recall": 84.02117960212331,
+        "f1": 73.10916540491276,
+        "accuracy": 84.2525731838709
+      },
+      "seconds": 178
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 73.10916540491276,
+  "git_commit": "3dcac61d7f983a8a39e2d980e74caffdf61c61df",
+  "data_sha256": "47bedd182435fed19778de5317cff3a012ec0a0aaa9f2ae36e28430ef41d8c4e",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\card1to17_real_only_marbertv2.json",
+  "total_seconds": 375,
+  "dev": {
+    "macro": {
+      "precision": 68.65999068519415,
+      "recall": 63.84646707497551,
+      "f1": 64.46910597658226,
+      "accuracy": 74.79166666666667
+    },
+    "micro_f1": 65.72237960339945,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 82.35294117647058,
+        "recall": 40.0,
+        "f1": 53.84615384615385,
+        "accuracy": 80.0,
+        "gold_positives": 35,
+        "predicted_positives": 17
+      },
+      "Egypt": {
+        "precision": 76.74418604651163,
+        "recall": 84.61538461538461,
+        "f1": 80.48780487804879,
+        "accuracy": 86.66666666666667,
+        "gold_positives": 39,
+        "predicted_positives": 43
+      },
+      "Jordan": {
+        "precision": 57.6271186440678,
+        "recall": 68.0,
+        "f1": 62.38532110091744,
+        "accuracy": 65.83333333333333,
+        "gold_positives": 50,
+        "predicted_positives": 59
+      },
+      "Palestine": {
+        "precision": 62.82051282051282,
+        "recall": 76.5625,
+        "f1": 69.01408450704226,
+        "accuracy": 63.33333333333333,
+        "gold_positives": 64,
+        "predicted_positives": 78
+      },
+      "Sudan": {
+        "precision": 79.16666666666666,
+        "recall": 45.23809523809524,
+        "f1": 57.57575757575758,
+        "accuracy": 76.66666666666667,
+        "gold_positives": 42,
+        "predicted_positives": 24
+      },
+      "Syria": {
+        "precision": 58.92857142857143,
+        "recall": 71.73913043478261,
+        "f1": 64.70588235294117,
+        "accuracy": 70.0,
+        "gold_positives": 46,
+        "predicted_positives": 56
+      },
+      "Tunisia": {
+        "precision": 59.09090909090909,
+        "recall": 61.904761904761905,
+        "f1": 60.46511627906976,
+        "accuracy": 85.83333333333333,
+        "gold_positives": 21,
+        "predicted_positives": 22
+      },
+      "Yemen": {
+        "precision": 72.54901960784314,
+        "recall": 62.71186440677966,
+        "f1": 67.27272727272727,
+        "accuracy": 70.0,
+        "gold_positives": 59,
+        "predicted_positives": 51
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  }
+}

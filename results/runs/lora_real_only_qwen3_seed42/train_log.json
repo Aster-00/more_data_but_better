@@ -1,0 +1,162 @@
+{
+  "config": {
+    "run_name": "lora_real_only_qwen3_seed42",
+    "condition": "real_only",
+    "data": "data/processed/nadi_lahjatbert.jsonl",
+    "text_field": "text",
+    "model": "Qwen/Qwen3-8B",
+    "seed": 42,
+    "val_fraction": 0.1,
+    "max_length": 128,
+    "micro_batch_size": 8,
+    "grad_accum": 3,
+    "eval_batch_size": 8,
+    "epochs": 2,
+    "learning_rate": 0.0001,
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "threshold": 0.3,
+    "patience": 2,
+    "limit": null
+  },
+  "device": "cuda",
+  "n_train": 52546,
+  "n_val": 5838,
+  "trainable_parameters": 43720704,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.39850537475067505,
+      "val_macro_f1": 78.48003424003983,
+      "val_micro_f1": 78.77432341757996,
+      "val_macro": {
+        "precision": 74.31201709094613,
+        "recall": 83.81908276061641,
+        "f1": 78.48003424003983,
+        "accuracy": 83.74443302500856
+      },
+      "seconds": 11386
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.25360448968160515,
+      "val_macro_f1": 80.05195006429548,
+      "val_micro_f1": 80.23264521604553,
+      "val_macro": {
+        "precision": 75.2086802290334,
+        "recall": 85.5960513856915,
+        "f1": 80.05195006429548,
+        "accuracy": 84.92824787788817
+      },
+      "seconds": 10785
+    }
+  ],
+  "best_epoch": 2,
+  "selection_metric": "macro",
+  "best_val_selection_score": 80.05195006429548,
+  "peak_vram_mib": 7928,
+  "git_commit": "cf358931968dc164775cba460f6486692fd8a010",
+  "data_sha256": "d299edd78f3d1b56cd0bfa4569e0044e130552a31f15e132ad04559a5ea08b4b",
+  "python": "3.12.10",
+  "torch": "2.14.1+cu126",
+  "config_file": "configs\\lora_real_only_qwen3.json",
+  "train_seconds": 22307,
+  "dev": {
+    "macro": {
+      "precision": 73.47957698501176,
+      "recall": 61.20077566785032,
+      "f1": 65.14548268187508,
+      "accuracy": 75.72916666666666
+    },
+    "micro_f1": 65.27570789865872,
+    "per_dialect": {
+      "Algeria": {
+        "precision": 86.66666666666667,
+        "recall": 37.142857142857146,
+        "f1": 52.0,
+        "accuracy": 80.0,
+        "gold_positives": 35,
+        "predicted_positives": 15
+      },
+      "Egypt": {
+        "precision": 85.0,
+        "recall": 87.17948717948718,
+        "f1": 86.07594936708861,
+        "accuracy": 90.83333333333333,
+        "gold_positives": 39,
+        "predicted_positives": 40
+      },
+      "Jordan": {
+        "precision": 60.0,
+        "recall": 66.0,
+        "f1": 62.857142857142854,
+        "accuracy": 67.5,
+        "gold_positives": 50,
+        "predicted_positives": 55
+      },
+      "Palestine": {
+        "precision": 66.15384615384615,
+        "recall": 67.1875,
+        "f1": 66.66666666666666,
+        "accuracy": 64.16666666666667,
+        "gold_positives": 64,
+        "predicted_positives": 65
+      },
+      "Sudan": {
+        "precision": 82.6086956521739,
+        "recall": 45.23809523809524,
+        "f1": 58.46153846153847,
+        "accuracy": 77.5,
+        "gold_positives": 42,
+        "predicted_positives": 23
+      },
+      "Syria": {
+        "precision": 51.85185185185185,
+        "recall": 60.86956521739131,
+        "f1": 56.00000000000001,
+        "accuracy": 63.33333333333333,
+        "gold_positives": 46,
+        "predicted_positives": 54
+      },
+      "Tunisia": {
+        "precision": 77.77777777777779,
+        "recall": 66.66666666666666,
+        "f1": 71.7948717948718,
+        "accuracy": 90.83333333333333,
+        "gold_positives": 21,
+        "predicted_positives": 18
+      },
+      "Yemen": {
+        "precision": 77.77777777777779,
+        "recall": 59.32203389830508,
+        "f1": 67.3076923076923,
+        "accuracy": 71.66666666666667,
+        "gold_positives": 59,
+        "predicted_positives": 45
+      }
+    },
+    "dialects_scored": [
+      "Algeria",
+      "Egypt",
+      "Jordan",
+      "Palestine",
+      "Sudan",
+      "Syria",
+      "Tunisia",
+      "Yemen"
+    ]
+  },
+  "total_seconds": 22436
+}
