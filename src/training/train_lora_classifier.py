@@ -10,8 +10,10 @@ once at the end). What differs, because a 7-9B model does not fit 8 GB of VRAM o
   - bf16 compute instead of fp16 + loss scaling
   - batches are padded to their longest text, not to max_length (tweets are short)
 
-Supported: architectures with an AutoModelForSequenceClassification class (Qwen3, Gemma-2 /
-Fanar). Jais-2, Falcon-H1 and Cohere/Aya have none in transformers 5.18.
+Architectures with an AutoModelForSequenceClassification class (Qwen3, Gemma-2 / Fanar) use
+it. Jais-2, Falcon-H1 and Cohere / Aya have none in transformers 5.18; for them the same
+last-token head is built in src/training/decoder_head.py (and padding is forced to the right,
+so Falcon-H1's Mamba layers never read padding before the real tokens).
 
 Runs are resumable: every `checkpoint_minutes` (default 30) and after each epoch the adapter,
 optimizer, scheduler, progress and RNG states are written to results/runs/<run_name>/checkpoint.pt.
@@ -45,22 +47,28 @@ from transformers import (AutoModelForSequenceClassification, AutoTokenizer, Bit
                           get_linear_schedule_with_warmup)
 
 from src.data.build_dataset import DIALECTS, git_commit, read_dev, sha256
+from src.training import decoder_head
+from src.training.decoder_head import LastTokenClassifier
 from src.evaluation.evaluate_dev import predict_probabilities
 from src.evaluation.metrics import multilabel_scores
 from src.training.train_classifier import load_records, set_seed, split_train_val
 
 
+def quant_config() -> BitsAndBytesConfig:
+    """4-bit NF4 with double quantization and bf16 compute (QLoRA settings)."""
+    return BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                              bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+
+
 def load_base(name: str, pad_token_id: int):
     """Frozen 4-bit base model with an 18-output multi-label head (head in fp32)."""
-    quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                               bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
     model = AutoModelForSequenceClassification.from_pretrained(
         name,
         num_labels=len(DIALECTS),
         id2label=dict(enumerate(DIALECTS)),
         label2id={d: i for i, d in enumerate(DIALECTS)},
         problem_type="multi_label_classification",
-        quantization_config=quant,
+        quantization_config=quant_config(),
         dtype=torch.bfloat16,
         device_map={"": 0},
     )
@@ -70,12 +78,29 @@ def load_base(name: str, pad_token_id: int):
     return model
 
 
-def load_tokenizer(name: str):
+def load_tokenizer(name: str, right_padding: bool = False):
     """Tokenizer with a padding token (decoder tokenizers often lack one: reuse EOS)."""
     tokenizer = AutoTokenizer.from_pretrained(name)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
+    if right_padding:
+        tokenizer.padding_side = "right"
     return tokenizer
+
+
+def adapter_state(model) -> dict:
+    """Trainable weights (LoRA adapters + head) for a checkpoint."""
+    if isinstance(model, LastTokenClassifier):
+        return decoder_head.trainable_state(model)
+    return get_peft_model_state_dict(model)
+
+
+def load_adapter_state(model, state: dict) -> None:
+    """Restore weights written by adapter_state."""
+    if isinstance(model, LastTokenClassifier):
+        decoder_head.load_trainable_state(model, state)
+    else:
+        set_peft_model_state_dict(model, state)
 
 
 def batches(texts: list[str], labels: np.ndarray, batch_size: int, shuffle: bool, seed: int):
@@ -101,7 +126,7 @@ def save_checkpoint(path: Path, cfg: dict, model, optimizer, scheduler, state: d
     """Write adapter, optimizer, scheduler, progress and RNG states; atomic (temp file + rename)."""
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {"cfg": cfg, "state": state,
-               "adapter": get_peft_model_state_dict(model),
+               "adapter": adapter_state(model),
                "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
                "rng": {"python": random.getstate(), "numpy": np.random.get_state(),
                        "torch": torch.get_rng_state(), "cuda": torch.cuda.get_rng_state_all()}}
@@ -115,7 +140,7 @@ def load_checkpoint(path: Path, cfg: dict, model, optimizer, scheduler) -> dict:
     payload = torch.load(path, map_location="cpu", weights_only=False)
     if payload["cfg"] != cfg:
         sys.exit(f"{path} was written with a different config; delete it to start over.")
-    set_peft_model_state_dict(model, payload["adapter"])
+    load_adapter_state(model, payload["adapter"])
     optimizer.load_state_dict(payload["optimizer"])
     scheduler.load_state_dict(payload["scheduler"])
     rng = payload["rng"]
@@ -138,12 +163,19 @@ def train(cfg: dict) -> dict:
     val_texts, val_labels = [texts[i] for i in val_idx], labels[val_idx]
 
     # Model: 4-bit base + LoRA adapters; the classification head is trained in full.
-    tokenizer = load_tokenizer(cfg["model"])
-    model = load_base(cfg["model"], tokenizer.pad_token_id)
-    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
-    lora = LoraConfig(task_type=TaskType.SEQ_CLS, r=cfg["lora_r"], lora_alpha=cfg["lora_alpha"],
-                      lora_dropout=cfg["lora_dropout"], target_modules=cfg["lora_target_modules"])
-    model = get_peft_model(model, lora)
+    # Architectures without a library classification class get the equivalent custom head.
+    custom = decoder_head.needs_custom_head(cfg["model"])
+    tokenizer = load_tokenizer(cfg["model"], right_padding=custom)
+    lora = LoraConfig(task_type=None if custom else TaskType.SEQ_CLS, r=cfg["lora_r"],
+                      lora_alpha=cfg["lora_alpha"], lora_dropout=cfg["lora_dropout"],
+                      target_modules=cfg["lora_target_modules"])
+    if custom:
+        model = decoder_head.build_for_training(cfg["model"], quant_config(), lora, len(DIALECTS))
+    else:
+        model = load_base(cfg["model"], tokenizer.pad_token_id)
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
+        model = get_peft_model(model, lora)
+    log_head = "custom last-token head (decoder_head.py)" if custom else "AutoModelForSequenceClassification"
     n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"trainable parameters: {n_trainable:,}")
 
@@ -156,7 +188,7 @@ def train(cfg: dict) -> dict:
     scheduler = get_linear_schedule_with_warmup(optimizer, int(cfg["warmup_ratio"] * total_steps), total_steps)
 
     log = {"config": cfg, "device": "cuda", "n_train": len(train_texts), "n_val": len(val_texts),
-           "trainable_parameters": n_trainable, "epochs": []}
+           "trainable_parameters": n_trainable, "head": log_head, "epochs": []}
     state = {"epoch": 1, "step": 0, "running_loss": 0.0, "seconds": 0.0, "log": log,
              "best_f1": -1.0, "epochs_without_gain": 0}
 
@@ -227,7 +259,10 @@ def train(cfg: dict) -> dict:
         stop = False
         if f1 > best_f1:
             best_f1, epochs_without_gain = f1, 0
-            model.save_pretrained(model_dir)
+            if custom:
+                decoder_head.save(model, model_dir)
+            else:
+                model.save_pretrained(model_dir)
             tokenizer.save_pretrained(model_dir)
             log["best_epoch"] = epoch
         else:
@@ -254,8 +289,12 @@ def train(cfg: dict) -> dict:
 def evaluate_saved(cfg: dict, threshold: float) -> dict:
     """Reload the saved best adapter on a fresh 4-bit base and score the MLADI dev set."""
     model_dir = Path("results/runs") / cfg["run_name"] / "model"
-    tokenizer = load_tokenizer(str(model_dir))
-    model = PeftModel.from_pretrained(load_base(cfg["model"], tokenizer.pad_token_id), model_dir)
+    custom = decoder_head.needs_custom_head(cfg["model"])
+    tokenizer = load_tokenizer(str(model_dir), right_padding=custom)
+    if custom:
+        model = decoder_head.load_trained(cfg["model"], quant_config(), model_dir, len(DIALECTS))
+    else:
+        model = PeftModel.from_pretrained(load_base(cfg["model"], tokenizer.pad_token_id), model_dir)
     texts, gold = read_dev(Path("MLADI/dev/NADI2024_subtask1_dev2.tsv"))
     with torch.autocast("cuda", dtype=torch.bfloat16):
         probs = predict_probabilities(model, tokenizer, texts, "cuda", batch_size=cfg["eval_batch_size"])
