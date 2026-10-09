@@ -18,18 +18,27 @@ if [ ! -f results/runs/lora_real_only_qwen3_seed42/train_log.json ]; then
 say "Qwen3 finished: $(grep -h DEV results/lora_real_only_qwen3_seed42.console.log)"
 
 # 1. Checkpoint test: uninterrupted reference vs a run killed after a checkpoint and resumed.
-say "1/3 checkpoint test: reference run"
-$TRAIN --config configs/lora_resumetest_ref_qwen3.json --limit 2000 > results/resumetest_ref.console.log 2>&1 \
-  || { say "STOP: reference run failed"; exit 1; }
+if grep -q "^DEV" results/resumetest_ref.console.log 2>/dev/null; then
+  say "1/3 checkpoint test: reusing finished reference run (training is deterministic)"
+else
+  say "1/3 checkpoint test: reference run"
+  $TRAIN --config configs/lora_resumetest_ref_qwen3.json --limit 2000 > results/resumetest_ref.console.log 2>&1 \
+    || { say "STOP: reference run failed"; exit 1; }
+fi
+rm -rf results/runs/lora_resumetest_kill_qwen3_seed42_limit2000 results/resumetest_kill_part*.log   # start clean
 say "1/3 checkpoint test: run to be killed"
 # Launch as a Windows process so we know its PID, and later kill only that process tree.
-kpid=$(powershell.exe -NoProfile -Command "\$env:PYTHONIOENCODING='utf-8'; \$env:HF_HUB_CACHE='F:/Thesis/models'; \$env:HF_HUB_OFFLINE='1'; (Start-Process -FilePath 'F:\Thesis\code\.venv\Scripts\python.exe' -ArgumentList '-m','src.training.train_lora_classifier','--config','configs/lora_resumetest_kill_qwen3.json','--limit','2000' -WorkingDirectory 'F:\Thesis\code' -RedirectStandardOutput 'F:\Thesis\code\results\resumetest_kill_part1.console.log' -RedirectStandardError 'F:\Thesis\code\results\resumetest_kill_part1.stderr.log' -WindowStyle Hidden -PassThru).Id" | tr -d $'\r')
+# The PID goes to a file: capturing PowerShell's output with $(...) made bash wait until
+# the training run finished (the child inherits the pipe), so the kill came too late.
+powershell.exe -NoProfile -Command "\$env:PYTHONIOENCODING='utf-8'; \$env:HF_HUB_CACHE='F:/Thesis/models'; \$env:HF_HUB_OFFLINE='1'; (Start-Process -FilePath 'F:\Thesis\code\.venv\Scripts\python.exe' -ArgumentList '-m','src.training.train_lora_classifier','--config','configs/lora_resumetest_kill_qwen3.json','--limit','2000' -WorkingDirectory 'F:\Thesis\code' -RedirectStandardOutput 'F:\Thesis\code\results\resumetest_kill_part1.console.log' -RedirectStandardError 'F:\Thesis\code\results\resumetest_kill_part1.stderr.log' -WindowStyle Hidden -PassThru).Id" > results/resumetest_kill.pid
+kpid=$(tr -d $'\r\n' < results/resumetest_kill.pid)
 say "run to be killed has PID $kpid"
 until grep -q "checkpoint saved" results/resumetest_kill_part1.console.log 2>/dev/null; do sleep 5; done
 sleep 45   # train a little past the checkpoint, so the resume must discard unsaved work
 taskkill //F //T //PID "$kpid" > /dev/null 2>&1   # /T: also the real python child of the venv launcher
 sleep 10
 say "killed after: $(grep -h 'checkpoint saved' results/resumetest_kill_part1.console.log | tail -1)"
+grep -q "^epoch 1:" results/resumetest_kill_part1.console.log && { say "STOP: test invalid, the run finished its epoch before the kill"; exit 1; }
 $TRAIN --config configs/lora_resumetest_kill_qwen3.json --limit 2000 > results/resumetest_kill_part2.console.log 2>&1 \
   || { say "STOP: resumed run failed"; exit 1; }
 grep -q "resumed from checkpoint" results/resumetest_kill_part2.console.log || { say "STOP: run did not resume"; exit 1; }
