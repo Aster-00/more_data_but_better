@@ -99,3 +99,15 @@ Per-dialect F1 (mean over seeds):
 | R07-arabertv02_twitter | 60.1 | 78.4 | 71.8 | 74.3 | 69.7 | 66.5 | 68.2 | 76.9 |
 | R07-marbertv2 | 67.4 | 81.0 | 68.3 | 70.6 | 62.0 | 70.9 | 70.9 | 67.2 |
 | R07-tfidf_lr | 48.0 | 75.6 | 61.0 | 66.0 | 56.6 | 64.8 | 60.8 | 68.7 |
+
+## R08: Real only, D1, 7-9B decoder LLMs as classifiers: 4-bit QLoRA (r 16, alpha 32, all projections), lr 1e-4, effective batch 24, 2 epochs, macro-F1 epoch selection, threshold 0.3
+
+| ID | Seeds | Macro F1 | Precision | Recall | Micro F1 | F1 per seed | Result folder |
+|---|---|---|---|---|---|---|---|
+| R08-qwen3 | 1 | 65.15 | 73.48 | 61.20 | 65.28 | 65.15 | `lora_real_only_qwen3` |
+
+Per-dialect F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R08-qwen3 | 52.0 | 86.1 | 62.9 | 66.7 | 58.5 | 56.0 | 71.8 | 67.3 |

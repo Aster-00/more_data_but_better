@@ -42,6 +42,12 @@ Numbers are copied from `results/tables/dev_summary.md`, which `python -m src.ev
 |---|---|---|---|---|---|---|---|
 | R04-marbert | `UBC-NLP/MARBERT` | 42, 43, 44 | **68.71 ± 0.35** | 74.89 ± 1.48 | 65.49 ± 0.59 | 69.00 / 68.81 / 68.32 | `repro_lahjatbert_baseline_seed*` |
 
+### R08: real only, D1, decoder LLMs as classifiers, 4-bit QLoRA (2026-10-08 / 09)
+
+| ID | Hub model | Seeds | Macro F1 | Precision | Recall | F1 per seed | Result folder |
+|---|---|---|---|---|---|---|---|
+| R08-qwen3 | `Qwen/Qwen3-8B` | 42 | **65.15** | 73.48 | 61.20 | 65.15 | `lora_real_only_qwen3_seed42` |
+
 Per-dialect F1 for every run: `results/tables/dev_summary.md`.
 
 ### T: MLADI test set (leaderboard, 1,000 sentences, 11 dialects)
@@ -160,6 +166,17 @@ Script `scripts/check_generators.py`: 4 sentences each for Egypt, Morocco, Syria
 - Removing the all-18 texts (R06) costs about as much as removing both (R05): MARBERT −4.2, MARBERTv2 −3.8, TF-IDF −6.3, AraBERT −1.3 vs R03. As in R05, the loss is in recall (e.g. MARBERT 73.0 → 67.4, TF-IDF 62.3 → 51.8). This fits the R05 explanation (all-18 texts teach the model that a sentence can be valid everywhere), still untested.
 - Size is a weaker explanation than composition here: R06 loses 13% of the data and drops as much as R05 (17%), while R07 loses 4% and does not drop. A size-matched random sample of D1 would settle it; not run.
 - Decision unchanged: keep D1 with both groups (decisions.md D-006).
+
+**R08-qwen3: Qwen3-8B as a classifier, 4-bit QLoRA, real only (D1), seed 42.**
+- Config: `configs/lora_real_only_qwen3.json`, script `src/training/train_lora_classifier.py`. 4-bit NF4 base (frozen), LoRA r 16 / alpha 32 / dropout 0.05 on all attention and MLP projections, new 18-output head trained in full (43.7M trainable parameters), lr 1e-4 with 3% warmup and linear decay, micro-batch 8 × 3 accumulation = 24, bf16, gradient checkpointing, max length 128, 2 epochs, epoch chosen by validation macro F1, threshold 0.3. Same D1 data and seeded 90/10 split as R03. LoRA settings are standard QLoRA defaults, not tuned.
+- Code: commit `3ce9c49` (the log records `cf35893` because the commit is read when training ends, after the checkpointing commit `6e53d9a` landed; the run itself used the pre-checkpoint code). 6.2 h on the RTX 3070 (≈1.5–1.75 s per micro-batch), peak VRAM 7,928 MiB.
+- A first attempt was killed at epoch 1 step ≈5,800 / 6,569 when the Claude Code session ended (it ran as a child process; log kept as `results/lora_real_only_qwen3_seed42_killed.console.log`). No result came from it. The rerun was started as a detached process.
+- **Result (one seed):** dev macro F1 **65.15** (P 73.48, R 61.20). Validation macro F1 78.48 after epoch 1, 80.05 after epoch 2 (picked).
+- **About 5 points below the BERT-sized classifiers** on the same data (R03: MARBERTv2 70.11 ± 0.55, AraBERTv02-Twitter 70.52 ± 0.52), although its validation F1 (80.05) is level with theirs (≈79–81). The gap opens only on human labels.
+- **The loss is recall** (61.2 vs 71.6 / 75.1 for MARBERTv2 / AraBERT), while precision is the highest of our models (73.5). Qwen3 marks fewer dialects per sentence.
+- Single seed: the BERT seed spread is about ±1 point, so a 5-point gap is probably real, but not yet a result by our rule.
+- Per dialect: Egypt 86.1, Tunisia 71.8; weakest Algeria 52.0 and Syria 56.0.
+- Cannot be submitted to the leaderboard as it stands (cpu-basic Space; an 8B model does not fit its memory). Dev only.
 
 **G01: generator feasibility (all six chat generators).**
 - **All six fit the 8 GB card in 4-bit** with ≥ 1.8 GB to spare; Gemma (6174 MiB) and Qwen3 (6066 MiB) are the tightest. The 9B-in-4-bit open question is answered: yes, for 20-sentence batches of 5 at 48 new tokens. Longer outputs or bigger batches are untested.

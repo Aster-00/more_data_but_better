@@ -1,0 +1,32 @@
+{
+  "run_name": "lora_real_only_jais2_seed42",
+  "condition": "real_only",
+  "data": "data/processed/nadi_lahjatbert.jsonl",
+  "text_field": "text",
+  "model": "inception42/Jais-2-8B-Chat",
+  "seed": 42,
+  "val_fraction": 0.1,
+  "max_length": 128,
+  "micro_batch_size": 8,
+  "grad_accum": 3,
+  "eval_batch_size": 8,
+  "epochs": 2,
+  "learning_rate": 0.0001,
+  "warmup_ratio": 0.03,
+  "weight_decay": 0.01,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "threshold": 0.3,
+  "patience": 2,
+  "limit": null,
+  "checkpoint_minutes": 30
+}
