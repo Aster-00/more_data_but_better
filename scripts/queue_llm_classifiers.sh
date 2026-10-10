@@ -13,8 +13,14 @@ MAX_S_PER_SENTENCE=0.375   # above this, one epoch (52,546 sentences) takes > 5.
 say() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
 TRAIN="$PY -m src.training.train_lora_classifier"
 
-for tag in fanar aya jais2 falcon_h1; do
+for tag in ${@:-fanar aya jais2 falcon_h1}; do   # models can be given as arguments
   cfg=configs/lora_real_only_$tag.json
+  run_dir=results/runs/lora_real_only_${tag}_seed42
+  # 0. Already finished: skip. Interrupted (checkpoint on disk): resume without a new smoke test.
+  if [ -f "$run_dir/train_log.json" ]; then say "$tag: already finished, skipping"; continue; fi
+  if [ -f "$run_dir/checkpoint.pt" ]; then
+    say "$tag: checkpoint found, resuming the full run"
+  else
   # 1. Smoke test: must finish, fit in 8192 MiB, and be fast enough.
   say "$tag: smoke test (2,000 sentences)"
   if ! $TRAIN --config "$cfg" --limit 2000 > results/lora_${tag}_limit2000.console.log 2>&1; then
@@ -28,11 +34,13 @@ for tag in fanar aya jais2 falcon_h1; do
   mb=$($PY -c "import json; print(json.load(open('$cfg'))['micro_batch_size'])")
   if ! $PY -c "import sys; sys.exit(0 if float('${rate:-99}') / $mb <= $MAX_S_PER_SENTENCE else 1)"; then
     say "SKIP $tag: ${rate} s/step at batch $mb is above $MAX_S_PER_SENTENCE s/sentence (full run too long)"; continue; fi
+  fi
 
   # 2. Full run (resumable: rerun the same command to continue from the last checkpoint).
   say "$tag: full run, seed 42"
-  if $TRAIN --config "$cfg" > results/lora_real_only_${tag}_seed42.console.log 2>&1; then
-    say "$tag done: $(grep -h '^DEV' results/lora_real_only_${tag}_seed42.console.log)"
+  # Append (>>), so a resumed run keeps the log of its interrupted part.
+  if $TRAIN --config "$cfg" >> results/lora_real_only_${tag}_seed42.console.log 2>&1; then
+    say "$tag done: $(grep -h '^DEV' results/lora_real_only_${tag}_seed42.console.log | tail -1)"
   else
     say "FAILED $tag full run (rerun: $TRAIN --config $cfg)"
   fi
