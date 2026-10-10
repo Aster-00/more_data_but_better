@@ -27,7 +27,7 @@ Per-dialect dev F1 (mean over seeds):
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
-| R03-marbert | 3 | 81.44 ± 0.14 | **71.34 ± 1.03** | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 | 70.65 / 72.52 / 70.84 | — | `baseline_real_only` |
+| R03-marbert | 3 | 81.44 ± 0.14 | **71.34 ± 1.03** | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 | 70.65 / 72.52 / 70.84 | 68.65 | `baseline_real_only` |
 | R03-arabertv02_twitter | 3 | 78.65 ± 0.89 | **70.52 ± 0.52** | 69.15 ± 1.34 | 75.12 ± 0.30 | 71.99 ± 0.66 | 70.80 / 70.83 / 69.92 | 67.31 | `baseline_real_only_arabertv02_twitter` |
 | R03-marbertv2 | 3 | 80.95 ± 0.25 | **70.11 ± 0.55** | 70.94 ± 1.15 | 71.62 ± 0.90 | 69.81 ± 0.32 | 70.00 / 69.62 / 70.70 | 67.71 | `baseline_real_only_marbertv2` |
 | R03-tfidf_lr | 3 | 75.89 ± 0.59 | **62.58 ± 0.05** | 65.83 ± 1.27 | 62.28 ± 0.54 | 63.91 ± 0.07 | 62.52 / 62.59 / 62.62 | — | `baseline_real_only_tfidf_lr` |
@@ -93,7 +93,7 @@ Per-dialect dev F1 (mean over seeds):
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
-| R07-marbert | 3 | 82.40 ± 0.07 | **72.17 ± 0.75** | 72.02 ± 2.11 | 74.05 ± 0.74 | 71.94 ± 0.73 | 72.96 / 72.09 / 71.46 | — | `card1to18_real_only` |
+| R07-marbert | 3 | 82.40 ± 0.07 | **72.17 ± 0.75** | 72.02 ± 2.11 | 74.05 ± 0.74 | 71.94 ± 0.73 | 72.96 / 72.09 / 71.46 | 68.61 | `card1to18_real_only` |
 | R07-arabertv02_twitter | 3 | 79.87 ± 0.14 | **70.74 ± 0.52** | 69.35 ± 0.45 | 75.34 ± 0.98 | 71.83 ± 0.45 | 70.61 / 70.31 / 71.32 | — | `card1to18_real_only_arabertv02_twitter` |
 | R07-marbertv2 | 3 | 81.94 ± 0.37 | **69.79 ± 0.56** | 70.38 ± 1.08 | 71.52 ± 0.83 | 69.94 ± 0.53 | 69.51 / 69.41 / 70.43 | — | `card1to18_real_only_marbertv2` |
 | R07-tfidf_lr | 3 | 76.50 ± 0.18 | **62.70 ± 1.00** | 64.13 ± 1.09 | 63.49 ± 0.95 | 63.95 ± 0.83 | 63.81 / 61.86 / 62.41 | — | `card1to18_real_only_tfidf_lr` |
@@ -125,3 +125,5 @@ Per-dialect dev F1 (mean over seeds):
 |---|---|---|---|---|---|---|---|---|---|---|
 | T01 | R03-marbertv2 | `baseline_real_only_marbertv2_seed44` | `Ammar-06/mladi-marbertv2-r03` @ `48fc50e` | 80.67 | 70.70 | **67.71** | 63.58 | 75.36 | 77.14 | 3 |
 | T02 | R03-arabertv02_twitter | `baseline_real_only_arabertv02_twitter_seed43` | `Ammar-06/mladi-arabertv02-twitter-r03` @ `bce9290` | 79.13 | 70.83 | **67.31** | 61.86 | 77.65 | 76.04 | 4 |
+| T03 | R07-marbert | `card1to18_real_only_seed42` | `Ammar-06/mladi-marbert-r07` @ `5a92d8c` | 82.43 | 72.96 | **68.61** | 63.75 | 77.36 | 77.45 | — |
+| T04 | R03-marbert | `baseline_real_only_seed43` | `Ammar-06/mladi-marbert-r03` @ `685a30d` | 81.52 | 72.52 | **68.65** | 64.60 | 76.39 | 77.88 | 2 |

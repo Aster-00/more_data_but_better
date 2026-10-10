@@ -34,7 +34,7 @@ OUT_DIR = Path("docs/tables")
 LEADERBOARD = Path("results/leaderboard.jsonl")
 SPLITS = ("train", "dev", "test")
 ORIGIN_OURS = "ours"
-ORIGIN_EXTERNAL = "external: published checkpoint, scored only (no training code or data)"
+ORIGIN_EXTERNAL = "external"
 
 
 def origin(member: dict) -> str:
@@ -248,7 +248,7 @@ def write_split_markdown(registry: dict, out: list[dict], dialects: list[str]) -
             dev = log.get("dev", {}).get("macro", {}).get("f1")
             lines.append(f"| {t['test_id']} | {t['run_id']} | `{t['run']}` | `{t['repo_id']}` @ `{t['commit'][:7]}` | "
                          f"{fmt(val)} | {fmt(dev)} | **{100 * t['f1']:.2f}** | {100 * t['precision']:.2f} | "
-                         f"{100 * t['recall']:.2f} | {100 * t['accuracy']:.2f} | {t.get('rank_at_reading', '—')} |")
+                         f"{100 * t['recall']:.2f} | {100 * t['accuracy']:.2f} | {t.get('rank_at_reading') or '—'} |")
     (OUT_DIR / "split_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 

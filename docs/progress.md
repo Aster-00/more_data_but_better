@@ -53,6 +53,17 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 - On test both models mark too many dialects per sentence. The threshold is fixed at 0.3, so a stricter cutoff would have to be built into the model (training, or lowering the output bias), chosen on dev, not test.
 - The splits differ in dialects, label source and size, so rows are not strictly comparable. Macro F1 is averaged per dialect, so it is not the harmonic mean of macro P and R.
 
+### T03: R07-marbert on the leaderboard (2026-10-09)
+- **Setup:** best dev seed of R07-marbert (MARBERT v1 on D4, seed 42), `Ammar-06/mladi-marbert-r07` @ `5a92d8c`, `predict_binary_outcomes`. Submitted to inform the open D4 question (`CLAUDE.md`). The Hub copy re-scored on dev matches the local run (72.96). Uploaded over plain LFS (`HF_HUB_DISABLE_XET=1`): Xet uploads failed three times after ~33 min at this machine's ~210 kB/s upload speed (`results/upload_hub_2026-10-09.log`).
+- **Result:** test macro F1 68.61, our best submission so far (T01 67.71, T02 67.31). Same pattern as T01/T02: precision 63.75, recall 77.36, so it also marks too many dialects per sentence.
+- **Not yet evidence for D4:** T03 differs from T01 in both model (MARBERT v1 vs v2) and data (D4 vs D1), and the 0.9-point gap is one submission each. The direct comparison is T04 below; R07-arabertv02_twitter vs T02 gives a second same-model pair.
+
+### T04: R03-marbert on the leaderboard, the D1 side of the MARBERT pair (2026-10-09)
+- **Setup:** best dev seed of R03-marbert (MARBERT v1 on D1, seed 43), `Ammar-06/mladi-marbert-r03` @ `685a30d`, `predict_binary_outcomes`, uploaded over LFS like T03. Hub copy re-scored on dev matches the local run (72.52).
+- **Result:** test macro F1 68.65 (rank 2 when read), level with T03 (68.61, D4). Precision 64.60 vs 63.75, recall 76.39 vs 77.36: D4 trades about one point of precision for one of recall, within noise.
+- **D4 question, MARBERT pair:** no test difference between D1 and D4 (0.04 points, one submission each). This matches dev, where R07 vs R03 was within seed spread (72.17 ± 0.75 vs 71.34 ± 1.03). The AraBERT pair (R07-arabertv02_twitter, uploaded @ `526cedb`, vs T02) is not on the leaderboard yet.
+- MARBERT v1 is now our best test model on both data versions (68.6), about 1 point above MARBERTv2 (T01, 67.71); also one submission each.
+
 ### R05: real only on D2, zero-label and all-18 texts removed (2026-10-08)
 - **Setup:** `configs/card1to17_real_only*.json`, all four classifiers, seeds 42/43/44, otherwise identical to R03. Commit `3dcac61` (matches the logs). 5.7–6.3 min per transformer run.
 - **Result: dev macro F1 drops for every classifier:** MARBERTv2 −5.2, TF-IDF −6.0 (clear); MARBERT −2.1 (at the noise boundary); AraBERT −0.7 (noise). None improves.
