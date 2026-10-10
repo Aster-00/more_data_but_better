@@ -170,10 +170,11 @@ def train(cfg: dict) -> dict:
                       lora_alpha=cfg["lora_alpha"], lora_dropout=cfg["lora_dropout"],
                       target_modules=cfg["lora_target_modules"])
     if custom:
-        model = decoder_head.build_for_training(cfg["model"], quant_config(), lora, len(DIALECTS))
+        model = decoder_head.build_for_training(cfg["model"], quant_config(), lora, len(DIALECTS),
+                                                cfg.get("embeddings_16bit", False))
     else:
         model = load_base(cfg["model"], tokenizer.pad_token_id)
-        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
+        model = decoder_head.prepare_kbit(model, cfg.get("embeddings_16bit", False))
         model = get_peft_model(model, lora)
     log_head = "custom last-token head (decoder_head.py)" if custom else "AutoModelForSequenceClassification"
     n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)

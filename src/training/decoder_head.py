@@ -24,6 +24,30 @@ from transformers.models.auto.modeling_auto import MODEL_FOR_SEQUENCE_CLASSIFICA
 HEAD_FILE = "score_head.pt"
 
 
+def prepare_kbit(model: torch.nn.Module, embeddings_16bit: bool = False) -> torch.nn.Module:
+    """Freeze the 4-bit model and enable gradient checkpointing (peft's k-bit preparation).
+
+    peft.prepare_model_for_kbit_training (0.21.2) casts every non-4-bit 16-bit weight to fp32,
+    including the input embedding table. Wrong for models with a very large vocabulary: Aya's
+    256k x 4096 table grows from 2.1 to 4.2 GB, and the model no longer fits 8 GB. The table is
+    frozen and was stored in 16-bit, so fp32 adds memory but no information. Fix (opt-in via
+    `embeddings_16bit`): the same steps, except the input embedding table stays 16-bit.
+    """
+    if not embeddings_16bit:
+        return prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
+    table = model.get_input_embeddings().weight
+    for param in model.parameters():
+        param.requires_grad = False
+    for param in model.parameters():
+        if (param is not table and param.dtype in (torch.float16, torch.bfloat16)
+                and param.__class__.__name__ != "Params4bit"):
+            param.data = param.data.to(torch.float32)
+    torch.cuda.empty_cache()
+    model.enable_input_require_grads()
+    model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={})
+    return model
+
+
 def needs_custom_head(name: str) -> bool:
     """True if transformers has no sequence-classification class for this architecture."""
     return AutoConfig.from_pretrained(name).model_type not in MODEL_FOR_SEQUENCE_CLASSIFICATION_MAPPING_NAMES
@@ -54,9 +78,10 @@ def load_body(name: str, quant) -> torch.nn.Module:
                                      device_map={"": 0})
 
 
-def build_for_training(name: str, quant, lora: LoraConfig, num_labels: int) -> LastTokenClassifier:
+def build_for_training(name: str, quant, lora: LoraConfig, num_labels: int,
+                       embeddings_16bit: bool = False) -> LastTokenClassifier:
     """4-bit body with LoRA adapters and gradient checkpointing, plus a fresh head."""
-    body = prepare_model_for_kbit_training(load_body(name, quant), use_gradient_checkpointing=True)
+    body = prepare_kbit(load_body(name, quant), embeddings_16bit)
     return LastTokenClassifier(get_peft_model(body, lora), num_labels)
 
 

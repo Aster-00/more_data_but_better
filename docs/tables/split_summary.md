@@ -94,7 +94,7 @@ Per-dialect dev F1 (mean over seeds):
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R07-marbert | 3 | 82.40 ± 0.07 | **72.17 ± 0.75** | 72.02 ± 2.11 | 74.05 ± 0.74 | 71.94 ± 0.73 | 72.96 / 72.09 / 71.46 | 68.61 | `card1to18_real_only` |
-| R07-arabertv02_twitter | 3 | 79.87 ± 0.14 | **70.74 ± 0.52** | 69.35 ± 0.45 | 75.34 ± 0.98 | 71.83 ± 0.45 | 70.61 / 70.31 / 71.32 | — | `card1to18_real_only_arabertv02_twitter` |
+| R07-arabertv02_twitter | 3 | 79.87 ± 0.14 | **70.74 ± 0.52** | 69.35 ± 0.45 | 75.34 ± 0.98 | 71.83 ± 0.45 | 70.61 / 70.31 / 71.32 | 67.48 | `card1to18_real_only_arabertv02_twitter` |
 | R07-marbertv2 | 3 | 81.94 ± 0.37 | **69.79 ± 0.56** | 70.38 ± 1.08 | 71.52 ± 0.83 | 69.94 ± 0.53 | 69.51 / 69.41 / 70.43 | — | `card1to18_real_only_marbertv2` |
 | R07-tfidf_lr | 3 | 76.50 ± 0.18 | **62.70 ± 1.00** | 64.13 ± 1.09 | 63.49 ± 0.95 | 63.95 ± 0.83 | 63.81 / 61.86 / 62.41 | — | `card1to18_real_only_tfidf_lr` |
 
@@ -111,12 +111,14 @@ Per-dialect dev F1 (mean over seeds):
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R08-fanar | 1 | 82.44 | **67.30** | 74.06 | 63.56 | 67.96 | 67.30 | — | `lora_real_only_fanar` |
 | R08-qwen3 | 1 | 80.05 | **65.15** | 73.48 | 61.20 | 65.28 | 65.15 | — | `lora_real_only_qwen3` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R08-fanar | 56.6 | 79.5 | 63.3 | 69.8 | 62.7 | 66.7 | 68.2 | 71.7 |
 | R08-qwen3 | 52.0 | 86.1 | 62.9 | 66.7 | 58.5 | 56.0 | 71.8 | 67.3 |
 
 ## Leaderboard submissions (test)
@@ -127,3 +129,4 @@ Per-dialect dev F1 (mean over seeds):
 | T02 | R03-arabertv02_twitter | `baseline_real_only_arabertv02_twitter_seed43` | `Ammar-06/mladi-arabertv02-twitter-r03` @ `bce9290` | 79.13 | 70.83 | **67.31** | 61.86 | 77.65 | 76.04 | 4 |
 | T03 | R07-marbert | `card1to18_real_only_seed42` | `Ammar-06/mladi-marbert-r07` @ `5a92d8c` | 82.43 | 72.96 | **68.61** | 63.75 | 77.36 | 77.45 | — |
 | T04 | R03-marbert | `baseline_real_only_seed43` | `Ammar-06/mladi-marbert-r03` @ `685a30d` | 81.52 | 72.52 | **68.65** | 64.60 | 76.39 | 77.88 | 2 |
+| T05 | R07-arabertv02_twitter | `card1to18_real_only_arabertv02_twitter_seed44` | `Ammar-06/mladi-arabertv02-twitter-r07` @ `526cedb` | 79.88 | 71.32 | **67.48** | 61.57 | 78.58 | 75.87 | 6 |

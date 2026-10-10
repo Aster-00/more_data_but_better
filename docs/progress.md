@@ -64,6 +64,11 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 - **D4 question, MARBERT pair:** no test difference between D1 and D4 (0.04 points, one submission each). This matches dev, where R07 vs R03 was within seed spread (72.17 ± 0.75 vs 71.34 ± 1.03). The AraBERT pair (R07-arabertv02_twitter, uploaded @ `526cedb`, vs T02) is not on the leaderboard yet.
 - MARBERT v1 is now our best test model on both data versions (68.6), about 1 point above MARBERTv2 (T01, 67.71); also one submission each.
 
+### T05: R07-arabertv02_twitter on the leaderboard, the D4 side of the AraBERT pair (2026-10-10)
+- **Setup:** best dev seed of R07-arabertv02_twitter (AraBERTv02-Twitter on D4, seed 44), `Ammar-06/mladi-arabertv02-twitter-r07` @ `526cedb`, `predict_binary_outcomes`. Hub copy re-scored on dev matches the local run (71.32).
+- **Result:** test macro F1 67.48 (P 61.57, R 78.58, accuracy 75.87; rank 6 when read), level with its D1 counterpart T02 (67.31). As with MARBERT, D4 trades a little precision (61.57 vs 61.86) for recall (78.58 vs 77.65), within noise.
+- **D4 question, both pairs on test:** MARBERT D4 vs D1 68.61 vs 68.65, AraBERT 67.48 vs 67.31. No test difference for either model (one submission each). Condition (1) of the pending D4 decision in `CLAUDE.md` is now met; condition (2), the LLM-classifier queue, is still running.
+
 ### R05: real only on D2, zero-label and all-18 texts removed (2026-10-08)
 - **Setup:** `configs/card1to17_real_only*.json`, all four classifiers, seeds 42/43/44, otherwise identical to R03. Commit `3dcac61` (matches the logs). 5.7–6.3 min per transformer run.
 - **Result: dev macro F1 drops for every classifier:** MARBERTv2 −5.2, TF-IDF −6.0 (clear); MARBERT −2.1 (at the noise boundary); AraBERT −0.7 (noise). None improves.
@@ -77,11 +82,13 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 - Size explains less than composition: R06 loses 13% of the data and drops as much as R05 (17%), while R07 loses 4% and does not drop. A size-matched sample would settle it; not run.
 - Decision: keep D1 (D-006). R07 is the best setup for MARBERT and AraBERT on dev; whether to switch to D4 is an open question in `CLAUDE.md`.
 
-### R08: decoder LLMs as classifiers, 4-bit QLoRA, D1 (2026-10-08 / 09)
+### R08: decoder LLMs as classifiers, 4-bit QLoRA, D1 (2026-10-08 / 10)
 - **Setup:** `configs/lora_real_only_<model>.json`, `src/training/train_lora_classifier.py`. 4-bit NF4 base (frozen), LoRA r 16 / alpha 32 / dropout 0.05 on all projections, new 18-output head trained in full, lr 1e-4, effective batch 24, bf16, max length 128, 2 epochs, macro-F1 selection. Same D1 and split as R03. LoRA settings are standard QLoRA defaults, not tuned.
 - **Qwen3-8B (seed 42): 65.15**, about 5 points below the BERT-sized classifiers on the same data, although its validation F1 (80.05) is level with theirs. The gap opens only on human labels. **The loss is recall** (61.2); its precision (73.5) is the highest of our models. One seed only, so not yet a result by our rule.
 - Qwen3 run: 6.2 h, peak VRAM 7,928 MiB, 43.7M trainable parameters. Code at `3ce9c49`; the log records `cf35893` because the commit is read at the end of training. A first attempt was killed at epoch 1 when the Claude Code session ended (log kept as `results/lora_real_only_qwen3_seed42_killed.console.log`); the rerun was detached.
-- Fanar, Jais-2, Falcon-H1 and Aya are running in a queue (custom last-token head for Jais-2, Falcon-H1 and Aya; commit `8631275`).
+- **Fanar-1-9B (seed 42): 67.30** (P 74.06, R 63.56), 2.2 above Qwen3 and about 3 below the BERT-sized classifiers (R03: MARBERTv2 70.11 ± 0.55, AraBERTv02-Twitter 70.52 ± 0.52). Same pattern as Qwen3: high precision, low recall. Validation F1 82.44 at epoch 2 (picked; 80.23 at epoch 1), above every R03 model (≈79–81), so again the gap opens only on human labels. One seed only.
+- Fanar run: micro-batch 4 × 6 accumulation (8 × 3 peaked at 8,238 MiB in its smoke test; effective batch 24 unchanged), 1.6–1.9 s per micro-batch, about 6.5 h per epoch, peak VRAM 7,894 MiB, 54.1M trainable parameters. Code `8631275`; the log records `7d3f786` (commit read at the end; `git diff 8631275 7d3f786 -- src/training configs/lora_real_only_fanar.json` is empty). The PC restarted during epoch 2 (between 18:51 on 2026-10-09 and 03:08 on 2026-10-10); the run resumed from its checkpoint at step 11,994 / 13,137 and finished on 2026-10-10 04:12. The kill-and-resume test on 2026-10-09 had reproduced an uninterrupted run exactly, so the resume should not change the result.
+- Jais-2, Falcon-H1 and Aya are running in a queue (`scripts/queue_llm_classifiers.sh`; custom last-token head, `src/training/decoder_head.py`).
 - These models cannot be scored on the leaderboard as it stands (see `CLAUDE.md` → Model roster). Dev only.
 
 ### G01: generator feasibility, 4-bit NF4, 20 sentences, minimal prompt (2026-10-06 / 07)
@@ -121,7 +128,7 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 
 | ID | What | Why |
 |---|---|---|
-| R08 (running) | Fanar, Jais-2, Falcon-H1, Aya as QLoRA classifiers | Complete the LLM-classifier comparison |
+| R08 (running) | Jais-2, Falcon-H1, Aya as QLoRA classifiers (Qwen3 and Fanar done) | Complete the LLM-classifier comparison |
 | G02 | Bigger generator check (e.g. 200 sentences per generator over all 18 dialects, after fixing the translation cleanup) | n = 20 only suggests a ranking; needed before choosing generators |
 
 ## Old IDs
