@@ -1,0 +1,3 @@
+Rank,Model Name,F1 score,Precision,Recall,Accuracy,Inference Method,URL,Commit ID
+3,Ammar-06/mladi-marbertv2-r03,0.6771323911985513,0.6358370243230582,0.7536370224506483,0.7713636363636364,predict_binary_outcomes,https://huggingface.co/Ammar-06/mladi-marbertv2-r03,48fc5
+4,Ammar-06/mladi-arabertv02-twitter-r03,0.6731288881809272,0.6185906350933875,0.7764942812625312,0.7603636363636365,predict_binary_outcomes,https://huggingface.co/Ammar-06/mladi-arabertv02-twitter-r03,bce92
