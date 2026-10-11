@@ -23,6 +23,7 @@ import argparse
 import json
 import platform
 import random
+import re
 import sys
 import time
 from pathlib import Path
@@ -46,8 +47,23 @@ def set_seed(seed: int) -> None:
     torch.cuda.manual_seed_all(seed)
 
 
-def load_records(path: Path, text_field: str, limit: int | None) -> tuple[list[str], np.ndarray]:
-    """Read the JSONL dataset; return texts and an (n x 18) 0/1 label matrix."""
+# Arabic diacritics (harakat, tanween, shadda, sukun, dagger alef, Quranic marks). Tatweel is
+# not a diacritic and is kept. Used only when a config sets "strip_diacritics": true.
+DIACRITICS = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
+
+
+def strip_diacritics(text: str) -> str:
+    """Remove Arabic diacritics; every other character is kept."""
+    return DIACRITICS.sub("", text)
+
+
+def load_records(path: Path, text_field: str, limit: int | None,
+                 remove_diacritics: bool = False) -> tuple[list[str], np.ndarray]:
+    """Read the JSONL dataset; return texts and an (n x 18) 0/1 label matrix.
+
+    remove_diacritics applies to the training data only: dev/test text is fed to the model
+    raw, as the leaderboard does.
+    """
     texts, labels = [], []
     with open(path, encoding="utf-8") as f:
         for i, line in enumerate(f):
@@ -55,7 +71,8 @@ def load_records(path: Path, text_field: str, limit: int | None) -> tuple[list[s
             if limit is not None and i >= limit:
                 break
             r = json.loads(line)
-            texts.append(r[text_field])
+            # Optional explicit normalization step (off by default, see CLAUDE.md).
+            texts.append(strip_diacritics(r[text_field]) if remove_diacritics else r[text_field])
             labels.append([r["labels"][d] for d in DIALECTS])
     return texts, np.asarray(labels, dtype=np.float32)
 
@@ -132,7 +149,8 @@ def train(cfg: dict, device: str) -> dict:
     model_dir = run_dir / "model"
 
     # Data: load, split into train/validation, tokenize.
-    texts, labels = load_records(Path(cfg["data"]), cfg["text_field"], cfg["limit"])
+    texts, labels = load_records(Path(cfg["data"]), cfg["text_field"], cfg["limit"],
+                                 cfg.get("strip_diacritics", False))
     train_idx, val_idx = split_train_val(len(texts), cfg["val_fraction"], cfg["seed"])
     tokenizer = AutoTokenizer.from_pretrained(cfg["model"])
     train_loader = make_loader(tokenizer, [texts[i] for i in train_idx], labels[train_idx],
