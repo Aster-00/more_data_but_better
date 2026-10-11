@@ -26,7 +26,7 @@ Bachelor thesis at the German International University (GIU), Winter 2026.
 
 ## Model roster
 
-Final model set (decided 2026-10-08): classifiers MARBERTv2, AraBERTv02-Twitter, Qwen3-8B, Jais-2-8B, Falcon-H1-7B, Aya-Expanse-8B; Fanar-1-9B kept. **No longer used** (files kept on disk, their scores in `docs/tables/` kept as they are): MARBERT v1, TF-IDF + LR, Gemma-2, ALLaM, NLLB (never run), CAMeLBERT DID scorers as classifiers. Open: the leaderboard Space runs on `cpu-basic` (no GPU, ~16 GB RAM) and loads `AutoModelForSequenceClassification` without `trust_remote_code`; transformers has no sequence-classification class for Jais-2, Falcon-H1 or Aya (Cohere), and 7–9B models do not fit its memory, so the trained large models cannot be scored there as it stands (ask the organizer).
+Final model set (decided 2026-10-08): classifiers MARBERTv2, AraBERTv02-Twitter, MARBERT v1, Qwen3-8B, Jais-2-8B, Falcon-H1-7B, Aya-Expanse-8B; Fanar-1-9B kept. **No longer used** (files kept on disk, their scores in `docs/tables/` kept as they are): TF-IDF + LR, Gemma-2, ALLaM, NLLB (never run), the scorers (CAMeLBERT DID, Sentence-ALDi, multilingual-e5-large; changed 2026-10-10). Open: the leaderboard Space runs on `cpu-basic` (no GPU, ~16 GB RAM) and loads `AutoModelForSequenceClassification` without `trust_remote_code`; transformers has no sequence-classification class for Jais-2, Falcon-H1 or Aya (Cohere), and 7–9B models do not fit its memory, so the trained large models cannot be scored there as it stands (ask the organizer).
 
 Checked on the Hub on 2026-10-06. About 6.7 GB of the 8 GB of VRAM is free. Peak VRAM figures are from G01 (generation, 4-bit, batch 5, 48 new tokens).
 
@@ -37,17 +37,17 @@ Checked on the Hub on 2026-10-06. About 6.7 GB of the 8 GB of VRAM is free. Peak
 | Generator, classifier (R08) | `tiiuae/Falcon-H1-7B-Instruct` | 7.6B | 4-bit (G01: 5184 MiB) | in use | Added 2026-10-06; Arabic among its languages (Falcon3 has none); hybrid Mamba, batch 1 only for generation |
 | Generator, classifier (R08) | `inception42/Jais-2-8B-Chat` | 8.1B | 4-bit (G01: 5750 MiB) | in use | Added 2026-10-06; gated (license accepted on the Hub) |
 | Classifier (R08) | `CohereLabs/aya-expanse-8b` | 8B | 4-bit (TODO: peak VRAM) | in use | QLoRA config `configs/lora_real_only_aya.json` |
+| Classifier | `UBC-NLP/MARBERTv2` | ~163M | yes | in use | Main classifier |
+| Classifier | `aubmindlab/bert-base-arabertv02-twitter` | 135M | yes | in use | |
+| Classifier | `UBC-NLP/MARBERT` | ~163M | yes | in use | v1; compared with v2 in R03 |
 | Generator | `google/gemma-2-9b-it` | 9.2B | 4-bit only (G01: 6174 MiB) | dropped | Gated: accept the license and use an access token |
 | Generator | `humain-ai/ALLaM-7B-Instruct-preview` | 7.0B | 4-bit (G01: 4562 MiB) | dropped | |
 | Generator | `facebook/nllb-200-1.3B` | 1.3B | yes | dropped | Translation / back-translation. Downloaded, never run |
 | Generator | `facebook/nllb-200-distilled-1.3B` | 1.3B | yes | dropped | Same. Downloaded, never run |
 | Generator | GPT-4o-mini (optional) | — | remote | not used | Paid: conflicts with the zero-cost rule |
-| Scorer (fidelity) | `CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi` or `-did-madar-corpus26` | ~110M | yes | in use | Variant not decided (S01 favours `-did-nadi`) |
-| Scorer (dialectness) | `VARabi/Sentence-ALDi` | ~110M | yes | in use | |
-| Scorer (diversity) | `intfloat/multilingual-e5-large` | 560M | yes | in use | |
-| Classifier | `UBC-NLP/MARBERTv2` | ~163M | yes | in use | Main classifier |
-| Classifier | `aubmindlab/bert-base-arabertv02-twitter` | 135M | yes | in use | |
-| Classifier | `UBC-NLP/MARBERT` | ~163M | yes | dropped | v1; compared with v2 in R03 |
+| Scorer (fidelity) | `CAMeL-Lab/bert-base-arabic-camelbert-mix-did-nadi` or `-did-madar-corpus26` | ~110M | yes | dropped | S01 favoured `-did-nadi` |
+| Scorer (dialectness) | `VARabi/Sentence-ALDi` | ~110M | yes | dropped | |
+| Scorer (diversity) | `intfloat/multilingual-e5-large` | 560M | yes | dropped | |
 | Classifier | TF-IDF + logistic regression | — | CPU | dropped | Dev-only reference (cannot be submitted to the leaderboard) |
 
 ## Experimental design
@@ -169,7 +169,7 @@ The supervisor scores quality of work, interim reports, presentations and indepe
 - Final training dataset: the NADI tweet text is now available, but alternatives are still being considered.
 - Test-set evaluation budget: the leaderboard is public and evaluates one model at a time, so 3 conditions × seeds × learning-curve sizes would mean many public submissions. Decide which runs to submit, or ask the organizer (Amr Keleg) about batch or private evaluation.
 - Final label inventory: country-level labels, or countries regrouped into regions.
-- Generators are chosen (see Model roster above), and G01 showed that all of them fit the 8 GB card in 4-bit. Still open: whether GPT-4o-mini is allowed, and which CAMeLBERT DID variant to use (`-did-nadi` or `-did-madar-corpus26`).
+- Generators are chosen (see Model roster above), and G01 showed that all of them fit the 8 GB card in 4-bit. Still open: whether GPT-4o-mini is allowed.
 - Exact metric set and the real-data sizes for the learning curves.
 - Whether sentiment classification stays in scope as a secondary task or is dropped.
 - **Pending (raised 2026-10-09): make D4 the default training set for all runs?** D4 is D1 without the 2,271 zero-label texts, with the all-18 texts kept (`nadi_lahjatbert_card1to18.jsonl`). On dev, R07 (D4) is the best setup for MARBERT (72.17 ± 0.75 vs 71.34 on D1) and AraBERTv02-Twitter (70.74 vs 70.52), but not for MARBERTv2 (69.79 vs 70.11 on D1). Decide only after (1) the R07 models uploaded on 2026-10-09 have leaderboard test scores and (2) the processes running now have finished (LLM-classifier queue: Fanar, Jais-2, Falcon-H1, Aya). Until then, keep D1 as the default and do not switch configs. Test so far: MARBERT D4 68.61 (T03) vs D1 68.65 (T04), no difference; AraBERT D4 67.48 (T05) vs D1 67.31 (T02), no difference. Condition (1) is met.

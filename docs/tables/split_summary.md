@@ -111,6 +111,8 @@ Per-dialect dev F1 (mean over seeds):
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R08-jais2 | 1 | 84.05 | **69.31** | 76.08 | 65.53 | 69.14 | 69.31 | — | `lora_real_only_jais2` |
+| R08-aya | 1 | 82.76 | **69.11** | 75.50 | 66.07 | 69.11 | 69.11 | — | `lora_real_only_aya` |
 | R08-fanar | 1 | 82.44 | **67.30** | 74.06 | 63.56 | 67.96 | 67.30 | — | `lora_real_only_fanar` |
 | R08-qwen3 | 1 | 80.05 | **65.15** | 73.48 | 61.20 | 65.28 | 65.15 | — | `lora_real_only_qwen3` |
 
@@ -118,6 +120,8 @@ Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R08-jais2 | 60.4 | 83.1 | 66.0 | 71.3 | 61.8 | 65.3 | 78.0 | 68.6 |
+| R08-aya | 63.0 | 89.7 | 61.5 | 75.8 | 64.6 | 61.4 | 71.4 | 65.4 |
 | R08-fanar | 56.6 | 79.5 | 63.3 | 69.8 | 62.7 | 66.7 | 68.2 | 71.7 |
 | R08-qwen3 | 52.0 | 86.1 | 62.9 | 66.7 | 58.5 | 56.0 | 71.8 | 67.3 |
 
