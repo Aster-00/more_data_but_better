@@ -24,8 +24,14 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 - Downloaded and scored, not trained by us: the reference to beat. cl_cardinality 72.68, cl_aldi 70.27, baseline 67.41.
 - Both curriculum models beat their baseline, as in their paper. The ranking differs from their test results (there cl_aldi was best); at 120 sentences, 1–2 points are noise.
 
-### R02: smoke test, D1, 500 examples (2026-10-06)
+### Smoke test, D1, 500 examples (2026-10-06; was R02, ID reused below)
 - Training, saving and scoring run end to end. The model predicts every dialect as valid (recall 100, F1 53.2), as expected after 500 examples. Not a result; folder deleted.
+
+### R02: real only on D4, diacritics stripped from the training text (2026-10-11)
+- **Setup:** `configs/card1to18_nodiac_real_only*.json`, identical to R07 except `strip_diacritics: true` (`src/training/train_classifier.py`: harakat, tanween, shadda, sukun, dagger alef, Quranic marks; tatweel kept). Training and validation text only: dev text is scored as it is, as on the leaderboard. Called R09 in the commit that added it (`924e068`). 6.4–7.2 min per run.
+- **Result: no measurable difference** from R07 for any model: MARBERT 71.39 ± 1.52 vs 72.17 ± 0.75, AraBERTv02-Twitter 70.84 ± 0.10 vs 70.74 ± 0.52, MARBERTv2 69.70 ± 0.35 (2 seeds) vs 69.79 ± 0.56. Precision and recall also move within seed spread.
+- MARBERTv2 seed 44 was stopped before it finished (folder has only `model/`, no `train_log.json`), so MARBERTv2 has 2 seeds.
+- Logs record three commits (`dd47a5a`, `b03033d`, `ee2342d`); `git diff dd47a5a ee2342d -- src configs/card1to18_nodiac*` is empty, so all runs used the same code.
 
 ### R03: real only (condition 1), D1, our settings (2026-10-06)
 - **Setup:** `configs/baseline_real_only*.json`, seeds 42/43/44. First 8 of 12 layers frozen, dropout 0.3, lr 5e-5, batch 24, 2 epochs, fp16, 90/10 train/validation split of D1, epoch chosen by validation macro F1. 6.6–7.4 min per transformer run.
@@ -137,4 +143,4 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 
 ## Old IDs
 
-Before the 2026-10-06 renumbering (still used in early commits and console logs): R00 → R00-sample_submission; R01/R02/R03 → R01-lahjatbert_cl_cardinality / _cl_aldi / _baseline; R04 → R02-marbert; R05–R07 → R03-marbert; R09 → R03-marbertv2; R10 → R03-arabertv02_twitter and R03-tfidf_lr; R08 → R04-marbert; G01/G02/G03 → G01-fanar / G01-gemma / G01-allam.
+Before the 2026-10-06 renumbering (still used in early commits and console logs): R00 → R00-sample_submission; R01/R02/R03 → R01-lahjatbert_cl_cardinality / _cl_aldi / _baseline; R04 → R02-marbert; R05–R07 → R03-marbert; R09 → R03-marbertv2; R10 → R03-arabertv02_twitter and R03-tfidf_lr; R08 → R04-marbert; G01/G02/G03 → G01-fanar / G01-gemma / G01-allam. After the renumbering, R02 (smoke test, no results) was reused on 2026-10-11 for the no-diacritics run, which its commit `924e068` calls R09.

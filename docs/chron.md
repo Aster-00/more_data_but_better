@@ -26,9 +26,17 @@ Downloaded and scored, not trained by us. One published checkpoint each, so no s
 
 `cl_aldi` orders the data by ALDi (Arabic Level of Dialectness, Keleg et al. 2023)
 
-## R02 – Does training work end to end?
+## R02 – Does removing diacritics from the training text change anything?
 
-Smoke test, 500 examples. The model predicted every dialect as valid (R 100, F1 53.2). Not a result; folder deleted.
+R07 setup (D4, our R03 settings) with `strip_diacritics: true` (`configs/card1to18_nodiac_real_only*.json`). MARBERTv2 seed 44 was stopped before it finished (no score), so MARBERTv2 has 2 seeds. Diacritics are stripped from training text only; dev text is scored as it is.
+
+| Model | Seeds | R07 dev F1 (D4) | R02 dev F1 (D4, no diacritics) | P | R | micro F1 | Validation F1 | Dev F1 per seed (42 / 43 / 44) |
+|---|---|---|---|---|---|---|---|---|
+| MARBERT | 3 | 72.17 ± 0.75 | 71.39 ± 1.52 | 71.14 ± 2.87 | 73.30 ± 0.77 | 71.12 ± 1.38 | 82.48 ± 0.08 | 73.15 / 70.55 / 70.48 |
+| AraBERTv02-Twitter | 3 | 70.74 ± 0.52 | 70.84 ± 0.10 | 69.84 ± 0.73 | 74.87 ± 0.45 | 71.92 ± 0.13 | 80.14 ± 0.07 | 70.73 / 70.93 / 70.86 |
+| MARBERTv2 | 2 | 69.79 ± 0.56 | 69.70 ± 0.35 | 70.45 ± 1.32 | 71.29 ± 1.81 | 69.78 ± 0.33 | 81.72 ± 0.24 | 69.46 / 69.95 / — |
+
+**Takeaway:** removing diacritics makes no measurable difference for any of the three models (all changes within seed spread).
 
 ## R03 – Real only (condition 1) on D1, our training settings
 

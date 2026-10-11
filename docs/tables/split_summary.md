@@ -23,6 +23,22 @@ Per-dialect dev F1 (mean over seeds):
 | R01-lahjatbert_cl_aldi | 58.2 | 83.7 | 67.9 | 69.6 | 75.9 | 69.9 | 65.2 | 71.7 |
 | R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
+## R02: Real only, D4 with diacritics stripped from the training text (strip_diacritics), otherwise identical to R07
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R02-marbert | 3 | 82.48 ± 0.08 | **71.39 ± 1.52** | 71.14 ± 2.87 | 73.30 ± 0.77 | 71.12 ± 1.38 | 73.15 / 70.55 / 70.48 | — | `card1to18_nodiac_real_only` |
+| R02-arabertv02_twitter | 3 | 80.14 ± 0.07 | **70.84 ± 0.10** | 69.84 ± 0.73 | 74.87 ± 0.45 | 71.92 ± 0.13 | 70.73 / 70.93 / 70.86 | — | `card1to18_nodiac_real_only_arabertv02_twitter` |
+| R02-marbertv2 | 2 | 81.72 ± 0.24 | **69.70 ± 0.35** | 70.45 ± 1.32 | 71.29 ± 1.81 | 69.78 ± 0.33 | 69.46 / 69.95 | — | `card1to18_nodiac_real_only_marbertv2` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R02-marbert | 66.3 | 83.7 | 67.7 | 69.5 | 73.9 | 68.6 | 71.9 | 69.4 |
+| R02-arabertv02_twitter | 60.1 | 79.9 | 71.6 | 74.2 | 69.4 | 67.7 | 67.8 | 76.1 |
+| R02-marbertv2 | 66.6 | 81.2 | 67.9 | 69.7 | 63.9 | 70.5 | 70.2 | 67.6 |
+
 ## R03: Real only (condition 1), D1, our settings: dropout 0.3, 2 epochs, macro-F1 epoch selection, threshold 0.3
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
