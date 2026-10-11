@@ -52,6 +52,10 @@ D_FILES = {
 }
 G01_MATCH = Path("data/processed/d1_g01match_seed42.jsonl")
 G01_DIR = Path("data/synthetic")
+EXTRA_DIR = Path("results/datasets")   # external corpora added 2026-10-11 (not gitignored: see summary)
+HABIBI_ZIP = EXTRA_DIR / "habibi_full_corpus_csv.zip"
+TRAVEL_CSV = EXTRA_DIR / "multidialectal_travel_corpus.csv"
+PADIC_XML = EXTRA_DIR / "PADIC.xml"
 INSPECT_FILES = {"cardinality=18": Path("data/inspect/d1_all18.tsv"),
                  "cardinality=0": Path("data/inspect/d1_zero.tsv")}
 # Documented row counts (docs/data.md, results/data_stats/nadi_lahjatbert_stats.json).
@@ -107,6 +111,7 @@ class Row:
     label: str | None = None                     # single country label (None if none / several)
     labels: dict[str, int] | None = None         # multi-label validity, if the set has it
     meta: dict = field(default_factory=dict)     # aggregate-only extras (nadi_refs, cardinality, id)
+    label2: str | None = None                    # second single-label family (Habibi song dialect)
 
 
 @dataclass
@@ -118,6 +123,67 @@ class Split:
     rows: list[Row]
     kind: str            # "single", "multi" or "single+multi"
     label_name: str      # what `label` means
+    label2_name: str = ""  # what `label2` means, if used
+    notes: list[str] = field(default_factory=list)  # aggregate-only notes for summary.md
+
+
+def read_habibi(path: Path, limit: int | None) -> Split:
+    """Habibi lyrics (zip, read in memory): one row per lyric line; labels = singer nationality, song dialect."""
+    import io
+    import zipfile
+    rows, empty, songs = [], 0, set()
+    with zipfile.ZipFile(path) as z, z.open("arabicLyrics.csv") as f:
+        for i, r in enumerate(csv.DictReader(io.TextIOWrapper(f, encoding="utf-8-sig", newline=""))):
+            if limit is not None and i >= limit:
+                break
+            # Empty lines are counted, not measured.
+            if not r["Lyrics"].strip():
+                empty += 1
+                continue
+            songs.add(r["songID"])
+            rows.append(Row(r["Lyrics"], model_text(r["Lyrics"]), label=r["SingerNationality"], label2=r["SongDialect"]))
+    return Split("Habibi-lyrics", "all", f"{path}::arabicLyrics.csv", rows, "single", "singer nationality",
+                 "song dialect", [f"Habibi: unit = one lyric line; {len(rows)} non-empty lines from {len(songs)} songs; "
+                                  f"{empty} empty lines skipped."])
+
+
+def read_parallel(name: str, path: Path, columns: list[tuple[str, list[str]]], limit: int | None) -> Split:
+    """Parallel corpus -> one row per non-empty cell, label = variety; meta holds the source row and MSA cell."""
+    rows, empty = [], Counter()
+    # Walk source rows, then varieties, so cells of one source sentence stay together.
+    n_src = len(columns[0][1]) if limit is None else min(limit, len(columns[0][1]))
+    msa = dict(columns).get("MSA")
+    for j in range(n_src):
+        for variety, cells in columns:
+            t = cells[j]
+            if not t.strip():
+                empty[variety] += 1
+                continue
+            rows.append(Row(t, model_text(t), label=variety,
+                            meta={"src": j, "msa": msa[j] if msa is not None and variety != "MSA" else None}))
+    note = f"{name}: unit = one cell of the parallel corpus; {n_src} source rows x {len(columns)} varieties"
+    note += f"; empty cells skipped: {dict(empty)}." if empty else "; no empty cells."
+    return Split(name, "all", str(path), rows, "single", "variety", "", [note])
+
+
+def read_travel(path: Path, limit: int | None) -> Split:
+    """multidialectal_travel_corpus.csv: 6 parallel columns (MSA + 5 dialects)."""
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        data = list(csv.reader(f))
+    names = {"Modern Standard Arabic": "MSA", "Saudi Dialect": "Saudi", "Egyptian Dialect": "Egyptian",
+             "Iraqi Dialect": "Iraqi", "Levantine Dialect": "Levantine", "Moroccan Dialect": "Moroccan"}
+    cols = [(names[h], [r[i] for r in data[1:]]) for i, h in enumerate(data[0])]
+    return read_parallel("Travel-parallel", path, cols, limit)
+
+
+def read_padic(path: Path, limit: int | None) -> Split:
+    """PADIC.xml: <Sentence> elements with 6 parallel varieties (Algiers, Annaba, MSA, Syrian, Palestinian, Moroccan)."""
+    from xml.etree import ElementTree as ET
+    sents = ET.parse(path).getroot().findall("Sentence")
+    tags = [c.tag for c in sents[0]]
+    names = {t: ("MSA" if t == "MODERN-STANDARD-ARABIC" else t.title()) for t in tags}
+    cols = [(names[t], [(s.findtext(t) or "") for s in sents]) for t in tags]
+    return read_parallel("PADIC", path, cols, limit)
 
 
 def read_nadi_file(path: Path, limit: int | None) -> list[Row]:
@@ -199,6 +265,15 @@ def load_all(limit: int | None, only: set[str] | None) -> tuple[list[Split], lis
             rows = [Row(r["text"], model_text(r["text"]), label=r["target_dialect"])
                     for r in read_jsonl(p, limit)]
             splits.append(Split(name, "all", str(p), rows, "single", "target dialect"))
+
+    # 5. External corpora in results/datasets/ (no splits shipped: each measured as one split "all").
+    for name, path, reader in (("Habibi-lyrics", HABIBI_ZIP, read_habibi), ("Travel-parallel", TRAVEL_CSV, read_travel),
+                               ("PADIC", PADIC_XML, read_padic)):
+        if want(name):
+            if path.exists():
+                splits.append(reader(path, limit))
+            else:
+                notes.append(f"{name}: {path} not found")
     return splits, notes
 
 # ---------------------------------------------------------------- A + B lexical
@@ -253,6 +328,13 @@ def balance_rows(sp: Split) -> tuple[list[dict], dict]:
                         "count": k, "share": round(k / n, 6)})
         real = {k: v for k, v in c.items() if k != "(several countries)"}
         ratios["single"] = round(max(real.values()) / min(real.values()), ROUND) if real else None
+    # Second single-label family (Habibi song dialect): its own rows, its shares also sum to 1.
+    if sp.label2_name:
+        c2 = Counter(r.label2 for r in sp.rows)
+        for lab, k in sorted(c2.items()):
+            out.append({"dataset": sp.dataset, "split": sp.split, "label": f"{sp.label2_name}:{lab}",
+                        "count": k, "share": round(k / n, 6)})
+        ratios["single2"] = round(max(c2.values()) / min(c2.values()), ROUND)
     # Multi-label: positives per country (share of texts), then cardinality 0 / 1 / 2 / 3+ (sums to 1).
     if sp.kind in ("multi", "single+multi"):
         countries = list(sp.rows[0].labels)
@@ -346,6 +428,26 @@ def consistency_rows(splits: list[Split]) -> list[dict]:
                 out.append({"dataset": "MLADI-dev", "country": "(all)", "n": n,
                             "measure": f"valid_in_exactly_{k if k < 3 else '3+'}_share",
                             "value": round(card.get(k, 0) / n, ROUND)})
+        # Habibi: does each singer nationality map to one song dialect? (share of lines with the majority dialect)
+        if sp.label2_name:
+            by = defaultdict(Counter)
+            for r in sp.rows:
+                by[r.label][r.label2] += 1
+            for country, c in sorted(by.items()):
+                n = sum(c.values())
+                out.append({"dataset": sp.dataset, "country": country, "n": n,
+                            "measure": "majority_song_dialect_share", "value": round(max(c.values()) / n, ROUND)})
+                out.append({"dataset": sp.dataset, "country": country, "n": n,
+                            "measure": "n_song_dialects", "value": len(c)})
+        # Parallel corpora: share of dialect cells identical to their MSA source after norm() (untranslated).
+        if any(r.meta.get("msa") is not None for r in sp.rows[:50]):
+            per = defaultdict(list)
+            for r in sp.rows:
+                if r.label != "MSA" and r.meta.get("msa") is not None:
+                    per[r.label].append(norm(r.text) == norm(r.meta["msa"]))
+            for variety, v in sorted(per.items()):
+                out.append({"dataset": sp.dataset, "country": variety, "n": len(v),
+                            "measure": "identical_to_msa_share", "value": round(float(np.mean(v)), ROUND)})
     return out
 
 # ---------------------------------------------------------------- output
@@ -387,6 +489,12 @@ def subsets_of(sp: Split) -> list[tuple[str, list[Row]]]:
             if r.label is not None:
                 by[r.label].append(r)
         out += [(f"{sp.label_name.split()[-1]}={k}", v) for k, v in sorted(by.items()) if len(v) >= MIN_SUBSET_TEXTS]
+    # Second label family (Habibi song dialect).
+    if sp.label2_name:
+        by2 = defaultdict(list)
+        for r in sp.rows:
+            by2[r.label2].append(r)
+        out += [(f"{sp.label2_name.split()[-1]}={k}", v) for k, v in sorted(by2.items()) if len(v) >= MIN_SUBSET_TEXTS]
     # D1 only: the zero-label and all-18 subsets (exported as data/inspect/*.tsv).
     if sp.dataset == "LahjatBERT-D1":
         for k in (0, 18):
@@ -449,6 +557,10 @@ def main() -> None:
     nadi = ["NADI2020-TWT", "NADI2021-TWT", "NADI2023-TWT"]
     pairs += [(a, b) for a in nadi for b in nadi if a != b]
     pairs += [(d, "LahjatBERT-D1") for d in sets if d.startswith("G01-synthetic-")]
+    # External corpora: leakage into MLADI dev, overlap with the training set, and with each other.
+    extra = ["Habibi-lyrics", "Travel-parallel", "PADIC"]
+    pairs += [("MLADI-dev", e) for e in extra] + [(e, "LahjatBERT-D1") for e in extra]
+    pairs += [(a, b) for a in extra for b in extra if a != b]
     overlap = []
     for a, b in pairs:
         if a in sets and b in sets and sets[a]:
@@ -460,15 +572,26 @@ def main() -> None:
     if not args.no_models:
         import os
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
-        all_m = [r.mtext for sp in splits for r in sp.rows]
-        t1 = time.time()
-        aldi = aldi_scores(all_m, args.device, args.cache_dir)
-        print(f"ALDi scored {len(aldi)} unique texts ({time.time() - t1:.0f}s)", flush=True)
+        # Fix every sample first, then score only the texts the samples need.
+        # ALDi: every row, or a fixed random 20,000 rows (seed 0); subsets use the sampled rows.
+        aldi_keep = {}
         for sp in splits:
-            # Score every text, or a fixed random 20,000 rows (seed 0); subsets use the sampled rows.
             idx = (np.random.default_rng(ALDI_SEED).choice(len(sp.rows), ALDI_MAX, replace=False)
                    if len(sp.rows) > ALDI_MAX else np.arange(len(sp.rows)))
-            keep = {id(sp.rows[i]) for i in idx}
+            aldi_keep[sp.dataset] = {id(sp.rows[i]) for i in idx}
+        # E5: 2,000 random texts per repeat (seeds 0..4), or all texts once if the subset is smaller.
+        sem_draws = {}
+        for sp in splits:
+            for name, rows in subsets_of(sp):
+                n = len(rows)
+                sem_draws[(sp.dataset, name)] = ([np.random.default_rng(s).choice(n, SEM_N, replace=False)
+                                                  for s in SEM_SEEDS] if n > SEM_N else [np.arange(n)])
+        t1 = time.time()
+        aldi = aldi_scores([r.mtext for sp in splits for r in sp.rows if id(r) in aldi_keep[sp.dataset]],
+                           args.device, args.cache_dir)
+        print(f"ALDi scored {len(aldi)} unique texts ({time.time() - t1:.0f}s)", flush=True)
+        for sp in splits:
+            keep = aldi_keep[sp.dataset]
             for name, rows in subsets_of(sp):
                 v = np.array([aldi[r.mtext] for r in rows if id(r) in keep])
                 if len(v):
@@ -481,14 +604,13 @@ def main() -> None:
         import torch
         torch.cuda.empty_cache()
         t1 = time.time()
-        emb = e5_embeddings(all_m, args.device, args.cache_dir)
+        need = [rows[i].mtext for sp in splits for name, rows in subsets_of(sp)
+                for d in sem_draws[(sp.dataset, name)] for i in d]
+        emb = e5_embeddings(need, args.device, args.cache_dir)
         print(f"E5 embedded {len(emb)} unique texts ({time.time() - t1:.0f}s)", flush=True)
         for sp in splits:
             for name, rows in subsets_of(sp):
-                # 2,000 random texts per repeat (seeds 0..4), or all texts once if the subset is smaller.
-                n = len(rows)
-                draws = ([np.random.default_rng(s).choice(n, SEM_N, replace=False) for s in SEM_SEEDS]
-                         if n > SEM_N else [np.arange(n)])
+                n, draws = len(rows), sem_draws[(sp.dataset, name)]
                 vals = np.array([semantic_one(np.stack([emb[rows[i].mtext] for i in d])) for d in draws])
                 semantic.append({"dataset": sp.dataset, "split": sp.split, "subset": name, "n": min(n, SEM_N),
                                  "mean_pairwise_cos_dist": round(vals[:, 0].mean(), ROUND),
@@ -507,13 +629,16 @@ def main() -> None:
         if exp is not None:
             ok = len(sp.rows) == exp
             checks.append(f"{'OK ' if ok else 'MISMATCH'} rows {sp.dataset}/{sp.split}: {len(sp.rows)} (documented {exp})")
-    for key in {(b["dataset"], b["split"]) for b in balance}:
-        sp = next(s for s in splits if (s.dataset, s.split) == key)
-        if sp.kind in ("single", "single+multi"):
-            tot = sum(b["count"] for b in balance if (b["dataset"], b["split"]) == key and not b["label"].startswith(("valid:", "cardinality:")))
-            sh = sum(b["share"] for b in balance if (b["dataset"], b["split"]) == key and not b["label"].startswith(("valid:", "cardinality:")))
+    # Each single-label family (text before ":" in the label) must cover every row once.
+    for sp in splits:
+        if sp.kind not in ("single", "single+multi"):
+            continue
+        for fam in [sp.label_name] + ([sp.label2_name] if sp.label2_name else []):
+            fam_rows = [b for b in balance if (b["dataset"], b["split"]) == (sp.dataset, sp.split)
+                        and b["label"].split(":")[0] == fam]
+            tot, sh = sum(b["count"] for b in fam_rows), sum(b["share"] for b in fam_rows)
             checks.append(f"{'OK ' if tot == len(sp.rows) and abs(sh - 1) < 1e-4 else 'MISMATCH'} single-label balance "
-                          f"{key[0]}/{key[1]}: counts sum {tot} of {len(sp.rows)}, shares sum {sh:.6f}")
+                          f"{sp.dataset}/{sp.split} [{fam}]: counts sum {tot} of {len(sp.rows)}, shares sum {sh:.6f}")
     d1 = next((s for s in splits if s.dataset == "LahjatBERT-D1"), None)
     if d1 is not None and args.limit is None:
         for name, path in INSPECT_FILES.items():
@@ -555,12 +680,13 @@ def main() -> None:
           f"Aggregate numbers only. Tiny-subset limit: {args.limit}. Data sets filter: {args.datasets}.\n",
           "## Data sets measured\n",
           md_table([{"dataset": s.dataset, "split": s.split, "path": f"`{s.path}`", "rows": len(s.rows),
-                     "sha256[:12]": sha256(Path(s.path))[:12]} for s in splits],
+                     "sha256[:12]": sha256(Path(s.path.split("::")[0]))[:12]} for s in splits],
                    ["dataset", "split", "path", "rows", "sha256[:12]"]) + "\n",
           "Copies not measured twice (identical SHA-256): `LahjatBERT_-main/evaluation/NADI2024_subtask1_dev2.tsv` = "
           "MLADI dev; `MLADI/MLADI_subtask1.tar.gz` contains the same three NADI files and dev file. "
           "`data/inspect/d1_all18.tsv` and `d1_zero.tsv` are exports of D1's all-18 and zero-label texts and are "
           "measured as D1 subsets `cardinality=18` / `cardinality=0`.\n",
+          "Unit notes:\n" + "\n".join(f"- {n}" for s in splits for n in s.notes) + "\n",
           "Not available / skipped:\n" + "\n".join(f"- {n}" for n in notes)
           + "\n- MLADI dev has no geolocated-country column, so the geolocation-vs-validity measure of G is skipped."
           + f"\n- Per-label subsets with fewer than {MIN_SUBSET_TEXTS} texts are skipped: "
@@ -585,7 +711,13 @@ def main() -> None:
           f"cosine distance to the mean vector; Vendi = exp(entropy of eigenvalues of K/n), K = cosine-similarity "
           f"matrix (computed from X^T X / n, same non-zero eigenvalues).\n"
           f"- Per-label subsets: NADI country; D1-D4 original NADI country (texts whose copies all share one "
-          f"country); G01 target dialect; minimum {MIN_SUBSET_TEXTS} texts.\n",
+          f"country); G01 target dialect; Habibi singer nationality and song dialect; Travel / PADIC variety "
+          f"(parallel-corpus column); minimum {MIN_SUBSET_TEXTS} texts.\n"
+          f"- External corpora (Habibi, Travel-parallel, PADIC) ship no splits: each is one split `all`. Only the "
+          f"texts the ALDi / E5 samples need are scored.\n"
+          f"- G extras: Habibi `majority_song_dialect_share` = share of a nationality's lines carrying its most common "
+          f"song dialect; parallel corpora `identical_to_msa_share` = share of a variety's cells whose norm() equals "
+          f"the MSA cell of the same source row.\n",
           "## Checks\n", "\n".join(f"- {c}" for c in checks) + "\n",
           section("A + B. Size and lexical diversity", lexical,
                   ["dataset", "split", "subset", "texts", "tokens", "unique_words", "mean_tokens", "ttr_5000",
@@ -593,8 +725,9 @@ def main() -> None:
           section("C. Class balance", balance, ["dataset", "split", "label", "count", "share"],
                   lambda r: r["label"].startswith("cardinality:")),
           "Largest / smallest label ratio (single = original/target label, multi = valid positives per country):\n\n"
-          + md_table([{"split": k, "single": v.get("single", ""), "multi": v.get("multi", "")} for k, v in ratios.items()],
-                     ["split", "single", "multi"]) + "\n\n",
+          + md_table([{"split": k, "single": v.get("single", ""), "single2": v.get("single2", ""),
+                       "multi": v.get("multi", "")} for k, v in ratios.items()],
+                     ["split", "single", "single2", "multi"]) + "\n\n(single2 = Habibi song dialect.)\n\n",
           section("D. Duplication", duplication, ["dataset", "split", "repeat_share", "in_train_share", "_empty"]),
           "`_empty` = rows whose normalized text is empty (excluded from D).\n\n",
           section("D. Cross-dataset overlap (unique normalized texts)", overlap,
@@ -604,7 +737,8 @@ def main() -> None:
                section("F. Semantic diversity (multilingual-e5-large)", semantic,
                        sem_cols + ["_repeats", "_vendi_sd"], split_level)]
     md += [section("G. Label consistency", consistency, ["dataset", "country", "n", "measure", "value"],
-                   lambda r: r["dataset"] in ("LahjatBERT-vs-NADI", "MLADI-dev")
+                   lambda r: r["measure"] in ("majority_song_dialect_share", "identical_to_msa_share")
+                   or r["dataset"] in ("LahjatBERT-vs-NADI", "MLADI-dev")
                    and r["measure"] in ("own_country_in_pseudo_labels_share", "mean_pseudo_labels", "valid_count")
                    or r["measure"].startswith("valid_in_exactly"))]
     (args.out / "summary.md").write_text("\n".join(md), encoding="utf-8")
