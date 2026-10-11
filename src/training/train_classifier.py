@@ -142,6 +142,27 @@ def validation_scores(model, loader: DataLoader, threshold: float, device: str) 
                              {d: decisions[:, i].tolist() for i, d in enumerate(DIALECTS)})
 
 
+def train_one_epoch(model, loader: DataLoader, optimizer, scheduler, scaler, use_amp: bool,
+                    device: str, epoch: int) -> float:
+    """One pass over the training data; returns the mean training loss."""
+    model.train()
+    running_loss = 0.0
+    for step, (input_ids, mask, y) in enumerate(loader, 1):
+        with torch.autocast("cuda", dtype=torch.float16, enabled=use_amp):
+            # problem_type=multi_label -> the model computes BCE-with-logits loss.
+            loss = model(input_ids=input_ids.to(device), attention_mask=mask.to(device),
+                         labels=y.to(device)).loss
+        optimizer.zero_grad(set_to_none=True)
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
+        scheduler.step()
+        running_loss += loss.item()
+        if step % 200 == 0:
+            print(f"  epoch {epoch} step {step}/{len(loader)} loss {running_loss / step:.4f}")
+    return running_loss / len(loader)
+
+
 def train(cfg: dict, device: str) -> dict:
     """Train with early stopping on validation macro F1; save the best checkpoint; return the log."""
     set_seed(cfg["seed"])
@@ -173,30 +194,18 @@ def train(cfg: dict, device: str) -> dict:
     best_f1, epochs_without_gain = -1.0, 0
     for epoch in range(1, cfg["epochs"] + 1):
         # One pass over the training data.
-        model.train()
-        start, running_loss = time.time(), 0.0
-        for step, (input_ids, mask, y) in enumerate(train_loader, 1):
-            with torch.autocast("cuda", dtype=torch.float16, enabled=use_amp):
-                # problem_type=multi_label -> the model computes BCE-with-logits loss.
-                loss = model(input_ids=input_ids.to(device), attention_mask=mask.to(device),
-                             labels=y.to(device)).loss
-            optimizer.zero_grad(set_to_none=True)
-            scaler.scale(loss).backward()
-            scaler.step(optimizer)
-            scaler.update()
-            scheduler.step()
-            running_loss += loss.item()
-            if step % 200 == 0:
-                print(f"  epoch {epoch} step {step}/{len(train_loader)} loss {running_loss / step:.4f}")
+        start = time.time()
+        train_loss = train_one_epoch(model, train_loader, optimizer, scheduler, scaler, use_amp,
+                                     device, epoch)
 
         # Score on the validation split and log the epoch. The score used to pick the best
         # epoch is macro F1 by default; "micro" reproduces LahjatBERT's selection.
         scores = validation_scores(model, val_loader, cfg["threshold"], device)
         f1 = scores["micro_f1"] if cfg.get("selection_metric", "macro") == "micro" else scores["macro"]["f1"]
-        log["epochs"].append({"epoch": epoch, "train_loss": running_loss / len(train_loader),
+        log["epochs"].append({"epoch": epoch, "train_loss": train_loss,
                               "val_macro_f1": scores["macro"]["f1"], "val_micro_f1": scores["micro_f1"],
                               "val_macro": scores["macro"], "seconds": round(time.time() - start)})
-        print(f"epoch {epoch}: train loss {running_loss / len(train_loader):.4f}  "
+        print(f"epoch {epoch}: train loss {train_loss:.4f}  "
               f"val macro F1 {scores['macro']['f1']:.2f}  micro F1 {scores['micro_f1']:.2f}")
 
         # Keep the best checkpoint on disk; stop after `patience` epochs without improvement.
