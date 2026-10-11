@@ -107,7 +107,7 @@ Point for the report: measures from the first five rows can be computed **before
 - **Baseline (condition 1, real only):** MARBERT, 3 seeds, **71.34 ± 1.03** dev macro F1.
   - That is above LahjatBERT's published baseline (67.41) and level with their best published model (72.68).
   - It uses the same recipe with a dropout bug fixed and macro-F1 checkpoint selection. R04-marbert is testing which change explains the gain.
-- **Models chosen:** 3 generators + NLLB, 3 scorers, 3 classifiers (`progress.md`).
+- **Models chosen:** 3 generators + NLLB, 3 scorers, 3 classifiers (`CLAUDE.md` → Model roster).
 - **Next:** generation (open and controlled), filtering and quality measures; baselines with MARBERTv2 and AraBERT-Twitter.
 
 ---

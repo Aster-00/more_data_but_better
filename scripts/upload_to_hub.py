@@ -63,7 +63,7 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--run", required=True, help="folder under results/runs/")
     p.add_argument("--repo", required=True, help="repo name under the logged-in account")
-    p.add_argument("--run-id", default=None, help="progress.md ID for the card, e.g. R03-marbertv2")
+    p.add_argument("--run-id", default=None, help="run ID (docs/progress.md) for the card, e.g. R03-marbertv2")
     p.add_argument("--device", default="cuda")
     p.add_argument("--dry-run", action="store_true")
     args = p.parse_args()
