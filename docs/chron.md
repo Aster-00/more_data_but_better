@@ -87,7 +87,8 @@ Micro-F1 selection changed nothing (every R04 seed picked epoch 3), so the gap c
   - R15 Dropout = 0.1, Epochs =3
   - Maybe try 4 Epochs and 0.5, 0.2 dropouts  
 - Run the best combination of these 2 Expirements R16
- # R05 / R06 / R07 – Does removing zero-label or all-18 texts from D1 help?
+
+## R05 / R06 / R07 – Does removing zero-label or all-18 texts from D1 help?
 
 Dev F1. R03 is repeated as the reference.
 
