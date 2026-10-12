@@ -23,6 +23,7 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 ### R01: published LahjatBERT models (2026-10-06)
 - Downloaded and scored, not trained by us: the reference to beat. cl_cardinality 72.68, cl_aldi 70.27, baseline 67.41.
 - Both curriculum models beat their baseline, as in their paper. The ranking differs from their test results (there cl_aldi was best); at 120 sentences, 1–2 points are noise.
+- 2026-10-12: the cached baseline weights (`model.safetensors`) turned out to be a 0-byte file from an interrupted download, so they were downloaded again from the same Hub commit (`f18b12e`). The baseline is now shown as a reference row (`reference` in `configs/runs.json`) in every run table with more than one model: R02, R03, R05–R08.
 
 ### Smoke test, D1, 500 examples (2026-10-06; was R02, ID reused below)
 - Training, saving and scoring run end to end. The model predicts every dialect as valid (recall 100, F1 53.2), as expected after 500 examples. Not a result; folder deleted.
@@ -50,6 +51,24 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 - Micro-F1 selection changed nothing (every seed picked epoch 3; validation macro and micro F1 within 0.15). So the gap comes from dropout and/or the third epoch; R04 cannot separate them.
 - Validation F1 still rose from epoch 2 to 3, yet dev is lower than R03. If the third epoch itself hurts dev (untested), geolocation-labelled validation is a poor guide for model selection.
 - Logs record `ad08dd5`, not `3c35ac9` (docs-only commits landed during the run); `git diff 3c35ac9 ad08dd5 -- src configs` is empty.
+
+### R10–R24: R04 follow-ups, dropout × epochs and curriculum learning (2026-10-11)
+- **Question:** which of R04's changes (dropout 0.3 → 0.1, 2 → 3 epochs) costs the ~2.6 dev points, and does LahjatBERT's curriculum learning help on top of our settings?
+- **Setup:** MARBERT, D1, seeds 42/43/44, everything else as R03; code `f9dc6dc`. One queue, `scripts/queue_r04_followups.sh` (log `results/queue_r04_followups.log`), 09:10–16:52, 42 runs, no failures. 7.1 min per 2-epoch run, 10.7 min per 3-epoch, 14.2 min per 4-epoch, 13.6 min per R10 run, 10.1 min per R11 run.
+  - Grid, `configs/dropout{01,02,03,05}_ep{2,3,4}_real_only.json`: R12 0.3/2 (= R03 setup), R13 0.1/2, R14 0.3/3, R15 0.1/3 (= R04 except macro selection); extras R17 0.2/2, R18 0.5/2, R19 0.2/3, R20 0.5/3, R21–R24 dropout 0.1/0.2/0.3/0.5 at 4 epochs (patience 2).
+  - Curriculum, `src/training/train_curriculum.py`: R10 cardinality (18 stages in the order from LahjatBERT's `run_workflow.sh`; stage L = all texts with cardinality L plus up to |L| texts from each earlier level; cardinality-0 texts in no stage; 220,363 stage texts), R11 ALDi (4 cumulative bins in the order 4, 1, 3, 2, 163,251 stage texts; uses D1's `aldi_score`). 1 epoch per stage as LahjatBERT, fresh optimizer and warmup per stage, dropout 0.3 and macro selection as R03.
+  - R16 is reserved for the best grid setting combined with the better curriculum.
+- **Caveats:** "epochs" is the planned schedule length: the learning rate decays linearly over all planned epochs, so epoch 2 of a 3-epoch run is not a 2-epoch run. Whether the published cl models used these stage orders is not documented in their repo. Validation scores of R10/R11 are not comparable with the others (each stage has its own split), so the table leaves them empty.
+- `train_classifier.py`: the epoch loop moved into `train_one_epoch`; no behaviour change.
+- **R12 reproduces R03 exactly** (70.65 / 72.52 / 70.84, 71.34 ± 1.03): training is deterministic and the refactor changed nothing.
+- **Evidence for "R04 fits the training labels more closely":** R04 ends at training loss 0.123 (epoch 3) vs 0.283 for R03 (epoch 2), and is already at 0.196 after its epoch 2, so lower dropout alone lowers training loss. Its validation (geolocation labels) F1 is higher (82.85 vs 81.44) while dev is lower. R13 vs R12 and R15 vs R14 test this directly.
+- **R15 reproduces R04 exactly** (69.00 / 68.81 / 68.32): micro and macro selection picked the same epoch for every seed, as R04 already suggested.
+- **What causes R04's drop: the combination of low dropout and longer training, not either change alone.** Alone, each change is within noise: dropout 0.3 → 0.1 at 2 epochs costs 0.9 (R12 71.34 → R13 70.42), and 2 → 3 epochs at dropout 0.3 costs 0.4 (R12 → R14 70.98). Together they cost 2.6 (R15 68.71). The 4-epoch row repeats the pattern: dropout 0.1 is worst (R21 68.19), 0.2 and 0.3 sit at 69.6–69.8.
+- **Dropout 0.5 is too much:** 57–59 dev at every length (R18, R20, R24), with validation F1 also down to ~74 and training loss ~0.42–0.49: the model underfits.
+- **Best grid cell = our existing setting.** R12 (0.3 / 2) 71.34, R17 (0.2 / 2) 71.21, R14 / R19 (3 epochs) ~71.0: all within noise, so there is no reason to change R03's settings. More epochs never helped dev.
+- **"R04 fits the training labels more closely": confirmed for the training and validation data.** Lower dropout and more epochs both lower the training loss of the selected epoch (0.3 / 2: 0.28; 0.1 / 2: 0.19; 0.3 / 3: 0.24; 0.1 / 3: 0.12; 0.1 / 4: ~0.09–0.12) and raise validation F1 on the geolocation labels (R12 81.44 → R13 82.75 → R15 82.85). Dev moves the other way: the two highest validation scores (R15 82.85, R21 82.83) have the two lowest dev scores of the grid (68.71, 68.19), and the loss is all recall (R21 R 63.94 vs R12 72.98; precision rises). Why fitting the single-country geolocation labels more tightly costs multi-label recall is a hypothesis (the model learns to name fewer dialects per sentence), not tested; the number of predicted labels per sentence would check it. Consequence: validation F1 on automatic labels is not a usable guide for these settings, which supports using the human dev set for model selection.
+- **Curriculum learning: no clear gain on our settings.** R10 cardinality 71.79 ± 1.63, R11 ALDi 70.87 ± 0.70, vs R12 71.34 ± 1.03: both within noise. LahjatBERT's own cl_cardinality gained +5.3 over their baseline (72.68 vs 67.41, R01), but their baseline had the dropout bug; once the baseline is trained with dropout 0.3 (R12), almost all of that gain is gone. R10 does change the error profile: recall 80.03 vs 72.98, precision 67.73 vs 71.67 (more dialects named per sentence). Since the leaderboard models already over-predict on test (T01–T05), a higher-recall model is not obviously better there; untested.
+- **R16 not run:** R10 already is "best grid setting + better curriculum" (dropout 0.3, macro selection); the epoch dimension does not carry over, because a curriculum trains one epoch per stage. Open: whether a different R16 is worth running (see Next runs).
 
 ### T01 / T02: first leaderboard submissions (2026-10-08)
 - **Setup:** best dev seed of R03-marbertv2 (T01, seed 44) and R03-arabertv02_twitter (T02, seed 43), `predict_binary_outcomes`. Scores, repos and commits: `split_summary.md` → Leaderboard submissions.
@@ -138,6 +157,7 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 
 | ID | What | Why |
 |---|---|---|
+| R16 | Open: R10 already is the planned combination. Options: cardinality curriculum with 2 epochs per stage, or with dropout 0.2; or submit R10 to the leaderboard to see whether its higher recall survives on test | Decide before running; avoid tuning on 120 dev sentences |
 | R08 | Falcon-H1 (skipped: ~30 h per run) | Decide whether to run it anyway; Qwen3, Fanar, Jais-2, Aya done |
 | G02 | Bigger generator check (e.g. 200 sentences per generator over all 18 dialects, after fixing the translation cleanup) | n = 20 only suggests a ranking; needed before choosing generators |
 

@@ -80,3 +80,45 @@ R08,R08-fanar,ours,test,lora_real_only_fanar,0,,,,,,,,,,,,,,,,,,
 R08,R08-qwen3,ours,train,lora_real_only_qwen3,1,80.05,80.05,0.0,75.21,0.0,85.6,0.0,80.23,0.0,,,,,,,,,"validation split of the training data, best epoch"
 R08,R08-qwen3,ours,dev,lora_real_only_qwen3,1,65.15,65.15,0.0,73.48,0.0,61.2,0.0,65.28,0.0,52.0,86.08,62.86,66.67,58.46,56.0,71.79,67.31,"MLADI dev (120 sentences, 8 dialects)"
 R08,R08-qwen3,ours,test,lora_real_only_qwen3,0,,,,,,,,,,,,,,,,,,
+R10,R10-marbert,ours,train,cl_cardinality_real_only,0,,,,,,,,,,,,,,,,,,
+R10,R10-marbert,ours,dev,cl_cardinality_real_only,3,71.96 / 73.33 / 70.08,71.79,1.63,67.73,2.15,80.03,1.73,72.02,1.7,62.2,80.8,68.48,72.68,71.85,66.89,74.47,76.95,"MLADI dev (120 sentences, 8 dialects)"
+R10,R10-marbert,ours,test,cl_cardinality_real_only,0,,,,,,,,,,,,,,,,,,
+R11,R11-marbert,ours,train,cl_aldi_real_only,0,,,,,,,,,,,,,,,,,,
+R11,R11-marbert,ours,dev,cl_aldi_real_only,3,71.46 / 71.05 / 70.09,70.87,0.7,69.98,0.57,73.35,0.97,71.02,1.01,62.85,83.73,66.87,70.01,71.98,70.75,70.0,70.73,"MLADI dev (120 sentences, 8 dialects)"
+R11,R11-marbert,ours,test,cl_aldi_real_only,0,,,,,,,,,,,,,,,,,,
+R12,R12-marbert,ours,train,dropout03_ep2_real_only,3,81.52 / 81.52 / 81.28,81.44,0.14,73.95,0.61,90.72,0.64,81.52,0.15,,,,,,,,,"validation split of the training data, best epoch"
+R12,R12-marbert,ours,dev,dropout03_ep2_real_only,3,70.65 / 72.52 / 70.84,71.34,1.03,71.67,2.54,72.98,0.4,71.54,0.76,62.01,86.4,67.08,72.34,72.15,68.41,71.01,71.3,"MLADI dev (120 sentences, 8 dialects)"
+R12,R12-marbert,ours,test,dropout03_ep2_real_only,0,,,,,,,,,,,,,,,,,,
+R13,R13-marbert,ours,train,dropout01_ep2_real_only,3,82.88 / 82.72 / 82.66,82.75,0.11,77.09,0.5,89.37,0.57,82.83,0.12,,,,,,,,,"validation split of the training data, best epoch"
+R13,R13-marbert,ours,dev,dropout01_ep2_real_only,3,69.88 / 70.98 / 70.40,70.42,0.55,74.22,1.44,68.85,0.9,70.62,0.51,59.41,87.0,64.97,71.9,69.93,68.21,72.01,69.92,"MLADI dev (120 sentences, 8 dialects)"
+R13,R13-marbert,ours,test,dropout01_ep2_real_only,0,,,,,,,,,,,,,,,,,,
+R14,R14-marbert,ours,train,dropout03_ep3_real_only,3,81.86 / 81.87 / 81.76,81.83,0.06,74.68,0.34,90.58,0.55,81.91,0.06,,,,,,,,,"validation split of the training data, best epoch"
+R14,R14-marbert,ours,dev,dropout03_ep3_real_only,3,72.16 / 71.61 / 69.16,70.98,1.6,72.06,1.02,71.67,2.34,70.89,1.07,62.61,86.42,66.24,70.19,74.15,66.65,71.53,70.06,"MLADI dev (120 sentences, 8 dialects)"
+R14,R14-marbert,ours,test,dropout03_ep3_real_only,0,,,,,,,,,,,,,,,,,,
+R15,R15-marbert,ours,train,dropout01_ep3_real_only,3,82.84 / 82.80 / 82.91,82.85,0.06,78.3,0.19,88.0,0.23,82.94,0.08,,,,,,,,,"validation split of the training data, best epoch"
+R15,R15-marbert,ours,dev,dropout01_ep3_real_only,3,69.00 / 68.81 / 68.32,68.71,0.35,74.89,1.48,65.49,0.59,69.12,0.35,54.77,87.21,64.5,69.81,67.92,65.53,69.99,69.98,"MLADI dev (120 sentences, 8 dialects)"
+R15,R15-marbert,ours,test,dropout01_ep3_real_only,0,,,,,,,,,,,,,,,,,,
+R17,R17-marbert,ours,train,dropout02_ep2_real_only,3,82.32 / 82.23 / 81.99,82.18,0.17,75.68,1.27,90.03,1.61,82.3,0.2,,,,,,,,,"validation split of the training data, best epoch"
+R17,R17-marbert,ours,dev,dropout02_ep2_real_only,3,70.63 / 71.65 / 71.35,71.21,0.52,73.06,2.14,71.6,0.67,71.13,0.58,64.25,86.9,66.74,69.92,70.55,69.74,71.22,70.37,"MLADI dev (120 sentences, 8 dialects)"
+R17,R17-marbert,ours,test,dropout02_ep2_real_only,0,,,,,,,,,,,,,,,,,,
+R18,R18-marbert,ours,train,dropout05_ep2_real_only,3,74.71 / 72.74 / 73.08,73.51,1.06,72.0,3.88,76.55,2.05,73.99,0.97,,,,,,,,,"validation split of the training data, best epoch"
+R18,R18-marbert,ours,dev,dropout05_ep2_real_only,3,58.20 / 59.41 / 57.41,58.34,1.0,64.83,2.74,55.95,2.91,58.66,1.08,59.55,79.25,47.87,59.13,49.76,58.74,55.73,56.69,"MLADI dev (120 sentences, 8 dialects)"
+R18,R18-marbert,ours,test,dropout05_ep2_real_only,0,,,,,,,,,,,,,,,,,,
+R19,R19-marbert,ours,train,dropout02_ep3_real_only,3,82.57 / 82.28 / 82.53,82.46,0.16,76.35,0.29,89.7,0.67,82.53,0.16,,,,,,,,,"validation split of the training data, best epoch"
+R19,R19-marbert,ours,dev,dropout02_ep3_real_only,3,70.62 / 72.97 / 69.43,71.01,1.8,74.17,1.31,69.87,2.27,70.93,1.17,62.62,86.41,65.43,70.5,72.37,67.72,71.87,71.13,"MLADI dev (120 sentences, 8 dialects)"
+R19,R19-marbert,ours,test,dropout02_ep3_real_only,0,,,,,,,,,,,,,,,,,,
+R20,R20-marbert,ours,train,dropout05_ep3_real_only,3,74.77 / 74.08 / 75.37,74.74,0.64,75.33,0.38,75.59,1.22,75.18,0.66,,,,,,,,,"validation split of the training data, best epoch"
+R20,R20-marbert,ours,dev,dropout05_ep3_real_only,3,59.50 / 57.90 / 58.96,58.79,0.81,67.07,1.0,55.13,0.6,58.98,1.12,57.21,80.15,55.68,58.53,47.87,63.7,58.81,48.35,"MLADI dev (120 sentences, 8 dialects)"
+R20,R20-marbert,ours,test,dropout05_ep3_real_only,0,,,,,,,,,,,,,,,,,,
+R21,R21-marbert,ours,train,dropout01_ep4_real_only,3,82.71 / 82.96 / 82.82,82.83,0.13,79.43,0.61,86.59,0.67,82.91,0.11,,,,,,,,,"validation split of the training data, best epoch"
+R21,R21-marbert,ours,dev,dropout01_ep4_real_only,3,68.25 / 68.56 / 67.74,68.19,0.42,76.08,1.2,63.94,0.25,68.7,0.35,53.5,85.72,65.13,68.27,67.64,67.09,68.93,69.21,"MLADI dev (120 sentences, 8 dialects)"
+R21,R21-marbert,ours,test,dropout01_ep4_real_only,0,,,,,,,,,,,,,,,,,,
+R22,R22-marbert,ours,train,dropout02_ep4_real_only,3,82.55 / 82.44 / 82.44,82.48,0.06,76.91,0.41,88.97,0.6,82.54,0.06,,,,,,,,,"validation split of the training data, best epoch"
+R22,R22-marbert,ours,dev,dropout02_ep4_real_only,3,68.58 / 71.31 / 69.38,69.76,1.4,73.91,1.21,68.09,1.48,69.82,0.83,59.98,86.89,62.65,71.2,70.54,66.01,71.0,69.79,"MLADI dev (120 sentences, 8 dialects)"
+R22,R22-marbert,ours,test,dropout02_ep4_real_only,0,,,,,,,,,,,,,,,,,,
+R23,R23-marbert,ours,train,dropout03_ep4_real_only,3,82.19 / 81.91 / 81.87,81.99,0.18,75.41,0.19,89.91,0.22,82.09,0.19,,,,,,,,,"validation split of the training data, best epoch"
+R23,R23-marbert,ours,dev,dropout03_ep4_real_only,3,69.20 / 71.82 / 67.67,69.56,2.1,72.12,1.84,69.11,2.71,69.51,1.64,61.3,84.49,63.84,69.92,71.0,64.47,71.78,69.71,"MLADI dev (120 sentences, 8 dialects)"
+R23,R23-marbert,ours,test,dropout03_ep4_real_only,0,,,,,,,,,,,,,,,,,,
+R24,R24-marbert,ours,train,dropout05_ep4_real_only,3,74.72 / 74.30 / 74.66,74.56,0.23,76.23,0.48,74.54,0.24,74.94,0.22,,,,,,,,,"validation split of the training data, best epoch"
+R24,R24-marbert,ours,dev,dropout05_ep4_real_only,3,56.39 / 56.50 / 58.19,57.03,1.01,68.42,2.11,52.3,0.48,57.34,0.97,56.83,78.79,55.74,56.38,50.35,63.05,52.37,42.72,"MLADI dev (120 sentences, 8 dialects)"
+R24,R24-marbert,ours,test,dropout05_ep4_real_only,0,,,,,,,,,,,,,,,,,,

@@ -77,6 +77,7 @@ Micro-F1 selection changed nothing (every R04 seed picked epoch 3), so the gap c
 - R03 finds about 7.5 points more of the dialects that humans marked valid, and gives up about 3 points of precision. Algeria improves the most (62.0 vs 54.8). 
 
 - R04 fits the training labels more closely. Less dropout (0.1 vs 0.3) and an extra epoch (2 vs 3)let it learn them more tightly. STATEMENT TO BE VERIFIED
+  - Confirmed by R12–R15 below. Evidence from the train logs: R04's training loss ends at 0.123 (epoch 3) vs 0.283 for R03 (epoch 2); after its own epoch 2 R04 is already at 0.196, so lower dropout alone lowers the training loss. Validation F1 (automatic labels) is higher for R04 (82.85 vs 81.44) while dev is lower.
   
 *Further investigation:** 
 - Run R3 (our settings) again with `cl_cardinality` as R10 and `cl_adli` as R11.
@@ -132,6 +133,74 @@ Dev recall (macro).
 
 **Takeaway:** none beats the BERT models. Highest precision, low recall, 5–11 h per run (vs ~7 min for BERT), and not scorable on the leaderboard as it stands.
 
+
+## R10 / R11 – Does LahjatBERT's curriculum learning help on our settings?
+
+R03 settings (dropout 0.3, macro selection), LahjatBERT's stages (orders from their `run_workflow.sh`), 1 epoch per stage. Validation F1 has no single value (each stage has its own split).
+
+| Run | Model | Dev F1 | P | R | micro F1 |
+|---|---|---|---|---|---|
+| R10 | cl_cardinality, our settings | 71.79 ± 1.63 | 67.73 ± 2.15 | 80.03 ± 1.73 | 72.02 ± 1.70 |
+| R11 | cl_aldi, our settings | 70.87 ± 0.70 | 69.98 ± 0.57 | 73.35 ± 0.97 | 71.02 ± 1.01 |
+| R12 | no curriculum, our settings | 71.34 ± 1.03 | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 |
+| R01 | LahjatBERT cl_cardinality, published | 72.68 | 68.98 | 80.64 | 73.07 |
+| R01 | LahjatBERT baseline, published | 67.41 | 73.66 | 63.66 | 67.86 |
+
+**Takeaways:**
+
+- **No gain beyond noise.** Both curricula are within 0.5 points of R12.
+- LahjatBERT's cl_cardinality beat their own baseline by 5.3 points, but that baseline had the dropout bug. Against a baseline trained with dropout 0.3, almost all of the gain is gone. Our R10 lands where their cl_cardinality does (71.79 vs 72.68), with the same profile.
+- R10 changes the error profile: about 7 points more recall, 4 points less precision (it names more dialects per sentence). The leaderboard models already name too many dialects on test (T01–T05), so whether this helps on test is untested.
+
+**R16 not run:** R10 already is "best grid setting + better curriculum". A curriculum trains one epoch per stage, so the epochs dimension does not carry over. Options in `progress.md` → Next runs.
+  
+***future runs:*** 
+
+- verify the satement made by the baseline by repeating the runs with LahjaBERT as R9
+## R12–R24 – Which R04 change costs the dev points: dropout or epochs?
+
+MARBERT, D1, 3 seeds, R03 settings except dropout and epochs. Val = macro F1 on the 10% validation split of D1 (automatic labels, never trained on); Dev = macro F1 on the 120 human-labelled MLADI dev sentences. Mean ± std over the 3 seeds. **R12** = R03's setup, **R15** = R04's.
+
+| Dropout \ Epochs | 2 | 3 | 4 |
+|---|---|---|---|
+| 0.1 | R13: Val (82.75 ± 0.11), Dev (70.42 ± 0.55) | **R15**: Val (82.85 ± 0.06), Dev (68.71 ± 0.35) | R21: Val (82.83 ± 0.13), Dev (68.19 ± 0.42) |
+| 0.2 | R17: Val (82.18 ± 0.17), Dev (71.21 ± 0.52) | R19: Val (82.46 ± 0.16), Dev (71.01 ± 1.80) | R22: Val (82.48 ± 0.06), Dev (69.76 ± 1.40) |
+| 0.3 | **R12**: Val (81.44 ± 0.14), Dev (71.34 ± 1.03) | R14: Val (81.83 ± 0.06), Dev (70.98 ± 1.60) | R23: Val (81.99 ± 0.18), Dev (69.56 ± 2.10) |
+| 0.5 | R18: Val (73.51 ± 1.06), Dev (58.34 ± 1.00) | R20: Val (74.74 ± 0.64), Dev (58.79 ± 0.81) | R24: Val (74.56 ± 0.23), Dev (57.03 ± 1.01) |
+
+All runs, with dev precision, recall and micro F1:
+
+| Run | Dropout | Epochs | Val F1 | Dev F1 | P | R | micro F1 |
+|---|---|---|---|---|---|---|---|
+| R12 | 0.3 | 2 | 81.44 ± 0.14 | 71.34 ± 1.03 | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 |
+| R13 | 0.1 | 2 | 82.75 ± 0.11 | 70.42 ± 0.55 | 74.22 ± 1.44 | 68.85 ± 0.90 | 70.62 ± 0.51 |
+| R14 | 0.3 | 3 | 81.83 ± 0.06 | 70.98 ± 1.60 | 72.06 ± 1.02 | 71.67 ± 2.34 | 70.89 ± 1.07 |
+| R15 | 0.1 | 3 | 82.85 ± 0.06 | 68.71 ± 0.35 | 74.89 ± 1.48 | 65.49 ± 0.59 | 69.12 ± 0.35 |
+| R17 | 0.2 | 2 | 82.18 ± 0.17 | 71.21 ± 0.52 | 73.06 ± 2.14 | 71.60 ± 0.67 | 71.13 ± 0.58 |
+| R18 | 0.5 | 2 | 73.51 ± 1.06 | 58.34 ± 1.00 | 64.83 ± 2.74 | 55.95 ± 2.91 | 58.66 ± 1.08 |
+| R19 | 0.2 | 3 | 82.46 ± 0.16 | 71.01 ± 1.80 | 74.17 ± 1.31 | 69.87 ± 2.27 | 70.93 ± 1.17 |
+| R20 | 0.5 | 3 | 74.74 ± 0.64 | 58.79 ± 0.81 | 67.07 ± 1.00 | 55.13 ± 0.60 | 58.98 ± 1.12 |
+| R21 | 0.1 | 4 | 82.83 ± 0.13 | 68.19 ± 0.42 | 76.08 ± 1.20 | 63.94 ± 0.25 | 68.70 ± 0.35 |
+| R22 | 0.2 | 4 | 82.48 ± 0.06 | 69.76 ± 1.40 | 73.91 ± 1.21 | 68.09 ± 1.48 | 69.82 ± 0.83 |
+| R23 | 0.3 | 4 | 81.99 ± 0.18 | 69.56 ± 2.10 | 72.12 ± 1.84 | 69.11 ± 2.71 | 69.51 ± 1.64 |
+| R24 | 0.5 | 4 | 74.56 ± 0.23 | 57.03 ± 1.01 | 68.42 ± 2.11 | 52.30 ± 0.48 | 57.34 ± 0.97 |
+
+**Takeaways:**
+
+- R12 and R15 reproduce R03 and R04 seed for seed, so training is deterministic and every difference here comes from the settings.
+- **Neither change alone matters; together they cost 2.6 points.** Dropout 0.3 → 0.1 alone: −0.9 (R12 → R13). 2 → 3 epochs alone: −0.4 (R12 → R14). Both: −2.6 (R15). Lower dropout hurts more the longer the model trains.
+- Dropout 0.5 is too much: the model underfits (dev ~58, validation ~74).
+- The best cell is the setting we already had (R12). Dropout 0.2 / 2 epochs (R17) is level with it. More epochs never helped dev.
+- **The statement under R04 is confirmed:** lower dropout and more epochs both lower the training loss (0.28 for R12 → 0.12 for R15) and raise validation F1 on the automatic labels (81.44 → 82.85), while dev F1 drops through recall. The two runs with the highest validation F1 (R15, R21) have the lowest dev F1. So validation F1 on geolocation labels cannot pick these settings; the human dev set has to. Why tighter fitting costs recall is a hypothesis (the model names fewer dialects per sentence), not tested yet.
+
+Caveat: "epochs" is the planned length of the learning-rate schedule, so epoch 2 of a 3-epoch run is not the same as a 2-epoch run.
+
+
+***future runs:***
+
+- If it proves that R9 produces the same results as the published baselines then we will run these tests again with all the other models not just MARBERT, because this proves that different models respond differently to different hyperparameters. **LOW PRIORITY**
+
+- 
 ## T01–T05 – Leaderboard test submissions
 
 | Test | Model | Test F1 | P | R |

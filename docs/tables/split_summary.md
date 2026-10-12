@@ -141,6 +141,174 @@ Per-dialect dev F1 (mean over seeds):
 | R08-fanar | 56.6 | 79.5 | 63.3 | 69.8 | 62.7 | 66.7 | 68.2 | 71.7 |
 | R08-qwen3 | 52.0 | 86.1 | 62.9 | 66.7 | 58.5 | 56.0 | 71.8 | 67.3 |
 
+## R10: Real only, D1, R03 settings + LahjatBERT's cardinality curriculum: 18 stages (order 18,2,3,1,12,7,4,15,17,11,6,8,16,14,5,9,10,13), 1 epoch per stage, zero-label texts in no stage
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R10-marbert | 3 | — | **71.79 ± 1.63** | 67.73 ± 2.15 | 80.03 ± 1.73 | 72.02 ± 1.70 | 71.96 / 73.33 / 70.08 | — | `cl_cardinality_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R10-marbert | 62.2 | 80.8 | 68.5 | 72.7 | 71.9 | 66.9 | 74.5 | 77.0 |
+
+## R11: Real only, D1, R03 settings + LahjatBERT's ALDi curriculum: 4 cumulative ALDi-bin stages (order 4,1,3,2), 1 epoch per stage
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R11-marbert | 3 | — | **70.87 ± 0.70** | 69.98 ± 0.57 | 73.35 ± 0.97 | 71.02 ± 1.01 | 71.46 / 71.05 / 70.09 | — | `cl_aldi_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R11-marbert | 62.9 | 83.7 | 66.9 | 70.0 | 72.0 | 70.8 | 70.0 | 70.7 |
+
+## R12: Real only, D1, dropout 0.3, 2 epochs, macro-F1 selection (= R03 setup, rerun on current code)
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R12-marbert | 3 | 81.44 ± 0.14 | **71.34 ± 1.03** | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 | 70.65 / 72.52 / 70.84 | — | `dropout03_ep2_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R12-marbert | 62.0 | 86.4 | 67.1 | 72.3 | 72.2 | 68.4 | 71.0 | 71.3 |
+
+## R13: Real only, D1, dropout 0.1, 2 epochs, macro-F1 selection
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R13-marbert | 3 | 82.75 ± 0.11 | **70.42 ± 0.55** | 74.22 ± 1.44 | 68.85 ± 0.90 | 70.62 ± 0.51 | 69.88 / 70.98 / 70.40 | — | `dropout01_ep2_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R13-marbert | 59.4 | 87.0 | 65.0 | 71.9 | 69.9 | 68.2 | 72.0 | 69.9 |
+
+## R14: Real only, D1, dropout 0.3, 3 epochs, macro-F1 selection
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R14-marbert | 3 | 81.83 ± 0.06 | **70.98 ± 1.60** | 72.06 ± 1.02 | 71.67 ± 2.34 | 70.89 ± 1.07 | 72.16 / 71.61 / 69.16 | — | `dropout03_ep3_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R14-marbert | 62.6 | 86.4 | 66.2 | 70.2 | 74.1 | 66.6 | 71.5 | 70.1 |
+
+## R15: Real only, D1, dropout 0.1, 3 epochs, macro-F1 selection (= R04 except selection metric)
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R15-marbert | 3 | 82.85 ± 0.06 | **68.71 ± 0.35** | 74.89 ± 1.48 | 65.49 ± 0.59 | 69.12 ± 0.35 | 69.00 / 68.81 / 68.32 | — | `dropout01_ep3_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R15-marbert | 54.8 | 87.2 | 64.5 | 69.8 | 67.9 | 65.5 | 70.0 | 70.0 |
+
+## R17: Real only, D1, dropout 0.2, 2 epochs, macro-F1 selection
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R17-marbert | 3 | 82.18 ± 0.17 | **71.21 ± 0.52** | 73.06 ± 2.14 | 71.60 ± 0.67 | 71.13 ± 0.58 | 70.63 / 71.65 / 71.35 | — | `dropout02_ep2_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R17-marbert | 64.2 | 86.9 | 66.7 | 69.9 | 70.6 | 69.7 | 71.2 | 70.4 |
+
+## R18: Real only, D1, dropout 0.5, 2 epochs, macro-F1 selection
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R18-marbert | 3 | 73.51 ± 1.06 | **58.34 ± 1.00** | 64.83 ± 2.74 | 55.95 ± 2.91 | 58.66 ± 1.08 | 58.20 / 59.41 / 57.41 | — | `dropout05_ep2_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R18-marbert | 59.5 | 79.3 | 47.9 | 59.1 | 49.8 | 58.7 | 55.7 | 56.7 |
+
+## R19: Real only, D1, dropout 0.2, 3 epochs, macro-F1 selection
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R19-marbert | 3 | 82.46 ± 0.16 | **71.01 ± 1.80** | 74.17 ± 1.31 | 69.87 ± 2.27 | 70.93 ± 1.17 | 70.62 / 72.97 / 69.43 | — | `dropout02_ep3_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R19-marbert | 62.6 | 86.4 | 65.4 | 70.5 | 72.4 | 67.7 | 71.9 | 71.1 |
+
+## R20: Real only, D1, dropout 0.5, 3 epochs, macro-F1 selection
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R20-marbert | 3 | 74.74 ± 0.64 | **58.79 ± 0.81** | 67.07 ± 1.00 | 55.13 ± 0.60 | 58.98 ± 1.12 | 59.50 / 57.90 / 58.96 | — | `dropout05_ep3_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R20-marbert | 57.2 | 80.1 | 55.7 | 58.5 | 47.9 | 63.7 | 58.8 | 48.3 |
+
+## R21: Real only, D1, dropout 0.1, 4 epochs, macro-F1 selection, patience 2
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R21-marbert | 3 | 82.83 ± 0.13 | **68.19 ± 0.42** | 76.08 ± 1.20 | 63.94 ± 0.25 | 68.70 ± 0.35 | 68.25 / 68.56 / 67.74 | — | `dropout01_ep4_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R21-marbert | 53.5 | 85.7 | 65.1 | 68.3 | 67.6 | 67.1 | 68.9 | 69.2 |
+
+## R22: Real only, D1, dropout 0.2, 4 epochs, macro-F1 selection, patience 2
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R22-marbert | 3 | 82.48 ± 0.06 | **69.76 ± 1.40** | 73.91 ± 1.21 | 68.09 ± 1.48 | 69.82 ± 0.83 | 68.58 / 71.31 / 69.38 | — | `dropout02_ep4_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R22-marbert | 60.0 | 86.9 | 62.7 | 71.2 | 70.5 | 66.0 | 71.0 | 69.8 |
+
+## R23: Real only, D1, dropout 0.3, 4 epochs, macro-F1 selection, patience 2
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R23-marbert | 3 | 81.99 ± 0.18 | **69.56 ± 2.10** | 72.12 ± 1.84 | 69.11 ± 2.71 | 69.51 ± 1.64 | 69.20 / 71.82 / 67.67 | — | `dropout03_ep4_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R23-marbert | 61.3 | 84.5 | 63.8 | 69.9 | 71.0 | 64.5 | 71.8 | 69.7 |
+
+## R24: Real only, D1, dropout 0.5, 4 epochs, macro-F1 selection, patience 2
+
+| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
+|---|---|---|---|---|---|---|---|---|---|
+| R24-marbert | 3 | 74.56 ± 0.23 | **57.03 ± 1.01** | 68.42 ± 2.11 | 52.30 ± 0.48 | 57.34 ± 0.97 | 56.39 / 56.50 / 58.19 | — | `dropout05_ep4_real_only` |
+
+Per-dialect dev F1 (mean over seeds):
+
+| ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
+|---|---|---|---|---|---|---|---|---|
+| R24-marbert | 56.8 | 78.8 | 55.7 | 56.4 | 50.4 | 63.1 | 52.4 | 42.7 |
+
 ## Leaderboard submissions (test)
 
 | Test ID | Model | Submitted folder | Hub repo @ commit | Train F1 | Dev F1 | Test F1 | Test P | Test R | Test accuracy | Rank when read |
