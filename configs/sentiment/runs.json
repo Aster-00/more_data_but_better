@@ -1,0 +1,16 @@
+{
+  "_doc": "Sentiment run registry (separate from configs/runs.json). A run (SR<NN>) is one fixed setup: data and training settings. Each model tried under it is a member SR<NN>-<model>. 'members' maps a result folder under results/sentiment/runs/ (with _seed<N> removed) to its run and model tag. src.sentiment.summarize_runs groups the score tables by this file.",
+  "runs": {
+    "SR01": "Real only (condition 1), S1 (ArSarcasm-v2), every roster classifier; BERTs 3 seeds, LLMs seed 42 first (SD-003)"
+  },
+  "members": {
+    "sr01_marbertv2": {"run": "SR01", "model": "marbertv2"},
+    "sr01_arabertv02_twitter": {"run": "SR01", "model": "arabertv02_twitter"},
+    "sr01_marbert": {"run": "SR01", "model": "marbert"},
+    "sr01_qwen3": {"run": "SR01", "model": "qwen3"},
+    "sr01_jais2": {"run": "SR01", "model": "jais2"},
+    "sr01_fanar": {"run": "SR01", "model": "fanar"},
+    "sr01_aya": {"run": "SR01", "model": "aya"},
+    "sr01_falcon_h1": {"run": "SR01", "model": "falcon_h1"}
+  }
+}
