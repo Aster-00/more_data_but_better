@@ -41,3 +41,24 @@ The build is deterministic: a rerun gives byte-identical files.
 ## Record format
 
 One JSON object per line: `text_id` (hash of cleaned text), `text` (cleaned), `text_raw`, `source` (`real`), `origin` (`ArSarcasm-v2`), `split`, `sentiment` (NEG/NEU/POS), `sarcasm` (bool), `dialect`, `raw_rows` (0-based row numbers in the raw CSV), `label_conflict`, `cleaning`.
+
+## Synthetic sets (S2, open condition, 2026-10-16)
+
+Built by `scripts/sentiment/queue_sg_open.sh` (decision SD-004, run SG01 in `progress.md`). Zero-shot, template `prompts/sentiment/open_v1.json` (SHA-256 `b2a5012c6764`), seed 42. Every record carries `source: "synthetic"`, the generator, its prompt, raw output, sampling settings and the cell (`controls.variety`, `controls.sentiment`); kept separate from the real S1 files. Selection = seeded sample of 500 per variety × sentiment cell from the filtered texts.
+
+| ID | Generator | File | SHA-256 (first 12) | Texts |
+|---|---|---|---|---|
+| S2-SG01-jais2 | Jais-2-8B | `data/synthetic/sentiment/sg01_jais2.jsonl` (all outputs) | `6d9499722a86` | 15,600 |
+| S2-SG01-jais2 | | `sg01_jais2.selected.jsonl` | `c9f7f95a4aa8` | 3,402 (cells short; not used for training) |
+| S2-SG01-fanar | Fanar-1-9B | `sg01_fanar.jsonl` | `35261df56889` | 7,800 |
+| S2-SG01-fanar | | `sg01_fanar.selected.jsonl` (SR02) | `cbb9ffe3a0a8` | 6,000 |
+| S2-SG01-qwen3 | Qwen3-8B | `sg01_qwen3.jsonl` | `be1438c04e1e` | 7,800 |
+| S2-SG01-qwen3 | | `sg01_qwen3.selected.jsonl` (SR02) | `2cf037f87f4c` | 6,000 |
+| S2-SG01-aya | Aya-Expanse-8B | `sg01_aya.jsonl` | `568c0a02a012` | 7,800 |
+| S2-SG01-aya | | `sg01_aya.selected.jsonl` (SR02) | `118e5dcda679` | 6,000 |
+
+- Each selected set: 500 per cell over msa/egypt/gulf/levant × NEG/NEU/POS (2,000 per class), no sarcasm label (`sarcasm: null`, not controlled).
+- `.filtered.jsonl` / `.rejected.jsonl` next to each file hold the filter outcome per record; counts in `results/filtering/`.
+- Same cleaning as S1 (links → `URL`, mentions → `USER`, original in `text_raw`); `**` markers and same-line English translations removed before that (`translation_stripped`).
+- Files were renamed on 2026-10-16 to the SG01/SR02 numbering (map: `results/sentiment/renames_2026-10-16.json`); contents were not edited, so `set_name`, `request_id`, `config_file` inside the records and `run_name` / `synthetic_data` inside the train logs still show the first names (sg02_fanar, sr03_marbertv2_seed42, …).
+- No selected text matches an official test text exactly (reported, not filtered).

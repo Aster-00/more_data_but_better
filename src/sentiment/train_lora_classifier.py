@@ -7,6 +7,8 @@ Falcon-H1 and Aya). Differences, because the task is single-label sentiment:
   - 3 outputs (NEG/NEU/POS) with cross-entropy loss, prediction = argmax
   - the epoch is chosen by macro F1 on the S1 dev split; no extra validation split
   - after training, dev and the official test set are scored once (test never used for choices)
+Conditions 2/3: an optional `synthetic_data` file (kept separate, source "synthetic") is appended
+to the real training texts; dev and test stay real only.
 
 Outputs in results/sentiment/runs/<run_name>/:
   model/                    LoRA adapter + classification head + tokenizer (gitignored)
@@ -70,6 +72,11 @@ def train(cfg: dict) -> dict:
 
     # Data: S1 train for learning, S1 dev for picking the epoch.
     train_texts, train_labels, _ = load_split(Path(cfg["train_data"]), cfg["text_field"], cfg["limit"])
+    n_real = len(train_texts)
+    # Conditions 2/3: synthetic texts (a separate file, source="synthetic") appended to the real ones.
+    if cfg.get("synthetic_data"):
+        syn_texts, syn_labels, _ = load_split(Path(cfg["synthetic_data"]), "text", cfg["limit"])
+        train_texts, train_labels = train_texts + syn_texts, np.concatenate([train_labels, syn_labels])
     dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"])
 
     # Model: 4-bit base + LoRA adapters; the classification head is trained in full.
@@ -97,7 +104,8 @@ def train(cfg: dict) -> dict:
     total_steps = -(-micro_per_epoch // accum) * cfg["epochs"]
     scheduler = get_linear_schedule_with_warmup(optimizer, int(cfg["warmup_ratio"] * total_steps), total_steps)
 
-    log = {"config": cfg, "device": "cuda", "n_train": len(train_texts), "n_dev": len(dev_texts),
+    log = {"config": cfg, "device": "cuda", "n_train": len(train_texts), "n_train_real": n_real,
+           "n_train_synthetic": len(train_texts) - n_real, "n_dev": len(dev_texts),
            "trainable_parameters": n_trainable,
            "head": "custom last-token head (decoder_head.py)" if custom else "AutoModelForSequenceClassification",
            "epochs": []}
@@ -242,7 +250,8 @@ def main() -> None:
 
     # Provenance alongside the results.
     log.update(git_commit=git_commit(), python=platform.python_version(), torch=torch.__version__,
-               data_sha256={s: sha256(Path(cfg[f"{s}_data"])) for s in ("train", "dev", "test")},
+               data_sha256={s: sha256(Path(cfg[f"{s}_data"])) for s in ("train", "synthetic", "dev", "test")
+                            if cfg.get(f"{s}_data")},
                config_file=str(args.config), total_seconds=round(time.time() - started))
     with open(run_dir / "train_log.json", "w", encoding="utf-8", newline="\n") as f:
         json.dump(log, f, ensure_ascii=False, indent=2)

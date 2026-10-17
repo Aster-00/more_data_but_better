@@ -13,6 +13,8 @@ _seed<N>), and writes:
     we have neither their training code nor data, so they cannot be retrained or built on.
   docs/tables/split_summary.md  the same numbers for reading: one table per run, one row per model,
     per-dialect dev F1, and every leaderboard submission with the scores of the submitted seed.
+    Runs with more than one model also show the "reference" model of configs/runs.json
+    (LahjatBERT baseline) as a last row.
 
 Usage:
   python -m src.evaluation.summarize_runs
@@ -213,15 +215,24 @@ def write_split_markdown(registry: dict, out: list[dict], dialects: list[str]) -
              "- **Test F1:** MLADI leaderboard, 1,000 sentences, 11 dialects; one submitted seed per model.",
              "- Scores are mean ± std over seeds. *External* models are published checkpoints we only scored.", ""]
 
+    # The reference model (configs/runs.json "reference") is repeated at the bottom of every run with
+    # more than one model, so each comparison table shows the published baseline next to our models.
+    ref_folder = registry.get("reference", {}).get("folder")
+    ref_id = next((i for i, s in by_id.items() if s["dev"]["folder"] == ref_folder), None)
+
     # One section per run, in the order the rows were written (run ID order, best dev F1 first).
     for run in dict.fromkeys(r["run"] for r in out):
         ids = [i for i, s in by_id.items() if s["dev"]["run"] == run]
+        if ref_id and ref_id not in ids and len(ids) > 1:
+            ids.append(ref_id)
         lines += [f"## {run}: {registry['runs'].get(run, 'not in configs/runs.json')}", "",
                   "| ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |",
                   "|---|---|---|---|---|---|---|---|---|---|"]
         for i in ids:
             s = by_id[i]
             dev, label = s["dev"], i + (" *(external)*" if s["dev"]["origin"] != ORIGIN_OURS else "")
+            if i == ref_id and s["dev"]["run"] != run:
+                label = f"{i} *(external, reference)*"
             lines.append(f"| {label} | {dev['seeds']} | {pm(s['train'], 'macro_f1')} | **{pm(dev, 'macro_f1')}** | "
                          f"{pm(dev, 'macro_precision')} | {pm(dev, 'macro_recall')} | {pm(dev, 'micro_f1')} | "
                          f"{dev['seed_f1'] or '—'} | {pm(s['test'], 'macro_f1')} | `{dev['folder']}` |")

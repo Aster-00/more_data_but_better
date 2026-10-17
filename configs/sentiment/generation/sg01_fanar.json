@@ -1,0 +1,32 @@
+{
+  "set_name": "sg02_fanar",
+  "condition": "open",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/open_v1.json",
+  "varieties": [
+    "msa",
+    "egypt",
+    "gulf",
+    "levant"
+  ],
+  "sentiments": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "per_cell": 650,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg01_fanar.jsonl",
+  "_notes": "Sentiment open condition, zero-shot (Ammar, 2026-10-16). 650 requests per cell = 500 kept + 30% margin for filtering; select_synthetic keeps 500 per cell. Same plan for every generator. Renamed from sg02_fanar.json on 2026-10-16 (SG01 = all zero-shot sets); set_name kept as 'sg02_fanar' because it prefixes every request_id."
+}

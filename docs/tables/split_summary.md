@@ -29,7 +29,9 @@ Per-dialect dev F1 (mean over seeds):
 |---|---|---|---|---|---|---|---|---|---|
 | R02-marbert | 3 | 82.48 ± 0.08 | **71.39 ± 1.52** | 71.14 ± 2.87 | 73.30 ± 0.77 | 71.12 ± 1.38 | 73.15 / 70.55 / 70.48 | — | `card1to18_nodiac_real_only` |
 | R02-arabertv02_twitter | 3 | 80.14 ± 0.07 | **70.84 ± 0.10** | 69.84 ± 0.73 | 74.87 ± 0.45 | 71.92 ± 0.13 | 70.73 / 70.93 / 70.86 | — | `card1to18_nodiac_real_only_arabertv02_twitter` |
+| R02-lahjatbert_clcard | 3 | 86.10 ± 0.02 | **70.56 ± 0.32** | 71.68 ± 0.86 | 71.26 ± 0.94 | 70.60 ± 0.47 | 70.52 / 70.26 / 70.90 | — | `card1to18_nodiac_real_only_lahjat_clcard` |
 | R02-marbertv2 | 2 | 81.72 ± 0.24 | **69.70 ± 0.35** | 70.45 ± 1.32 | 71.29 ± 1.81 | 69.78 ± 0.33 | 69.46 / 69.95 | — | `card1to18_nodiac_real_only_marbertv2` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
@@ -37,7 +39,9 @@ Per-dialect dev F1 (mean over seeds):
 |---|---|---|---|---|---|---|---|---|
 | R02-marbert | 66.3 | 83.7 | 67.7 | 69.5 | 73.9 | 68.6 | 71.9 | 69.4 |
 | R02-arabertv02_twitter | 60.1 | 79.9 | 71.6 | 74.2 | 69.4 | 67.7 | 67.8 | 76.1 |
+| R02-lahjatbert_clcard | 61.9 | 85.3 | 65.6 | 69.1 | 74.5 | 67.1 | 69.6 | 71.4 |
 | R02-marbertv2 | 66.6 | 81.2 | 67.9 | 69.7 | 63.9 | 70.5 | 70.2 | 67.6 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R03: Real only (condition 1), D1, our settings: dropout 0.3, 2 epochs, macro-F1 epoch selection, threshold 0.3
 
@@ -46,7 +50,9 @@ Per-dialect dev F1 (mean over seeds):
 | R03-marbert | 3 | 81.44 ± 0.14 | **71.34 ± 1.03** | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 | 70.65 / 72.52 / 70.84 | 68.65 | `baseline_real_only` |
 | R03-arabertv02_twitter | 3 | 78.65 ± 0.89 | **70.52 ± 0.52** | 69.15 ± 1.34 | 75.12 ± 0.30 | 71.99 ± 0.66 | 70.80 / 70.83 / 69.92 | 67.31 | `baseline_real_only_arabertv02_twitter` |
 | R03-marbertv2 | 3 | 80.95 ± 0.25 | **70.11 ± 0.55** | 70.94 ± 1.15 | 71.62 ± 0.90 | 69.81 ± 0.32 | 70.00 / 69.62 / 70.70 | 67.71 | `baseline_real_only_marbertv2` |
+| R03-lahjatbert_clcard | 3 | 84.75 ± 0.36 | **69.97 ± 0.43** | 70.66 ± 0.95 | 71.13 ± 1.60 | 70.35 ± 0.52 | 70.16 / 69.49 / 70.28 | — | `baseline_real_only_lahjat_clcard` |
 | R03-tfidf_lr | 3 | 75.89 ± 0.59 | **62.58 ± 0.05** | 65.83 ± 1.27 | 62.28 ± 0.54 | 63.91 ± 0.07 | 62.52 / 62.59 / 62.62 | — | `baseline_real_only_tfidf_lr` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
@@ -55,55 +61,69 @@ Per-dialect dev F1 (mean over seeds):
 | R03-marbert | 62.0 | 86.4 | 67.1 | 72.3 | 72.2 | 68.4 | 71.0 | 71.3 |
 | R03-arabertv02_twitter | 57.6 | 78.7 | 70.9 | 76.0 | 70.5 | 68.0 | 66.2 | 76.3 |
 | R03-marbertv2 | 69.4 | 80.2 | 67.5 | 70.3 | 63.3 | 69.2 | 74.0 | 67.1 |
+| R03-lahjatbert_clcard | 60.0 | 84.1 | 65.4 | 70.9 | 72.2 | 65.6 | 68.1 | 73.5 |
 | R03-tfidf_lr | 46.9 | 78.7 | 60.4 | 66.2 | 53.8 | 63.6 | 61.7 | 69.3 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R04: Real only, D1, LahjatBERT's settings: dropout 0.1, 3 epochs, micro-F1 epoch selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R04-lahjatbert_clcard | 3 | 85.85 ± 0.22 | **68.93 ± 0.27** | 75.77 ± 0.50 | 65.66 ± 0.58 | 69.74 ± 0.22 | 69.16 / 68.63 / 69.01 | — | `repro_lahjatbert_baseline_lahjat_clcard` |
 | R04-marbert | 3 | 82.85 ± 0.06 | **68.71 ± 0.35** | 74.89 ± 1.48 | 65.49 ± 0.59 | 69.12 ± 0.35 | 69.00 / 68.81 / 68.32 | — | `repro_lahjatbert_baseline` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R04-lahjatbert_clcard | 54.5 | 87.4 | 66.0 | 70.2 | 69.2 | 67.3 | 65.5 | 71.3 |
 | R04-marbert | 54.8 | 87.2 | 64.5 | 69.8 | 67.9 | 65.5 | 70.0 | 70.0 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R05: Real only, D2 (D1 without zero-label and all-18 texts), otherwise identical to R03
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R05-lahjatbert_clcard | 3 | 78.90 ± 0.39 | **69.92 ± 0.88** | 72.45 ± 1.09 | 69.26 ± 1.08 | 70.80 ± 0.43 | 70.85 / 69.12 / 69.78 | — | `card1to17_real_only_lahjat_clcard` |
 | R05-arabertv02_twitter | 3 | 71.18 ± 0.48 | **69.82 ± 0.65** | 69.60 ± 0.61 | 73.80 ± 1.54 | 71.89 ± 0.69 | 69.47 / 70.58 / 69.43 | — | `card1to17_real_only_arabertv02_twitter` |
 | R05-marbert | 3 | 74.09 ± 0.17 | **69.25 ± 0.54** | 72.53 ± 0.56 | 68.40 ± 1.39 | 70.53 ± 0.62 | 69.81 / 68.72 / 69.20 | — | `card1to17_real_only` |
 | R05-marbertv2 | 3 | 73.44 ± 0.29 | **64.89 ± 1.44** | 69.07 ± 0.51 | 64.27 ± 2.45 | 66.33 ± 1.34 | 64.47 / 66.49 / 63.71 | — | `card1to17_real_only_marbertv2` |
 | R05-tfidf_lr | 3 | 66.87 ± 0.53 | **56.54 ± 0.82** | 65.95 ± 0.44 | 53.43 ± 0.63 | 59.64 ± 0.74 | 56.14 / 56.00 / 57.49 | — | `card1to17_real_only_tfidf_lr` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R05-lahjatbert_clcard | 55.8 | 86.0 | 67.5 | 71.7 | 74.1 | 68.9 | 64.6 | 70.8 |
 | R05-arabertv02_twitter | 56.0 | 78.8 | 72.5 | 76.2 | 69.7 | 67.1 | 61.1 | 77.2 |
 | R05-marbert | 54.1 | 85.4 | 68.5 | 71.7 | 73.3 | 71.6 | 60.2 | 69.1 |
 | R05-marbertv2 | 52.3 | 79.0 | 64.4 | 70.0 | 56.5 | 67.3 | 62.0 | 67.7 |
 | R05-tfidf_lr | 28.0 | 76.8 | 58.4 | 64.0 | 46.2 | 60.2 | 52.6 | 66.2 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R06: Real only, D3 (D1 without all-18 texts; zero-label kept), otherwise identical to R03
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R06-arabertv02_twitter | 3 | 69.49 ± 0.42 | **69.27 ± 0.60** | 68.82 ± 0.58 | 73.13 ± 0.72 | 71.02 ± 0.53 | 69.46 / 69.75 / 68.60 | — | `card0to17_real_only_arabertv02_twitter` |
+| R06-lahjatbert_clcard | 3 | 77.28 ± 0.48 | **67.70 ± 0.57** | 71.27 ± 0.71 | 66.58 ± 0.80 | 68.73 ± 0.36 | 67.32 / 68.35 / 67.43 | — | `card0to17_real_only_lahjat_clcard` |
 | R06-marbert | 3 | 72.28 ± 0.69 | **67.11 ± 1.13** | 69.68 ± 1.46 | 67.36 ± 0.87 | 68.71 ± 0.74 | 66.28 / 68.40 / 66.64 | — | `card0to17_real_only` |
 | R06-marbertv2 | 3 | 71.64 ± 0.33 | **66.29 ± 1.21** | 69.29 ± 1.01 | 66.60 ± 1.49 | 67.50 ± 1.13 | 66.80 / 67.16 / 64.91 | — | `card0to17_real_only_marbertv2` |
 | R06-tfidf_lr | 3 | 65.29 ± 0.53 | **56.27 ± 0.64** | 68.02 ± 0.94 | 51.77 ± 1.00 | 59.11 ± 0.65 | 55.80 / 57.00 / 56.00 | — | `card0to17_real_only_tfidf_lr` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R06-arabertv02_twitter | 55.7 | 78.0 | 71.4 | 74.2 | 70.0 | 66.1 | 62.2 | 76.5 |
+| R06-lahjatbert_clcard | 54.7 | 84.1 | 64.5 | 68.7 | 70.5 | 66.4 | 61.3 | 71.4 |
 | R06-marbert | 51.9 | 82.5 | 66.7 | 70.9 | 71.1 | 66.2 | 56.9 | 70.6 |
 | R06-marbertv2 | 52.2 | 78.7 | 67.1 | 69.2 | 62.7 | 68.3 | 64.0 | 68.1 |
 | R06-tfidf_lr | 27.5 | 74.4 | 56.3 | 62.0 | 45.7 | 60.1 | 55.3 | 68.8 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R07: Real only, D4 (D1 without zero-label texts; all-18 kept), otherwise identical to R03
 
@@ -111,8 +131,10 @@ Per-dialect dev F1 (mean over seeds):
 |---|---|---|---|---|---|---|---|---|---|
 | R07-marbert | 3 | 82.40 ± 0.07 | **72.17 ± 0.75** | 72.02 ± 2.11 | 74.05 ± 0.74 | 71.94 ± 0.73 | 72.96 / 72.09 / 71.46 | 68.61 | `card1to18_real_only` |
 | R07-arabertv02_twitter | 3 | 79.87 ± 0.14 | **70.74 ± 0.52** | 69.35 ± 0.45 | 75.34 ± 0.98 | 71.83 ± 0.45 | 70.61 / 70.31 / 71.32 | 67.48 | `card1to18_real_only_arabertv02_twitter` |
+| R07-lahjatbert_clcard | 3 | 86.01 ± 0.05 | **70.55 ± 0.38** | 71.63 ± 0.62 | 71.41 ± 0.49 | 70.62 ± 0.21 | 70.25 / 70.42 / 70.97 | — | `card1to18_real_only_lahjat_clcard` |
 | R07-marbertv2 | 3 | 81.94 ± 0.37 | **69.79 ± 0.56** | 70.38 ± 1.08 | 71.52 ± 0.83 | 69.94 ± 0.53 | 69.51 / 69.41 / 70.43 | — | `card1to18_real_only_marbertv2` |
 | R07-tfidf_lr | 3 | 76.50 ± 0.18 | **62.70 ± 1.00** | 64.13 ± 1.09 | 63.49 ± 0.95 | 63.95 ± 0.83 | 63.81 / 61.86 / 62.41 | — | `card1to18_real_only_tfidf_lr` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
@@ -120,8 +142,10 @@ Per-dialect dev F1 (mean over seeds):
 |---|---|---|---|---|---|---|---|---|
 | R07-marbert | 65.1 | 85.1 | 67.3 | 70.2 | 74.6 | 69.6 | 73.9 | 71.6 |
 | R07-arabertv02_twitter | 60.1 | 78.4 | 71.8 | 74.3 | 69.7 | 66.5 | 68.2 | 76.9 |
+| R07-lahjatbert_clcard | 61.1 | 84.3 | 66.7 | 68.6 | 73.9 | 68.0 | 70.2 | 71.7 |
 | R07-marbertv2 | 67.4 | 81.0 | 68.3 | 70.6 | 62.0 | 70.9 | 70.9 | 67.2 |
 | R07-tfidf_lr | 48.0 | 75.6 | 61.0 | 66.0 | 56.6 | 64.8 | 60.8 | 68.7 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R08: Real only, D1, 7-9B decoder LLMs as classifiers: 4-bit QLoRA (r 16, alpha 32, all projections), lr 1e-4, effective batch 24, 2 epochs, macro-F1 epoch selection, threshold 0.3
 
@@ -131,6 +155,7 @@ Per-dialect dev F1 (mean over seeds):
 | R08-aya | 1 | 82.76 | **69.11** | 75.50 | 66.07 | 69.11 | 69.11 | — | `lora_real_only_aya` |
 | R08-fanar | 1 | 82.44 | **67.30** | 74.06 | 63.56 | 67.96 | 67.30 | — | `lora_real_only_fanar` |
 | R08-qwen3 | 1 | 80.05 | **65.15** | 73.48 | 61.20 | 65.28 | 65.15 | — | `lora_real_only_qwen3` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
@@ -140,174 +165,231 @@ Per-dialect dev F1 (mean over seeds):
 | R08-aya | 63.0 | 89.7 | 61.5 | 75.8 | 64.6 | 61.4 | 71.4 | 65.4 |
 | R08-fanar | 56.6 | 79.5 | 63.3 | 69.8 | 62.7 | 66.7 | 68.2 | 71.7 |
 | R08-qwen3 | 52.0 | 86.1 | 62.9 | 66.7 | 58.5 | 56.0 | 71.8 | 67.3 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R10: Real only, D1, R03 settings + LahjatBERT's cardinality curriculum: 18 stages (order 18,2,3,1,12,7,4,15,17,11,6,8,16,14,5,9,10,13), 1 epoch per stage, zero-label texts in no stage
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R10-lahjatbert_clcard | 3 | — | **72.06 ± 0.26** | 70.52 ± 0.53 | 76.87 ± 0.51 | 72.25 ± 0.21 | 71.89 / 72.35 / 71.93 | — | `cl_cardinality_real_only_lahjat_clcard` |
 | R10-marbert | 3 | — | **71.79 ± 1.63** | 67.73 ± 2.15 | 80.03 ± 1.73 | 72.02 ± 1.70 | 71.96 / 73.33 / 70.08 | — | `cl_cardinality_real_only` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R10-lahjatbert_clcard | 58.7 | 85.1 | 68.3 | 72.0 | 73.7 | 67.1 | 75.4 | 76.1 |
 | R10-marbert | 62.2 | 80.8 | 68.5 | 72.7 | 71.9 | 66.9 | 74.5 | 77.0 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R11: Real only, D1, R03 settings + LahjatBERT's ALDi curriculum: 4 cumulative ALDi-bin stages (order 4,1,3,2), 1 epoch per stage
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R11-marbert | 3 | — | **70.87 ± 0.70** | 69.98 ± 0.57 | 73.35 ± 0.97 | 71.02 ± 1.01 | 71.46 / 71.05 / 70.09 | — | `cl_aldi_real_only` |
+| R11-lahjatbert_clcard | 3 | — | **70.11 ± 1.17** | 71.33 ± 0.83 | 70.42 ± 2.24 | 70.52 ± 0.41 | 70.98 / 70.56 / 68.78 | — | `cl_aldi_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R11-marbert | 62.9 | 83.7 | 66.9 | 70.0 | 72.0 | 70.8 | 70.0 | 70.7 |
+| R11-lahjatbert_clcard | 60.0 | 83.9 | 68.2 | 68.9 | 72.6 | 69.9 | 66.5 | 70.9 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R12: Real only, D1, dropout 0.3, 2 epochs, macro-F1 selection (= R03 setup, rerun on current code)
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R12-marbert | 3 | 81.44 ± 0.14 | **71.34 ± 1.03** | 71.67 ± 2.54 | 72.98 ± 0.40 | 71.54 ± 0.76 | 70.65 / 72.52 / 70.84 | — | `dropout03_ep2_real_only` |
+| R12-lahjatbert_clcard | 3 | 84.75 ± 0.36 | **69.97 ± 0.43** | 70.66 ± 0.95 | 71.13 ± 1.60 | 70.35 ± 0.52 | 70.16 / 69.49 / 70.28 | — | `dropout03_ep2_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R12-marbert | 62.0 | 86.4 | 67.1 | 72.3 | 72.2 | 68.4 | 71.0 | 71.3 |
+| R12-lahjatbert_clcard | 60.0 | 84.1 | 65.4 | 70.9 | 72.2 | 65.6 | 68.1 | 73.5 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R13: Real only, D1, dropout 0.1, 2 epochs, macro-F1 selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R13-marbert | 3 | 82.75 ± 0.11 | **70.42 ± 0.55** | 74.22 ± 1.44 | 68.85 ± 0.90 | 70.62 ± 0.51 | 69.88 / 70.98 / 70.40 | — | `dropout01_ep2_real_only` |
+| R13-lahjatbert_clcard | 3 | 85.92 ± 0.27 | **68.92 ± 0.33** | 74.21 ± 0.91 | 66.39 ± 0.10 | 69.57 ± 0.20 | 68.54 / 69.09 / 69.14 | — | `dropout01_ep2_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R13-marbert | 59.4 | 87.0 | 65.0 | 71.9 | 69.9 | 68.2 | 72.0 | 69.9 |
+| R13-lahjatbert_clcard | 55.3 | 86.7 | 66.2 | 70.4 | 67.2 | 66.0 | 67.8 | 71.7 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R14: Real only, D1, dropout 0.3, 3 epochs, macro-F1 selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R14-marbert | 3 | 81.83 ± 0.06 | **70.98 ± 1.60** | 72.06 ± 1.02 | 71.67 ± 2.34 | 70.89 ± 1.07 | 72.16 / 71.61 / 69.16 | — | `dropout03_ep3_real_only` |
+| R14-lahjatbert_clcard | 3 | 84.84 ± 0.18 | **69.58 ± 1.06** | 71.49 ± 0.58 | 69.65 ± 1.91 | 69.93 ± 1.16 | 70.71 / 68.61 / 69.41 | — | `dropout03_ep3_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R14-marbert | 62.6 | 86.4 | 66.2 | 70.2 | 74.1 | 66.6 | 71.5 | 70.1 |
+| R14-lahjatbert_clcard | 59.9 | 83.3 | 64.8 | 70.4 | 70.7 | 66.4 | 68.7 | 72.3 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R15: Real only, D1, dropout 0.1, 3 epochs, macro-F1 selection (= R04 except selection metric)
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R15-lahjatbert_clcard | 3 | 85.85 ± 0.22 | **68.93 ± 0.27** | 75.77 ± 0.50 | 65.66 ± 0.58 | 69.74 ± 0.22 | 69.16 / 68.63 / 69.01 | — | `dropout01_ep3_real_only_lahjat_clcard` |
 | R15-marbert | 3 | 82.85 ± 0.06 | **68.71 ± 0.35** | 74.89 ± 1.48 | 65.49 ± 0.59 | 69.12 ± 0.35 | 69.00 / 68.81 / 68.32 | — | `dropout01_ep3_real_only` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R15-lahjatbert_clcard | 54.5 | 87.4 | 66.0 | 70.2 | 69.2 | 67.3 | 65.5 | 71.3 |
 | R15-marbert | 54.8 | 87.2 | 64.5 | 69.8 | 67.9 | 65.5 | 70.0 | 70.0 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R17: Real only, D1, dropout 0.2, 2 epochs, macro-F1 selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R17-marbert | 3 | 82.18 ± 0.17 | **71.21 ± 0.52** | 73.06 ± 2.14 | 71.60 ± 0.67 | 71.13 ± 0.58 | 70.63 / 71.65 / 71.35 | — | `dropout02_ep2_real_only` |
+| R17-lahjatbert_clcard | 3 | 85.56 ± 0.37 | **69.31 ± 1.00** | 72.17 ± 0.74 | 68.52 ± 1.64 | 69.91 ± 1.07 | 69.02 / 68.48 / 70.43 | — | `dropout02_ep2_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R17-marbert | 64.2 | 86.9 | 66.7 | 69.9 | 70.6 | 69.7 | 71.2 | 70.4 |
+| R17-lahjatbert_clcard | 57.0 | 85.0 | 66.2 | 70.7 | 71.4 | 67.6 | 66.1 | 70.4 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R18: Real only, D1, dropout 0.5, 2 epochs, macro-F1 selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R18-lahjatbert_clcard | 3 | 82.88 ± 0.38 | **62.20 ± 2.01** | 74.63 ± 1.35 | 55.87 ± 3.63 | 62.07 ± 2.02 | 60.31 / 64.32 / 61.97 | — | `dropout05_ep2_real_only_lahjat_clcard` |
 | R18-marbert | 3 | 73.51 ± 1.06 | **58.34 ± 1.00** | 64.83 ± 2.74 | 55.95 ± 2.91 | 58.66 ± 1.08 | 58.20 / 59.41 / 57.41 | — | `dropout05_ep2_real_only` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R18-lahjatbert_clcard | 59.4 | 84.2 | 60.6 | 58.2 | 64.2 | 63.2 | 57.2 | 50.6 |
 | R18-marbert | 59.5 | 79.3 | 47.9 | 59.1 | 49.8 | 58.7 | 55.7 | 56.7 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R19: Real only, D1, dropout 0.2, 3 epochs, macro-F1 selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R19-marbert | 3 | 82.46 ± 0.16 | **71.01 ± 1.80** | 74.17 ± 1.31 | 69.87 ± 2.27 | 70.93 ± 1.17 | 70.62 / 72.97 / 69.43 | — | `dropout02_ep3_real_only` |
+| R19-lahjatbert_clcard | 3 | 85.59 ± 0.29 | **69.62 ± 0.62** | 73.68 ± 0.75 | 67.91 ± 1.57 | 70.05 ± 1.07 | 69.95 / 68.91 / 70.01 | — | `dropout02_ep3_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R19-marbert | 62.6 | 86.4 | 65.4 | 70.5 | 72.4 | 67.7 | 71.9 | 71.1 |
+| R19-lahjatbert_clcard | 55.6 | 86.8 | 65.4 | 70.4 | 71.2 | 67.3 | 69.3 | 71.0 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R20: Real only, D1, dropout 0.5, 3 epochs, macro-F1 selection
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R20-lahjatbert_clcard | 3 | 82.72 ± 0.24 | **63.08 ± 2.07** | 74.04 ± 2.73 | 57.20 ± 4.09 | 62.89 ± 1.79 | 62.41 / 65.41 / 61.43 | — | `dropout05_ep3_real_only_lahjat_clcard` |
 | R20-marbert | 3 | 74.74 ± 0.64 | **58.79 ± 0.81** | 67.07 ± 1.00 | 55.13 ± 0.60 | 58.98 ± 1.12 | 59.50 / 57.90 / 58.96 | — | `dropout05_ep3_real_only` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R20-lahjatbert_clcard | 60.3 | 82.8 | 61.7 | 59.0 | 61.8 | 64.6 | 60.4 | 54.2 |
 | R20-marbert | 57.2 | 80.1 | 55.7 | 58.5 | 47.9 | 63.7 | 58.8 | 48.3 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R21: Real only, D1, dropout 0.1, 4 epochs, macro-F1 selection, patience 2
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R21-lahjatbert_clcard | 3 | 85.71 ± 0.30 | **68.20 ± 0.12** | 75.73 ± 0.73 | 64.30 ± 1.08 | 68.68 ± 0.18 | 68.23 / 68.07 / 68.31 | — | `dropout01_ep4_real_only_lahjat_clcard` |
 | R21-marbert | 3 | 82.83 ± 0.13 | **68.19 ± 0.42** | 76.08 ± 1.20 | 63.94 ± 0.25 | 68.70 ± 0.35 | 68.25 / 68.56 / 67.74 | — | `dropout01_ep4_real_only` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R21-lahjatbert_clcard | 53.2 | 86.9 | 63.8 | 67.0 | 69.8 | 67.1 | 67.3 | 70.5 |
 | R21-marbert | 53.5 | 85.7 | 65.1 | 68.3 | 67.6 | 67.1 | 68.9 | 69.2 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R22: Real only, D1, dropout 0.2, 4 epochs, macro-F1 selection, patience 2
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R22-marbert | 3 | 82.48 ± 0.06 | **69.76 ± 1.40** | 73.91 ± 1.21 | 68.09 ± 1.48 | 69.82 ± 0.83 | 68.58 / 71.31 / 69.38 | — | `dropout02_ep4_real_only` |
+| R22-lahjatbert_clcard | 3 | 85.55 ± 0.33 | **68.24 ± 0.70** | 73.05 ± 0.53 | 66.01 ± 1.04 | 68.66 ± 0.55 | 68.76 / 68.53 / 67.45 | — | `dropout02_ep4_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R22-marbert | 60.0 | 86.9 | 62.7 | 71.2 | 70.5 | 66.0 | 71.0 | 69.8 |
+| R22-lahjatbert_clcard | 55.9 | 85.2 | 64.6 | 69.6 | 67.6 | 64.7 | 68.3 | 70.1 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R23: Real only, D1, dropout 0.3, 4 epochs, macro-F1 selection, patience 2
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
 | R23-marbert | 3 | 81.99 ± 0.18 | **69.56 ± 2.10** | 72.12 ± 1.84 | 69.11 ± 2.71 | 69.51 ± 1.64 | 69.20 / 71.82 / 67.67 | — | `dropout03_ep4_real_only` |
+| R23-lahjatbert_clcard | 3 | 84.82 ± 0.25 | **69.18 ± 2.82** | 71.29 ± 1.90 | 68.67 ± 3.78 | 69.29 ± 2.84 | 72.29 / 68.48 / 66.78 | — | `dropout03_ep4_real_only_lahjat_clcard` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
 | R23-marbert | 61.3 | 84.5 | 63.8 | 69.9 | 71.0 | 64.5 | 71.8 | 69.7 |
+| R23-lahjatbert_clcard | 61.1 | 83.7 | 63.9 | 69.0 | 71.4 | 66.0 | 68.2 | 70.1 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## R24: Real only, D1, dropout 0.5, 4 epochs, macro-F1 selection, patience 2
 
 | ID | Seeds | Train F1 | Dev F1 | Dev P | Dev R | Dev micro F1 | Dev F1 per seed | Test F1 | Result folder |
 |---|---|---|---|---|---|---|---|---|---|
+| R24-lahjatbert_clcard | 3 | 82.47 ± 0.21 | **62.47 ± 2.79** | 73.50 ± 2.77 | 56.75 ± 5.76 | 62.16 ± 2.83 | 59.79 / 65.36 / 62.27 | — | `dropout05_ep4_real_only_lahjat_clcard` |
 | R24-marbert | 3 | 74.56 ± 0.23 | **57.03 ± 1.01** | 68.42 ± 2.11 | 52.30 ± 0.48 | 57.34 ± 0.97 | 56.39 / 56.50 / 58.19 | — | `dropout05_ep4_real_only` |
+| R01-lahjatbert_baseline *(external, reference)* | 1 | — | **67.41** | 73.66 | 63.66 | 67.86 | 67.41 | — | `Mohamedelzeftawy__LahjatBERT_baseline` |
 
 Per-dialect dev F1 (mean over seeds):
 
 | ID | Algeria | Egypt | Jordan | Palestine | Sudan | Syria | Tunisia | Yemen |
 |---|---|---|---|---|---|---|---|---|
+| R24-lahjatbert_clcard | 60.1 | 82.6 | 57.5 | 57.2 | 63.8 | 63.9 | 60.3 | 54.4 |
 | R24-marbert | 56.8 | 78.8 | 55.7 | 56.4 | 50.4 | 63.1 | 52.4 | 42.7 |
+| R01-lahjatbert_baseline | 55.6 | 86.1 | 65.3 | 65.6 | 69.6 | 63.9 | 63.4 | 69.8 |
 
 ## Leaderboard submissions (test)
 

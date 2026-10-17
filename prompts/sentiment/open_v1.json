@@ -1,0 +1,21 @@
+{
+  "id": "sentiment_open_v1",
+  "version": 1,
+  "condition": "open",
+  "description": "Sentiment track, open generation (condition 2): the prompt fixes only the target variety (msa/egypt/gulf/levant, the ArSarcasm-v2 region labels) and the sentiment class (the label). No sarcasm, length, topic or style instruction. Zero-shot. Placeholders: {variety_name} {variety_instruction} {sentiment_name} {sentiment_definition}.",
+  "system": "You are an Arabic-speaking social media user who writes posts on Twitter.",
+  "user": "Write one tweet in {variety_name}. {variety_instruction}\nThe tweet must express a {sentiment_name} sentiment: {sentiment_definition}\nOutput only the tweet itself, on one line, with no quotes, translation or explanation.",
+  "options": {
+    "variety": {
+      "msa":    {"name": "Modern Standard Arabic", "instruction": "Use Modern Standard Arabic (Fusha), not a dialect."},
+      "egypt":  {"name": "Egyptian Arabic", "instruction": "Use the Egyptian dialect, not Modern Standard Arabic."},
+      "gulf":   {"name": "Gulf Arabic", "instruction": "Use the Gulf dialect (as spoken in Saudi Arabia, Kuwait, the UAE, Qatar, Bahrain or Oman), not Modern Standard Arabic."},
+      "levant": {"name": "Levantine Arabic", "instruction": "Use the Levantine dialect (as spoken in Syria, Lebanon, Jordan or Palestine), not Modern Standard Arabic."}
+    },
+    "sentiment": {
+      "NEG": {"name": "negative", "definition": "the writer is unhappy, angry, critical, disappointed or sad about something."},
+      "NEU": {"name": "neutral", "definition": "the writer shares information, news, a question or a remark without expressing positive or negative feelings."},
+      "POS": {"name": "positive", "definition": "the writer is happy, grateful, admiring, praising or hopeful about something."}
+    }
+  }
+}

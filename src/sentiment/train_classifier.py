@@ -9,6 +9,8 @@ weight decay 0.01, batch 24, max length 128. Differences, because the task is si
   - warmup is a share of all steps (warmup_ratio), because S1 train gives ~470 steps per
     epoch and the dialect setting of 500 warmup steps would last more than one epoch
 The official test set is scored once at the end and never used for any choice.
+Conditions 2/3: an optional `synthetic_data` file (kept separate from the real data, source
+"synthetic") is appended to the real training texts; dev and test stay real only.
 
 Outputs in results/sentiment/runs/<run_name>/:
   model/                    best checkpoint (gitignored)
@@ -29,6 +31,7 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
@@ -75,6 +78,11 @@ def train(cfg: dict, device: str) -> dict:
 
     # Data: S1 train for learning, S1 dev for picking the epoch.
     train_texts, train_labels, _ = load_split(Path(cfg["train_data"]), cfg["text_field"], cfg["limit"])
+    n_real = len(train_texts)
+    # Conditions 2/3: synthetic texts (a separate file, source="synthetic") appended to the real ones.
+    if cfg.get("synthetic_data"):
+        syn_texts, syn_labels, _ = load_split(Path(cfg["synthetic_data"]), "text", cfg["limit"])
+        train_texts, train_labels = train_texts + syn_texts, np.concatenate([train_labels, syn_labels])
     dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"])
     tokenizer = AutoTokenizer.from_pretrained(cfg["model"])
     loader = make_loader(tokenizer, train_texts, train_labels, cfg["max_length"], cfg["batch_size"], cfg["seed"])
@@ -88,7 +96,8 @@ def train(cfg: dict, device: str) -> dict:
     use_amp = cfg["fp16"] and device == "cuda"
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
 
-    log = {"config": cfg, "device": device, "n_train": len(train_texts), "n_dev": len(dev_texts), "epochs": []}
+    log = {"config": cfg, "device": device, "n_train": len(train_texts), "n_train_real": n_real,
+           "n_train_synthetic": len(train_texts) - n_real, "n_dev": len(dev_texts), "epochs": []}
     best_f1, epochs_without_gain = -1.0, 0
     for epoch in range(1, cfg["epochs"] + 1):
         # One pass over the training data (the model computes cross-entropy from the labels).
@@ -164,7 +173,8 @@ def main() -> None:
 
     # Provenance alongside the results.
     log.update(git_commit=git_commit(), python=platform.python_version(), torch=torch.__version__,
-               data_sha256={s: sha256(Path(cfg[f"{s}_data"])) for s in ("train", "dev", "test")},
+               data_sha256={s: sha256(Path(cfg[f"{s}_data"])) for s in ("train", "synthetic", "dev", "test")
+                            if cfg.get(f"{s}_data")},
                config_file=str(args.config), total_seconds=round(time.time() - started))
     with open(run_dir / "train_log.json", "w", encoding="utf-8", newline="\n") as f:
         json.dump(log, f, ensure_ascii=False, indent=2)

@@ -1,16 +1,89 @@
 {
   "_doc": "Sentiment run registry (separate from configs/runs.json). A run (SR<NN>) is one fixed setup: data and training settings. Each model tried under it is a member SR<NN>-<model>. 'members' maps a result folder under results/sentiment/runs/ (with _seed<N> removed) to its run and model tag. src.sentiment.summarize_runs groups the score tables by this file.",
   "runs": {
-    "SR01": "Real only (condition 1), S1 (ArSarcasm-v2), every roster classifier; BERTs 3 seeds, LLMs seed 42 first (SD-003)"
+    "SR01": "Real only (condition 1), S1 (ArSarcasm-v2), every roster classifier; BERTs 3 seeds, LLMs seed 42 first (SD-003)",
+    "SR02": "Real + SG01 (open, zero-shot synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG01 generator; BERTs 3 seeds; Jais-2 (QLoRA, SR01 recipe) 3 seeds. Member = <classifier>_<generator>. The Jais-2 set could not fill its cells and was not trained."
   },
   "members": {
-    "sr01_marbertv2": {"run": "SR01", "model": "marbertv2"},
-    "sr01_arabertv02_twitter": {"run": "SR01", "model": "arabertv02_twitter"},
-    "sr01_marbert": {"run": "SR01", "model": "marbert"},
-    "sr01_qwen3": {"run": "SR01", "model": "qwen3"},
-    "sr01_jais2": {"run": "SR01", "model": "jais2"},
-    "sr01_fanar": {"run": "SR01", "model": "fanar"},
-    "sr01_aya": {"run": "SR01", "model": "aya"},
-    "sr01_falcon_h1": {"run": "SR01", "model": "falcon_h1"}
+    "sr01_marbertv2": {
+      "run": "SR01",
+      "model": "marbertv2"
+    },
+    "sr01_arabertv02_twitter": {
+      "run": "SR01",
+      "model": "arabertv02_twitter"
+    },
+    "sr01_marbert": {
+      "run": "SR01",
+      "model": "marbert"
+    },
+    "sr01_qwen3": {
+      "run": "SR01",
+      "model": "qwen3"
+    },
+    "sr01_jais2": {
+      "run": "SR01",
+      "model": "jais2"
+    },
+    "sr01_fanar": {
+      "run": "SR01",
+      "model": "fanar"
+    },
+    "sr01_aya": {
+      "run": "SR01",
+      "model": "aya"
+    },
+    "sr01_falcon_h1": {
+      "run": "SR01",
+      "model": "falcon_h1"
+    },
+    "sr02_marbertv2_fanar": {
+      "run": "SR02",
+      "model": "marbertv2_fanar"
+    },
+    "sr02_arabertv02_twitter_fanar": {
+      "run": "SR02",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr02_marbert_fanar": {
+      "run": "SR02",
+      "model": "marbert_fanar"
+    },
+    "sr02_marbertv2_qwen3": {
+      "run": "SR02",
+      "model": "marbertv2_qwen3"
+    },
+    "sr02_arabertv02_twitter_qwen3": {
+      "run": "SR02",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr02_marbert_qwen3": {
+      "run": "SR02",
+      "model": "marbert_qwen3"
+    },
+    "sr02_marbertv2_aya": {
+      "run": "SR02",
+      "model": "marbertv2_aya"
+    },
+    "sr02_arabertv02_twitter_aya": {
+      "run": "SR02",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr02_marbert_aya": {
+      "run": "SR02",
+      "model": "marbert_aya"
+    },
+    "sr02_jais2_fanar": {
+      "run": "SR02",
+      "model": "jais2_fanar"
+    },
+    "sr02_jais2_qwen3": {
+      "run": "SR02",
+      "model": "jais2_qwen3"
+    },
+    "sr02_jais2_aya": {
+      "run": "SR02",
+      "model": "jais2_aya"
+    }
   }
 }

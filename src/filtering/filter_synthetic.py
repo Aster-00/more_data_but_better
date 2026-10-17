@@ -10,8 +10,10 @@ Checks (names as in the config):
   parse_ok            the generator output could be parsed into a sentence
   exact_dup_within    identical text earlier in the set (first occurrence kept)
   near_dup_within     MinHash near-duplicate of an earlier text (Jaccard of char 5-grams >= threshold)
-  dup_against_real    near-duplicate of a D1 text (copied or memorised training data)
-  dup_against_dev     near-duplicate of an MLADI dev sentence (leak check)
+  dup_against_real    near-duplicate of a real training text (copied or memorised training data)
+  dup_against_dev     near-duplicate of a real dev text (leak check)
+                      (reference files come from the config: D1 / MLADI dev in default.json,
+                      ArSarcasm-v2 S1 train / dev in sentiment.json)
   script              letter shares match the requested script (open sets: Arabic script expected)
   length              word count inside [min_words, max_words]
   did_nadi/did_madar  CAMeLBERT DID top-1 country == target (or P(target) >= min_prob);
