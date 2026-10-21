@@ -36,8 +36,8 @@ from transformers import AutoModelForSequenceClassification, get_linear_schedule
 
 from src.data.build_dataset import git_commit, sha256
 from src.sentiment.build_dataset import SENTIMENTS
-from src.sentiment.common import (ID2LABEL, LABEL2ID, evaluate_splits, load_split, predict_logits,
-                                  print_scores, sentiment_scores)
+from src.sentiment.common import (evaluate_splits, label_maps, load_split, predict_logits,
+                                  print_scores, run_classes, sentiment_scores)
 from src.training import decoder_head
 from src.training.train_classifier import set_seed
 from src.training.train_lora_classifier import (batches, load_checkpoint, load_tokenizer, quant_config,
@@ -46,10 +46,11 @@ from src.training.train_lora_classifier import (batches, load_checkpoint, load_t
 RUNS_DIR = Path("results/sentiment/runs")
 
 
-def load_base(name: str, pad_token_id: int):
-    """Frozen 4-bit base model with a 3-class single-label head (head in fp32)."""
+def load_base(name: str, pad_token_id: int, classes: list[str] = SENTIMENTS):
+    """Frozen 4-bit base model with a single-label head over `classes` (head in fp32)."""
+    id2label, label2id = label_maps(classes)
     model = AutoModelForSequenceClassification.from_pretrained(
-        name, num_labels=len(SENTIMENTS), id2label=ID2LABEL, label2id=LABEL2ID,
+        name, num_labels=len(classes), id2label=id2label, label2id=label2id,
         problem_type="single_label_classification", quantization_config=quant_config(),
         dtype=torch.bfloat16, device_map={"": 0})
     # Decoder models pool the last non-padding token, so the model must know the pad id.
@@ -62,22 +63,23 @@ def dev_scores(model, tokenizer, texts: list[str], gold: np.ndarray, cfg: dict) 
     """Dev-split scores of the current model (bf16 inference)."""
     with torch.autocast("cuda", dtype=torch.bfloat16):
         logits = predict_logits(model, tokenizer, texts, cfg["max_length"], "cuda", cfg["eval_batch_size"])
-    return sentiment_scores(gold, logits.argmax(-1))
+    return sentiment_scores(gold, logits.argmax(-1), run_classes(cfg))
 
 
 def train(cfg: dict) -> dict:
     """QLoRA training with epoch selection on dev macro F1; saves the best adapter."""
     set_seed(cfg["seed"])
     model_dir = RUNS_DIR / cfg["run_name"] / "model"
+    classes = run_classes(cfg)
 
-    # Data: S1 train for learning, S1 dev for picking the epoch.
-    train_texts, train_labels, _ = load_split(Path(cfg["train_data"]), cfg["text_field"], cfg["limit"])
+    # Data: S1 train for learning, S1 dev for picking the epoch (only texts of `classes`).
+    train_texts, train_labels, _ = load_split(Path(cfg["train_data"]), cfg["text_field"], cfg["limit"], classes)
     n_real = len(train_texts)
     # Conditions 2/3: synthetic texts (a separate file, source="synthetic") appended to the real ones.
     if cfg.get("synthetic_data"):
-        syn_texts, syn_labels, _ = load_split(Path(cfg["synthetic_data"]), "text", cfg["limit"])
+        syn_texts, syn_labels, _ = load_split(Path(cfg["synthetic_data"]), "text", cfg["limit"], classes)
         train_texts, train_labels = train_texts + syn_texts, np.concatenate([train_labels, syn_labels])
-    dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"])
+    dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"], classes)
 
     # Model: 4-bit base + LoRA adapters; the classification head is trained in full.
     # Architectures without a library classification class get the equivalent custom head.
@@ -87,10 +89,10 @@ def train(cfg: dict) -> dict:
                       lora_alpha=cfg["lora_alpha"], lora_dropout=cfg["lora_dropout"],
                       target_modules=cfg["lora_target_modules"])
     if custom:
-        model = decoder_head.build_for_training(cfg["model"], quant_config(), lora, len(SENTIMENTS),
+        model = decoder_head.build_for_training(cfg["model"], quant_config(), lora, len(classes),
                                                 cfg.get("embeddings_16bit", False))
     else:
-        model = load_base(cfg["model"], tokenizer.pad_token_id)
+        model = load_base(cfg["model"], tokenizer.pad_token_id, classes)
         model = decoder_head.prepare_kbit(model, cfg.get("embeddings_16bit", False))
         model = get_peft_model(model, lora)
     n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -207,9 +209,10 @@ def load_saved(cfg: dict):
     custom = decoder_head.needs_custom_head(cfg["model"])
     tokenizer = load_tokenizer(str(model_dir), right_padding=custom)
     if custom:
-        model = decoder_head.load_trained(cfg["model"], quant_config(), model_dir, len(SENTIMENTS))
+        model = decoder_head.load_trained(cfg["model"], quant_config(), model_dir, len(run_classes(cfg)))
     else:
-        model = PeftModel.from_pretrained(load_base(cfg["model"], tokenizer.pad_token_id), model_dir)
+        model = PeftModel.from_pretrained(load_base(cfg["model"], tokenizer.pad_token_id, run_classes(cfg)),
+                                          model_dir)
     return model, tokenizer
 
 

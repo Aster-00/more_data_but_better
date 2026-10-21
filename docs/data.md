@@ -11,6 +11,8 @@ Every data set used in training or measurement, with its version ID. Raw and pro
 | MLADI dev | 120 sentences, human multi-label gold for 8 dialects | `MLADI/dev/NADI2024_subtask1_dev2.tsv` | Model selection, scorer validation |
 | MLADI test | 1,000 sentences, 11 dialects, labels private | Leaderboard Space only | Final evaluation only |
 
+Sentiment data (ArSarcasm-v2) is documented separately in `docs/sentiment/data.md`.
+
 ## Versions
 
 | ID | File | SHA-256 (first 12) | Texts | Contents | Built by |

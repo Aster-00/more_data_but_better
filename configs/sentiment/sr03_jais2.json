@@ -1,0 +1,36 @@
+{
+  "run_name": "sr03_jais2_seed42",
+  "condition": "real_only_no_neu",
+  "classes": [
+    "NEG",
+    "POS"
+  ],
+  "train_data": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "dev_data": "data/processed/sentiment/arsarcasm_v2_dev.jsonl",
+  "test_data": "data/processed/sentiment/arsarcasm_v2_test.jsonl",
+  "text_field": "text",
+  "model": "inception42/Jais-2-8B-Chat",
+  "seed": 42,
+  "max_length": 128,
+  "micro_batch_size": 2,
+  "grad_accum": 12,
+  "eval_batch_size": 2,
+  "epochs": 2,
+  "learning_rate": 0.0001,
+  "warmup_ratio": 0.03,
+  "weight_decay": 0.01,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "patience": 2,
+  "limit": null,
+  "checkpoint_minutes": 30
+}

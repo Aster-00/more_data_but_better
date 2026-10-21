@@ -2,7 +2,8 @@
   "_doc": "Sentiment run registry (separate from configs/runs.json). A run (SR<NN>) is one fixed setup: data and training settings. Each model tried under it is a member SR<NN>-<model>. 'members' maps a result folder under results/sentiment/runs/ (with _seed<N> removed) to its run and model tag. src.sentiment.summarize_runs groups the score tables by this file.",
   "runs": {
     "SR01": "Real only (condition 1), S1 (ArSarcasm-v2), every roster classifier; BERTs 3 seeds, LLMs seed 42 first (SD-003)",
-    "SR02": "Real + SG01 (open, zero-shot synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG01 generator; BERTs 3 seeds; Jais-2 (QLoRA, SR01 recipe) 3 seeds. Member = <classifier>_<generator>. The Jais-2 set could not fill its cells and was not trained."
+    "SR02": "Real + SG01 (open, zero-shot synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG01 generator; BERTs 3 seeds; Jais-2 (QLoRA, SR01 recipe) 3 seeds. Member = <classifier>_<generator>. The Jais-2 set could not fill its cells and was not trained.",
+    "SR03": "Real only, NEU dropped: S1 train/dev/test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS head, every roster classifier, 3 seeds (SD-007). Macro F1 is over NEG/POS, not comparable with SR01/SR02."
   },
   "members": {
     "sr01_marbertv2": {
@@ -84,6 +85,118 @@
     "sr02_jais2_aya": {
       "run": "SR02",
       "model": "jais2_aya"
+    },
+    "sr01_camelbert_mix": {
+      "run": "SR01",
+      "model": "camelbert_mix"
+    },
+    "sr01_camelbert_da": {
+      "run": "SR01",
+      "model": "camelbert_da"
+    },
+    "sr01_arbert": {
+      "run": "SR01",
+      "model": "arbert"
+    },
+    "sr01_arbertv2": {
+      "run": "SR01",
+      "model": "arbertv2"
+    },
+    "sr02_camelbert_mix_fanar": {
+      "run": "SR02",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr02_camelbert_mix_qwen3": {
+      "run": "SR02",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr02_camelbert_mix_aya": {
+      "run": "SR02",
+      "model": "camelbert_mix_aya"
+    },
+    "sr02_camelbert_da_fanar": {
+      "run": "SR02",
+      "model": "camelbert_da_fanar"
+    },
+    "sr02_camelbert_da_qwen3": {
+      "run": "SR02",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr02_camelbert_da_aya": {
+      "run": "SR02",
+      "model": "camelbert_da_aya"
+    },
+    "sr02_arbert_fanar": {
+      "run": "SR02",
+      "model": "arbert_fanar"
+    },
+    "sr02_arbert_qwen3": {
+      "run": "SR02",
+      "model": "arbert_qwen3"
+    },
+    "sr02_arbert_aya": {
+      "run": "SR02",
+      "model": "arbert_aya"
+    },
+    "sr02_arbertv2_fanar": {
+      "run": "SR02",
+      "model": "arbertv2_fanar"
+    },
+    "sr02_arbertv2_qwen3": {
+      "run": "SR02",
+      "model": "arbertv2_qwen3"
+    },
+    "sr02_arbertv2_aya": {
+      "run": "SR02",
+      "model": "arbertv2_aya"
+    },
+    "sr03_marbertv2": {
+      "run": "SR03",
+      "model": "marbertv2"
+    },
+    "sr03_arabertv02_twitter": {
+      "run": "SR03",
+      "model": "arabertv02_twitter"
+    },
+    "sr03_marbert": {
+      "run": "SR03",
+      "model": "marbert"
+    },
+    "sr03_camelbert_mix": {
+      "run": "SR03",
+      "model": "camelbert_mix"
+    },
+    "sr03_camelbert_da": {
+      "run": "SR03",
+      "model": "camelbert_da"
+    },
+    "sr03_arbert": {
+      "run": "SR03",
+      "model": "arbert"
+    },
+    "sr03_arbertv2": {
+      "run": "SR03",
+      "model": "arbertv2"
+    },
+    "sr03_jais2": {
+      "run": "SR03",
+      "model": "jais2"
+    },
+    "sr03_fanar": {
+      "run": "SR03",
+      "model": "fanar"
+    },
+    "sr03_aya": {
+      "run": "SR03",
+      "model": "aya"
+    },
+    "sr03_qwen3": {
+      "run": "SR03",
+      "model": "qwen3"
+    },
+    "sr03_falcon_h1": {
+      "run": "SR03",
+      "model": "falcon_h1"
     }
   }
 }

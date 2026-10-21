@@ -1,0 +1,37 @@
+{
+  "run_name": "sr03_fanar_seed42",
+  "condition": "real_only_no_neu",
+  "classes": [
+    "NEG",
+    "POS"
+  ],
+  "train_data": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "dev_data": "data/processed/sentiment/arsarcasm_v2_dev.jsonl",
+  "test_data": "data/processed/sentiment/arsarcasm_v2_test.jsonl",
+  "text_field": "text",
+  "model": "QCRI/Fanar-1-9B-Instruct",
+  "seed": 42,
+  "max_length": 128,
+  "micro_batch_size": 4,
+  "grad_accum": 6,
+  "eval_batch_size": 4,
+  "epochs": 2,
+  "learning_rate": 0.0001,
+  "warmup_ratio": 0.03,
+  "weight_decay": 0.01,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "patience": 2,
+  "limit": null,
+  "checkpoint_minutes": 30
+}

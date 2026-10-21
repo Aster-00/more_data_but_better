@@ -153,6 +153,21 @@ Data versions (D1–D4) are in `data.md`, decisions in `decisions.md`, the model
 - **Jais-2 repeats itself** (Self-BLEU 0.253 vs 0.028 real; one near duplicate within its set). **Gemma writes very short texts** (5.5 words vs 11.3 real). No other set has exact or near duplicates, and no generated text is a near duplicate of D1.
 - Leftovers the parser does not remove are scored as text (Fanar's translations, ALLaM's refusals, Jais-2's presentation-form fragments), so scores after a parser fix could differ.
 
+### R02–R24 started from LahjatBERT_cl_cardinality instead of MARBERT (2026-10-12/13)
+- **Question:** does starting from the published LahjatBERT_cl_cardinality checkpoint (R01, dev 72.68) instead of plain MARBERT help under each of our setups?
+- **Setup:** `configs/*_lahjat_clcard.json`: the 20 MARBERT configs of R02–R07 and R10–R24, identical except `model: Mohamedelzeftawy/LahjatBERT_cl_cardinality` (Hub commit `331f1ca`; same 18 labels in the same order, so its classification head is reused and trained further). Members `R<NN>-lahjatbert_clcard`. Seeds 42/43/44, 60 runs, `scripts/queue_lahjat_clcard.sh` (log `results/queue_lahjat_clcard.log`). **Code not committed:** the logs record `105f872`, which does not contain these configs or the queue script (the full config is in each `train_log.json`). Smoke test `baseline_real_only_lahjat_clcard_seed42_limit500` (500 texts, 1 epoch: validation 89.83, dev 69.15).
+- **Interruptions:** the PC crashed at 04:53:56 on 10-13 (decisions.md D-009) during `dropout02_ep4 … seed42`; the queue was later stopped by hand for a reboot during the same run. Both partial folders were deleted (Ammar's approval); the run was redone from scratch. 51 runs 2026-10-12 20:51 → 10-13 04:40, 9 runs 10:10 → 12:11, no training errors. 7.2 min per 2-epoch run, ~10.7 per 3-epoch, ~14.3 per 4-epoch, 13.6 per R10 run, 10.1 per R11 run.
+- **Caveats, read before using any number:**
+  - **Not a fresh model.** The checkpoint was already fine-tuned by its authors on NADI tweets, the same source as D1, for our 18 labels. These runs are continued training of a published model, not a fourth classifier trained under the same conditions as MARBERT / MARBERTv2 / AraBERT.
+  - **Validation F1 is contaminated.** The checkpoint has very probably seen our validation tweets: validation F1 is above MARBERT in every setup, by 2.9–5.0 points at dropout 0.1–0.3 (e.g. R03 84.75 vs 81.44) and 7.9–9.4 at dropout 0.5, while dev is mostly lower. Epoch selection uses it, so it is a weaker guide here.
+  - **Dev/test leakage unknown.** Whether LahjatBERT's training data (`stage_1_and_gpt.csv`) contains MLADI dev or test sentences cannot be checked (TODO).
+- **Continued training never beats the published checkpoint.** Best: R10 (cardinality curriculum) 72.06 ± 0.26, vs 72.68 for the checkpoint itself; with our R03 settings it drops to 69.97 ± 0.43. Training on D1 pulls it back to where MARBERT trained on D1 lands.
+- **Under our good settings it is ~1.4–1.9 points below MARBERT:** R03/R12 69.97 vs 71.34, R07 70.55 vs 72.17, R13/R14/R17/R19/R22 −1.4 to −1.9, lower recall and the same or slightly higher precision. R02, R11 and R23 are within noise (−0.4 to −0.8).
+- **Where MARBERT does badly it does better:** with dropout 0.5 (R18, R20, R24) it scores 62–63 vs 57–59 for MARBERT (+3.9 to +5.4), mostly through higher precision: the head start limits underfitting. Seed spread is large there (± 2.0–2.8).
+- **Same or within noise:** R04/R15 68.93 vs 68.71, R05 69.92 vs 69.25, R06 67.70 vs 67.11, R10 72.06 vs 71.79, R21 68.20 vs 68.19. Seed spread is usually smaller than MARBERT's (e.g. R03 ± 0.43 vs ± 1.03).
+- **Repeats reproduce exactly:** R12 = R03 and R15 = R04 for every seed, as with MARBERT (deterministic training).
+- **Takeaway:** starting from LahjatBERT_cl_cardinality brings no gain under our settings and costs about 1.5 dev points where our settings are good; its advantage is only robustness to bad settings. Keep MARBERT as the starting model; the published checkpoint stays a fixed reference (R01).
+
 ## Next runs
 
 | ID | What | Why |

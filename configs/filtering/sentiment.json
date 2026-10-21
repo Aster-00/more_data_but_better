@@ -1,0 +1,53 @@
+{
+  "cache_dir": "F:/Thesis/models",
+  "checks": {
+    "parse_ok": {
+      "enabled": true
+    },
+    "exact_dup_within": {
+      "enabled": true
+    },
+    "near_dup_within": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5
+    },
+    "dup_against_real": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_train.jsonl"
+    },
+    "dup_against_dev": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_dev.jsonl"
+    },
+    "script": {
+      "enabled": true,
+      "min_share": 0.7,
+      "default_script": "arabic"
+    },
+    "length": {
+      "enabled": true,
+      "min_words": 2,
+      "max_words": 60
+    },
+    "did_nadi": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "did_madar": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "aldi": {
+      "enabled": false,
+      "min_score": 0.3
+    }
+  },
+  "_notes": "Sentiment track (ArSarcasm-v2). Duplicate checks against S1 train and S1 dev; the official test set is NOT used for filtering (CLAUDE.md), overlap with it is only reported by src.sentiment.select_synthetic. Dialect scorers (DID, ALDi) are off: they are dropped from the roster and do not cover msa/gulf/levant labels. Thresholds as in the dialect default (near-dup Jaccard 0.8 on char 5-grams, 2-60 words), not tuned."
+}
