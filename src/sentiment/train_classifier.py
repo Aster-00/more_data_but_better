@@ -39,8 +39,8 @@ from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
 
 from src.data.build_dataset import git_commit, sha256
 from src.sentiment.build_dataset import SENTIMENTS
-from src.sentiment.common import (ID2LABEL, LABEL2ID, evaluate_splits, load_split, predict_logits,
-                                  print_scores, sentiment_scores)
+from src.sentiment.common import (evaluate_splits, label_maps, load_split, predict_logits,
+                                  print_scores, run_classes, sentiment_scores)
 from src.training.train_classifier import set_seed
 
 RUNS_DIR = Path("results/sentiment/runs")
@@ -57,11 +57,12 @@ def make_loader(tokenizer, texts: list[str], labels, max_length: int, batch_size
                       generator=torch.Generator().manual_seed(seed))
 
 
-def build_model(name: str, dropout: float, freeze_layers: int):
-    """Pretrained encoder with a 3-class head, dropout set at load time, lower layers frozen."""
+def build_model(name: str, dropout: float, freeze_layers: int, classes: list[str] = SENTIMENTS):
+    """Pretrained encoder with a head over `classes`, dropout set at load time, lower layers frozen."""
     # Dropout passed to from_pretrained so the layers are built with it (see the dialect script).
+    id2label, label2id = label_maps(classes)
     model = AutoModelForSequenceClassification.from_pretrained(
-        name, num_labels=len(SENTIMENTS), id2label=ID2LABEL, label2id=LABEL2ID,
+        name, num_labels=len(classes), id2label=id2label, label2id=label2id,
         problem_type="single_label_classification",
         hidden_dropout_prob=dropout, attention_probs_dropout_prob=dropout)
     # Freeze the first `freeze_layers` encoder layers; embeddings stay trainable.
@@ -75,20 +76,21 @@ def train(cfg: dict, device: str) -> dict:
     """Train with epoch selection on dev macro F1; save the best checkpoint; return the log."""
     set_seed(cfg["seed"])
     model_dir = RUNS_DIR / cfg["run_name"] / "model"
+    classes = run_classes(cfg)
 
-    # Data: S1 train for learning, S1 dev for picking the epoch.
-    train_texts, train_labels, _ = load_split(Path(cfg["train_data"]), cfg["text_field"], cfg["limit"])
+    # Data: S1 train for learning, S1 dev for picking the epoch (only texts of `classes`).
+    train_texts, train_labels, _ = load_split(Path(cfg["train_data"]), cfg["text_field"], cfg["limit"], classes)
     n_real = len(train_texts)
     # Conditions 2/3: synthetic texts (a separate file, source="synthetic") appended to the real ones.
     if cfg.get("synthetic_data"):
-        syn_texts, syn_labels, _ = load_split(Path(cfg["synthetic_data"]), "text", cfg["limit"])
+        syn_texts, syn_labels, _ = load_split(Path(cfg["synthetic_data"]), "text", cfg["limit"], classes)
         train_texts, train_labels = train_texts + syn_texts, np.concatenate([train_labels, syn_labels])
-    dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"])
+    dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"], classes)
     tokenizer = AutoTokenizer.from_pretrained(cfg["model"])
     loader = make_loader(tokenizer, train_texts, train_labels, cfg["max_length"], cfg["batch_size"], cfg["seed"])
 
     # Model, optimizer (trainable parameters only), warmup + linear decay, fp16 loss scaling.
-    model = build_model(cfg["model"], cfg["dropout"], cfg["freeze_layers"]).to(device)
+    model = build_model(cfg["model"], cfg["dropout"], cfg["freeze_layers"], classes).to(device)
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad],
                                   lr=cfg["learning_rate"], weight_decay=cfg["weight_decay"])
     total_steps = len(loader) * cfg["epochs"]
@@ -117,7 +119,7 @@ def train(cfg: dict, device: str) -> dict:
         # Dev macro F1 picks the epoch.
         with torch.autocast("cuda", dtype=torch.float16, enabled=use_amp):
             logits = predict_logits(model, tokenizer, dev_texts, cfg["max_length"], device)
-        scores = sentiment_scores(dev_labels, logits.argmax(-1))
+        scores = sentiment_scores(dev_labels, logits.argmax(-1), classes)
         f1 = scores["macro"]["f1"]
         log["epochs"].append({"epoch": epoch, "train_loss": running_loss / len(loader), "dev_macro_f1": f1,
                               "dev_accuracy": scores["accuracy"], "dev_f1_pn": scores["f1_pn"],

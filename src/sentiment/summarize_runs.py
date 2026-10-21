@@ -62,10 +62,16 @@ def split_row(member: dict, folder: str, logs: list[dict], split: str) -> dict:
         row[name], row[f"{name}_std"] = mean_std([get(s) for s in scores])
     # Per-class F1 (mean over seeds).
     for c in SENTIMENTS:
-        row[f"f1_{c}"] = mean_std([s["per_class"][c]["f1"] for s in scores])[0]
+        row[f"f1_{c}"] = (mean_std([s["per_class"][c]["f1"] for s in scores])[0]
+                          if c in scores[0]["per_class"] else None)
     row["best_epochs"] = " / ".join(str(log.get("best_epoch")) for log in logs)
     row["minutes_per_seed"] = statistics.fmean(log["total_seconds"] for log in logs) / 60
     return row
+
+
+def f1_cell(value: float | None) -> str:
+    """A per-class F1 cell; "-" for a class the run does not use (SR03 has no NEU)."""
+    return "–" if value is None else f"{value:.1f}"
 
 
 def pm(row: dict, key: str) -> str:
@@ -105,8 +111,8 @@ def write_markdown(registry: dict, rows: list[dict]) -> None:
                   "|---" * (2 * len(SENTIMENTS) + 1) + "|"]
         for i in ids:
             d, t = by_id[i]["dev"], by_id[i]["test"]
-            lines.append(f"| {i} | " + " | ".join(f"{d[f'f1_{c}']:.1f}" for c in SENTIMENTS) + " | "
-                         + " | ".join(f"{t[f'f1_{c}']:.1f}" for c in SENTIMENTS) + " |")
+            lines.append(f"| {i} | " + " | ".join(f1_cell(d[f'f1_{c}']) for c in SENTIMENTS) + " | "
+                         + " | ".join(f1_cell(t[f'f1_{c}']) for c in SENTIMENTS) + " |")
         lines.append("")
     (OUT_DIR / "sentiment_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
