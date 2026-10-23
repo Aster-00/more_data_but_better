@@ -62,3 +62,16 @@ Built by `scripts/sentiment/queue_sg_open.sh` (decision SD-004, run SG01 in `pro
 - Same cleaning as S1 (links → `URL`, mentions → `USER`, original in `text_raw`); `**` markers and same-line English translations removed before that (`translation_stripped`).
 - Files were renamed on 2026-10-16 to the SG01/SR02 numbering (map: `results/sentiment/renames_2026-10-16.json`); contents were not edited, so `set_name`, `request_id`, `config_file` inside the records and `run_name` / `synthetic_data` inside the train logs still show the first names (sg02_fanar, sr03_marbertv2_seed42, …).
 - No selected text matches an official test text exactly (reported, not filtered).
+
+## Relabelling sheet for the dev agreement study (SD-008)
+
+Built 2026-10-23 by `python -m src.sentiment.make_relabel_sheet` (seed 42). Files in `data/annotation/sentiment/` (gitignored): `relabel_dev_v1.csv` (sheet: item, text, label, note; UTF-8 with BOM), `relabel_dev_v1.key.jsonl` (gold labels, part, SR03 votes per item), `relabel_dev_v1.meta.json`. Source: S1 dev (`38713d095d1d`).
+
+| Part | Tweets | Content |
+|---|---|---|
+| A, random | 150 | Stratified by gold: NEG 55 / NEU 69 / POS 26 |
+| B, model errors | 138 | Every dev NEG tweet that ≥ 1 of 36 SR03 runs predicted POS |
+| Overlap | 16 | In both parts, labelled once |
+| **Sheet** | **272** | Shuffled; text only, no gold, part or prediction shown |
+
+- **Bias to handle in the analysis:** Ammar already saw 22 part-B tweets with their gold labels and Claude's reading (2026-10-22, the ≥ 18/36 tweets). Report part-B results with and without those 22.

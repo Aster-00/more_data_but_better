@@ -202,11 +202,30 @@ which is a run that uses SG01, which is a run that uses 0 shot prompting and gen
 | arbertv2 | test | SR02 + SG01 Qwen3 | 63.25 ± 0.47 | 63.26 ± 0.94 | 64.00 ± 0.48 | +2.15 |
 | arbertv2 | test | SR02 + SG01 Aya | 62.44 ± 0.71 | 62.32 ± 2.07 | 63.66 ± 0.64 | +1.34 |
 
+
+
+| Split | NEG | NEU |POS	| Best class | Worst class |
+|---|---|---|---|---|---| 
+| Dev	| 79.7	 | 79.8 |	71.8	| NEG and NEU tie (12 members each) | POS (all 24 members) |
+| Test | 77.5 | 48.6 | 64.7 | NEG (all 24) | NEU (all 24) |
+
+| | POS precision | POS recall |
+|---|---|--
+| Jais-2 | 71.7 | 86.0 |
+| MARBERT | 66.3 | 88.0 |
+
 Takeaway:
 - BERTS dont show improvement
+- SR02, per-class F1 averaged over all 24 members:
+  - In dev 
+    - POS is the worst falling behind by 8 points and it is the worst for all the 24 members
+    - NEG and NEU are the best models tied by 12 models each
+  - In Test 
+    - NEU is the worst for all 2 models
+  - a fifth of the NEG statements that were labelled POS were labelling errors by the annotators which fits the 80% agreement between annotators
+- When i looked at the errors of NEG tweets that the models labelled as positive they were mostly angry prayers, sad news with positive words, and hopeful tweets that mention hardship, which is what the model needs to train on better. This is the "Better Data" 
 
-**Future runs**
-- Repeat runs but with the state of the art model
+**Future runs
 - SG02 same prompt but with one shot
 - SG03 few shot
 - SG04 few shot with controlled generation
@@ -216,6 +235,7 @@ Takeaway:
 - before any runs define constrains to ensure that generated datasets will look like real
     - if there is time, find which constraint is the most effective
  no improvement shown beyond noise, no need to run Jais
+
 
 ## SR03 real data only, NEU dropped
 
@@ -251,3 +271,6 @@ S1 train / dev / test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS 
 **Takeaways**:
 - NEU labels have alot of inaccuracies
 - need to explore annotation standards, what is considered NEU, POS or NEG
+
+**Future Runs**
+- 

@@ -60,3 +60,22 @@ Decisions for the sentiment track. Dialect-track decisions are in `../decisions.
 - **Not comparable:** SR03 macro F1 is over two classes on a NEG/POS-only dev and test, so it cannot be compared with SR01/SR02 macro F1 or F1-PN (those are 3-class models scored on all tweets). Ammar is aware and wants the runs anyway; rescoring SR01 on the NEG/POS subset was offered and not wanted.
 - **Cost:** ~2.5 h for the new BERTs in SR01/SR02, ~30 min for the SR03 BERTs, ~16 h for the SR03 LLMs (estimated from SR01 times scaled to the smaller data). Queue `scripts/sentiment/queue_sr03.sh`.
 - **Not in the dialect roster:** these four models are used in the sentiment track only.
+
+## SD-008 — 2026-10-23 — Measure label agreement on S1 dev by relabelling a sample
+- **Decision:** Ammar relabels a sample of S1 dev tweets (NEG / NEU / POS) under the ArSarcasm-v2 sentiment guidelines, without seeing the gold labels or any model predictions. Cohen's kappa against the gold labels is computed overall and per class. The sample has two parts:
+  - **A, random:** 150 dev tweets, stratified by gold sentiment. This part gives the agreement estimate for the whole dataset.
+  - **B, model errors:** every dev NEG tweet that at least one SR03 run (12 models × 3 seeds) called POS (138 tweets). This part shows how many of these errors are label errors.
+  - Tweets in both parts are labelled once. The order is shuffled, so Ammar cannot tell which part a tweet is from.
+- **Why (Ammar's justification, 2026-10-23):**
+  1. **A real number for label quality.** Today we only guess the labels are noisy. Agreement turns the guess into a measured, citable number.
+  2. **A ceiling for our scores.** Models cannot be more reliable than their labels. Agreement shows roughly where that ceiling is, and how much room any method still has.
+  3. **A way to judge small differences.** If labels often disagree, small score gaps are noise. We then know which differences between models or conditions to ignore.
+  4. **An explanation for weak classes.** Agreement per class shows whether low NEU and POS F1 is partly a label problem rather than only a model problem.
+  5. **A reason synthetic data did not help.** If the hard cases are the ones where the labels themselves disagree, clean synthetic data cannot fix them. This supports "better data, not more data".
+  6. **A target for controlled generation.** Agreement shows which kinds of tweets are confusing. Controlled generation can then produce those cases, following the guidelines.
+  7. **Evidence of analytical work.** The supervisor rewards analysis, not only headline numbers. A label-quality study with Cohen's kappa is that kind of analysis.
+- **Trigger:** the SR03 dev error review (2026-10-22). Of 22 dev NEG tweets that at least half of the SR03 runs called POS, about 4–5 look POS under the guidelines (e.g. "ابق قويا ♥✨", 36/36 runs). Too few to estimate a rate.
+- **Rules:** dev only; the test set is not relabelled or inspected. The gold labels stay the evaluation reference (CLAUDE.md label trust rule). Ammar's labels are an analysis, not a new training or test version. Using them to relabel train would be a new data version and needs its own decision.
+- **Cost:** no GPU. About 280 tweets of Ammar's time.
+- **Known bias:** Ammar already saw the 22 most confident part-B tweets with gold labels (2026-10-22); part-B results are reported with and without them.
+- **Open:** the source of the guideline text and of the "~80% annotator agreement" figure (to be checked before citing).
