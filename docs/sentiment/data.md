@@ -1,6 +1,6 @@
 # Sentiment data
 
-Data for the sentiment track (interim, started 2026-10-13 while the full MLADI data is pending). The dialect track's data is in `../data.md`. Raw and processed data live in `data/` (gitignored). Counts below are from `results/data_stats/sentiment/arsarcasm_v2_stats.json`; reasons for each step are in `decisions.md`.
+Data for the sentiment track (interim, started 2026-10-13 while the full MLADI data is pending). The dialect track's data is in `../data.md`. Raw and processed data live in `data/` (gitignored). Counts below are from `results/data_stats/sentiment/arsarcasm_v2_stats.json`; reasons for each step are in `../decisions.md` (shared log, tag `[SA]`).
 
 ## Sources
 

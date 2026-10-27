@@ -180,5 +180,13 @@ IDs are permanent and never reused or renumbered. `D-001` to `D-010` were the di
 - **Decision:**
   - **Length buckets:** kept as they are: short 3–7, medium 8–15, long 16–30 words, in equal thirds. For comparison, D1's thirds are 7 or fewer, 8–14, and 15 or more words (median 10).
   - **Requests per dialect (`per_dialect`) and few-shot examples (`few_shot.k`):** experiment variables that change between runs. Within any open vs controlled comparison, both conditions use the same values.
-- **Still open:** the topic list (keep the 15 hand-written topics, or name them from the D1 topic groups) and `label_mode`. `target_only` labels the 17 non-requested dialects as invalid. That is often wrong in a multi-label task: in MLADI, 90% of Palestine-valid sentences are also valid for Jordan. `target_unknown` needs a loss mask in `train_classifier.py`.
+- **Still open:** the topic list (keep the 15 hand-written topics, or name them from the D1 topic groups) and `label_mode` (settled in D-014). `target_only` labels the 17 non-requested dialects as invalid. That is often wrong in a multi-label task: in MLADI, 90% of Palestine-valid sentences are also valid for Jordan. `target_unknown` needs a loss mask in `train_classifier.py`.
 - **Why:** Ammar, 2026-10-28.
+
+## D-014 [DI] — 2026-10-28 — Generated texts: only the requested dialect is labelled
+- **Decision:** Open and controlled generation use `label_mode: target_unknown`. The requested dialect is labelled 1, and the other 17 dialects are unknown (`null`). Training skips the unknown labels with a loss mask, so they add no loss. Validation and model selection use real data only.
+- **Why:** The task is multi-label, and many sentences are valid in several dialects (in MLADI, 90% of Palestine-valid sentences are also valid for Jordan). Setting the other 17 to 0 (`target_only`) would teach false "not this dialect" labels. Synthetic data could then hurt because of label noise rather than text quality, which would confound open vs controlled. The real data (D1) already has multi-dialect labels.
+- **To do before the first augmented run:** `src/training/train_classifier.py` cannot use these labels yet. It needs (1) a masked BCE loss that ignores `null` labels and (2) loading of real + synthetic files, with the validation split taken from the real data only.
+- **Alternatives considered:**
+  - `target_only`: can be kept as an ablation.
+  - Labelling the other 17 dialects with LahjatBERT `cl_cardinality`: rejected, because it is the fidelity judge (D-011) and would end up grading its own labels.

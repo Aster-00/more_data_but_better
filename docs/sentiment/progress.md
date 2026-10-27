@@ -1,6 +1,6 @@
 # Sentiment progress log
 
-Run notes for the sentiment track (ArSarcasm-v2). Same conventions as `../progress.md`: what each run did, what changed, what it showed; no hand-written score tables. Data versions are in `data.md`, decisions in `decisions.md`.
+Run notes for the sentiment track (ArSarcasm-v2). Same conventions as `../progress.md`: what each run did, what changed, what it showed; no hand-written score tables. Data versions are in `data.md`, decisions in the shared log `../decisions.md` (tag `[SA]`).
 
 **IDs.** Sentiment runs are prefixed `SR<NN>` (training), `SG<NN>` (generation), `SQ<NN>` (quality), so they never clash with the dialect track's R/G/Q IDs.
 
