@@ -80,11 +80,10 @@ class Request:
 def control_grid(controls: dict) -> list[dict]:
     """Every combination of the control-factor values given in the config (the balanced grid)."""
     # Each factor is a list of values; "lengths" is a dict name -> [min_words, max_words].
+    # Script and code-switching are not factors (D-010): the template fixes Arabic script, no foreign words.
     factors = {
         "topic": controls["topics"],
-        "script": controls["scripts"],
         "length": list(controls["lengths"]),
-        "code_switching": controls["code_switching"],
     }
     names = list(factors)
     return [dict(zip(names, combo)) for combo in product(*factors.values())]
@@ -184,10 +183,7 @@ def render_messages(template: Template, req: Request, cfg: dict, names: dict[str
         lo, hi = cfg["controls"]["lengths"][c["length"]]
         values.update(
             topic=c["topic"],
-            script_instruction=opts["script"][c["script"]],
             length_instruction=opts["length"].format(min_words=lo, max_words=hi),
-            code_switching_instruction=opts["code_switching"][c["code_switching"]].format(
-                foreign_language=cfg["controls"]["foreign_language"].get(d, cfg["controls"]["foreign_language"]["default"])),
         )
     # Few-shot block (empty string when k = 0).
     if req.few_shot_texts:

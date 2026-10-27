@@ -5,8 +5,8 @@ Measures (pipeline stage 5):
   lexical      TTR, distinct-1/2, MTLD, Self-BLEU (whitespace tokens, no normalization)
   embedding    E5 mean pairwise cosine distance and Vendi score (Friedman & Dieng 2022)
   fidelity     CAMeLBERT DID top-1 agreement with the target dialect (both variants), ALDi distribution
-  adherence    controlled sets: share of texts that follow each control factor (script, length,
-               code-switching); topic needs a judge and is left as TODO
+  adherence    controlled sets: share of texts that follow the requested length bucket, and that keep
+               the fixed Arabic script with no foreign words (D-010); topic needs a judge and is left as TODO
   kappa        Cohen's kappa between the two DID scorers, and between each scorer and the target
 
 The same script runs on a real D1 sample (`--sample`), where the target dialect of a text is
@@ -40,7 +40,7 @@ from src.quality.lexical import lexical_summary
 ARABIC_LETTER_RE = re.compile(r"[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]")
 LATIN_LETTER_RE = re.compile(r"[A-Za-z]")
 LATIN_WORD_RE = re.compile(r"[A-Za-z]{2,}")
-PLACEHOLDER_RE = re.compile(r"\b(?:USER|URL)\b")
+PLACEHOLDER_RE = re.compile(r"\b(?:USER|URL)\b|https?://\S+|www\.\S+|@\w+")  # placeholders, raw links, mentions
 
 
 # ---------------------------------------------------------------- loading
@@ -71,8 +71,11 @@ def script_features(text: str) -> dict:
     letters = sum(c.isalpha() for c in t)
     ar = len(ARABIC_LETTER_RE.findall(t))
     lat = len(LATIN_LETTER_RE.findall(t))
+    words = len(t.split())
+    latin_words = len(LATIN_WORD_RE.findall(t))
     return {"letters": letters, "arabic_share": ar / letters if letters else 0.0,
-            "latin_share": lat / letters if letters else 0.0, "latin_words": len(LATIN_WORD_RE.findall(t))}
+            "latin_share": lat / letters if letters else 0.0, "latin_words": latin_words,
+            "latin_word_share": latin_words / words if words else 0.0}
 
 
 def observed_script(f: dict, min_share: float = 0.7) -> str:
@@ -84,9 +87,11 @@ def observed_script(f: dict, min_share: float = 0.7) -> str:
     return "mixed"
 
 
-def observed_code_switching(f: dict) -> str:
-    """'none' (0 Latin words), 'light' (1-2) or 'heavy' (3+); only meaningful for Arabic-script text."""
-    return "none" if f["latin_words"] == 0 else ("light" if f["latin_words"] <= 2 else "heavy")
+def observed_code_switching(f: dict, heavy_share: float = 0.2) -> str:
+    """'none' (0% Latin words), 'light' (below 20%) or 'heavy' (20%+); only meaningful for Arabic-script text."""
+    # Share of words, not a count, so short and long texts are judged alike (Ammar, 2026-10-27).
+    s = f["latin_word_share"]
+    return "none" if s == 0 else ("light" if s < heavy_share else "heavy")
 
 
 # ---------------------------------------------------------------- measures
@@ -183,21 +188,23 @@ def adherence_measures(records: list[dict], length_buckets: dict | None) -> dict
     totals: dict[str, Counter] = {"script": Counter(), "length": Counter(), "code_switching": Counter()}
     for r in ctrl:
         c, f = r["controls"], script_features(r["text"])
-        # Script: observed script equals the requested one.
-        s_ok = observed_script(f) == c["script"]
+        # Script and code-switching are fixed by the template (D-010): Arabic script, no foreign words.
+        # Older plans that still carry them as factors are checked against their requested value.
+        want_script, want_cs = c.get("script", "arabic"), c.get("code_switching", "none")
+        s_ok = observed_script(f) == want_script
         # Length: word count inside the requested bucket's bounds.
         lo, hi = (length_buckets or {}).get(c["length"], (0, 10**9))
         l_ok = lo <= len(r["text"].split()) <= hi
-        for name, flag, level in (("script", s_ok, c["script"]), ("length", l_ok, c["length"])):
+        for name, flag, level in (("script", s_ok, want_script), ("length", l_ok, c["length"])):
             ok[name].append(flag)
             totals[name][level] += 1
             per_level[name][level] += flag
         # Code-switching is measurable only for Arabic-script requests (Latin words = foreign words).
-        if c["script"] == "arabic":
-            cs_ok = observed_code_switching(f) == c["code_switching"]
+        if want_script == "arabic":
+            cs_ok = observed_code_switching(f) == want_cs
             ok["code_switching"].append(cs_ok)
-            totals["code_switching"][c["code_switching"]] += 1
-            per_level["code_switching"][c["code_switching"]] += cs_ok
+            totals["code_switching"][want_cs] += 1
+            per_level["code_switching"][want_cs] += cs_ok
     return {
         "n": len(ctrl),
         **{name: {"rate": round(sum(v) / len(v), 4) if v else None,

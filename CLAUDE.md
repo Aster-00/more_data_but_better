@@ -58,7 +58,7 @@ The same classifier is trained under three conditions and evaluated on the same 
 2. **Real + open synthetic** (ordinary, unconstrained LLM generation)
 3. **Real + controlled synthetic** (prompts specify the control factors)
 
-Control factors for condition 3: dialect, class, topic, script (Arabic script vs Arabizi), sentence length, amount of code-switching. The augmentation should aim for class balance and for diversity across topics and dialects.
+Control factors for condition 3: dialect, class, topic, sentence length. Script and code-switching are not control factors (D-010, 2026-10-27): every generated text is Arabic script with Arabic words only; script and code-switching are only measured, as dataset properties (quality row 8). The augmentation should aim for class balance and for diversity across topics and dialects.
 
 Before training, the generated sets are compared with:
 
@@ -71,6 +71,25 @@ Before training, the generated sets are compared with:
 **Learning curves:** repeat the three conditions at several real-data sizes to test whether synthetic data helps most when real data is scarce.
 
 The supervisor's standing question is "more data vs better data", so every experiment should make it possible to separate the effect of *quantity* from the effect of *quality*. When comparing open vs controlled synthetic data, match the number of synthetic examples.
+
+## Dataset quality metrics
+
+One universal matrix rates every dataset, real and generated, the same way, so any two rows are comparable. Results go to the thesis Google Sheet (https://docs.google.com/spreadsheets/d/1ar52kcOnueAYdcmszD1yPToYJjZyYLZ6E2UQ1ok5q3o): summary in tab `08_DATASET_RATING` (explanations in `08b_RATING_DETAILS`), details in `10_LEXICAL_DIVERSITY`, `11_DIALECTNESS`, `12_TOPIC_DIVERSITY`. Every generated dataset gets its rows in all four tabs before training. Show Ammar the rows before writing them to the sheet. (Ammar, 2026-10-26 / 2026-10-27.)
+
+| # | Parameter | How we rate it |
+|---|---|---|
+| 1 | Class balance | Imbalance = largest class count / smallest class count (multi-label: valid texts per dialect). Generated sets: over the requested labels. |
+| 2 | Dialect coverage | Which dialects occur and how many texts each has. MSA share = share of texts with Sentence-ALDi below 0.11 (one cut-off for every dataset; SG01's 0.175 is replaced). |
+| 3 | Dialectness | Mean Sentence-ALDi score (0 = MSA, 1 = fully dialectal), plus shares below 0.11 and above 0.5. All texts, or a random 20,000 for larger splits. Rows from the old stand-in scorer are marked "stand-in". |
+| 4 | Lexical diversity | **MTLD** (main score) on 30 random samples of exactly 5,000 tokens, plus distinct-2 and hapax share on the same samples. **Self-BLEU** on 1,000 texts, seeds 0–4: do texts copy each other's phrasing? Shared tokenisation of `scripts/measure_dataset_quality.py` for all. TTR is not used. |
+| 5 | Semantic / topic diversity | **Vendi** on E5 embeddings (2,000 texts, mean of seeds 0–4). **Topic spread** = effective topics of 30 (exp of entropy, 800-text samples × 10) against frozen E5 k-means topic lists: a universal list (equal sample of every real training split) and a per-track list (dialect: D1; sentiment: ArSarcasm-v2 train). Generated data, MLADI dev and ArSarcasm-v2 test are never in a topic pool. Robustness: 10 / 20 / 50 topics and seeds 0–4. |
+| 6 | Duplication and leakage | Repeats = share of rows that are an exact copy of an earlier row after normalisation, on the set as trained (near-copies before filtering go in 08b). Leakage = share of unique texts also in the evaluation data (MLADI dev for dialect, ArSarcasm-v2 test for sentiment). |
+| 7 | Fidelity | Synthetic sets only; N/A for real data. Share of texts whose requested label is confirmed by a fixed judge. Dialect: LahjatBERT `cl_cardinality` (published; requested dialect at probability ≥ 0.3). Sentiment: the real-only SR01 classifiers. A proxy, since the judges make errors. |
+| 8 | Script, code-switching and length | Rule-based, `src/quality/measure.py`, after links and mentions are removed. Script per text: Arabic if at least 70% of its letters are Arabic, Arabizi if at least 70% are Latin, otherwise mixed; reported as shares. Code-switching (Arabic-script texts only): share of a text's words that are Latin-script words (2+ letters), none (0%) / light (above 0%, below 20%) / heavy (20% or more); reported as level shares plus the mean Latin-word share. Cut-offs hand-set (Ammar, 2026-10-27): at about 14 words per tweet, 1–2 Latin words fall in light and 3+ in heavy. Length: mean and spread of words per text. A description of the dataset only; generated sets are expected to be Arabic script with no Latin words. |
+
+- Labelling columns (trust, agreement, annotation error) are N/A for generated sets.
+- Sentence-ALDi, multilingual-e5-large and LahjatBERT `cl_cardinality` are used here only as measurement tools; this is separate from the model roster above.
+- Datasets measured are listed in one config; raw files are in `data/datasets/`. QADI: test split only (its training labels come from user location). ArSenTD-LEV: remove repeated tweets first (about 31%).
 
 ## Pipeline
 
@@ -94,16 +113,17 @@ The supervisor's standing question is "more data vs better data", so every exper
 - befre running any model or long task tell me an estimate of how long it will take
 
 **Reproducibility**
-- Record every run in `docs/progress.md`: what was used, what changed from the previous run, the results, and an explanation. Score tables are not written by hand: register the result folder in `configs/runs.json`, regenerate `docs/tables/` (`python -m src.evaluation.summarize_runs`, `python -m src.quality.summarize_quality`) and quote numbers from there. Record decisions in `docs/decisions.md` and new data versions in `docs/data.md`.
+- Record every run in `docs/progress.md`: what was used, what changed from the previous run, the results, and an explanation. Score tables are not written by hand: register the result folder in `configs/runs.json`, regenerate `docs/tables/` (`python -m src.evaluation.summarize_runs`, `python -m src.quality.summarize_quality`) and quote numbers from there. Record decisions of both tracks in the one log `docs/decisions.md` (tag each `[DI]`, `[SA]` or `[both]`) and new data versions in `docs/data.md`.
 - Commit the code before a run, so the git commit in its log identifies the exact code.
 - Every run is driven by a config file and a fixed seed; log the config, seed, git commit and data version alongside the results.
 - Save every prompt template and every generation setting (model, temperature, sampling parameters) with the data it produced. Synthetic examples must be traceable to the prompt and control-factor values that generated them.
 - Never hand-edit result files. Tables and figures in the thesis are regenerated by scripts from logged runs.
+- Every generated synthetic dataset (open, controlled, steered, any track) is rated with the dataset quality metrics below before it is used for training. No set is trained on without its quality rows. See "Dataset quality metrics".
 - Never delete trained models: no weights, adapters, heads (`score_head.pt`) or whole run folders under `results/runs/`, including smoke tests, aborted runs and dropped models. Do not overwrite a run folder either; rerun under a new folder name. Freeing disk space means moving models to backup storage, and only with Ammar's explicit approval.
 
 **Data handling**
 - MLADI and the NADI tweet text were obtained under access agreements. Keep raw data out of git (`data/` is gitignored).
-- All text is UTF-8. Do not apply Arabic normalization (alef/yaa unification, diacritic stripping, tatweel removal, emoji or Latin removal) implicitly; make it an explicit, configurable step, because script and code-switching are experimental factors.
+- All text is UTF-8. Do not apply Arabic normalization (alef/yaa unification, diacritic stripping, tatweel removal, emoji or Latin removal) implicitly; make it an explicit, configurable step, because script and code-switching are measured properties of the data.
 - Keep real and synthetic data in separate files with a `source` field so they can never be confused after merging.
 
 **Honesty**
@@ -172,5 +192,6 @@ The supervisor scores quality of work, interim reports, presentations and indepe
 - Final label inventory: country-level labels, or countries regrouped into regions.
 - Generators are chosen (see Model roster above), and G01 showed that all of them fit the 8 GB card in 4-bit. Still open: whether GPT-4o-mini is allowed.
 - Exact metric set and the real-data sizes for the learning curves.
-- Whether sentiment classification stays in scope as a secondary task or is dropped. Update 2026-10-13: sentiment work starts now on ArSarcasm-v2 while waiting for the full MLADI data; its long-term role is still open. The sentiment track has its own code (`src/sentiment/`) and docs (`docs/sentiment/`: data.md, decisions.md with SD-NNN IDs, progress.md with SR/SG/SQ run IDs).
+- Fluency measure for generated text (perplexity, local LLM judge or manual check): parked 2026-10-26, not measured for now.
+- Whether sentiment classification stays in scope as a secondary task or is dropped. Update 2026-10-13: sentiment work starts now on ArSarcasm-v2 while waiting for the full MLADI data; its long-term role is still open. The sentiment track has its own code (`src/sentiment/`) and docs (`docs/sentiment/`: data.md, progress.md with SR/SG/SQ run IDs); its decisions are in the shared `docs/decisions.md` (old SD-NNN IDs kept, tag `[SA]`).
 - **Pending (raised 2026-10-09): make D4 the default training set for all runs?** D4 is D1 without the 2,271 zero-label texts, with the all-18 texts kept (`nadi_lahjatbert_card1to18.jsonl`). On dev, R07 (D4) is the best setup for MARBERT (72.17 ± 0.75 vs 71.34 on D1) and AraBERTv02-Twitter (70.74 vs 70.52), but not for MARBERTv2 (69.79 vs 70.11 on D1). Decide only after (1) the R07 models uploaded on 2026-10-09 have leaderboard test scores and (2) the processes running now have finished (LLM-classifier queue: Fanar, Jais-2, Falcon-H1, Aya). Until then, keep D1 as the default and do not switch configs. Test so far: MARBERT D4 68.61 (T03) vs D1 68.65 (T04), no difference; AraBERT D4 67.48 (T05) vs D1 67.31 (T02), no difference. Condition (1) is met.
