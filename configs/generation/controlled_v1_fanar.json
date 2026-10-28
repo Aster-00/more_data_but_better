@@ -18,28 +18,56 @@
     "repetition_penalty": 1.0,
     "do_sample": true
   },
-  "few_shot": {"k": 0, "source": "data/processed/nadi_lahjatbert.jsonl", "max_cardinality": 1, "min_aldi": 0.5, "min_words": 4},
-  "label_mode": "target_only",
+  "few_shot": {
+    "k": 0,
+    "source": "data/processed/nadi_lahjatbert.jsonl",
+    "max_cardinality": 1,
+    "min_aldi": 0.5,
+    "min_words": 4
+  },
+  "label_mode": "target_unknown",
   "controls": {
     "topics": [
-      "daily life and family",
+      "love and longing",
+      "personal feelings, mood and self-image",
+      "life advice and wisdom",
+      "politics and government",
+      "war and conflict",
+      "Arab unity and the state of the Arab world",
+      "football",
+      "national pride and leaders",
+      "music, singers and videos",
+      "studies and exams",
+      "social media and the internet",
+      "religion and prayer",
+      "congratulations and holiday wishes",
+      "greetings",
+      "community announcements and events",
+      "informal everyday chit-chat and humour",
+      "time passing in everyday life",
+      "friendship and affection",
       "food and cooking",
-      "weather",
-      "work and studies",
-      "football and sports",
-      "traffic and transport",
+      "work and money",
       "prices and shopping",
-      "health and tiredness",
-      "religion and holidays",
-      "TV series, music and celebrities",
-      "politics and news",
-      "phones, internet and technology",
-      "friends and relationships",
-      "travel and the hometown",
-      "complaints about services and officials"
+      "health and illness",
+      "traffic and transport",
+      "family"
     ],
-    "lengths": {"short": [3, 7], "medium": [8, 15], "long": [16, 30]}
+    "lengths": {
+      "short": [
+        3,
+        7
+      ],
+      "medium": [
+        8,
+        15
+      ],
+      "long": [
+        16,
+        30
+      ]
+    }
   },
   "output": "data/synthetic/controlled_v1_fanar.jsonl",
-  "_notes": "DRAFT factor values, PENDING user decisions: topic list, length buckets, per_dialect, label_mode, few_shot.k. Script and code-switching are not factors (D-010: Arabic script, no foreign words). The grid is 15 topics x 3 lengths = 45 combinations per dialect."
+  "_notes": "Length buckets accepted as they are (Ammar, 2026-10-28). per_dialect and few_shot.k are experiment variables and will change between runs. label_mode target_unknown (D-014). Topics: 18 named by Ammar from the E5 clusters of d1_clean_k50_seed0, plus 6 everyday topics with no cluster of their own (D-016). Script and code-switching are not factors (D-010: Arabic script, no foreign words). The grid is 24 topics x 3 lengths = 72 combinations per dialect."
 }

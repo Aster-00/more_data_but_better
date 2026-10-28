@@ -1,0 +1,12 @@
+{
+  "name": "d1_k30_seed0",
+  "data": "data/processed/nadi_lahjatbert.jsonl",
+  "text_field": "text",
+  "k": 30,
+  "seed": 0,
+  "n_init": 10,
+  "n_closest": 20,
+  "n_random": 10,
+  "output_dir": "data/topics",
+  "_notes": "E5 k-means topics on D1, fitted once and frozen. Used (1) to name the controlled_v1 topic list (D-013, pending) and (2) as the per-track DI topic list of quality row 5 (D-011). Outputs contain tweet text, so they stay in data/ (gitignored)."
+}

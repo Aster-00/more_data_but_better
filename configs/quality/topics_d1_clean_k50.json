@@ -1,0 +1,14 @@
+{
+  "name": "d1_clean_k50_seed0",
+  "data": "data/processed/nadi_lahjatbert.jsonl",
+  "text_field": "text",
+  "clean": {"remove_placeholders": true, "hashtags_to_words": true, "shorten_laughter": true, "min_words": 5},
+  "k": 50,
+  "seed": 0,
+  "n_init": 10,
+  "n_closest": 20,
+  "n_random": 10,
+  "save_embeddings": true,
+  "output_dir": "data/topics",
+  "_notes": "Re-cluster of d1_k30_seed0 (2026-10-28): that run grouped tweets by form (USER/URL placeholders, laughter, length, questions), so only ~9 of 30 clusters were topics. Cleaning applies to the E5 input only; the same cleaning must be used when other datasets are measured against this topic list."
+}
