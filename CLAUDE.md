@@ -91,6 +91,51 @@ One universal matrix rates every dataset, real and generated, the same way, so a
 - Sentence-ALDi, multilingual-e5-large and LahjatBERT `cl_cardinality` are used here only as measurement tools; this is separate from the model roster above.
 - Datasets measured are listed in one config; raw files are in `data/datasets/`. QADI: test split only (its training labels come from user location). ArSenTD-LEV: remove repeated tweets first (about 31%).
 
+### Universal topic pool
+
+One E5 topic list for all texts from all datasets (Ammar, 2026-10-28), cleaned as in D-015, then named by Ammar like D1 (D-016). Pool rules: Arabic script only (per text, at least 70% Arabic letters, as in row 8), written by humans (no machine translation, no LLM output), no song lyrics. Row counts are approximate.
+
+**Included**
+
+| Dataset | Task | Brief | Rows |
+|---|---|---|---|
+| D1 (NADI 2020/21/23 + LahjatBERT labels) | DI | Tweets, 18 countries | 58k |
+| AOC-ALDi (train, dev, test) | DI, dialectness | Reader comments on Arabic news sites (Youm7, Alghad, Alriyadh) with dialectness scores | 128k |
+| AOC dialect-classification batch 2 (2010) | DI | Raw crowd-annotation file behind AOC: news comments and article sentences; mostly overlaps AOC-ALDi | 3.3k HITs |
+| QADI test | DI | Tweets, 18 countries, human-checked | 3.5k |
+| E_MSA_BDs, Bahraini part | SA | Product reviews translated to Bahraini by native speakers | 5k |
+| ArSarcasm-v2 train and dev | SA, sarcasm | Tweets | 12.5k |
+| Arabic 100k Reviews | SA | Hotel, book, airline and product reviews | 100k |
+| ArSen-20 | SA | Tweets, mostly neutral | 20k |
+| AJGT | SA | Jordanian tweets | 1.8k |
+| AT-ODTSA | targeted SA | Tweets | ~3k |
+| Mawqif | stance, SA, sarcasm | Tweets on COVID vaccine, digital transformation, women's empowerment | 4.1k |
+| EESA | SA | Egyptian Arabic-English code-switched comments (Arabic-script texts only) | 4.1k |
+| ALR | aspect SA | Laptop reviews | ~1.7k |
+| MASC | SA | Multi-domain reviews and comments | ~8.9k |
+| LABR | SA | Goodreads book reviews | 16k |
+| ASTD, ArTwitter, QRCI | SA | Tweets (QRCI noisy) | 4.3k |
+| arabic-sentiment-analysis | SA | Tweets labelled through emojis | 58k |
+| ATT, HTL, MOV, PROD, RES | SA | TripAdvisor / elcinema / souq / qaym reviews | 34k |
+| AfriSenti, Algerian and Moroccan | SA | Tweets in Arabic and Latin script (Arabic-script texts only) | ~9k |
+
+**Excluded**
+
+| Dataset | Task | Brief | Why |
+|---|---|---|---|
+| Habibi | DI | Song lyrics, 528k lines | Song lyrics |
+| E_MSA_BDs, MSA part | SA | Same reviews in MSA | Google Translate (machine) |
+| E_MSA_BDs, English part | SA | Original Amazon reviews | Not Arabic |
+| MPQA-ar | subjectivity | English news sentences in Arabic | Machine-translated |
+| PADIC (`data/datasets/di/PADIC/PADIC.xml`) | DI | Human-translated sentences in 6 varieties | Stored in Buckwalter Latin transliteration, not Arabic script |
+| AfriSenti, other 12 languages | SA | Amharic, Hausa and others | Not Arabic |
+| QADI train | DI | Tweet IDs only | No text |
+| MASC lexicons, EESA lexicon | SA | Sentiment word lists | Not texts |
+| MLADI dev, ArSarcasm-v2 test | DI, SA | Evaluation data | Never in a topic pool (D-011) |
+| MLADI test | DI | Leaderboard test | No text (private) |
+| D2–D4 | DI | Subsets of D1 | Copies of D1 |
+| Synthetic sets (G01, SG01) | DI, SA | LLM output | Machine-made (D-011) |
+
 ## Pipeline
 
 0. Task and seed data

@@ -6,7 +6,7 @@ Data for the sentiment track (interim, started 2026-10-13 while the full MLADI d
 
 | Source | What | Where | Used for |
 |---|---|---|---|
-| ArSarcasm-v2 (Abu Farha, Zaghouani & Magdy, WANLP 2021) | 15,548 tweets, human-labelled for sentiment (POS/NEG/NEU), sarcasm and region dialect (msa/egypt/levant/gulf/magreb). Official split 12,548 train / 3,000 test. MIT license. Cloned 2026-10-13 from `github.com/iabufarha/ArSarcasm-v2`, commit `eb85513` | `data/raw/ArSarcasm-v2/ArSarcasm-v2/{training,testing}_data.csv` | Training, dev (carved from train), final test |
+| ArSarcasm-v2 (Abu Farha, Zaghouani & Magdy, WANLP 2021) | 15,548 tweets, human-labelled for sentiment (POS/NEG/NEU), sarcasm and region dialect (msa/egypt/levant/gulf/magreb). Official split 12,548 train / 3,000 test. MIT license. Cloned 2026-10-13 from `github.com/iabufarha/ArSarcasm-v2`, commit `eb85513` | `data/datasets/both/ArSarcasm-v2/ArSarcasm-v2/{training,testing}_data.csv` (moved from `data/raw/` 2026-10-28; S1 rebuild byte-identical) | Training, dev (carved from train), final test |
 
 Raw files as released:
 - **Train (12,548):** NEU 5,747 / NEG 4,621 / POS 2,180; sarcastic 2,168; msa 8,562 / egypt 2,675 / gulf 644 / levant 624 / magreb 43.

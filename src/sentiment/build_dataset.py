@@ -195,7 +195,7 @@ def print_summary(stats: dict) -> None:
 def parse_args() -> argparse.Namespace:
     """Command-line options: paths, cleaning switches, dev fraction, seed, tiny-subset limit."""
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--raw-dir", type=Path, default=Path("data/raw/ArSarcasm-v2/ArSarcasm-v2"))
+    p.add_argument("--raw-dir", type=Path, default=Path("data/datasets/both/ArSarcasm-v2/ArSarcasm-v2"))
     p.add_argument("--out-dir", type=Path, default=Path("data/processed/sentiment"))
     p.add_argument("--stats-out", type=Path,
                    default=Path("results/data_stats/sentiment/arsarcasm_v2_stats.json"))

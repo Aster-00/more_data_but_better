@@ -52,10 +52,10 @@ D_FILES = {
 }
 G01_MATCH = Path("data/processed/d1_g01match_seed42.jsonl")
 G01_DIR = Path("data/synthetic")
-EXTRA_DIR = Path("results/datasets")   # external corpora added 2026-10-11 (not gitignored: see summary)
-HABIBI_ZIP = EXTRA_DIR / "habibi_full_corpus_csv.zip"
-TRAVEL_CSV = EXTRA_DIR / "multidialectal_travel_corpus.csv"
-PADIC_XML = EXTRA_DIR / "PADIC.xml"
+EXTRA_DIR = Path("data/datasets/di")   # external corpora added 2026-10-11; moved from results/datasets/ 2026-10-28
+HABIBI_CSV = EXTRA_DIR / "habibi_full_corpus_csv (1)" / "arabicLyrics.csv"
+TRAVEL_CSV = EXTRA_DIR / "multidialectal_travel_corpus" / "multidialectal_travel_corpus.csv"
+PADIC_XML = EXTRA_DIR / "PADIC" / "PADIC.xml"
 INSPECT_FILES = {"cardinality=18": Path("data/inspect/d1_all18.tsv"),
                  "cardinality=0": Path("data/inspect/d1_zero.tsv")}
 # Documented row counts (docs/data.md, results/data_stats/nadi_lahjatbert_stats.json).
@@ -128,12 +128,10 @@ class Split:
 
 
 def read_habibi(path: Path, limit: int | None) -> Split:
-    """Habibi lyrics (zip, read in memory): one row per lyric line; labels = singer nationality, song dialect."""
-    import io
-    import zipfile
+    """Habibi lyrics (arabicLyrics.csv): one row per lyric line; labels = singer nationality, song dialect."""
     rows, empty, songs = [], 0, set()
-    with zipfile.ZipFile(path) as z, z.open("arabicLyrics.csv") as f:
-        for i, r in enumerate(csv.DictReader(io.TextIOWrapper(f, encoding="utf-8-sig", newline=""))):
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        for i, r in enumerate(csv.DictReader(f)):
             if limit is not None and i >= limit:
                 break
             # Empty lines are counted, not measured.
@@ -142,7 +140,7 @@ def read_habibi(path: Path, limit: int | None) -> Split:
                 continue
             songs.add(r["songID"])
             rows.append(Row(r["Lyrics"], model_text(r["Lyrics"]), label=r["SingerNationality"], label2=r["SongDialect"]))
-    return Split("Habibi-lyrics", "all", f"{path}::arabicLyrics.csv", rows, "single", "singer nationality",
+    return Split("Habibi-lyrics", "all", str(path), rows, "single", "singer nationality",
                  "song dialect", [f"Habibi: unit = one lyric line; {len(rows)} non-empty lines from {len(songs)} songs; "
                                   f"{empty} empty lines skipped."])
 
@@ -266,8 +264,8 @@ def load_all(limit: int | None, only: set[str] | None) -> tuple[list[Split], lis
                     for r in read_jsonl(p, limit)]
             splits.append(Split(name, "all", str(p), rows, "single", "target dialect"))
 
-    # 5. External corpora in results/datasets/ (no splits shipped: each measured as one split "all").
-    for name, path, reader in (("Habibi-lyrics", HABIBI_ZIP, read_habibi), ("Travel-parallel", TRAVEL_CSV, read_travel),
+    # 5. External corpora in data/datasets/di/ (no splits shipped: each measured as one split "all").
+    for name, path, reader in (("Habibi-lyrics", HABIBI_CSV, read_habibi), ("Travel-parallel", TRAVEL_CSV, read_travel),
                                ("PADIC", PADIC_XML, read_padic)):
         if want(name):
             if path.exists():
