@@ -1,0 +1,24 @@
+{
+  "run_name": "sv01_fanar",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "train_data": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "text_field": "text",
+  "varieties": ["msa", "egypt", "gulf", "levant"],
+  "user_prompt": "Write one tweet in Arabic.",
+  "batch_size": 8,
+  "max_text_tokens": 128,
+  "text_vector_layer_step": 2,
+  "min_group_size": 30,
+  "seed": 42,
+  "output_dir": "data/steering/sv01_fanar",
+  "vectors": {
+    "pos":          {"target": [["POS", false]], "contrast": [["NEG", false], ["NEU", false]]},
+    "neg":          {"target": [["NEG", false]], "contrast": [["POS", false], ["NEU", false]]},
+    "neu":          {"target": [["NEU", false]], "contrast": [["POS", false], ["NEG", false]]},
+    "sarc":         {"target": [["NEG", true]],  "contrast": [["NEG", false]]},
+    "neg_withsarc": {"target": [["NEG", false], ["NEG", true]], "contrast": [["POS", false], ["NEU", false]]}
+  },
+  "_notes": "SV01: residual-stream DiffMean vectors for steering Fanar (steering plan, SD-009). Groups are (sentiment, sarcasm); every vector is built pooled and per-dialect-averaged. S1 train only, never dev or test. neg_withsarc is the ablation 'v_neg built with sarcastic tweets'. magreb is left out (22/9/6 train tweets), as in SG01."
+}

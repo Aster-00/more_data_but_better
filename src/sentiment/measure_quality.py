@@ -1,4 +1,4 @@
-"""Quality measures of the SG01 synthetic sentiment sets, with a real S1 reference (decision SD-005).
+"""Quality measures of the SG01 / SG02 synthetic sentiment sets, with a real S1 reference (decision SD-005).
 
 Measures (definitions agreed with Ammar, 2026-10-17); all on the selected sets (the texts used
 for training) unless stated:
@@ -21,10 +21,12 @@ label-free measures; imbalance over all of S1 train; repeats = near/exact duplic
 sample; fidelity = the same classifiers' accuracy on S1 dev (on train it would be in-sample).
 The official test set is not used. Size-dependent measures use equal-size samples.
 
-Outputs: results/quality/sentiment/sg01_quality.json, docs/sentiment/tables/sg01_quality.{csv,md}.
+Outputs: results/quality/sentiment/<set>_quality.json, docs/sentiment/tables/<set>_quality.{csv,md}
+(<set> = sg01, the default, or sg02: same measures, k-means seed and sample seed, so rows compare).
 
 Usage:
   python -m src.sentiment.measure_quality
+  python -m src.sentiment.measure_quality --set sg02
   python -m src.sentiment.measure_quality --n 300        # tiny mode
 """
 from __future__ import annotations
@@ -45,7 +47,9 @@ from src.data.build_dataset import git_commit, sha256
 from src.filtering.dedup import dedup_key, exact_duplicates, near_duplicates_within
 from src.quality.lexical import mtld, tokenize
 
-GENERATORS = {"jais2": "Jais-2-8B", "fanar": "Fanar-1-9B", "qwen3": "Qwen3-8B", "aya": "Aya-Expanse-8B"}
+GENERATOR_NAMES = {"jais2": "Jais-2-8B", "fanar": "Fanar-1-9B", "qwen3": "Qwen3-8B", "aya": "Aya-Expanse-8B"}
+# Generators per synthetic set (SG02 without Jais-2, SD-006).
+SET_GENERATORS = {"sg01": ["jais2", "fanar", "qwen3", "aya"], "sg02": ["fanar", "qwen3", "aya"]}
 VARIETIES, SENTIMENTS = ["msa", "egypt", "gulf", "levant"], ["NEG", "NEU", "POS"]
 DIALECTS = {"egypt", "gulf", "levant"}
 TRAIN = Path("data/processed/sentiment/arsarcasm_v2_train.jsonl")
@@ -98,14 +102,17 @@ def sentiment_probs(texts: list[str], device: str) -> np.ndarray:
 
 
 def main() -> None:
-    """Measure every SG01 set and the real reference; write JSON and tables."""
+    """Measure every generator's set of one synthetic run and the real reference; write JSON and tables."""
     sys.stdout.reconfigure(encoding="utf-8")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--n", type=int, default=3000, help="sample size for the size-dependent measures")
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--set", default="sg01", choices=sorted(SET_GENERATORS))
     p.add_argument("--device", default="cuda")
     args = p.parse_args()
     started = time.time()
+    tag = args.set
+    GENERATORS = {g: GENERATOR_NAMES[g] for g in SET_GENERATORS[tag]}
 
     # Real data: S1 train restricted to the four varieties used for generation.
     train = [r for r in read(TRAIN) if r["dialect"] in VARIETIES]
@@ -116,7 +123,7 @@ def main() -> None:
     sets = {"real": {"name": "S1 real (reference)", "all": train,
                      "sample": random.Random(args.seed).sample(train, min(args.n, len(train)))}}
     for g, name in GENERATORS.items():
-        sel = read(SYN / f"sg01_{g}.selected.jsonl")
+        sel = read(SYN / f"{tag}_{g}.selected.jsonl")
         sets[g] = {"name": name, "all": sel, "sample": random.Random(args.seed).sample(sel, min(args.n, len(sel)))}
 
     # ALDi: cutoff from S1 train (msa vs dialect labels), then scores for every set's dialect cells.
@@ -151,7 +158,7 @@ def main() -> None:
 
     # Repeats: synthetic from the filter statistics (raw output); real from duplicates in its sample.
     for g in GENERATORS:
-        f = json.load(open(f"results/filtering/sg01_{g}.json", encoding="utf-8"))
+        f = json.load(open(f"results/filtering/{tag}_{g}.json", encoding="utf-8"))
         rb = f["rejected_by_first_failing_check"]
         sets[g]["repeats"] = (rb["exact_dup_within"] + rb["near_dup_within"]) / f["n_in"]
     keys = [dedup_key(r["text"]) for r in sets["real"]["sample"]]
@@ -167,29 +174,29 @@ def main() -> None:
 
     # Write JSON and tables.
     cols = ["imbalance", "msa_share", "dialectness", "mtld", "topic_spread", "vendi", "repeats", "fidelity"]
-    out = {"n_sample": args.n, "seed": args.seed, "aldi_cutoff": cutoff,
+    out = {"set": tag, "n_sample": args.n, "seed": args.seed, "aldi_cutoff": cutoff,
            "sets": {k: {c: s[c] for c in cols + ["fidelity_per_class"]} | {"name": s["name"], "n": len(s["all"])}
                     for k, s in sets.items()},
-           "inputs": {k: sha256(SYN / f"sg01_{k}.selected.jsonl") for k in GENERATORS} | {"train": sha256(TRAIN), "dev": sha256(DEV)},
+           "inputs": {k: sha256(SYN / f"{tag}_{k}.selected.jsonl") for k in GENERATORS} | {"train": sha256(TRAIN), "dev": sha256(DEV)},
            "git_commit": git_commit(), "seconds": round(time.time() - started), "finished": time.strftime("%Y-%m-%d %H:%M")}
     Path("results/quality/sentiment").mkdir(parents=True, exist_ok=True)
-    with open("results/quality/sentiment/sg01_quality.json", "w", encoding="utf-8", newline="\n") as f:
+    with open(f"results/quality/sentiment/{tag}_quality.json", "w", encoding="utf-8", newline="\n") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     fmt = {"imbalance": "{:.1f} : 1", "msa_share": "{:.1%}", "dialectness": "{:.2f}", "mtld": "{:.1f}",
            "topic_spread": "{}", "vendi": "{:.1f}", "repeats": "{:.1%}", "fidelity": "{:.1%}"}
     heads = ["Imbalance (max : min)", "MSA share", "Dialectness", "Lexical diversity (MTLD)", "Topic spread (of 30)",
              "Semantic diversity (Vendi)", "Repeats", "Fidelity"]
     Path("docs/sentiment/tables").mkdir(parents=True, exist_ok=True)
-    with open("docs/sentiment/tables/sg01_quality.csv", "w", encoding="utf-8", newline="") as f:
+    with open(f"docs/sentiment/tables/{tag}_quality.csv", "w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         w.writerow(["set"] + cols)
         for s in sets.values():
             w.writerow([s["name"]] + [s[c] for c in cols])
-    md = ["# SG01 quality", "", f"Generated by `python -m src.sentiment.measure_quality` (results/quality/sentiment/sg01_quality.json). "
+    md = [f"# {tag.upper()} quality", "", f"Generated by `python -m src.sentiment.measure_quality --set {tag}` (results/quality/sentiment/{tag}_quality.json). "
           f"Do not edit by hand. Samples of {args.n} texts for MTLD, topic spread and Vendi; ALDi cutoff {cutoff} from S1 train.", "",
           "| Set | " + " | ".join(heads) + " |", "|" + "---|" * (len(heads) + 1)]
     md += ["| " + s["name"] + " | " + " | ".join(fmt[c].format(s[c]) for c in cols) + " |" for s in sets.values()]
-    with open("docs/sentiment/tables/sg01_quality.md", "w", encoding="utf-8", newline="\n") as f:
+    with open(f"docs/sentiment/tables/{tag}_quality.md", "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(md) + "\n")
     print("\n".join(md[4:]))
 

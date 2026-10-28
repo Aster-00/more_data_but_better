@@ -223,3 +223,13 @@ IDs are permanent and never reused or renumbered. `D-001` to `D-010` were the di
 - **Shares (capped pool, 181,905 texts):** named topics 80.2%. Books 12.6%, COVID-19 10.4% and hotels 10.0% are a third of the pool; each comes mainly from one or two datasets (LABR and 100k Reviews; ArSen-20; TripAdvisor and 100k Reviews). Women's empowerment (0.9%) and digital transformation (0.8%) come almost only from Mawqif.
 - **Use:** measurement only (quality row 5, topic spread against the 50 frozen centroids). The names help interpret the spread; generation topics stay those of D-016.
 
+
+## D-020 [SA] — 2026-10-28 — SG02: open few-shot generation (k = 5); SR04 trains BERTs only for now
+- **Decision:**
+  - SG02 = SG01 (open condition, SD-004) plus 5 real S1-train tweets of the same variety × sentiment cell in front of every request, and one line asking not to copy or rephrase them. Template `prompts/sentiment/open_fewshot_v1.json`; configs `configs/sentiment/generation/sg02_{fanar,qwen3,aya}.json`. The examples are drawn afresh for every request (seeded from seed and request id), from all S1 train tweets of the cell: no relabelling, no exclusion of sarcastic tweets or of tweets with URL/USER placeholders. Each record keeps its `few_shot_ids`.
+  - Generators: Fanar-1-9B, Qwen3-8B, Aya-Expanse-8B (not Jais-2, SD-006; not Falcon-H1). Sampling, 650 requests and 500 kept per cell, filter and selection unchanged from SG01, so SG01 and SG02 sets have the same size (6,000).
+  - SQ02 measures the three sets with the SQ01 measures (`src.sentiment.measure_quality --set sg02`) before any training.
+  - SR04 = S1 train + one SG02 set: the 7 BERTs, seeds 42/43/44, recipe unchanged (configs `configs/sentiment/sr04_<bert>_<generator>.json`). LLM classifiers wait until the BERT results are seen. When they run: no LLM trains on a set it generated itself; Jais-2 trains on all three sets.
+- **Why:** Ammar's choices (2026-10-28). k = 5 now; one-shot (planned as SG02 in `docs/sentiment/chron.md`) is not run. Drawing examples per request spreads the cell's tweets over the set instead of anchoring 650 requests on 5 tweets. In the 24-request smoke tests 1 of 72 outputs copied a placeholder (RT), so placeholder tweets stay in the pool.
+- **Not comparable yet:** only zero-shot vs few-shot for the BERTs; Fanar, Qwen3 and Aya were never trained on SG01, so a few-shot effect for them would need SG01 runs too.
+- **Open:** the universal quality matrix rows (sheet tabs 08, 10–12) for SG02; SQ02 uses the older SQ01 measures.

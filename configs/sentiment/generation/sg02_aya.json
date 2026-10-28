@@ -1,0 +1,36 @@
+{
+  "set_name": "sg02k5_aya",
+  "condition": "open",
+  "generator": "CohereLabs/aya-expanse-8b",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/open_fewshot_v1.json",
+  "few_shot": {
+    "k": 5,
+    "source": "data/processed/sentiment/arsarcasm_v2_train.jsonl"
+  },
+  "varieties": [
+    "msa",
+    "egypt",
+    "gulf",
+    "levant"
+  ],
+  "sentiments": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "per_cell": 650,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg02_aya.jsonl",
+  "_notes": "SG02: open condition, few-shot k=5 (Ammar, 2026-10-28). Same as sg01_aya except the template (open_v1 + 5 real S1-train tweets of the same variety x sentiment cell, drawn afresh per request, + a do-not-copy line). 650 requests per cell, 500 kept per cell by select_synthetic, as SG01. set_name 'sg02k5_' so request/text ids never collide with SG01, whose set_names use the old sg02-sg04 numbering."
+}

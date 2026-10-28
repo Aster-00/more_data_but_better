@@ -63,6 +63,23 @@ Built by `scripts/sentiment/queue_sg_open.sh` (decision SD-004, run SG01 in `pro
 - Files were renamed on 2026-10-16 to the SG01/SR02 numbering (map: `results/sentiment/renames_2026-10-16.json`); contents were not edited, so `set_name`, `request_id`, `config_file` inside the records and `run_name` / `synthetic_data` inside the train logs still show the first names (sg02_fanar, sr03_marbertv2_seed42, …).
 - No selected text matches an official test text exactly (reported, not filtered).
 
+## Synthetic sets (S3, open condition, few-shot k = 5, 2026-10-28)
+
+Built by `scripts/sentiment/queue_sg02.sh` (decision D-020, run SG02 in `progress.md`). Template `prompts/sentiment/open_fewshot_v1.json` (SHA-256 `acdaa34d2411`), seed 42; otherwise as S2. Every prompt shows 5 real S1-train tweets of the requested cell, drawn per request; their ids are in `few_shot_ids`. `set_name` inside the records is `sg02k5_<generator>` (the SG01 records already use `sg02_*` from the old numbering).
+
+| ID | Generator | File | SHA-256 (first 12) | Texts |
+|---|---|---|---|---|
+| S3-SG02-fanar | Fanar-1-9B | `data/synthetic/sentiment/sg02_fanar.jsonl` (all outputs) | `db89eb32838b` | 7,800 |
+| S3-SG02-fanar | | `sg02_fanar.selected.jsonl` (SR04) | `211243c22104` | 6,000 |
+| S3-SG02-qwen3 | Qwen3-8B | `sg02_qwen3.jsonl` | `f2d0e8d85f61` | 7,800 |
+| S3-SG02-qwen3 | | `sg02_qwen3.selected.jsonl` (SR04) | `746d20735295` | 6,000 |
+| S3-SG02-aya | Aya-Expanse-8B | `sg02_aya.jsonl` | `b5b6de576a9d` | 7,800 |
+| S3-SG02-aya | | `sg02_aya.selected.jsonl` (SR04) | `be18269f69f1` | 6,000 |
+
+- Each selected set: 500 per cell over msa/egypt/gulf/levant × NEG/NEU/POS, `sarcasm: null`.
+- The filter's check against S1 train also catches copies of the shown examples (Qwen3: 24 removed; Fanar, Aya: 0).
+- No selected text matches an official test text exactly (reported, not filtered).
+
 ## Relabelling sheet for the dev agreement study (SD-008)
 
 Built 2026-10-23 by `python -m src.sentiment.make_relabel_sheet` (seed 42). Files in `data/annotation/sentiment/` (gitignored): `relabel_dev_v1.csv` (sheet: item, text, label, note; UTF-8 with BOM), `relabel_dev_v1.key.jsonl` (gold labels, part, SR03 votes per item), `relabel_dev_v1.meta.json`. Source: S1 dev (`38713d095d1d`).

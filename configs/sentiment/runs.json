@@ -3,7 +3,8 @@
   "runs": {
     "SR01": "Real only (condition 1), S1 (ArSarcasm-v2), every roster classifier; BERTs 3 seeds, LLMs seed 42 first (SD-003)",
     "SR02": "Real + SG01 (open, zero-shot synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG01 generator; BERTs 3 seeds; Jais-2 (QLoRA, SR01 recipe) 3 seeds. Member = <classifier>_<generator>. The Jais-2 set could not fill its cells and was not trained.",
-    "SR03": "Real only, NEU dropped: S1 train/dev/test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS head, every roster classifier, 3 seeds (SD-007). Macro F1 is over NEG/POS, not comparable with SR01/SR02."
+    "SR03": "Real only, NEU dropped: S1 train/dev/test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS head, every roster classifier, 3 seeds (SD-007). Macro F1 is over NEG/POS, not comparable with SR01/SR02.",
+    "SR04": "Real + SG02 (open, few-shot k=5 synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG02 generator (Fanar, Qwen3, Aya); the 7 BERTs, 3 seeds, SR02 recipe (D-020). Member = <classifier>_<generator>."
   },
   "members": {
     "sr01_marbertv2": {
@@ -197,6 +198,90 @@
     "sr03_falcon_h1": {
       "run": "SR03",
       "model": "falcon_h1"
+    },
+    "sr04_marbertv2_fanar": {
+      "run": "SR04",
+      "model": "marbertv2_fanar"
+    },
+    "sr04_marbertv2_qwen3": {
+      "run": "SR04",
+      "model": "marbertv2_qwen3"
+    },
+    "sr04_marbertv2_aya": {
+      "run": "SR04",
+      "model": "marbertv2_aya"
+    },
+    "sr04_arabertv02_twitter_fanar": {
+      "run": "SR04",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr04_arabertv02_twitter_qwen3": {
+      "run": "SR04",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr04_arabertv02_twitter_aya": {
+      "run": "SR04",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr04_marbert_fanar": {
+      "run": "SR04",
+      "model": "marbert_fanar"
+    },
+    "sr04_marbert_qwen3": {
+      "run": "SR04",
+      "model": "marbert_qwen3"
+    },
+    "sr04_marbert_aya": {
+      "run": "SR04",
+      "model": "marbert_aya"
+    },
+    "sr04_camelbert_mix_fanar": {
+      "run": "SR04",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr04_camelbert_mix_qwen3": {
+      "run": "SR04",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr04_camelbert_mix_aya": {
+      "run": "SR04",
+      "model": "camelbert_mix_aya"
+    },
+    "sr04_camelbert_da_fanar": {
+      "run": "SR04",
+      "model": "camelbert_da_fanar"
+    },
+    "sr04_camelbert_da_qwen3": {
+      "run": "SR04",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr04_camelbert_da_aya": {
+      "run": "SR04",
+      "model": "camelbert_da_aya"
+    },
+    "sr04_arbert_fanar": {
+      "run": "SR04",
+      "model": "arbert_fanar"
+    },
+    "sr04_arbert_qwen3": {
+      "run": "SR04",
+      "model": "arbert_qwen3"
+    },
+    "sr04_arbert_aya": {
+      "run": "SR04",
+      "model": "arbert_aya"
+    },
+    "sr04_arbertv2_fanar": {
+      "run": "SR04",
+      "model": "arbertv2_fanar"
+    },
+    "sr04_arbertv2_qwen3": {
+      "run": "SR04",
+      "model": "arbertv2_qwen3"
+    },
+    "sr04_arbertv2_aya": {
+      "run": "SR04",
+      "model": "arbertv2_aya"
     }
   }
 }

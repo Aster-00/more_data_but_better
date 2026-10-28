@@ -1,0 +1,35 @@
+{
+  "topic_list": "universal_clean_k50_seed0",
+  "decision": "D-019 (Ammar, 2026-10-28)",
+  "topics": {
+    "COVID-19": [18, 12, 22, 7, 21],
+    "Books and novels": [20, 19, 29, 40, 11],
+    "Hotels and stays": [33, 42, 31, 24, 49, 8],
+    "Restaurants and food": [46, 6, 25],
+    "Products and shopping": [37, 13],
+    "Apps, phones and technology": [48],
+    "Places, malls and attractions": [1],
+    "Films, TV, music and celebrities": [9, 36],
+    "Football": [0],
+    "Politics and government": [30, 10],
+    "War and conflict": [39, 5],
+    "News and official announcements": [28, 2],
+    "Religion and prayer": [15, 34],
+    "Greetings": [23, 32],
+    "Love and feelings": [26, 47],
+    "Friendship and affection": [4],
+    "Women's empowerment": [27],
+    "Digital transformation": [38]
+  },
+  "not_named": {
+    "14": "mixed Egyptian and Gulf chatter",
+    "45": "mixed personal chatter",
+    "3": "short mixed tweets",
+    "43": "mixed Maghrebi and Gulf chatter",
+    "44": "very short emoji replies",
+    "35": "very short emoji replies",
+    "17": "short negative statements (tone)",
+    "41": "stretched letters and decorated text",
+    "16": "questions (sentence type)"
+  }
+}

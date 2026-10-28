@@ -14,6 +14,11 @@ Markdown bold markers (**) are removed before parsing (the shared parser drops l
 starting with ** as preambles; Jais-2 bolds whole tweets). Then the same link/mention
 cleaning as the real S1 data (URL, USER) is applied; the uncleaned text is kept as text_raw.
 
+Few-shot (optional, SG02): with a `few_shot` block {k, source} in the config, every request
+gets k real tweets of its own (variety, sentiment) cell from S1 train, drawn afresh per request
+and reproducibly from (seed, request_id). Only S1 train is allowed as the source (never dev or
+test); the example ids are stored in the record (few_shot_ids).
+
 Output: one JSONL record per request, appended as batches finish; on restart, requests that
 already have a record are skipped. Sidecar <output>.meta.json: config, template hash,
 generator revision, git commit, timing.
@@ -21,7 +26,7 @@ generator revision, git commit, timing.
 Record schema: text_id, request_id, text, source="synthetic", origin, condition, generator,
   generator_revision, quantization, template_id, template_version, template_sha256,
   controls{variety, sentiment}, dialect, target_dialect (= variety, for the shared filter),
-  sentiment, sarcasm (None: not controlled), sampling, seed, prompt, raw_output, parse_ok,
+  sentiment, sarcasm (None: not controlled), few_shot_ids, sampling, seed, prompt, raw_output, parse_ok,
   translation_stripped, text_raw, cleaning, created, git_commit, config_file
 
 Usage:
@@ -35,10 +40,11 @@ import argparse
 import hashlib
 import json
 import platform
+import random
 import re
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.data.build_dataset import CLEANING_STEPS, clean_text, git_commit
@@ -63,6 +69,8 @@ class Request:
     variety: str
     sentiment: str
     index: int
+    few_shot_ids: list[str] = field(default_factory=list)
+    few_shot_texts: list[str] = field(default_factory=list)
 
 
 def build_plan(cfg: dict) -> list[Request]:
@@ -72,11 +80,36 @@ def build_plan(cfg: dict) -> list[Request]:
             for j in range(cfg["per_cell"]) for v, s in cells]
 
 
+def assign_few_shot(plan: list[Request], cfg: dict) -> None:
+    """Give every request k real S1-train tweets of its own cell, reproducibly from (seed, request_id)."""
+    fs = cfg.get("few_shot") or {}
+    if not fs.get("k"):
+        return
+    # Per (variety, sentiment) cell, every S1 train tweet is a candidate.
+    pool: dict[tuple[str, str], list[dict]] = {}
+    with open(Path(fs["source"]), encoding="utf-8") as f:
+        for line in f:
+            r = json.loads(line)
+            if r.get("source") != "real" or r.get("split") != "train":
+                raise ValueError("few-shot source must be real S1 train data")
+            pool.setdefault((r["dialect"], r["sentiment"]), []).append(r)
+    for req in plan:
+        candidates = pool.get((req.variety, req.sentiment), [])
+        if len(candidates) < fs["k"]:
+            raise ValueError(f"only {len(candidates)} few-shot candidates for {req.variety}/{req.sentiment}")
+        chosen = random.Random(f"{cfg['seed']}:{req.request_id}").sample(candidates, fs["k"])
+        req.few_shot_ids = [c["text_id"] for c in chosen]
+        req.few_shot_texts = [c["text"] for c in chosen]
+
+
 def render_messages(template: Template, req: Request) -> list[dict]:
-    """Fill the template with the request's variety and sentiment; return chat messages."""
+    """Fill the template with the request's variety, sentiment and examples; return chat messages."""
     var, sen = template.options["variety"][req.variety], template.options["sentiment"][req.sentiment]
     values = {"variety_name": var["name"], "variety_instruction": var["instruction"],
-              "sentiment_name": sen["name"], "sentiment_definition": sen["definition"]}
+              "sentiment_name": sen["name"], "sentiment_definition": sen["definition"], "few_shot_block": ""}
+    if req.few_shot_texts:
+        items = "\n".join(template.few_shot_item.format(text=t) for t in req.few_shot_texts)
+        values["few_shot_block"] = template.few_shot_header.format(**values) + "\n" + items + "\n\n"
     messages = [{"role": "system", "content": template.system.format(**values)}] if template.system else []
     return messages + [{"role": "user", "content": template.user.format(**values)}]
 
@@ -111,6 +144,7 @@ def make_record(req: Request, text: str | None, text_raw: str | None, stripped: 
         "target_dialect": req.variety,
         "sentiment": req.sentiment,
         "sarcasm": None,
+        "few_shot_ids": req.few_shot_ids,
         "sampling": cfg["sampling"],
         "seed": out.get("seed"),
         "prompt": out.get("prompt"),
@@ -130,6 +164,7 @@ def run(cfg: dict, config_file: str, limit: int | None, dry_run: bool) -> dict:
     if template.condition != cfg["condition"]:
         raise ValueError(f"template {template.id} is for {template.condition}, config says {cfg['condition']}")
     plan = build_plan(cfg)
+    assign_few_shot(plan, cfg)
     # Tiny mode: the first `limit` requests (interleaving keeps every cell represented).
     if limit is not None:
         plan = plan[:limit]

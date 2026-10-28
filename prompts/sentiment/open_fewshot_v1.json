@@ -1,0 +1,23 @@
+{
+  "id": "sentiment_open_fewshot_v1",
+  "version": 1,
+  "condition": "open",
+  "description": "Sentiment track, open generation with few-shot examples (SG02). Same wording as open_v1 (variety and sentiment only, no sarcasm, length, topic or style instruction), plus k real S1-train tweets of the same variety x sentiment cell in front and one line asking not to copy them. Placeholders: {variety_name} {variety_instruction} {sentiment_name} {sentiment_definition} {few_shot_block}.",
+  "system": "You are an Arabic-speaking social media user who writes posts on Twitter.",
+  "user": "{few_shot_block}Write one new tweet in {variety_name}. {variety_instruction}\nThe tweet must express a {sentiment_name} sentiment: {sentiment_definition}\nDo not copy or rephrase the examples; write about something else.\nOutput only the tweet itself, on one line, with no quotes, translation or explanation.",
+  "few_shot_header": "Here are some real tweets written in {variety_name} that express a {sentiment_name} sentiment:",
+  "few_shot_item": "- {text}",
+  "options": {
+    "variety": {
+      "msa":    {"name": "Modern Standard Arabic", "instruction": "Use Modern Standard Arabic (Fusha), not a dialect."},
+      "egypt":  {"name": "Egyptian Arabic", "instruction": "Use the Egyptian dialect, not Modern Standard Arabic."},
+      "gulf":   {"name": "Gulf Arabic", "instruction": "Use the Gulf dialect (as spoken in Saudi Arabia, Kuwait, the UAE, Qatar, Bahrain or Oman), not Modern Standard Arabic."},
+      "levant": {"name": "Levantine Arabic", "instruction": "Use the Levantine dialect (as spoken in Syria, Lebanon, Jordan or Palestine), not Modern Standard Arabic."}
+    },
+    "sentiment": {
+      "NEG": {"name": "negative", "definition": "the writer is unhappy, angry, critical, disappointed or sad about something."},
+      "NEU": {"name": "neutral", "definition": "the writer shares information, news, a question or a remark without expressing positive or negative feelings."},
+      "POS": {"name": "positive", "definition": "the writer is happy, grateful, admiring, praising or hopeful about something."}
+    }
+  }
+}
