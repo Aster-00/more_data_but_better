@@ -31,7 +31,8 @@ from src.data.build_dataset import git_commit, sha256  # noqa: E402
 
 # Optional cleaning for the E5 input only (explicit and configurable, CLAUDE.md data rules).
 # The run d1_k30_seed0 showed E5 grouping tweets by form (placeholders, laughter, length), not topic.
-PLACEHOLDER_RE = re.compile(r"\b(?:USER|URL|NUM)\b|https?://\S+|@\w+|…")
+# EMOJI is QADI's emoji placeholder (added for the universal pool; D1 has none, so d1_* lists are unchanged).
+PLACEHOLDER_RE = re.compile(r"\b(?:USER|URL|NUM|EMOJI)\b|https?://\S+|@\w+|…")
 LAUGH_RE = re.compile(r"(?:ه){3,}")
 
 
@@ -46,10 +47,12 @@ def clean_for_topics(text: str, opts: dict) -> str:
     return " ".join(text.split())
 
 
-def load_records(path: Path, text_field: str, limit: int | None, clean: dict | None = None) -> list[dict]:
+def load_records(path: Path, text_field: str, limit: int | None, clean: dict | None = None,
+                 group_field: str = "countries") -> list[dict]:
     """Real records only; one record per unique (cleaned) text, the first one.
 
     With `clean`, E5 sees the cleaned text and texts shorter than clean["min_words"] are skipped.
+    `group_field` (a string or a list per record) is what the report counts per cluster.
     """
     clean = clean or {}
     out, seen = [], set()
@@ -65,9 +68,20 @@ def load_records(path: Path, text_field: str, limit: int | None, clean: dict | N
             if t in seen or len(t.split()) < clean.get("min_words", 0):
                 continue
             seen.add(t)
+            g = r.get(group_field, [])
             out.append({"text_id": r["text_id"], "text": t, "aldi": r.get("aldi_score"),
-                        "countries": r.get("countries", [])})
+                        "groups": [g] if isinstance(g, str) else g})
     return out
+
+
+def cap_groups(recs: list[dict], cap: int, seed: int) -> list[dict]:
+    """At most `cap` records per group (seeded random sample), so no single dataset sets the topics."""
+    rng = random.Random(seed)
+    by_group: dict[str, list[dict]] = {}
+    for r in recs:
+        by_group.setdefault(r["groups"][0], []).append(r)
+    keep = {id(r) for rs in by_group.values() for r in (rng.sample(rs, cap) if len(rs) > cap else rs)}
+    return [r for r in recs if id(r) in keep]   # input order kept
 
 
 def embed(texts: list[str], device: str) -> tuple[np.ndarray, str | None]:
@@ -94,12 +108,12 @@ def write_report(path: Path, recs: list[dict], labels: np.ndarray, sims: np.ndar
     for c, size in sizes.most_common():
         idx = np.flatnonzero(labels == c)
         aldi = [recs[i]["aldi"] for i in idx if recs[i]["aldi"] is not None]
-        countries = Counter(cty for i in idx for cty in recs[i]["countries"])
-        top = ", ".join(f"{cty} {cnt / size:.0%}" for cty, cnt in countries.most_common(4))
+        groups = Counter(g for i in idx for g in recs[i]["groups"])
+        top = ", ".join(f"{g} {cnt / size:.0%}" for g, cnt in groups.most_common(4))
         lines += [f"## Cluster {c}: {size} texts ({size / n:.1%})", "",
-                  f"- Mean ALDi {np.mean(aldi):.2f}; mean sim {sims[idx].mean():.3f}; "
+                  f"- Mean ALDi {f'{np.mean(aldi):.2f}' if aldi else 'n/a'}; mean sim {sims[idx].mean():.3f}; "
                   f"mean words {np.mean([len(recs[i]['text'].split()) for i in idx]):.1f}",
-                  f"- Top NADI countries: {top}", "", "Closest to the centre:", ""]
+                  f"- Top {cfg.get('group_field', 'countries')}: {top}", "", "Closest to the centre:", ""]
         for i in idx[np.argsort(-sims[idx])][:cfg["n_closest"]]:
             lines.append(f"- ({sims[i]:.3f}) {recs[i]['text']}")
         lines += ["", "Random:", ""]
@@ -125,8 +139,12 @@ def main() -> None:
     t0 = time.time()
 
     # Data: unique real texts.
-    recs = load_records(Path(cfg["data"]), cfg["text_field"], args.limit, cfg.get("clean"))
+    recs = load_records(Path(cfg["data"]), cfg["text_field"], args.limit, cfg.get("clean"),
+                        cfg.get("group_field", "countries"))
     print(f"{len(recs)} unique texts", flush=True)
+    if cfg.get("cap_per_group"):
+        recs = cap_groups(recs, cfg["cap_per_group"], cfg["seed"])
+        print(f"{len(recs)} texts after the cap of {cfg['cap_per_group']} per {cfg['group_field']}", flush=True)
 
     # Embeddings.
     X, e5_rev = embed([r["text"] for r in recs], args.device)
@@ -153,7 +171,9 @@ def main() -> None:
             f.write(json.dumps({"text_id": r["text_id"], "cluster": int(c), "sim": round(float(s), 4)}) + "\n")
     write_report(out_dir / "report.md", recs, labels, sims, cfg | {"name": name})
     sizes = Counter(labels.tolist())
+    group_sizes = Counter(r["groups"][0] for r in recs if r["groups"])
     meta = {"config": cfg, "config_file": args.config, "limit": args.limit, "git_commit": git_commit(),
+            "group_sizes": dict(group_sizes.most_common()),
             "data_sha256": sha256(Path(cfg["data"])), "e5_model": "intfloat/multilingual-e5-large",
             "e5_revision": e5_rev, "n_texts": len(recs), "inertia": float(km.inertia_),
             "cluster_sizes": {int(c): s for c, s in sorted(sizes.items())},

@@ -273,4 +273,10 @@ S1 train / dev / test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS 
 - need to explore annotation standards, what is considered NEU, POS or NEG
 
 **Future Runs**
-- 
+- SG02 generate synthetic data for ArSarcasmV2 but with few shot and not controlled
+- SG03 generate synthetic data for diverse topics for ArSarcasmV2 for dialects using stats of the ArSarcasmV2
+  - Compare it with the 0 shot performance 
+- SG04 but neuron activated
+  - after understanding the neurons activation from the ArSar2 we need to monitor if any trend happens for a specific class or dialect that fires unfamiliar neurons and look at that text and figure out how different that text is from the text from the other neurons. For generation and learning text
+- SG05 but vector Steered
+- SG06 neuron activated and vector steered (if possible)

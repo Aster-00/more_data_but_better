@@ -26,7 +26,7 @@ Bachelor thesis at the German International University (GIU), Winter 2026.
 
 ## Model roster
 
-Final model set (decided 2026-10-08): classifiers MARBERTv2, AraBERTv02-Twitter, MARBERT v1, Qwen3-8B, Jais-2-8B, Falcon-H1-7B, Aya-Expanse-8B; Fanar-1-9B kept. **No longer used** (files kept on disk, their scores in `docs/tables/` kept as they are): TF-IDF + LR, Gemma-2, ALLaM, NLLB (never run), the scorers (CAMeLBERT DID, Sentence-ALDi, multilingual-e5-large; changed 2026-10-10). Open: the leaderboard Space runs on `cpu-basic` (no GPU, ~16 GB RAM) and loads `AutoModelForSequenceClassification` without `trust_remote_code`; transformers has no sequence-classification class for Jais-2, Falcon-H1 or Aya (Cohere), and 7–9B models do not fit its memory, so the trained large models cannot be scored there as it stands (ask the organizer).
+Final model set (decided 2026-10-08; four BERTs added for sentiment 2026-10-21, SD-007): classifiers MARBERTv2, AraBERTv02-Twitter, MARBERT v1, CAMeLBERT-mix, CAMeLBERT-DA, ARBERT, ARBERTv2, Qwen3-8B, Jais-2-8B, Falcon-H1-7B, Aya-Expanse-8B; Fanar-1-9B kept. **No longer used** (files kept on disk, their scores in `docs/tables/` kept as they are): TF-IDF + LR, Gemma-2, ALLaM, NLLB (never run), the scorers (CAMeLBERT DID, Sentence-ALDi, multilingual-e5-large; changed 2026-10-10). Open: the leaderboard Space runs on `cpu-basic` (no GPU, ~16 GB RAM) and loads `AutoModelForSequenceClassification` without `trust_remote_code`; transformers has no sequence-classification class for Jais-2, Falcon-H1 or Aya (Cohere), and 7–9B models do not fit its memory, so the trained large models cannot be scored there as it stands (ask the organizer).
 
 Checked on the Hub on 2026-10-06. About 6.7 GB of the 8 GB of VRAM is free. Peak VRAM figures are from G01 (generation, 4-bit, batch 5, 48 new tokens).
 
@@ -40,6 +40,10 @@ Checked on the Hub on 2026-10-06. About 6.7 GB of the 8 GB of VRAM is free. Peak
 | Classifier | `UBC-NLP/MARBERTv2` | ~163M | yes | in use | Main classifier |
 | Classifier | `aubmindlab/bert-base-arabertv02-twitter` | 135M | yes | in use | |
 | Classifier | `UBC-NLP/MARBERT` | ~163M | yes | in use | v1; compared with v2 in R03 |
+| Classifier (sentiment) | `CAMeL-Lab/bert-base-arabic-camelbert-mix` | ~110M | yes | in use | Added 2026-10-21 (SD-007); SR01–SR03 |
+| Classifier (sentiment) | `CAMeL-Lab/bert-base-arabic-camelbert-da` | ~110M | yes | in use | Added 2026-10-21 (SD-007); SR01–SR03 |
+| Classifier (sentiment) | `UBC-NLP/ARBERT` | ~163M | yes | in use | Added 2026-10-21 (SD-007); SR01–SR03 |
+| Classifier (sentiment) | `UBC-NLP/ARBERTv2` | ~163M | yes | in use | Added 2026-10-21 (SD-007); SR01–SR03 |
 | Generator | `google/gemma-2-9b-it` | 9.2B | 4-bit only (G01: 6174 MiB) | dropped | Gated: accept the license and use an access token |
 | Generator | `humain-ai/ALLaM-7B-Instruct-preview` | 7.0B | 4-bit (G01: 4562 MiB) | dropped | |
 | Generator | `facebook/nllb-200-1.3B` | 1.3B | yes | dropped | Translation / back-translation. Downloaded, never run |

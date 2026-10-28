@@ -25,6 +25,8 @@ Sentiment data (ArSarcasm-v2) is documented separately in `docs/sentiment/data.m
 Other files:
 - `data/processed/d1_g01match_seed42.jsonl`: 20 single-label D1 tweets, 4 for each of the 5 G01 dialects. The size-matched real reference for Q02.
 - `data/synthetic/g01_<model>.jsonl`: the 20 G01 sentences per generator after the pipeline's parser (`scripts/g01_to_records.py`). Scored in Q02.
+- `data/topics/pool/universal_v1.jsonl` (SHA-256 `1fcd8fd7bcd6`, 555,820 texts, 2026-10-28): the universal topic pool. Unique Arabic-script texts (at least 70% Arabic letters) from the 19 included datasets of CLAUDE.md "Universal topic pool", stored unchanged with a `dataset` field. Built by `scripts/build_topic_pool.py`; counts per dataset (rows, kept, not Arabic script, repeats) in `universal_v1.meta.json`. Topic-pool use only, not training data.
+- `data/topics/<name>/` (2026-10-28): frozen E5 topic lists `d1_k30_seed0`, `d1_clean_k50_seed0` and `universal_clean_k50_seed0` (centroids, assignments, meta; embeddings for the last two). Files are read-only; SHA-256 of each in `data/topics/SHA256SUMS.txt`. Backup in the private Hub dataset `Ammar-06/thesis-topic-embeddings`: the derived files, plus the three `report.md` files and the pool `universal_v1.jsonl`, which hold raw text under access agreements (uploaded with Ammar's approval because the repo is private, 2026-10-28). Keep the repo private.
 
 ## D1 at a glance
 
