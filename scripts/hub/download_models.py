@@ -8,8 +8,8 @@ and models already in the cache are not downloaded again.
 Gated models (Gemma) use the Hugging Face login saved on this machine (`hf auth login`).
 
 Usage:
-  python scripts/download_models.py                 # all models
-  python scripts/download_models.py --only scorers  # one group
+  python scripts/hub/download_models.py                 # all models
+  python scripts/hub/download_models.py --only scorers  # one group
 """
 from __future__ import annotations
 

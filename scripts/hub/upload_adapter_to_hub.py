@@ -12,8 +12,8 @@ Steps:
   4. append the repo id and commit to results/submissions.jsonl (marked not submittable)
 
 Usage:
-  python -m scripts.upload_adapter_to_hub --run lora_real_only_fanar_seed42 --repo mladi-fanar-r08 --run-id R08-fanar
-  python -m scripts.upload_adapter_to_hub --run ... --repo ... --dry-run     # write the card only
+  python -m scripts.hub.upload_adapter_to_hub --run lora_real_only_fanar_seed42 --repo mladi-fanar-r08 --run-id R08-fanar
+  python -m scripts.hub.upload_adapter_to_hub --run ... --repo ... --dry-run     # write the card only
 """
 from __future__ import annotations
 

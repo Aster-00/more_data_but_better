@@ -44,7 +44,7 @@ One JSON object per line: `text_id` (hash of cleaned text), `text` (cleaned), `t
 
 ## Synthetic sets (S2, open condition, 2026-10-16)
 
-Built by `scripts/sentiment/queue_sg_open.sh` (decision SD-004, run SG01 in `progress.md`). Zero-shot, template `prompts/sentiment/open_v1.json` (SHA-256 `b2a5012c6764`), seed 42. Every record carries `source: "synthetic"`, the generator, its prompt, raw output, sampling settings and the cell (`controls.variety`, `controls.sentiment`); kept separate from the real S1 files. Selection = seeded sample of 500 per variety × sentiment cell from the filtered texts.
+Built by `scripts/queues/sentiment/queue_sg_open.sh` (decision SD-004, run SG01 in `progress.md`). Zero-shot, template `prompts/sentiment/open_v1.json` (SHA-256 `b2a5012c6764`), seed 42. Every record carries `source: "synthetic"`, the generator, its prompt, raw output, sampling settings and the cell (`controls.variety`, `controls.sentiment`); kept separate from the real S1 files. Selection = seeded sample of 500 per variety × sentiment cell from the filtered texts.
 
 | ID | Generator | File | SHA-256 (first 12) | Texts |
 |---|---|---|---|---|
@@ -65,7 +65,7 @@ Built by `scripts/sentiment/queue_sg_open.sh` (decision SD-004, run SG01 in `pro
 
 ## Synthetic sets (S3, open condition, few-shot k = 5, 2026-10-28)
 
-Built by `scripts/sentiment/queue_sg02.sh` (decision D-020, run SG02 in `progress.md`). Template `prompts/sentiment/open_fewshot_v1.json` (SHA-256 `acdaa34d2411`), seed 42; otherwise as S2. Every prompt shows 5 real S1-train tweets of the requested cell, drawn per request; their ids are in `few_shot_ids`. `set_name` inside the records is `sg02k5_<generator>` (the SG01 records already use `sg02_*` from the old numbering).
+Built by `scripts/queues/sentiment/queue_sg02.sh` (decision D-020, run SG02 in `progress.md`). Template `prompts/sentiment/open_fewshot_v1.json` (SHA-256 `acdaa34d2411`), seed 42; otherwise as S2. Every prompt shows 5 real S1-train tweets of the requested cell, drawn per request; their ids are in `few_shot_ids`. `set_name` inside the records is `sg02k5_<generator>` (the SG01 records already use `sg02_*` from the old numbering).
 
 | ID | Generator | File | SHA-256 (first 12) | Texts |
 |---|---|---|---|---|

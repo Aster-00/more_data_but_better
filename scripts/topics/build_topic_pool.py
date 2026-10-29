@@ -3,14 +3,14 @@
 Inclusion rules and the dataset list: CLAUDE.md "Universal topic pool" (Ammar, 2026-10-28).
 Each text is kept only if its script is Arabic (at least 70% Arabic letters, the row-8 rule of
 src/quality/measure.py). Texts are stored unchanged; cleaning and the per-dataset cap are applied
-later, by scripts/fit_topics.py (configs/quality/topics_universal_clean_k50.json).
+later, by scripts/topics/fit_topics.py (configs/quality/topics_universal_clean_k50.json).
 
 Output (gitignored, since it holds the raw texts): data/topics/pool/universal_v1.jsonl with
 text_id, source ("real"), dataset, file and text, plus a .meta.json with counts per dataset.
 
 Usage:
-  python scripts/build_topic_pool.py
-  python scripts/build_topic_pool.py --limit 200      (tiny mode: first 200 rows per file, name gets _limit200)
+  python scripts/topics/build_topic_pool.py
+  python scripts/topics/build_topic_pool.py --limit 200      (tiny mode: first 200 rows per file, name gets _limit200)
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Callable, Iterator
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.build_dataset import git_commit  # noqa: E402
 from src.data.xlsx import read_xlsx  # noqa: E402
 from src.quality.measure import observed_script, script_features  # noqa: E402

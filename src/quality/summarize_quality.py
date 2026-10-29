@@ -4,7 +4,7 @@ Reads the logged results and writes, each as a .csv (full precision) and a .md (
   docs/tables/quality_summary    Q<NN>: results/quality/*.json from src/quality/measure.py
   docs/tables/scorer_summary     S<NN>: results/scorers/*.json from src/quality/validate_scorers.py
   docs/tables/generator_summary  G<NN>: results/runs/G*/feasibility.json + samples.jsonl
-                                 from scripts/check_generators.py
+                                 from scripts/generation/check_generators.py
 IDs and run descriptions come from configs/runs.json. The generator table also counts, per model,
 outputs that hit the max_new_tokens cap and outputs with foreign script or Arabic presentation forms
 (regex counts on samples.jsonl, not judgments).

@@ -9,8 +9,8 @@ Outputs, in <output_dir>/<name>/ (gitignored, because the report quotes tweets):
   meta.json         config, seed, git commit, E5 revision, data hash, counts, timings
 
 Usage:
-  python scripts/fit_topics.py --config configs/quality/topics_d1.json
-  python scripts/fit_topics.py --config configs/quality/topics_d1.json --limit 2000   (tiny mode)
+  python scripts/topics/fit_topics.py --config configs/quality/topics_d1.json
+  python scripts/topics/fit_topics.py --config configs/quality/topics_d1.json --limit 2000   (tiny mode)
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.build_dataset import git_commit, sha256  # noqa: E402
 
 

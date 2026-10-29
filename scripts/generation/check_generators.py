@@ -11,8 +11,8 @@ Outputs in results/runs/<run_id>_<model>/:
   samples.jsonl      one record per generated sentence (dialect, prompt, raw output)
 
 Usage:
-  python scripts/check_generators.py --run-id G01 --model QCRI/Fanar-1-9B-Instruct
-  python scripts/check_generators.py --run-id G01 --model google/gemma-2-9b-it --n 20
+  python scripts/generation/check_generators.py --run-id G01 --model QCRI/Fanar-1-9B-Instruct
+  python scripts/generation/check_generators.py --run-id G01 --model google/gemma-2-9b-it --n 20
 """
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ from pathlib import Path
 
 import torch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.build_dataset import git_commit  # noqa: E402
 from src.generation.llm import Generator, Sampling, vram_mib  # noqa: E402
 

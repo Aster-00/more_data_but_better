@@ -12,5 +12,5 @@
   "n_random": 10,
   "save_embeddings": true,
   "output_dir": "data/topics",
-  "_notes": "Universal topic list over all included datasets (CLAUDE.md 'Universal topic pool'; Ammar 2026-10-28: one list for all texts, capped). Pool built by scripts/build_topic_pool.py (Arabic script, human-written, no lyrics). Same cleaning as d1_clean_k50_seed0 (D-015). At most 20,000 texts per dataset after cleaning (seeded), so no single dataset sets the topics. n_init 3 instead of 10 to keep k-means near 45 min on ~200k texts."
+  "_notes": "Universal topic list over all included datasets (CLAUDE.md 'Universal topic pool'; Ammar 2026-10-28: one list for all texts, capped). Pool built by scripts/topics/build_topic_pool.py (Arabic script, human-written, no lyrics). Same cleaning as d1_clean_k50_seed0 (D-015). At most 20,000 texts per dataset after cleaning (seeded), so no single dataset sets the topics. n_init 3 instead of 10 to keep k-means near 45 min on ~200k texts."
 }

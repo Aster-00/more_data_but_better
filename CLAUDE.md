@@ -85,7 +85,7 @@ One universal matrix rates every dataset, real and generated, the same way, so a
 | 1 | Class balance | Imbalance = largest class count / smallest class count (multi-label: valid texts per dialect). Generated sets: over the requested labels. |
 | 2 | Dialect coverage | Which dialects occur and how many texts each has. MSA share = share of texts with Sentence-ALDi below 0.11 (one cut-off for every dataset; SG01's 0.175 is replaced). |
 | 3 | Dialectness | Mean Sentence-ALDi score (0 = MSA, 1 = fully dialectal), plus shares below 0.11 and above 0.5. All texts, or a random 20,000 for larger splits. Rows from the old stand-in scorer are marked "stand-in". |
-| 4 | Lexical diversity | **MTLD** (main score) on 30 random samples of exactly 5,000 tokens, plus distinct-2 and hapax share on the same samples. **Self-BLEU** on 1,000 texts, seeds 0–4: do texts copy each other's phrasing? Shared tokenisation of `scripts/measure_dataset_quality.py` for all. TTR is not used. |
+| 4 | Lexical diversity | **MTLD** (main score) on 30 random samples of exactly 5,000 tokens, plus distinct-2 and hapax share on the same samples. **Self-BLEU** on 1,000 texts, seeds 0–4: do texts copy each other's phrasing? Shared tokenisation of `scripts/quality/measure_dataset_quality.py` for all. TTR is not used. |
 | 5 | Semantic / topic diversity | **Vendi** on E5 embeddings (2,000 texts, mean of seeds 0–4). **Topic spread** = effective topics of 30 (exp of entropy, 800-text samples × 10) against frozen E5 k-means topic lists: a universal list (equal sample of every real training split) and a per-track list (dialect: D1; sentiment: ArSarcasm-v2 train). Generated data, MLADI dev and ArSarcasm-v2 test are never in a topic pool. Robustness: 10 / 20 / 50 topics and seeds 0–4. |
 | 6 | Duplication and leakage | Repeats = share of rows that are an exact copy of an earlier row after normalisation, on the set as trained (near-copies before filtering go in 08b). Leakage = share of unique texts also in the evaluation data (MLADI dev for dialect, ArSarcasm-v2 test for sentiment). |
 | 7 | Fidelity | Synthetic sets only; N/A for real data. Share of texts whose requested label is confirmed by a fixed judge. Dialect: LahjatBERT `cl_cardinality` (published; requested dialect at probability ≥ 0.3). Sentiment: the real-only SR01 classifiers. A proxy, since the judges make errors. |
@@ -204,7 +204,14 @@ src/
   quality/      diversity, fidelity, agreement metrics
   training/     classifier fine-tuning
   evaluation/   metrics, learning curves
-scripts/        entry points
+scripts/        entry points (index: scripts/README.md)
+  topics/       topic pool, topic lists, cluster analysis
+  quality/      dataset quality statistics
+  generation/   generator checks
+  hub/          model download and Hub upload
+  queues/       restartable run queues, dialect/ and sentiment/
+  system/       machine utilities
+notebooks/      figures and exploration only; numbers come from scripts and logged results
 results/        logged runs: raw results, console logs (source of every number)
 docs/           progress.md (run notes), decisions.md, data.md
   tables/       generated summary tables, each as .csv and .md (never hand-edited)

@@ -9,7 +9,7 @@
     "R02": "Real only, D4 with diacritics stripped from the training text (strip_diacritics), otherwise identical to R07",
     "R03": "Real only (condition 1), D1, our settings: dropout 0.3, 2 epochs, macro-F1 epoch selection, threshold 0.3",
     "R04": "Real only, D1, LahjatBERT's settings: dropout 0.1, 3 epochs, micro-F1 epoch selection",
-    "G01": "Generator feasibility: 4-bit NF4 load, 20 sentences over 5 dialects, minimal prompt (scripts/check_generators.py)",
+    "G01": "Generator feasibility: 4-bit NF4 load, 20 sentences over 5 dialects, minimal prompt (scripts/generation/check_generators.py)",
     "R05": "Real only, D2 (D1 without zero-label and all-18 texts), otherwise identical to R03",
     "R06": "Real only, D3 (D1 without all-18 texts; zero-label kept), otherwise identical to R03",
     "R07": "Real only, D4 (D1 without zero-label texts; all-18 kept), otherwise identical to R03",

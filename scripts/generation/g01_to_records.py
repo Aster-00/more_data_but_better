@@ -9,7 +9,7 @@ Lexical and embedding diversity depend on set size, so generators are compared w
 matched set, not with the 2000-text Q01 sample.
 
 Usage:
-  python scripts/g01_to_records.py
+  python scripts/generation/g01_to_records.py
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.generation.prompts import parse_output  # noqa: E402
 
 RUNS = Path("results/runs")

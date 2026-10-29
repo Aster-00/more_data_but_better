@@ -11,8 +11,8 @@ The leaderboard submission itself is made by hand in the Space's web form
 (model name, the commit printed here, inference method predict_binary_outcomes).
 
 Usage:
-  python -m scripts.upload_to_hub --run baseline_real_only_marbertv2_seed44 --repo mladi-marbertv2-r03
-  python -m scripts.upload_to_hub --run ... --repo ... --dry-run     # write the card only, no upload
+  python -m scripts.hub.upload_to_hub --run baseline_real_only_marbertv2_seed44 --repo mladi-marbertv2-r03
+  python -m scripts.hub.upload_to_hub --run ... --repo ... --dry-run     # write the card only, no upload
 """
 from __future__ import annotations
 

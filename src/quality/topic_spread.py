@@ -2,7 +2,7 @@
 
 Every text is cleaned exactly as the topic pool was (D-015: placeholders, links and mentions
 removed, hashtags to words, laughter shortened; fewer than 5 words -> not scored), embedded with
-multilingual-e5-large in fp32 (as in scripts/fit_topics.py) and assigned to the nearest of the
+multilingual-e5-large in fp32 (as in scripts/topics/fit_topics.py) and assigned to the nearest of the
 frozen centroids (cosine; both are unit length). Nothing is refitted.
 
 Measures per set:
@@ -16,7 +16,7 @@ Size-dependent, so every set is scored on samples of the same size.
 Outputs: <out>.json (all numbers) and <out>.md (table). No text is written.
 
 Usage:
-  python -m src.quality.topic_spread --names configs/quality/topics_universal_names.json \
+  python -m src.quality.topic_spread --names configs/quality/topic_names_universal_clean_k50.json \
       --sets real=data/processed/sentiment/arsarcasm_v2_train.jsonl sg02_fanar=data/synthetic/sentiment/sg02_fanar.selected.jsonl \
       --out results/quality/sentiment/universal_topics
   ... --limit 300     # tiny mode: first 300 texts per set, 2 samples of 100
@@ -34,7 +34,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from scripts.fit_topics import clean_for_topics, embed  # noqa: E402
+from scripts.topics.fit_topics import clean_for_topics, embed  # noqa: E402
 from src.data.build_dataset import git_commit, sha256  # noqa: E402
 
 
@@ -77,13 +77,14 @@ def main() -> None:
     if args.limit:
         args.sample, args.repeats = 100, 2
 
-    # The frozen topic list and the cleaning it was fitted with.
+    # The frozen topic list (data/topics/<topic_list>/) and the cleaning it was fitted with.
     names_cfg = json.loads(args.names.read_text(encoding="utf-8"))
-    topic_dir = Path(names_cfg["topic_list"])
+    topic_dir = Path("data/topics") / names_cfg["topic_list"]
     meta = json.loads((topic_dir / "meta.json").read_text(encoding="utf-8"))
     clean = meta["config"]["clean"]
     C = np.load(topic_dir / "centroids.npy")
-    name_of = {c: n for n, cs in names_cfg["names"].items() for c in cs}
+    names = names_cfg["topics"]
+    name_of = {c: n for n, cs in names.items() for c in cs}
 
     results = {}
     for spec in args.sets:
@@ -111,8 +112,8 @@ def main() -> None:
               f"named {np.mean(eff_n):.1f}, unnamed {results[key]['unnamed_share']:.1%}", flush=True)
 
     # Write JSON and the table.
-    k, n_names = len(C), len(names_cfg["names"])
-    out = {"topic_list": str(topic_dir), "k": k, "n_named_topics": n_names, "clean": clean,
+    k, n_names = len(C), len(names)
+    out = {"topic_list": str(topic_dir), "names_config": args.names.as_posix(), "k": k, "n_named_topics": n_names, "clean": clean,
            "sample": args.sample, "repeats": args.repeats, "e5_revision": e5_rev, "sets": results,
            "git_commit": git_commit(), "seconds": round(time.time() - started),
            "finished": time.strftime("%Y-%m-%d %H:%M")}
