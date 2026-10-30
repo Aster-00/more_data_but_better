@@ -1,0 +1,24 @@
+{
+  "set_name": "sg03_fanar",
+  "mode": "targeted",
+  "condition": "controlled",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/pairs_targeted_v1.json",
+  "plan_template": "prompts/sentiment/pairs_targeted_v1.json",
+  "seed_source": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "scale": 1.1,
+  "batch_size": 4,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 160,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg03_fanar.jsonl",
+  "_notes": "SG03: minimal pairs for the hard-case types (Ammar, 2026-10-30; option A headline convention). 2,000 target pairs (4,000 texts), 1.1x requests. Sampling as SG02; max_new_tokens 160 for two tweets. batch_size 4 (Fanar reached 7,982 MiB at batch 8 in SG02; pair prompts are longer)."
+}

@@ -1,0 +1,54 @@
+{
+  "cache_dir": "F:/Thesis/models",
+  "checks": {
+    "parse_ok": {
+      "enabled": true
+    },
+    "exact_dup_within": {
+      "enabled": true
+    },
+    "near_dup_within": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "exempt_same": "pair_id"
+    },
+    "dup_against_real": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_train.jsonl"
+    },
+    "dup_against_dev": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_dev.jsonl"
+    },
+    "script": {
+      "enabled": true,
+      "min_share": 0.7,
+      "default_script": "arabic"
+    },
+    "length": {
+      "enabled": true,
+      "min_words": 2,
+      "max_words": 60
+    },
+    "did_nadi": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "did_madar": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "aldi": {
+      "enabled": false,
+      "min_score": 0.3
+    }
+  },
+  "_notes": "Sentiment minimal-pair sets (SG03, SG03-random). Same as configs/filtering/sentiment.json except near_dup_within skips the comparison between the two halves of a pair (exempt_same: pair_id), which are meant to be near-copies. A pair whose B is an exact copy of A still fails exact_dup_within. src.sentiment.select_pairs keeps only pairs whose two halves both pass."
+}

@@ -1,0 +1,22 @@
+{
+  "run_name": "sr05_camelbert_da_qwen3_seed42",
+  "condition": "real_plus_controlled_synthetic",
+  "train_data": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "synthetic_data": "data/synthetic/sentiment/sg03_qwen3.selected.jsonl",
+  "dev_data": "data/processed/sentiment/arsarcasm_v2_dev.jsonl",
+  "test_data": "data/processed/sentiment/arsarcasm_v2_test.jsonl",
+  "text_field": "text",
+  "model": "CAMeL-Lab/bert-base-arabic-camelbert-da",
+  "seed": 42,
+  "max_length": 128,
+  "batch_size": 24,
+  "epochs": 3,
+  "learning_rate": 5e-05,
+  "warmup_ratio": 0.1,
+  "weight_decay": 0.01,
+  "dropout": 0.3,
+  "freeze_layers": 8,
+  "fp16": true,
+  "patience": 2,
+  "limit": null
+}

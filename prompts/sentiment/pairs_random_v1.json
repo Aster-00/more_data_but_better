@@ -1,0 +1,61 @@
+{
+  "id": "sentiment_pairs_random_v1",
+  "version": 1,
+  "condition": "controlled_random",
+  "description": "Sentiment track, SG03-random: the size-matched control for SG03 (Ammar, 2026-10-30). Same pair format, generators, label pairs (A, B), varieties and number of requests as SG03, but not targeted: no hard-case type, no subject hint, generic example pairs (written by Claude), and every request is seeded with one random real S1-train tweet of the same variety and the sentiment of tweet A (id in the record, drawn per request from (seed, request_id)). Placeholders: {seed_tweet} {a_name} {a_definition} {b_name} {b_definition} {examples} {variety_name} {variety_instruction}.",
+  "system": "You are an Arabic-speaking social media user who writes posts on Twitter.",
+  "user": "Write a pair of tweets about the same subject.\nTweet A has a {a_name} sentiment: {a_definition}\nTweet B is tweet A changed as little as possible so that its sentiment becomes {b_name}: {b_definition}\n\nExamples of pairs (with other sentiments):\n{examples}\n\nHere is a real tweet for inspiration; write about a similar subject, but do not copy it:\n{seed_tweet}\n\nNow write one new pair in {variety_name}. {variety_instruction}\nKeep tweet B as close to tweet A as possible: same subject and mostly the same words; change only what decides the sentiment. Tweet B must not be identical to tweet A.\nOutput exactly two lines and nothing else, with no translation or explanation:\nA: <tweet A>\nB: <tweet B>",
+  "example_item": "A ({a}): {text_a}\nB ({b}): {text_b}",
+  "examples": [
+    [
+      "neutral",
+      "رايح الجيم بعد الشغل النهارده",
+      "positive",
+      "رايح الجيم بعد الشغل النهارده وفرحان إني أخيرا رجعت أتمرن 💪"
+    ],
+    [
+      "negative",
+      "المطعم ده الأكل فيه بارد والخدمة زفت",
+      "neutral",
+      "المطعم ده بيقدم أكل مصري وبيفتح لحد الساعة 12"
+    ],
+    [
+      "positive",
+      "الحمد لله خلصت المشروع وأخيرا ارتحت 😊",
+      "neutral",
+      "خلصت المشروع وهسلمه بكرة الصبح"
+    ]
+  ],
+  "variety": {
+    "msa": {
+      "name": "Modern Standard Arabic",
+      "instruction": "Use Modern Standard Arabic (Fusha), not a dialect."
+    },
+    "egypt": {
+      "name": "Egyptian Arabic",
+      "instruction": "Use the Egyptian dialect, not Modern Standard Arabic."
+    },
+    "gulf": {
+      "name": "Gulf Arabic",
+      "instruction": "Use the Gulf dialect (as spoken in Saudi Arabia, Kuwait, the UAE, Qatar, Bahrain or Oman), not Modern Standard Arabic."
+    },
+    "levant": {
+      "name": "Levantine Arabic",
+      "instruction": "Use the Levantine dialect (as spoken in Syria, Lebanon, Jordan or Palestine), not Modern Standard Arabic."
+    }
+  },
+  "sentiment": {
+    "NEG": {
+      "name": "negative",
+      "definition": "the writer is unhappy, angry, critical, disappointed or sad about something."
+    },
+    "NEU": {
+      "name": "neutral",
+      "definition": "the writer shares information, news, a question or a remark without expressing positive or negative feelings."
+    },
+    "POS": {
+      "name": "positive",
+      "definition": "the writer is happy, grateful, admiring, praising or hopeful about something."
+    }
+  }
+}

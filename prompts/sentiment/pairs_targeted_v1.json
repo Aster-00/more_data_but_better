@@ -1,0 +1,376 @@
+{
+  "id": "sentiment_pairs_targeted_v1",
+  "version": 1,
+  "condition": "controlled",
+  "description": "Sentiment track, SG03: minimal pairs for the hard-case types found in the SR02 dev errors (Ammar, 2026-10-30, option A of the headline convention: a headline that only reports an event is neutral, for good and bad events). Each request asks for two tweets on the same subject that differ only in what sets the label. Tweet A is the target type, tweet B the contrast. The few-shot pairs are fixed per type: side A (or B for complaint/fan) is a real S1-train tweet (ids in `source_ids`, wrapping quotes trimmed), the other side was written by Claude and approved by Ammar. A random subject hint per request adds variety. Placeholders: {task} {examples} {variety_name} {variety_instruction} {hint}. Names in the hints are in Arabic script (a 24-request Qwen3 test on 2026-10-30 copied English names into the tweets).",
+  "system": "You are an Arabic-speaking social media user who writes posts on Twitter.",
+  "user": "{task}\n\nExamples:\n{examples}\n\nNow write one new pair in {variety_name}. {variety_instruction}\nSubject: {hint}\nDo not copy the examples. Keep tweet B as close to tweet A as possible: same subject and mostly the same words; change only what decides the sentiment. Tweet B must not be identical to tweet A.\nOutput exactly two lines and nothing else, with no translation or explanation:\nA: <tweet A>\nB: <tweet B>",
+  "example_item": "A: {a}\nB: {b}",
+  "variety": {
+    "msa": {
+      "name": "Modern Standard Arabic",
+      "instruction": "Use Modern Standard Arabic (Fusha), not a dialect."
+    },
+    "egypt": {
+      "name": "Egyptian Arabic",
+      "instruction": "Use the Egyptian dialect, not Modern Standard Arabic."
+    },
+    "gulf": {
+      "name": "Gulf Arabic",
+      "instruction": "Use the Gulf dialect (as spoken in Saudi Arabia, Kuwait, the UAE, Qatar, Bahrain or Oman), not Modern Standard Arabic."
+    },
+    "levant": {
+      "name": "Levantine Arabic",
+      "instruction": "Use the Levantine dialect (as spoken in Syria, Lebanon, Jordan or Palestine), not Modern Standard Arabic."
+    }
+  },
+  "types": {
+    "news_bad": {
+      "a": "NEU",
+      "b": "NEG",
+      "target_pairs": 250,
+      "varieties": [
+        "msa"
+      ],
+      "task": "Write a pair of tweets about the same bad-news event.\nTweet A is a news headline that only reports the event in a factual tone, the way a news account posts it. The writer adds no opinion and no feeling, so its sentiment is neutral, even though the event is bad.\nTweet B reports the same event, but the writer adds their own anger, sadness or criticism, so its sentiment is negative.",
+      "source_ids": [
+        "s4f472eab8f042c63",
+        "s927f78d525b9f2e4",
+        "s78d030116149f7b8"
+      ],
+      "pairs": [
+        [
+          "الأمم المتحدة: الإخلاء يتهدد 69 مبنى في القدس لصالح المستوطنين URL #الاحتلال URL",
+          "حسبنا الله ونعم الوكيل.. 69 مبنى في القدس مهددة بالإخلاء لصالح المستوطنين والعالم ساكت! #الاحتلال URL"
+        ],
+        [
+          "#الاتحاد_برس: بشار الأسد: لن نوقف القصف على حلب حتى يغادرها المسلحون URL",
+          "بشار الأسد يقولها بكل وقاحة: لن نوقف القصف على حلب.. مجرم يقتل شعبه ويتفاخر URL"
+        ],
+        [
+          "#الاحتلال يمنع 38 فلسطينياً من السفر الاسبوع الماضي لـ\"أسباب أمنية\" URL URL",
+          "38 فلسطينياً ممنوعون من السفر بحجة \"أسباب أمنية\".. ظلم ما بعده ظلم #الاحتلال URL"
+        ]
+      ],
+      "hints": [
+        "an air strike on a city",
+        "the arrest of protesters",
+        "a fire in a factory",
+        "a flood in a village",
+        "a train accident",
+        "a rise in the price of bread",
+        "a hospital going out of service",
+        "the demolition of houses",
+        "a travel ban",
+        "an explosion in a market",
+        "a ship sinking",
+        "layoffs at a large company",
+        "long power cuts",
+        "a drought hitting farmers",
+        "a court sentencing an activist",
+        "a bus crash on a highway",
+        "a cholera outbreak",
+        "food shortages in a refugee camp",
+        "a curfew in a city",
+        "a school closing",
+        "a building collapsing",
+        "the currency losing value",
+        "an earthquake",
+        "an oil leak polluting the sea",
+        "a strike by transport workers"
+      ]
+    },
+    "news_good": {
+      "a": "NEU",
+      "b": "POS",
+      "target_pairs": 250,
+      "varieties": [
+        "msa"
+      ],
+      "task": "Write a pair of tweets about the same good-news event.\nTweet A is a news headline that only reports the event in a factual tone, the way a news account posts it. The writer adds no opinion and no feeling, so its sentiment is neutral, even though the event is good.\nTweet B reports the same event, but the writer adds their own joy, pride or congratulations, so its sentiment is positive.",
+      "source_ids": [
+        "s3df560d67182b4e3",
+        "s2a64d4cf89c1bd41",
+        "s4b366076ac935a5b"
+      ],
+      "pairs": [
+        [
+          "URL #القدس افتتاح مشروع اعادة تأهيل شبكة المياه في #العيزرية URL",
+          "أخيراً! افتتاح مشروع إعادة تأهيل شبكة المياه في #العيزرية، خبر يفرّح القلب بعد سنين من المعاناة 👏 #القدس URL"
+        ],
+        [
+          "#أندي_موراي يحصد جائزة شخصية عام 2016 URL في #بريطانيا",
+          "مبروك #أندي_موراي جائزة شخصية عام 2016، يستاهلها وبجدارة 👏 #بريطانيا URL"
+        ],
+        [
+          "ديوان الوقف السني يقيم احتفالية بمناسبة ذكرى المولد النبوي الشريف في مخيم حي الجامعة للنازحين URL",
+          "ما أجمل هذه المبادرة! ديوان الوقف السني يقيم احتفالية بالمولد النبوي الشريف للنازحين في مخيم حي الجامعة، جزاهم الله خيراً URL"
+        ]
+      ],
+      "hints": [
+        "a team winning a cup",
+        "the opening of a new hospital",
+        "a scientist winning an international prize",
+        "a new metro line opening",
+        "a writer being honoured",
+        "a festival opening",
+        "a record harvest",
+        "trapped miners being rescued",
+        "a new university opening",
+        "a charity campaign reaching its goal",
+        "a national team qualifying for a tournament",
+        "a film winning an award",
+        "prisoners being released",
+        "a peace agreement being signed",
+        "a student topping the national exams",
+        "a new airport opening",
+        "unemployment falling",
+        "an athlete winning a gold medal",
+        "a historic mosque being restored",
+        "a ceasefire starting",
+        "a new public park opening",
+        "a book fair opening",
+        "electricity returning to a city",
+        "a free vaccination campaign",
+        "a new factory creating jobs"
+      ]
+    },
+    "complaint": {
+      "a": "NEG",
+      "b": "NEU",
+      "target_pairs": 500,
+      "varieties": [
+        "egypt",
+        "gulf",
+        "levant"
+      ],
+      "task": "Write a pair of short, informal tweets in dialect about the same everyday situation, each under 15 words.\nTweet A is a complaint: the writer is annoyed, disappointed, bored or fed up with the situation, so its sentiment is negative.\nTweet B describes the same situation in the same dialect but only as plain information or a question, with no complaint and no feeling, so its sentiment is neutral.",
+      "source_ids": [
+        "s095f388bdc0c65f9",
+        "se8278d46f7dc560b",
+        "s5ed0b6b25ed34af6",
+        "s5a7cef4e29c16759"
+      ],
+      "pairs": [
+        [
+          "نزلت ويندوز 10 ولسه بقول هييه لقيته 32 bit والجهاز 64",
+          "نزلت ويندوز 10 النهارده على الجهاز الجديد"
+        ],
+        [
+          "عدم وجود مصدر محايد للمعلومة بقى شيء مقرف جداً بصراحة",
+          "حد يعرف مصدر محايد للمعلومة دي؟"
+        ],
+        [
+          "هامر محطيه جستن بيبر... طحتي من عيني",
+          "هامر محطيه جستن بيبر؟"
+        ],
+        [
+          "اهلي طالعين حتى انوار البيت طافيه 😐",
+          "اهلي طالعين ورح يرجعوا بالليل"
+        ]
+      ],
+      "hints": [
+        "studying for exams",
+        "slow internet",
+        "a late bus",
+        "a phone battery that dies fast",
+        "a traffic jam",
+        "hot weather",
+        "the boss at work",
+        "noisy neighbours",
+        "a delivery that has not arrived",
+        "a broken air conditioner",
+        "waking up early",
+        "a boring lecture",
+        "a cracked phone screen",
+        "a long queue at the bank",
+        "a favourite team losing",
+        "an expensive taxi ride",
+        "a friend who does not reply",
+        "bad food at a restaurant",
+        "Monday morning",
+        "a late salary",
+        "a power cut at home",
+        "an app that keeps crashing",
+        "rain flooding the street",
+        "the weekend ending",
+        "catching a cold"
+      ]
+    },
+    "lyric_pos": {
+      "a": "NEU",
+      "b": "POS",
+      "target_pairs": 250,
+      "varieties": [
+        "msa",
+        "egypt",
+        "gulf",
+        "levant"
+      ],
+      "task": "Write a pair of tweets about the same song or singer.\nTweet A only quotes one or two lines in the style of a song or poem by the given singer or poet, the way people post lyrics they are listening to, optionally followed by the name as a hashtag. Invent new lines; do not quote real lyrics. The writer adds no opinion of their own, so its sentiment is neutral, even if the lines are emotional.\nTweet B is about the same singer or poet, but in the writer's own words, praising the song or saying how much they love it, so its sentiment is positive.",
+      "source_ids": [
+        "sfc810dbd9dda6d84",
+        "sa867ec219ec19708",
+        "s47fdaa3857adce02"
+      ],
+      "pairs": [
+        [
+          "بيتي انا بيتك وما الي حدا #فيروز",
+          "ما في أحلى من صوت #فيروز الصبح، بيعدّل المزاج كله ❤"
+        ],
+        [
+          "أنا خوفي يا حبي لتكون بعدك حبي ..وبتهيألي نسيتك وأنت مخبي بقلبي..#سيدة_الطرب_الأولى#فيروز",
+          "الأغنية دي من أحلى ما غنت #فيروز، كل ما أسمعها أفرح"
+        ],
+        [
+          "محتاجة حد يخاف عليا مش أبقى خايفه معاه#إليسا",
+          "#إليسا صوتها بيجنن، الأغنية دي من أحلى أغانيها 😍"
+        ]
+      ],
+      "hints": [
+        "فيروز",
+        "أم كلثوم",
+        "عبد الحليم حافظ",
+        "عمرو دياب",
+        "إليسا",
+        "نانسي عجرم",
+        "كاظم الساهر",
+        "محمد عبده",
+        "نوال الزغبي",
+        "وائل كفوري",
+        "شيرين",
+        "أصالة",
+        "راغب علامة",
+        "حسين الجسمي",
+        "محمد منير",
+        "ماجدة الرومي",
+        "تامر حسني",
+        "عبد المجيد عبد الله",
+        "أحلام",
+        "راشد الماجد",
+        "الشاعر نزار قباني",
+        "الشاعر محمود درويش",
+        "الشاعر المتنبي"
+      ]
+    },
+    "lyric_neg": {
+      "a": "NEU",
+      "b": "NEG",
+      "target_pairs": 250,
+      "varieties": [
+        "msa",
+        "egypt",
+        "gulf",
+        "levant"
+      ],
+      "task": "Write a pair of tweets around the same sad feeling.\nTweet A only quotes one or two sad lines in the style of a song or poem by the given singer or poet, the way people post lyrics they are listening to, optionally followed by the name as a hashtag. Invent new lines; do not quote real lyrics. The writer adds no words of their own, so its sentiment is neutral, even though the lines are sad.\nTweet B expresses the same sad feeling as the writer's own, about their own life, in their own words and without quoting, so its sentiment is negative.",
+      "source_ids": [
+        "sf2a5c2a29bb1821b",
+        "s89ebe66f2de95565",
+        "sf670ac66a33e3806"
+      ],
+      "pairs": [
+        [
+          "بدعي لربي عني هواگ يزول 💔#اليسا URL",
+          "تعبت منك ومن حبك، الله يريحني منك بقى 💔"
+        ],
+        [
+          "عم بحكي مع حالي #نوال_الزغبي URL",
+          "صرت أحكي مع حالي من كتر الوحدة، ما حدا سائل عني"
+        ],
+        [
+          "بيت صغير بكندا مايعرف طريقه حدا 🌼#فيروز",
+          "مخنوق من هالبلد، نفسي بيت صغير بعيد ما حدا يعرف طريقه"
+        ]
+      ],
+      "hints": [
+        "فيروز",
+        "أم كلثوم",
+        "عبد الحليم حافظ",
+        "عمرو دياب",
+        "إليسا",
+        "نانسي عجرم",
+        "كاظم الساهر",
+        "محمد عبده",
+        "نوال الزغبي",
+        "وائل كفوري",
+        "شيرين",
+        "أصالة",
+        "راغب علامة",
+        "حسين الجسمي",
+        "محمد منير",
+        "ماجدة الرومي",
+        "تامر حسني",
+        "عبد المجيد عبد الله",
+        "أحلام",
+        "راشد الماجد",
+        "الشاعر نزار قباني",
+        "الشاعر محمود درويش",
+        "الشاعر المتنبي"
+      ]
+    },
+    "fan_post": {
+      "a": "POS",
+      "b": "NEU",
+      "target_pairs": 500,
+      "varieties": [
+        "msa",
+        "egypt",
+        "gulf",
+        "levant"
+      ],
+      "task": "Write a pair of short tweets about the same celebrity, team, show or product.\nTweet A is a post by a fan or a fan account: it celebrates, greets, wishes luck to or shows love for them, mostly through hashtags, emojis and short phrases, so its sentiment is positive. It is not a news headline.\nTweet B is about the same celebrity, team, show or product, but only gives plain information (a time, a place, a fact), with no celebration and no praise, so its sentiment is neutral.",
+      "source_ids": [
+        "s44c23f8cb6d753a6",
+        "sfc5832bef2826538",
+        "s1a7a59e49cc52d8c",
+        "s34b7db5888ffd88b"
+      ],
+      "pairs": [
+        [
+          "تصبحو على ألف خير 😙#نادين_نسيب_نجيم #nnn USER URL",
+          "#نادين_نسيب_نجيم ضيفة برنامج الليلة على قناة الجديد USER URL"
+        ],
+        [
+          "سلفي جديد للنجمة الذهبية #نوال_الزغبي USER .. 😍 URL",
+          "صورة جديدة نشرتها #نوال_الزغبي على حسابها USER URL"
+        ],
+        [
+          "#ديربي_المرسيسايد بالتوفيق لزعيم بريطانيا #ليفربول ❤️❤️",
+          "#ديربي_المرسيسايد بين #ليفربول وايفرتون الساعة 9 الليلة"
+        ],
+        [
+          "البوب ستار #رامي_عياش بفندق الحبتور بمناسبة العيد الوطني الاماراتي..❤#رامي_عياش #ramyayach USER URL",
+          "#رامي_عياش يحيي حفلة في فندق الحبتور يوم العيد الوطني الاماراتي USER URL"
+        ]
+      ],
+      "hints": [
+        "محمد صلاح",
+        "النادي الأهلي",
+        "نادي الهلال",
+        "ريال مدريد",
+        "نادين نسيب نجيم",
+        "هيفاء وهبي",
+        "a perfume brand",
+        "a new smartphone",
+        "a new coffee shop",
+        "a TV series premiere",
+        "a singer's concert",
+        "a fashion brand",
+        "a restaurant offer",
+        "كريستيانو رونالدو",
+        "a football player's birthday",
+        "a Ramadan series",
+        "a beauty salon",
+        "a new car model",
+        "a book launch",
+        "a YouTuber",
+        "a national football team",
+        "a sale at a mall",
+        "an actor's birthday",
+        "برشلونة",
+        "a chocolate brand"
+      ]
+    }
+  }
+}

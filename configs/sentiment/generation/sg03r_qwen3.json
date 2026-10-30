@@ -1,0 +1,24 @@
+{
+  "set_name": "sg03r_qwen3",
+  "mode": "random",
+  "condition": "controlled_random",
+  "generator": "Qwen/Qwen3-8B",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/pairs_random_v1.json",
+  "plan_template": "prompts/sentiment/pairs_targeted_v1.json",
+  "seed_source": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "scale": 1.1,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 160,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg03r_qwen3.jsonl",
+  "_notes": "SG03-random: size-matched control for SG03 (same plan, generators, label pairs and varieties; random S1-train seed tweet instead of type, hint and type examples). 2,000 target pairs (4,000 texts), 1.1x requests. Sampling as SG02; max_new_tokens 160 for two tweets. batch_size 8."
+}
