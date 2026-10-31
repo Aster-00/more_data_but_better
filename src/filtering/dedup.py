@@ -113,11 +113,13 @@ def exact_duplicates(keys: list[str]) -> dict[int, int]:
 
 
 def near_duplicates_within(keys: list[str], threshold: float = 0.8, n: int = 5, num_perm: int = 128,
-                           bands: int = 16) -> dict[int, tuple[int, float]]:
+                           bands: int = 16, groups: list | None = None) -> dict[int, tuple[int, float]]:
     """For each index, the earliest earlier index it is a near-duplicate of (and the exact Jaccard).
 
     Items are processed in order, so the first occurrence of a cluster is kept and later
     members are marked. Exact duplicates are near-duplicates too (Jaccard 1.0).
+    With `groups`, items of the same (non-None) group are never compared (the two halves of a
+    minimal pair are meant to be near-copies).
     """
     hasher, index = MinHasher(num_perm), LSHIndex(num_perm, bands)
     sets = [shingles(k, n) for k in keys]
@@ -126,6 +128,8 @@ def near_duplicates_within(keys: list[str], threshold: float = 0.8, n: int = 5, 
         sig = hasher.signature(s)
         best = None
         for j in index.candidates(sig):
+            if groups is not None and groups[i] is not None and groups[i] == groups[j]:
+                continue
             sim = jaccard(s, sets[j])
             if sim >= threshold and (best is None or sim > best[1] or (sim == best[1] and j < best[0])):
                 best = (j, sim)

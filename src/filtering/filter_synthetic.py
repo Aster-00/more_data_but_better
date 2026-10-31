@@ -9,7 +9,9 @@ results/filtering/<set>.json. Each check can be switched off in the config.
 Checks (names as in the config):
   parse_ok            the generator output could be parsed into a sentence
   exact_dup_within    identical text earlier in the set (first occurrence kept)
-  near_dup_within     MinHash near-duplicate of an earlier text (Jaccard of char 5-grams >= threshold)
+  near_dup_within     MinHash near-duplicate of an earlier text (Jaccard of char 5-grams >= threshold);
+                      with "exempt_same": "<field>", records with the same value of that field
+                      (pair_id: the two halves of a minimal pair) are not compared with each other
   dup_against_real    near-duplicate of a real training text (copied or memorised training data)
   dup_against_dev     near-duplicate of a real dev text (leak check)
                       (reference files come from the config: D1 / MLADI dev in default.json,
@@ -80,8 +82,10 @@ def run_checks(records: list[dict], cfg: dict, device: str) -> dict[str, list[di
                                        for i in range(len(records))]
     if f["near_dup_within"]["enabled"]:
         c = f["near_dup_within"]
+        # Optional: records sharing this field (the two halves of a minimal pair) are not compared.
+        groups = [r.get(c["exempt_same"]) for r in records] if c.get("exempt_same") else None
         near = near_duplicates_within([k if h else f"__empty_{i}" for i, (k, h) in enumerate(zip(keys, has_text))],
-                                      c["threshold"], c["ngram"])
+                                      c["threshold"], c["ngram"], groups=groups)
         results["near_dup_within"] = [{"ok": i not in near, "duplicate_of": records[near[i][0]]["text_id"] if i in near else None,
                                        "jaccard": near[i][1] if i in near else None} for i in range(len(records))]
     for name in ("dup_against_real", "dup_against_dev"):

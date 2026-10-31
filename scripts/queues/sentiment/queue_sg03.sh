@@ -3,7 +3,7 @@
 # control (SG03-random), Fanar / Qwen3 / Aya as in SG02, then BERT training (Ammar 2026-10-30).
 #   1. per generator and set: generate 2,200 pair requests (1.1 x 2,000 target pairs), resumable;
 #      filter (configs/filtering/sentiment_pairs.json), keep 2,000 complete pairs per set (select_pairs);
-#      if a type is short, top up to 1.4x then 1.8x requests and refilter (as SG02)
+#      if a type is short, top up to 1.4x, 1.8x, then 2.4x requests and refilter (as SG02)
 #   2. SQ04: quality of the selected sets (src.sentiment.measure_quality --set sg03 / sg03r, and the universal
 #      topic spread), before any training
 #   3. SR05 (+ SG03) and SR06 (+ SG03-random): 7 BERTs x 3 generators x seeds 42/43/44, alternating
@@ -43,7 +43,7 @@ for g in $GENS; do
     sg=${s}_$g
     cfg=configs/sentiment/generation/$sg.json
     ok=0
-    for scale in 1.1 1.4 1.8; do
+    for scale in 1.1 1.4 1.8 2.4; do
       want=$($PY -c "import math,json;t=json.load(open('prompts/sentiment/pairs_targeted_v1.json',encoding='utf-8'))['types'];print(2*sum(math.ceil(v['target_pairs']*$scale) for v in t.values()))")
       for attempt in 1 2; do
         n=$( [ -f "$SYN/$sg.jsonl" ] && wc -l < "$SYN/$sg.jsonl" || echo 0 )
