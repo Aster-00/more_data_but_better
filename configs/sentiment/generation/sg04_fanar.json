@@ -1,0 +1,24 @@
+{
+  "set_name": "sg04_fanar",
+  "mode": "targeted",
+  "condition": "controlled",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/pairs_targeted_v2.json",
+  "plan_template": "prompts/sentiment/pairs_targeted_v2.json",
+  "seed_source": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "scale": 1.6,
+  "batch_size": 4,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 160,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg04_fanar.jsonl",
+  "_notes": "SG04 (D-023, test-contaminated): minimal pairs for the SR02 TEST hard-case types, 5 types agreed with Ammar 2026-11-02. 2,000 target pairs (4,000 texts); 1.6x requests (SG03: 1.1x) so the fidelity-first selection (min 80%) has spare pairs. Sampling and batch size as SG03."
+}

@@ -1,0 +1,60 @@
+{
+  "cache_dir": "F:/Thesis/models",
+  "checks": {
+    "parse_ok": {
+      "enabled": true
+    },
+    "exact_dup_within": {
+      "enabled": true
+    },
+    "near_dup_within": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "exempt_same": "pair_id"
+    },
+    "dup_against_real": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_train.jsonl"
+    },
+    "dup_against_dev": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_dev.jsonl"
+    },
+    "script": {
+      "enabled": true,
+      "min_share": 0.7,
+      "default_script": "arabic"
+    },
+    "length": {
+      "enabled": true,
+      "min_words": 2,
+      "max_words": 60
+    },
+    "did_nadi": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "did_madar": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "aldi": {
+      "enabled": false,
+      "min_score": 0.3
+    },
+    "dup_against_test": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/arsarcasm_v2_test.jsonl"
+    }
+  },
+  "_notes": "SG04 (D-023): as sentiment_pairs.json plus dup_against_test, which rejects any text that is a near-copy (char 5-gram Jaccard >= 0.8) of an official test tweet (Ammar, 2026-11-02: generated text must not be identical to the test)."
+}

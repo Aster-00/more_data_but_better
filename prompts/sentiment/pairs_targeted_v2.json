@@ -1,0 +1,175 @@
+{
+  "id": "sentiment_pairs_targeted_v2",
+  "version": 2,
+  "condition": "controlled",
+  "description": "Sentiment track, SG04: minimal pairs as SG03 (pairs_targeted_v1), but the types come from the SR02 errors on the official TEST set (D-023, test-contaminated; Ammar 2026-11-02). Types agreed with Ammar on 2026-11-02 after his review of the candidates (data/inspect/hard_cases/sg04_type_candidates.md, sg04_review_ammar.csv): sarcastic praise, public jab, personal remark, prayer, emoji in context; spam hashtags dropped. Labels follow Ammar's reading, not the test gold where they differ: sincere praise or encouragement is POS; disapproval or reproach without negative words is NEG. Few-shot pairs: one side (or both) is a real S1-train tweet (ids in `source_ids`; never a test tweet), the other side was written by Claude and is NOT yet checked by Ammar. Placeholders as v1: {task} {examples} {variety_name} {variety_instruction} {hint}.",
+  "system": "You are an Arabic-speaking social media user who writes posts on Twitter.",
+  "user": "{task}\n\nExamples:\n{examples}\n\nNow write one new pair in {variety_name}. {variety_instruction}\nSubject: {hint}\nDo not copy the examples. Keep tweet B as close to tweet A as possible: same subject and mostly the same words; change only what decides the sentiment. Tweet B must not be identical to tweet A.\nOutput exactly two lines and nothing else, with no translation or explanation:\nA: <tweet A>\nB: <tweet B>",
+  "example_item": "A: {a}\nB: {b}",
+  "variety": {
+    "msa": {
+      "name": "Modern Standard Arabic",
+      "instruction": "Use Modern Standard Arabic (Fusha), not a dialect."
+    },
+    "egypt": {
+      "name": "Egyptian Arabic",
+      "instruction": "Use the Egyptian dialect, not Modern Standard Arabic."
+    },
+    "gulf": {
+      "name": "Gulf Arabic",
+      "instruction": "Use the Gulf dialect (as spoken in Saudi Arabia, Kuwait, the UAE, Qatar, Bahrain or Oman), not Modern Standard Arabic."
+    },
+    "levant": {
+      "name": "Levantine Arabic",
+      "instruction": "Use the Levantine dialect (as spoken in Syria, Lebanon, Jordan or Palestine), not Modern Standard Arabic."
+    }
+  },
+  "types": {
+    "sarcastic_praise": {
+      "a": "POS",
+      "b": "NEG",
+      "target_pairs": 500,
+      "varieties": ["msa", "egypt", "gulf", "levant"],
+      "task": "Write a pair of tweets about the same subject that both use words of praise or congratulation.\nTweet A means the praise sincerely: the writer is really pleased, proud or thankful, so its sentiment is positive.\nTweet B keeps the same words of praise but uses them sarcastically: the writer is mocking or criticising the subject, and the praise means the opposite, so its sentiment is negative.",
+      "source_ids": ["s59877ee3e0ace5ef", "s3d96325d0eb228a0", "s9fd2b26640e452d5"],
+      "pairs": [
+        [
+          "ما شاء الله علي اللي هو عمله! أول مرة حد يقف موقف قوي كده ويسحب السفير بجد",
+          "ما شاء الله علي اللي هو عمله !! ... طب ما حسني كان بيعمل كدا بالزبط بيدين وبيشجب ولو ضغطوا عليه كان سحب السفير"
+        ],
+        [
+          "مبروك ومبروك - ولكل الزملاء واشكر كل من ساهم بانجاح هذا الانجاز الراقي اليوم #نقابة_الصحفيين",
+          "مبروك ومبروك على الانجاز الراقي اليوم.. نفس الوجوه ونفس الوعود، ونسيتوا الزملاء اللي في السجن #نقابة_الصحفيين"
+        ],
+        [
+          "USER مبروك عليك ويندوز 10 .. أسرع بكتير من القديم وهتنبسط بيه",
+          "USER مبروك عليك ويندوز 10 .. ربنا يخلهوللللللك"
+        ]
+      ],
+      "hints": [
+        "the electricity company", "a new government decision", "a football team that lost again", "the internet provider",
+        "a minister's speech", "a new road that is already broken", "a phone update", "the national team coach",
+        "a famous singer's new song", "a TV talk show host", "a bank's customer service", "an airline delay",
+        "a new law on taxes", "a university's exam schedule", "the traffic police", "a celebrity's new car",
+        "a city's new bridge", "a referee's decision", "the price of petrol", "a company's new product",
+        "a hospital's waiting time", "a parliament member", "a school's new rules", "a delivery app", "a mobile network"
+      ]
+    },
+    "public_jab": {
+      "a": "NEU",
+      "b": "NEG",
+      "target_pairs": 500,
+      "varieties": ["msa", "egypt", "gulf", "levant"],
+      "task": "Write a pair of tweets about the same public matter: politics, sports, news or public services.\nTweet A only states the matter or asks about it, in a plain tone, with no opinion and no feeling, so its sentiment is neutral.\nTweet B is about the same matter but adds a dig at the people responsible: a sarcastic joke, an ironic question or a mocking comparison. It may contain no negative words at all; the dig itself makes its sentiment negative.",
+      "source_ids": ["sc5440086343da136", "s40b1ffe32da99139", "s289e82a2d19b609a", "s6bf9321cf062c5ce"],
+      "pairs": [
+        [
+          "عاجل | مجلس الأمن يوافق بالإجماع على قرار لإرسال مراقبين إلى #حلب الشرقية",
+          "بعد أن سلموا #حلب ل #روسيا و #ايران وبعد أن هجروا أهلها #مجلس_اللا أمن يصوت بالاجماع على ارسال مراقبين للتأكد من عملية التهجير"
+        ],
+        [
+          "#الشباب_الاهلي الحكم احتسب بلنتي في الوقت الضايع وسجل منها الاهلي",
+          "#الشباب_الاهلي التحكيم يعبث بالدوري السعودي بلنتي وايرلس والوقت الضايع حتى يسجل الاهلي"
+        ],
+        [
+          "المجلس العسكرى يقول إنه أمين على الثوره #scaf",
+          "المجلس العسكرى أمين على الثوره , السؤال الأن . . . أمين ولد أبو جليل .. ولا أمين ولد الطحاوى ؟! #scaf"
+        ]
+      ],
+      "hints": [
+        "power cuts in summer", "a football league's referees", "parliament elections", "a minister's promise",
+        "the price of bread", "a new tax", "traffic jams in the capital", "a national team's coach",
+        "a government app that keeps crashing", "the official TV channel", "a president's speech", "rising rents",
+        "water cuts", "a club's new signing", "the exam results", "a peace conference", "public hospitals",
+        "a new metro project", "the currency rate", "a mayor's campaign", "fuel prices", "a ministry's statement",
+        "a delayed national project", "unemployment figures", "the airport's new terminal"
+      ]
+    },
+    "personal_remark": {
+      "a": "NEU",
+      "b": "NEG",
+      "target_pairs": 500,
+      "varieties": ["egypt", "gulf", "levant"],
+      "task": "Write a pair of short, informal tweets in dialect about the same everyday moment in the writer's own life: their day, their family, friends, work or study. Each under 20 words.\nTweet A only tells what happened or what the writer wants, or makes a light joke about it, with no blame and no complaint, so its sentiment is neutral.\nTweet B is about the same moment, but the writer shows real annoyance, blame or disapproval of someone, even without strong negative words (a reproach or a pointed question is enough), so its sentiment is negative.",
+      "source_ids": ["s057953c891794e42", "s29004261da35d0ce", "s044c0ede21a3ccd7"],
+      "pairs": [
+        [
+          "أبغى حد يوديني عالبحر بهالجو اليوم 🙄",
+          "محد فاضي يوديني البحر بهالجو، كل مره نفس الشي ويتهربون 🙄"
+        ],
+        [
+          "المدير جايب هدايا عالعدد وماحسب حسابي طلعني بدري 😂😂😂😂",
+          "المدير جايب هدايا عالعدد وماحسب حسابي.. هو انا مش موظف هنا ولا ايه؟"
+        ],
+        [
+          "حملت اللعبه ع جهازي اليوم، بشوف كيف تشتغل #SuperMarioRun",
+          "اللعبه مو راضيه تشتغل ع جهازي حملتها وحذفتها اكثر من مره مو راضيه 💔💔💔😭 #SuperMarioRun"
+        ]
+      ],
+      "hints": [
+        "waking up late", "a friend who did not answer the phone", "a brother who took the car", "the exam tomorrow",
+        "a cousin's wedding", "ordering food online", "the boss asking for overtime", "a group chat", "the weekend plans",
+        "a new phone", "the neighbours' noise", "a sister borrowing clothes", "a long queue at the bank",
+        "a teacher's homework", "a friend who cancelled plans", "visiting the grandparents", "a broken air conditioner",
+        "the gym", "a lost charger", "a colleague who is always late", "shopping with the mother", "a video game",
+        "cooking dinner", "the morning traffic", "a birthday that everyone forgot"
+      ]
+    },
+    "prayer": {
+      "a": "NEU",
+      "b": "POS",
+      "target_pairs": 200,
+      "varieties": ["msa", "egypt", "gulf", "levant"],
+      "task": "Write a pair of tweets built around the same prayer, supplication or Quran verse.\nTweet A only quotes or says the prayer, with nothing about the writer's own feelings, so its sentiment is neutral.\nTweet B has the same prayer, but the writer adds their own joy, gratitude or happiness about something in their life, so its sentiment is positive.",
+      "source_ids": ["s5afca2c8fe593737", "sf52a2aeb3a283709", "s662c658c467eddd0"],
+      "pairs": [
+        [
+          "اللهم عجّل بالصييف آمين",
+          "اللهم عجّل بالصيف آمين، والله اشتقت للبحر والإجازة وأحلى أيام السنة 😍"
+        ],
+        [
+          "#دعوة_الصائم_لاترد اللهم أغفر لي ذنبي وأجلي همي وبدد وحشتي وأنر قلبي بذكرك وطاعتك وأجعل الخير مفاتح دربي والصدق نور طريقي",
+          "#دعوة_الصائم_لاترد الحمدلله اللي بلغني رمضان وأنا بخير وبين أهلي، اللهم أغفر لي ذنبي وأنر قلبي بذكرك 🤍"
+        ],
+        [
+          "اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام",
+          "اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام.. الحمدلله على راحة البال اللي أعيشها هالأيام 🤍"
+        ]
+      ],
+      "hints": [
+        "rain", "Ramadan", "Friday", "the exams", "a new job", "a sick relative recovering", "travel", "the morning",
+        "a newborn baby", "the end of the year", "a wedding", "Eid", "a safe return home", "success at university",
+        "the parents", "forgiveness", "patience", "a new house", "the night prayer", "a good harvest"
+      ]
+    },
+    "emoji_context": {
+      "a": "POS",
+      "b": "NEG",
+      "target_pairs": 300,
+      "varieties": ["msa", "egypt", "gulf", "levant"],
+      "task": "Write a pair of short tweets that both use the same emoji, such as 😭 or 😂💔, about the same subject.\nIn tweet A the emoji shows excitement, love or laughter: the writer is thrilled or delighted, so its sentiment is positive.\nIn tweet B the same emoji shows real sadness or disappointment: something went wrong for the writer, so its sentiment is negative. Only the context decides the sentiment, not the emoji.",
+      "source_ids": ["s5935e6d217788544", "s4a617dc756cd314f", "s66a369808ba1a9f1"],
+      "pairs": [
+        [
+          "جيمين ثغيرر ثغيررر احبه😭😭😭😭",
+          "جيمين تعبان وما بيحضر الحفل 😭😭😭😭"
+        ],
+        [
+          "ياربي ببكي جبت تذاكر الحفل اخيراً 😭😭💕",
+          "ياربي ببكي راح علي الحفل وماكنا ادري انه فيه حفل 😭😭💔"
+        ],
+        [
+          "مططططر 😭💗💗💗💗💗💗",
+          "مطر وانا مسافره ومابشوفه 😭💔"
+        ]
+      ],
+      "hints": [
+        "a favourite singer's concert", "a K-pop idol's new video", "a football match", "the first rain of winter",
+        "a gift from a friend", "a cancelled trip", "a new album", "a pet cat", "the exam results", "a funny video",
+        "a sister's wedding", "a lost phone", "a series finale", "a birthday surprise", "a delayed flight",
+        "an actor's new film", "a concert ticket sale", "a holiday at the beach", "a team's last-minute goal",
+        "a childhood photo"
+      ]
+    }
+  }
+}

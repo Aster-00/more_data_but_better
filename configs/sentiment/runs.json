@@ -6,7 +6,8 @@
     "SR03": "Real only, NEU dropped: S1 train/dev/test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS head, every roster classifier, 3 seeds (SD-007). Macro F1 is over NEG/POS, not comparable with SR01/SR02.",
     "SR04": "Real + SG02 (open, few-shot k=5 synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG02 generator (Fanar, Qwen3, Aya); the 7 BERTs, 3 seeds, SR02 recipe (D-020). Member = <classifier>_<generator>.",
     "SR05": "Real + SG03 (targeted minimal pairs for the SR02 dev hard-case types, D-021; condition 3): S1 train + 4,000 texts (2,000 complete pairs) from one SG03 generator; 7 BERTs, 3 seeds, SR04 recipe. Member = <classifier>_<generator>.",
-    "SR06": "Real + SG03-random (size-matched untargeted minimal pairs, the control for SR05, D-021): S1 train + 4,000 texts from one SG03-random generator; 7 BERTs, 3 seeds, SR04 recipe. Member = <classifier>_<generator>."
+    "SR06": "Real + SG03-random (size-matched untargeted minimal pairs, the control for SR05, D-021): S1 train + 4,000 texts from one SG03-random generator; 7 BERTs, 3 seeds, SR04 recipe. Member = <classifier>_<generator>.",
+    "SR07": "Real + SG04 (targeted minimal pairs for the SR02 TEST hard-case types, D-023: TEST-CONTAMINATED, test scores are leakage analysis, not a result): S1 train + 4,000 texts (2,000 complete pairs, fidelity-first selection, min 80%) from one SG04 generator; 7 BERTs, 3 seeds, SR05 recipe. No random control. Member = <classifier>_<generator>."
   },
   "members": {
     "sr01_marbertv2": {
@@ -451,6 +452,90 @@
     },
     "sr06_arbertv2_aya": {
       "run": "SR06",
+      "model": "arbertv2_aya"
+    },
+    "sr07_marbertv2_fanar": {
+      "run": "SR07",
+      "model": "marbertv2_fanar"
+    },
+    "sr07_marbertv2_qwen3": {
+      "run": "SR07",
+      "model": "marbertv2_qwen3"
+    },
+    "sr07_marbertv2_aya": {
+      "run": "SR07",
+      "model": "marbertv2_aya"
+    },
+    "sr07_arabertv02_twitter_fanar": {
+      "run": "SR07",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr07_arabertv02_twitter_qwen3": {
+      "run": "SR07",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr07_arabertv02_twitter_aya": {
+      "run": "SR07",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr07_marbert_fanar": {
+      "run": "SR07",
+      "model": "marbert_fanar"
+    },
+    "sr07_marbert_qwen3": {
+      "run": "SR07",
+      "model": "marbert_qwen3"
+    },
+    "sr07_marbert_aya": {
+      "run": "SR07",
+      "model": "marbert_aya"
+    },
+    "sr07_camelbert_mix_fanar": {
+      "run": "SR07",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr07_camelbert_mix_qwen3": {
+      "run": "SR07",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr07_camelbert_mix_aya": {
+      "run": "SR07",
+      "model": "camelbert_mix_aya"
+    },
+    "sr07_camelbert_da_fanar": {
+      "run": "SR07",
+      "model": "camelbert_da_fanar"
+    },
+    "sr07_camelbert_da_qwen3": {
+      "run": "SR07",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr07_camelbert_da_aya": {
+      "run": "SR07",
+      "model": "camelbert_da_aya"
+    },
+    "sr07_arbert_fanar": {
+      "run": "SR07",
+      "model": "arbert_fanar"
+    },
+    "sr07_arbert_qwen3": {
+      "run": "SR07",
+      "model": "arbert_qwen3"
+    },
+    "sr07_arbert_aya": {
+      "run": "SR07",
+      "model": "arbert_aya"
+    },
+    "sr07_arbertv2_fanar": {
+      "run": "SR07",
+      "model": "arbertv2_fanar"
+    },
+    "sr07_arbertv2_qwen3": {
+      "run": "SR07",
+      "model": "arbertv2_qwen3"
+    },
+    "sr07_arbertv2_aya": {
+      "run": "SR07",
       "model": "arbertv2_aya"
     }
   }
