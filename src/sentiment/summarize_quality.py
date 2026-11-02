@@ -31,9 +31,9 @@ from pathlib import Path
 QUALITY_DIR = Path("results/quality/sentiment")
 RUNS_DIR = Path("results/sentiment/runs")
 OUT_DIR = Path("docs/sentiment/tables")
-SETS = ["sg01", "sg02", "sg03", "sg03r"]
-SET_NAMES = {"sg01": "SG01", "sg02": "SG02", "sg03": "SG03", "sg03r": "SG03-random"}
-TRAIN_RUN = {"real": "sr01", "sg01": "sr02", "sg02": "sr04", "sg03": "sr05", "sg03r": "sr06"}
+SETS = ["sg01", "sg02", "sg03", "sg03r", "sg04"]
+SET_NAMES = {"sg01": "SG01", "sg02": "SG02", "sg03": "SG03", "sg03r": "SG03-random", "sg04": "SG04 (test-contaminated)"}
+TRAIN_RUN = {"real": "sr01", "sg01": "sr02", "sg02": "sr04", "sg03": "sr05", "sg03r": "sr06", "sg04": "sr07"}
 GEN_NAMES = {"jais2": "Jais-2", "fanar": "Fanar", "qwen3": "Qwen3", "aya": "Aya"}
 BERTS = ["marbertv2", "arabertv02_twitter", "marbert", "camelbert_mix", "camelbert_da", "arbert", "arbertv2"]
 QUALITY = ["imbalance", "msa_share", "dialectness", "mtld", "topic_spread", "vendi", "repeats", "fidelity"]

@@ -1,3 +1,17 @@
+ ## Dataset for Sentiment Analysis (ArSarcasm-V2)
+### Here are it's annotation guidelines
+Positive (POS): Text whose overall feeling is positive. This includes congratulations, celebrations or occasions, wins or gains, and any event that brings good news or optimism.
+
+e.g. a tweet saying Mohamed Salah deserves the best-player award.
+
+Negative (NEG): Text that expresses something negative or sad, or reports bad news. Anger or strong emotional agitation also counts as negative.
+
+e.g. an Egyptian-dialect tweet saying there’s zero excitement about the World Cup qualifiers.
+
+Neutral (NEU): Text with neither positive nor negative expressions.
+
+e.g. a question about how many qualifier matches someone played, or a news-style quote reported without the writer’s own sentiment.
+
 ## SR01 baseline run, real data only
 
 | id | split | folder | seeds | macro_f1 | macro_precision | macro_recall | macro_recall_std | accuracy | f1_pn | f1_pn_std | f1_NEG | f1_NEU | f1_POS |
@@ -495,3 +509,176 @@ Mean of the 7 BERTs (each a 3-seed mean):
     - Annotate a few samples by hand and let claude continue the rest
   - Go through the hard cases myself and invoke the LLM to generate for these hard classes if that makes the LLM label them easier if i give it the topic of what these cases look like
 
+
+## SG03
+**Why**: Open Synthetic data doesnt help we need few shot.
+
+**Thought Process**: 
+- i wanted to give the shots to focus on the examples, phenomenons or scentence types that create more errors. 
+- **issues**: 
+  - as per the annotation guidelines, News should be NEU, but many annotators have chosen POS or NEG based on the news itself not on the writers emotion, which is wrong.
+  
+| Type | Tweets | NEG | NEU | POS |
+  |---|---|---|---|---|
+  | Bad-news headline | 468 | 36% | 60% | 4% |
+  | Good-news headline | 158 | 4% | 67% | 29% |
+- i then went through all the cases that all the models got wrong (63) `@data/inspect/hard_cases/sr02_dev_hard_cases.md` and classified them into groups (Complaint, Lyric/praise, Lyric/sadness, Fan/ad post)
+- wrote the opposing pair by changing only the part that decides the sentiment. 
+
+- so this is how i constructed the prompt
+  | Pair type | Tweet A → Tweet B | Pairs | What the model had to learn |
+  |---|---|---|---|
+  | Bad-news headline | NEU → NEG | 250 | A report is neutral; the writer's own anger makes it NEG |
+  | Good-news headline | NEU → POS | 250 | A report is neutral; the writer's own joy makes it POS |
+  | **Short dialect complaint** | NEG → NEU | **500** | A short dialect tweet with a complaint word isn't always NEG; some are neutral remarks |
+  | Quoted lyric, praise | NEU → POS | 250 | Quoting a song is neutral; the writer's own praise makes it POS |
+  | Quoted lyric, sadness | NEU → NEG | 250 | Quoting a song is neutral; the writer's own sadness makes it NEG |
+  | **Fan / ad post** | POS → NEU | **500** | Hearts and hashtags on a promo or fan post don't always mean POS |
+  - we also followed the annotation guidelines of the majority not of on the guidelines. 
+
+**add table for dataset quality metrics**
+| | SG03 | SG03-random |
+|---|---|---|
+| **1. Task text** | Describes the type (e.g. "a headline that only reports a bad event, then the writer's angry reaction") | Only names the two sentiments with general definitions |
+| **2. Example pairs** | Specific to the type, 3–4 per type, one side a real S1-train tweet | The same 3 generic pairs in every request, all written by Claude |
+| **3. Subject input** | A subject hint that fits the type (e.g. a singer's name for lyrics) | One random real S1-train tweet "for inspiration" |
+| **4. What A and B should be** | Fixed by the type (e.g. A = quoted lyric, B = own praise) | Any tweet with sentiment A, minimally changed to sentiment B |
+
+## SR05 + SG03
+Macro F1, mean ± std over seeds 42/43/44. Source `tables/sentiment_summary.csv`. Columns = the generator of the SG03 set.
+
+**Performance**
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | 78.68 ± 0.44 | 78.40 ± 0.54 | 78.95 ± 0.12 | 63.82 ± 0.57 | 63.85 ± 0.73 | 64.05 ± 0.68 |
+| MARBERT | 78.58 ± 0.93 | 78.17 ± 0.78 | 78.53 ± 0.74 | 64.43 ± 0.72 | 63.50 ± 0.70 | 64.79 ± 1.09 |
+| AraBERTv02-Tw | 77.99 ± 0.55 | 77.59 ± 0.58 | 77.37 ± 0.47 | 62.89 ± 0.50 | 62.65 ± 0.46 | 62.91 ± 0.55 |
+| CAMeLBERT-mix | 76.55 ± 0.56 | 75.42 ± 0.83 | 75.63 ± 0.76 | 61.37 ± 0.86 | 61.14 ± 0.83 | 61.08 ± 0.27 |
+| CAMeLBERT-DA | 74.08 ± 0.52 | 73.88 ± 0.39 | 74.47 ± 0.32 | 60.88 ± 0.32 | 60.57 ± 0.74 | 60.48 ± 0.48 |
+| ARBERT | 76.27 ± 0.55 | 75.13 ± 0.56 | 76.41 ± 0.46 | 61.48 ± 0.53 | 62.30 ± 0.88 | 61.73 ± 0.93 |
+| ARBERTv2 | 75.03 ± 0.10 | 74.98 ± 0.33 | 75.22 ± 0.53 | 60.99 ± 0.14 | 61.42 ± 0.40 | 61.22 ± 0.40 |
+| **Mean** | **76.74** | **76.22** | **76.65** | **62.27** | **62.20** | **62.32** |
+
+**Δ SR05 − SR04** (SG03 vs SG02, same BERT and generator; + = SG03 better)
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | -0.42 | -0.11 | +0.45 | +0.19 | -1.07 | -0.03 |
+| MARBERT | +0.12 | -0.62 | +0.07 | -0.35 | -0.78 | -0.11 |
+| AraBERTv02-Tw | +0.47 | -0.31 | +0.45 | -1.07 | -1.07 | -0.83 |
+| CAMeLBERT-mix | +0.90 | -1.40 | -0.09 | +0.13 | -0.66 | -0.13 |
+| CAMeLBERT-DA | -0.08 | -1.03 | +0.72 | -1.17 | -1.46 | -1.09 |
+| ARBERT | +0.28 | -1.51 | +0.62 | -0.82 | -1.26 | -1.03 |
+| ARBERTv2 | -1.03 | -0.84 | -0.41 | -1.56 | -2.01 | -1.58 |
+| **Mean** | **+0.03** | **-0.83** | **+0.26** | **-0.66** | **-1.19** | **-0.69** |
+| Better in | 4/7 | 0/7 | 5/7 | 2/7 | 0/7 | 0/7 |
+
+## SR06 + SG03-random
+Same layout as SR05.
+
+**Performance**
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | 78.12 ± 0.32 | 77.78 ± 0.34 | 78.04 ± 0.68 | 64.25 ± 0.19 | 63.95 ± 0.57 | 63.39 ± 0.53 |
+| MARBERT | 78.69 ± 0.16 | 77.95 ± 1.03 | 78.50 ± 0.27 | 64.00 ± 0.63 | 64.70 ± 0.75 | 64.50 ± 0.20 |
+| AraBERTv02-Tw | 77.03 ± 0.49 | 77.03 ± 0.52 | 76.96 ± 0.34 | 63.78 ± 0.59 | 63.44 ± 0.27 | 62.85 ± 0.34 |
+| CAMeLBERT-mix | 74.75 ± 0.43 | 75.19 ± 0.19 | 74.27 ± 0.55 | 61.25 ± 0.06 | 61.03 ± 0.61 | 60.85 ± 0.80 |
+| CAMeLBERT-DA | 73.64 ± 0.34 | 73.92 ± 0.19 | 73.52 ± 0.26 | 61.62 ± 0.40 | 61.21 ± 1.72 | 60.24 ± 0.72 |
+| ARBERT | 75.80 ± 0.52 | 74.62 ± 0.38 | 75.53 ± 0.32 | 61.68 ± 1.18 | 61.49 ± 0.81 | 61.31 ± 1.03 |
+| ARBERTv2 | 75.48 ± 0.47 | 74.64 ± 0.54 | 75.13 ± 0.93 | 62.43 ± 0.59 | 61.70 ± 0.31 | 61.25 ± 0.28 |
+| **Mean** | **76.22** | **75.88** | **75.99** | **62.72** | **62.50** | **62.06** |
+
+**Δ SR05 − SR06** (SG03 vs its size-matched control; + = SG03 better)
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | +0.56 | +0.62 | +0.91 | -0.43 | -0.10 | +0.66 |
+| MARBERT | -0.11 | +0.22 | +0.03 | +0.43 | -1.20 | +0.29 |
+| AraBERTv02-Tw | +0.96 | +0.56 | +0.41 | -0.89 | -0.79 | +0.06 |
+| CAMeLBERT-mix | +1.80 | +0.23 | +1.36 | +0.12 | +0.11 | +0.23 |
+| CAMeLBERT-DA | +0.44 | -0.04 | +0.95 | -0.74 | -0.64 | +0.24 |
+| ARBERT | +0.47 | +0.51 | +0.88 | -0.20 | +0.81 | +0.42 |
+| ARBERTv2 | -0.45 | +0.34 | +0.09 | -1.44 | -0.28 | -0.03 |
+| **Mean** | **+0.52** | **+0.35** | **+0.66** | **-0.45** | **-0.30** | **+0.27** |
+| Better in | 5/7 | 6/7 | 7/7 | 2/7 | 2/7 | 6/7 |
+
+**Takeaways**
+- Qwen3's SG03 set is the weakest
+- Aya's SG03 is the only set that beats its control on test
+
+
+## SG04
+Test Set
+| Type | Tweets |
+|---|---|
+| 1. Sarcastic praise (NEG → POS) | 141 |
+| 2. Dry sarcastic jab (NEG → NEU) | 162 |
+| 3. Maxim / reflection (NEU → NEG) | 194 |
+| 4. Prayer / verse / greeting (NEU → POS) | 13 |
+| 5. Election / promo hashtag (NEU → POS) | 26 |
+| 6. Crying / laughing emoji | 47 |
+
+These are the errors from test where at least 32/63 runs classified them wrong classified into groups.
+This generation will focus on the errors from test instead of dev because in ArSarcasm-V2 the errors in dev almost dont exist in test, because test and dev are not equally balanced. This could be considered cheating the model, but how else will we generate data for the models weakness.
+
+Your labels are saved in [sg04_review_ammar.csv](data/inspect/hard_cases/sg04_review_ammar.csv). The test gold labels are not changed.
+
+
+
+
+| Type | Change | Pairs |
+|---|---|---|
+| 1. Sarcastic praise, POS → NEG | Keep. The task text says sincere praise or encouragement stays POS. | 500 |
+| 2. Dry sarcastic jab, NEU → NEG | Keep. Merge in the reproach / disapproval tweets from type 3 (3.5, 3.10, 3.24): disapproval without negative words is NEG. | 600 |
+| 3. Maxim / reflection | Narrow to real general sayings (لهفة البدايات ليست حبّ…), which stay NEU. Pair: saying NEU ↔ the writer's own sad or happy use of it, NEG / POS. | 400 |
+| 4. Prayer / verse, NEU → POS | Keep. Only 13 test tweets, so it stays small. | 200 |
+| 5. Spam hashtag | Drop. | 0 |
+| 6. 😭 / 😂💔 | Redefine as a context pair. The same emoji appears in both tweets, and only the context decides: POS (excitement) ↔ NEG (sadness). That turns your "depends on context" into what the pair teaches. | 300 |
+
+| Type | Read | Gold label wrong | Share |
+|---|---|---|---|
+| 1. Sarcastic praise | 32 | 6 | 19% |
+| 2. Dry sarcastic jab | 32 | 0 | 0% |
+| 3. Maxim / reflection | 32 | 4 | 13% |
+- So the example tweets in the prompts must use my label, not the gold one.
+
+**Type 1: sarcastic praise (keep)**
+- Tweet A: real praise, POS.
+- Tweet B: the same praise, but sarcastic, NEG.
+- What the model learns: nice words can be mockery.
+- Change: the prompt says real praise or encouragement stays POS.
+**Types 2 + 3: neutral remark vs a dig (merge into one type)**
+- Tweet A: a plain remark or joke, NEU.
+- Tweet B: the same remark, but with a real dig at someone, NEG.
+- Why merge: both types make this same pair. Type 2 errors miss the dig, and type 3 errors see a dig that isn't there. One pair fixes both.
+
+**Type 4: prayer or verse (keep, small)**
+- Tweet A: a prayer or verse alone, NEU.
+- Tweet B: the same prayer plus the writer's own joy or thanks, POS.
+- What the model learns: religious words alone are not POS.
+
+**Type 5: spam hashtags (drop)**
+- These tweets can't be read, as you said.
+
+**Type 6: 😭 and 😂💔 (redefine)**
+- Both tweets use the same emoji.
+- Tweet A: excitement (e.g. a fan seeing their idol), POS.
+- Tweet B: real sadness, NEG.
+- What the model learns: the emoji alone doesn't decide; the context does. That is your "depends on context".
+
+
+## Size
+
+| Type | Pairs |
+|---|---|
+| 1. Sarcastic praise | 500 |
+| 2+3. Remark vs dig | 1,000 |
+| 4. Prayer / verse | 200 |
+| 6. Emoji in context | 300 |
+| **Total** | **2,000** (4,000 tweets, same as SG03) |
+
+- Sentiment split: NEG 1,800, NEU 1,200, POS 1,000.
+- This leans NEG, like the test set.
+- Keep a Fidelity at a minimum of 80% (generation repeats until each set reaches 80%.)

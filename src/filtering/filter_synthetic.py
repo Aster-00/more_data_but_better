@@ -14,6 +14,8 @@ Checks (names as in the config):
                       (pair_id: the two halves of a minimal pair) are not compared with each other
   dup_against_real    near-duplicate of a real training text (copied or memorised training data)
   dup_against_dev     near-duplicate of a real dev text (leak check)
+  dup_against_test    near-duplicate of an official test text (opt-in; only for SG04, whose prompts were
+                      already designed on the test errors, D-023; absent from a config = off)
                       (reference files come from the config: D1 / MLADI dev in default.json,
                       ArSarcasm-v2 S1 train / dev in sentiment.json)
   script              letter shares match the requested script (open sets: Arabic script expected)
@@ -45,7 +47,7 @@ from src.filtering.dedup import dedup_key, exact_duplicates, near_duplicates_aga
 from src.quality.measure import observed_script, script_features
 
 CHECK_ORDER = ["parse_ok", "exact_dup_within", "near_dup_within", "dup_against_real", "dup_against_dev",
-               "script", "length", "did_nadi", "did_madar", "aldi"]
+               "dup_against_test", "script", "length", "did_nadi", "did_madar", "aldi"]
 
 
 def read_reference_keys(path: Path) -> list[str]:
@@ -88,8 +90,8 @@ def run_checks(records: list[dict], cfg: dict, device: str) -> dict[str, list[di
                                       c["threshold"], c["ngram"], groups=groups)
         results["near_dup_within"] = [{"ok": i not in near, "duplicate_of": records[near[i][0]]["text_id"] if i in near else None,
                                        "jaccard": near[i][1] if i in near else None} for i in range(len(records))]
-    for name in ("dup_against_real", "dup_against_dev"):
-        if f[name]["enabled"]:
+    for name in ("dup_against_real", "dup_against_dev", "dup_against_test"):
+        if f.get(name, {}).get("enabled"):
             c = f[name]
             ref = read_reference_keys(Path(c["reference"]))
             hit = near_duplicates_against(keys, ref, c["threshold"], c["ngram"])
