@@ -829,6 +829,8 @@ Error rate = share of the subset's test tweets a run gets wrong; mean over seeds
 - It breaks more of the ordinary tweets: about 50 tweets (2.4% of 2,083). SG03 did the same, but less (+0.9).
 - So the net test score falls: the loss on the easy tweets outweighs the gain on the hard ones.
 - Type 5 (not generated) does not move, as expected; emoji (type 6) does not move although it was generated.
+- Source: all SG04 analysis tables can be regenerated with `python -m src.sentiment.sg04_analysis` (output `docs/sentiment/tables/sg04_analysis.md`).
+- Count note: the script counts hard cases per test row, so one duplicated test tweet counts twice: 918 hard / 2,082 other (here 917 / 2,083), and 119 broken tweets in the flips below. The percentages are the same.
 
 ### Which labels the classifiers predict
 
@@ -869,6 +871,39 @@ Error rate = share of the subset's test tweets a run gets wrong; mean over seeds
 - **Real POS tweets are where SG04 does the damage**, with 6.4 points more errors.
 - The probable cause: in SG04, praise words (sarcastic praise) and positive emoji (emoji context) appear on the NEG side of pairs. The classifiers learn to distrust positive words, and sincere POS tweets pay for it.
 - NEG improves, most clearly on the hard NEG tweets (−4.9). Sarcastic tweets improve slightly, while non-sarcastic ones get worse.
+
+### Tweets that flip from SR01 to SR07
+
+Per tweet, the majority label over all runs of a condition.
+
+| | Tweets | Of which |
+|---|---|---|
+| Fixed (wrong in SR01, right in SR07) | 109 | 76 hard cases |
+| Broken (right in SR01, wrong in SR07) | 119 | 36 hard cases |
+| Net | −10 | |
+
+| Broken as (gold → SR07) | Tweets |
+|---|---|
+| NEG → NEU | 33 |
+| POS → NEU | 32 |
+| NEU → NEG | 28 |
+| NEU → POS | 9 |
+| POS → NEG | 9 |
+| NEG → POS | 8 |
+
+- About 230 tweets (8% of test) change their answer, for a net of −10: SG04 trades one set of errors for another rather than adding knowledge.
+- Most broken tweets become NEU (65 of 119).
+
+### Fidelity vs usefulness
+
+| Generator | Fidelity | Test macro F1 |
+|---|---|---|
+| Fanar | 81.3% | 61.30 |
+| Qwen3 | 80.7% | 62.04 |
+| Aya | 82.4% | 61.56 |
+
+- The lowest-fidelity set (Qwen3) trained the best classifiers, and the highest (Aya) did not; with three sets this is a hint, not a result.
+- Prayer fidelity is about 50% by design: the judge reads neutral prayers as POS, which is the error the type targets. So for that type a high fidelity would mean the pairs failed.
 
 **Take awawys**
 - improvement but need to generate more data, and more targeted on the normal cases so that the model doesnt overtrain on hard
