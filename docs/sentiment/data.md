@@ -92,3 +92,16 @@ Built 2026-10-23 by `python -m src.sentiment.make_relabel_sheet` (seed 42). File
 | **Sheet** | **272** | Shuffled; text only, no gold, part or prediction shown |
 
 - **Bias to handle in the analysis:** Ammar already saw 22 part-B tweets with their gold labels and Claude's reading (2026-10-22, the ≥ 18/36 tweets). Report part-B results with and without those 22.
+
+## Mawqif (M1), second sentiment dataset (D-022)
+
+Built 2026-10-31 by `python -m src.sentiment.build_mawqif` (dev fraction 0.15, seed 42); statistics `results/data_stats/sentiment/mawqif_stats.json`. Source `data/datasets/sa/Mawqif-Arabic-Stance-main/Data/Mawqif_AllTargets_{Train,Test}.csv`. Same cleaning as S1 (links → URL, mentions → USER).
+
+| Split | Texts | NEG / NEU / POS | Women empowerment / COVID vaccine / Digital transformation |
+|---|---|---|---|
+| Train | 2,963 | 794 / 919 / 1,250 | 1,008 / 990 / 965 |
+| Dev | 525 | 141 / 163 / 221 | 179 / 175 / 171 |
+| Test | 619 | 171 / 191 / 257 | 210 / 206 / 203 |
+
+- Train: 3,502 rows → 3,493 unique texts; 5 rows dropped (copies disagree on sentiment), 3 dropped (also in test). No text in two splits.
+- Fields kept: target, stance, sarcasm, sentiment and stance confidence, date. `dialect` is null (Mawqif has no dialect label).

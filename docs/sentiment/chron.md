@@ -536,13 +536,33 @@ Mean of the 7 BERTs (each a 3-seed mean):
   | **Fan / ad post** | POS → NEU | **500** | Hearts and hashtags on a promo or fan post don't always mean POS |
   - we also followed the annotation guidelines of the majority not of on the guidelines. 
 
-**add table for dataset quality metrics**
-| | SG03 | SG03-random |
-|---|---|---|
-| **1. Task text** | Describes the type (e.g. "a headline that only reports a bad event, then the writer's angry reaction") | Only names the two sentiments with general definitions |
-| **2. Example pairs** | Specific to the type, 3–4 per type, one side a real S1-train tweet | The same 3 generic pairs in every request, all written by Claude |
-| **3. Subject input** | A subject hint that fits the type (e.g. a singer's name for lyrics) | One random real S1-train tweet "for inspiration" |
-| **4. What A and B should be** | Fixed by the type (e.g. A = quoted lyric, B = own praise) | Any tweet with sentiment A, minimally changed to sentiment B |
+**Dataset quality metrics (SQ04)**
+
+Topic spread on the frozen universal list `universal_clean_k50_seed0` (50 E5 clusters, 18 named topics, D-019), as for SG02. Effective topics = exp(entropy), mean ± std over 10 samples of 800 texts. Distance to real = Jensen-Shannon divergence (base 2) between the set's topic shares (18 named topics + unnamed) and S1 real train. Source `results/quality/sentiment/universal_topics_sg03.json`.
+
+| Set | Effective clusters (of 50) | Effective named topics (of 18) | Unnamed | Distance to real | War | Politics | News | Religion | Greetings | Love | Films, TV, music |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 real train | 15.6 ± 0.7 | 6.5 ± 0.5 | 19% | 0.000 | 38% | 6% | 7% | 3% | 3% | 4% | 7% |
+| SG03 Fanar | 14.8 ± 0.5 | 8.0 ± 0.2 | 27% | 0.255 | 1% | 2% | 17% | 1% | 2% | 15% | 19% |
+| SG03-random Fanar | 19.7 ± 0.6 | 11.4 ± 0.4 | 19% | 0.147 | 7% | 18% | 8% | 4% | 2% | 6% | 12% |
+| SG03 Qwen3 | 11.2 ± 0.3 | 6.5 ± 0.2 | 35% | 0.300 | 1% | 1% | 18% | 0% | 0% | 20% | 12% |
+| SG03-random Qwen3 | 19.5 ± 0.7 | 9.2 ± 0.3 | 31% | 0.130 | 10% | 8% | 7% | 2% | 1% | 18% | 6% |
+| SG03 Aya | 16.2 ± 0.7 | 8.6 ± 0.3 | 19% | 0.233 | 3% | 5% | 15% | 0% | 2% | 14% | 21% |
+| SG03-random Aya | 21.6 ± 0.5 | 12.4 ± 0.4 | 25% | 0.110 | 10% | 10% | 8% | 4% | 3% | 7% | 9% |
+
+Fidelity = share of texts whose requested label the SR01 MARBERT ensemble agrees with (real: accuracy on S1 dev). Imbalance over the requested variety × sentiment cells only. Source `results/quality/sentiment/{sg03,sg03r}_quality.json`; all sets in `tables/dataset_quality.md`.
+
+| Set | Fidelity | Fidelity NEG / NEU / POS | MTLD | Vendi | Topic spread (of 30) | Effective universal topics (of 18) | Distance to real | MSA share | Dialectness | Repeats | Imbalance |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 real (reference) | 80.3% | 85% / 79% / 75% | 2518 | 4.01 | 29 | 6.5 | 0.000 | 22.4% | 0.54 | 1.0% | 37.7 : 1 |
+| SG03 Fanar | 73.9% | 91% / 59% / 87% | 1865 | 3.83 | 18 | 8.0 | 0.255 | 31.0% | 0.46 | 0.0% | 4.3 : 1 |
+| SG03-random Fanar | 68.8% | 87% / 48% / 91% | 2817 | 3.76 | 19 | 11.4 | 0.147 | 28.9% | 0.46 | 0.0% | 4.1 : 1 |
+| SG03 Qwen3 | 68.5% | 78% / 56% / 84% | 989 | 3.94 | 18 | 6.5 | 0.300 | 24.7% | 0.51 | 5.0% | 4.1 : 1 |
+| SG03-random Qwen3 | 55.9% | 65% / 46% / 67% | 1496 | 3.98 | 22 | 9.2 | 0.130 | 9.8% | 0.66 | 8.1% | 3.9 : 1 |
+| SG03 Aya | 77.7% | 98% / 58% / 97% | 1435 | 3.63 | 16 | 8.6 | 0.233 | 23.8% | 0.53 | 1.1% | 4.0 : 1 |
+| SG03-random Aya | 65.1% | 92% / 39% / 91% | 2162 | 3.50 | 17 | 12.4 | 0.110 | 11.0% | 0.61 | 0.0% | 4.0 : 1 |
+
+SG03 changes four things besides the targeting: quantity (from 11,208 to 15,208 texts), source (LLM-written instead of human), format (minimal pairs instead of single tweets) and label mix (50% NEU). I built SG03-random to keep all four the same and remove only the targeting, so the comparison is fair and tests only the targeting.
 
 ## SR05 + SG03
 Macro F1, mean ± std over seeds 42/43/44. Source `tables/sentiment_summary.csv`. Columns = the generator of the SG03 set.
@@ -608,6 +628,17 @@ Same layout as SR05.
 - Qwen3's SG03 set is the weakest
 - Aya's SG03 is the only set that beats its control on test
 
+| Comparison | Test | Dev |
+|---|---|---|
+| SR06 (control) vs real-only | −0.50 | −0.79 |
+| SR05 (targeted) vs control | −0.16 (not significant, better in 10/21) | **+0.51 (better in 18/21)** |
+
+1. **The loss isn't caused by the targeting.** The untargeted control loses almost as much (−0.50). The loss comes from what both sets share: the LLM source, the pair format and the label mix.
+2. **Targeting does have an effect, but only on dev.** On dev, the targeted pairs beat the control in 18 of 21 cells. On test there's no difference. Dev and train come from the same distribution, while test is different (SA-E01), so what targeting teaches doesn't carry over to test.
+3. **Test had no change beyond noise** because the classes that we targeted dont exist heavily in the test, they exist mostly in the dev. Dev and Test are not balanced
+
+**Future Runs**
+- Repeat the run but get the errors from the test. 
 
 ## SG04
 Test Set
@@ -682,3 +713,169 @@ Your labels are saved in [sg04_review_ammar.csv](data/inspect/hard_cases/sg04_re
 - Sentiment split: NEG 1,800, NEU 1,200, POS 1,000.
 - This leans NEG, like the test set.
 - Keep a Fidelity at a minimum of 80% (generation repeats until each set reaches 80%.) using That is judge-based filtering with a set-level target. It ranks pairs by how many sides an external judge (the SR01 MARBERT ensemble) confirms. It then keeps generating until set reaches 80% agreement.
+
+
+**Dataset quality** (source `tables/dataset_quality.md`; fidelity = SR01 MARBERT judge, which SG04 was also selected by, so its ≥ 80% holds by construction)
+
+| Dataset | Texts | Imbalance | MSA share | Dialectness | MTLD | Topics (of 30) | Universal clusters (of 50) | Vendi | Repeats | Fidelity (NEG / NEU / POS) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S1 real (train) | 11,171 | 37.7 : 1 | 22.4% | 0.54 | 2518 | 29 | 15.6 | 4.0 | 1.0% | 80.3% (85% / 79% / 75%) |
+| SG03 Fanar | 4,000 | 4.3 : 1 | 31.0% | 0.46 | 1865 | 18 | 14.8 | 3.8 | 0.0% | 73.9% (91% / 59% / 87%) |
+| SG03 Qwen3 | 4,000 | 4.1 : 1 | 24.7% | 0.51 | 989 | 18 | 11.2 | 3.9 | 5.0% | 68.5% (78% / 56% / 84%) |
+| SG03 Aya | 4,000 | 4.0 : 1 | 23.8% | 0.53 | 1435 | 16 | 16.2 | 3.6 | 1.1% | 77.7% (98% / 58% / 97%) |
+| SG04 (test-contaminated) Fanar | 4,000 | 2.4 : 1 | 22.6% | 0.51 | 1749 | 12 | 20.9 | 3.5 | 0.0% | 81.3% (90% / 53% / 99%) |
+| SG04 (test-contaminated) Qwen3 | 4,000 | 3.2 : 1 | 25.8% | 0.49 | 901 | 9 | 18.6 | 3.5 | 3.0% | 80.7% (80% / 72% / 91%) |
+| SG04 (test-contaminated) Aya | 4,000 | 2.6 : 1 | 18.8% | 0.58 | 1159 | 10 | 17.8 | 3.1 | 0.4% | 82.4% (98% / 44% / 100%) |
+
+- Fidelity per type after selection (`results/filtering/sg04_<gen>.selection.json`):
+
+| Type | Fanar | Qwen3 | Aya |
+|---|---|---|---|
+| Sarcastic praise | 86.0% | 64.2% | 100% |
+| Public jab | 91.2% | 93.9% | 83.3% |
+| Personal remark | 68.0% | 81.8% | 66.4% |
+| Prayer | 50.5% | 57.3% | 50.0% |
+| Emoji in context | 100% | 100% | 100% |
+| **Set** | **81.3%** (2.0× requests) | **80.7%** (3.0×) | **82.4%** (2.0×) |
+
+- Prayer stays near 50% for every generator: the judge reads neutral prayers as POS (the error the type targets).
+- Note: types 2 and 3 were finally kept as two types (public jab 500, personal remark 500), not merged.
+
+## SG04 / SR07
+**Performance** (macro F1, mean ± std over seeds 42/43/44; source `tables/sentiment_summary.csv`; columns = generator of the SG04 set)
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | 78.13 ± 0.50 | 77.87 ± 0.49 | 77.76 ± 0.20 | 62.49 ± 0.12 | 63.22 ± 1.13 | 63.57 ± 0.84 |
+| MARBERT | 77.70 ± 0.36 | 78.37 ± 0.56 | 77.88 ± 0.35 | 63.36 ± 1.09 | 63.92 ± 0.76 | 63.98 ± 1.02 |
+| AraBERTv02-Tw | 76.15 ± 0.54 | 76.03 ± 0.69 | 76.91 ± 0.37 | 61.62 ± 0.25 | 62.67 ± 0.96 | 62.24 ± 0.72 |
+| CAMeLBERT-mix | 75.16 ± 0.27 | 74.83 ± 0.96 | 74.57 ± 0.38 | 60.33 ± 0.84 | 60.73 ± 0.66 | 60.24 ± 0.89 |
+| CAMeLBERT-DA | 74.32 ± 0.30 | 73.50 ± 0.42 | 74.21 ± 0.73 | 60.32 ± 1.17 | 60.66 ± 0.44 | 60.09 ± 0.97 |
+| ARBERT | 75.45 ± 0.80 | 75.16 ± 0.56 | 75.50 ± 0.65 | 60.32 ± 0.05 | 61.81 ± 0.26 | 60.82 ± 0.61 |
+| ARBERTv2 | 74.72 ± 0.68 | 74.75 ± 0.66 | 74.45 ± 0.33 | 60.70 ± 1.08 | 61.26 ± 0.90 | 59.98 ± 0.41 |
+| **Mean** | **75.95** | **75.79** | **75.90** | **61.31** | **62.04** | **61.56** |
+
+**Comparison with previous runs**
+
+**Δ SR07 − SR01 (SG04 vs real only, same BERT; + = SG04 better)**
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | -0.29 | -0.55 | -0.66 | -1.46 | -0.73 | -0.38 |
+| MARBERT | -0.98 | -0.31 | -0.80 | -1.78 | -1.22 | -1.16 |
+| AraBERTv02-Tw | -1.16 | -1.28 | -0.40 | -2.16 | -1.11 | -1.54 |
+| CAMeLBERT-mix | -1.51 | -1.84 | -2.10 | -1.37 | -0.97 | -1.46 |
+| CAMeLBERT-DA | -0.58 | -1.40 | -0.69 | -1.68 | -1.34 | -1.91 |
+| ARBERT | -0.71 | -1.00 | -0.66 | -2.46 | -0.97 | -1.96 |
+| ARBERTv2 | -0.84 | -0.81 | -1.11 | -0.40 | +0.16 | -1.12 |
+| **Mean** | **-0.87** | **-1.03** | **-0.92** | **-1.62** | **-0.88** | **-1.36** |
+| Better in | 0/7 | 0/7 | 0/7 | 0/7 | 1/7 | 0/7 |
+
+**Δ SR07 − SR05 (SG04 vs SG03, same BERT and generator; + = SG04 better)**
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | -0.55 | -0.53 | -1.19 | -1.33 | -0.63 | -0.48 |
+| MARBERT | -0.88 | +0.20 | -0.65 | -1.07 | +0.42 | -0.81 |
+| AraBERTv02-Tw | -1.84 | -1.56 | -0.46 | -1.27 | +0.02 | -0.67 |
+| CAMeLBERT-mix | -1.39 | -0.59 | -1.06 | -1.04 | -0.41 | -0.84 |
+| CAMeLBERT-DA | +0.24 | -0.38 | -0.26 | -0.56 | +0.09 | -0.39 |
+| ARBERT | -0.82 | +0.03 | -0.91 | -1.16 | -0.49 | -0.91 |
+| ARBERTv2 | -0.31 | -0.23 | -0.77 | -0.29 | -0.16 | -1.24 |
+| **Mean** | **-0.79** | **-0.44** | **-0.76** | **-0.96** | **-0.17** | **-0.76** |
+| Better in | 1/7 | 2/7 | 0/7 | 0/7 | 3/7 | 0/7 |
+
+**Δ SR07 − SR06 (SG04 vs SG03-random, same BERT and generator; + = SG04 better)**
+
+| BERT | Dev Fanar | Dev Qwen3 | Dev Aya | Test Fanar | Test Qwen3 | Test Aya |
+|---|---|---|---|---|---|---|
+| MARBERTv2 | +0.01 | +0.09 | -0.28 | -1.76 | -0.73 | +0.18 |
+| MARBERT | -0.99 | +0.42 | -0.62 | -0.64 | -0.78 | -0.52 |
+| AraBERTv02-Tw | -0.88 | -1.00 | -0.05 | -2.16 | -0.77 | -0.61 |
+| CAMeLBERT-mix | +0.41 | -0.36 | +0.30 | -0.92 | -0.30 | -0.61 |
+| CAMeLBERT-DA | +0.68 | -0.42 | +0.69 | -1.30 | -0.55 | -0.15 |
+| ARBERT | -0.35 | +0.54 | -0.03 | -1.36 | +0.32 | -0.49 |
+| ARBERTv2 | -0.76 | +0.11 | -0.68 | -1.73 | -0.44 | -1.27 |
+| **Mean** | **-0.27** | **-0.09** | **-0.10** | **-1.41** | **-0.46** | **-0.50** |
+| Better in | 3/7 | 4/7 | 2/7 | 0/7 | 1/7 | 1/7 |
+
+**Summary over the 21 BERT × generator cells** (sign test, two-sided)
+
+| Comparison | Dev | Test |
+|---|---|---|
+| SR07 − SR01 (real only) | -0.94 (better in 0/21, p = 0.000) | -1.29 (better in 1/21, p = 0.000) |
+| SR07 − SR05 (SG03) | -0.66 (better in 3/21, p = 0.001) | -0.63 (better in 3/21, p = 0.001) |
+| SR07 − SR06 (SG03-random) | -0.15 (better in 9/21, p = 0.664) | -0.79 (better in 2/21, p = 0.000) |
+
+- SR01 has one value per BERT, so in SR07 − SR01 the three generator cells of a BERT share the same baseline; the 21 cells are not independent.
+
+
+**Where the errors come from: hard cases or not**
+
+Error rate = share of the subset's test tweets a run gets wrong; mean over seeds per BERT × generator cell, then over cells (SR01: 7 cells, others: 21). Subsets from `data/inspect/hard_cases/` (candidate lists are rough keyword rules).
+
+| Test subset | Tweets | SR01 real | SR05 + SG03 | SR07 + SG04 | SR07 − SR01 |
+|---|---|---|---|---|---|
+| Hard cases (SG04 built from these) | 917 | 82.6% | 82.4% | 79.9% | −2.7 |
+| Other test tweets | 2,083 | 9.9% | 10.8% | 12.2% | +2.4 |
+| Type 1 candidates: sarcastic praise | 141 | 82.4% | 79.8% | 76.4% | −6.1 |
+| Type 2 candidates: dry jab | 162 | 67.8% | 71.6% | 63.5% | −4.3 |
+| Type 3 candidates: maxim / remark | 194 | 93.6% | 91.9% | 91.5% | −2.1 |
+| Type 4 candidates: prayer | 13 | 92.7% | 95.1% | 73.9% | −18.8 |
+| Type 5 candidates: spam hashtag (not generated) | 26 | 91.2% | 92.0% | 90.9% | −0.3 |
+| Type 6 candidates: emoji | 47 | 87.7% | 84.1% | 87.2% | −0.6 |
+
+- SG04 fixes some of the hard cases: about 25 tweets (2.7% of 917), most clearly prayer (−18.8) and sarcastic praise (−6.1).
+- It breaks more of the ordinary tweets: about 50 tweets (2.4% of 2,083). SG03 did the same, but less (+0.9).
+- So the net test score falls: the loss on the easy tweets outweighs the gain on the hard ones.
+- Type 5 (not generated) does not move, as expected; emoji (type 6) does not move although it was generated.
+
+### Which labels the classifiers predict
+
+| | NEG | NEU | POS |
+|---|---|---|---|
+| Gold labels (test) | 55.9% | 24.9% | 19.2% |
+| SR01 (real only) | 54.9% | 18.6% | 26.5% |
+| SR05 (+ SG03) | 54.6% | 20.0% | 25.4% |
+| SR07 (+ SG04) | 56.2% | 19.7% | 24.1% |
+
+- SG04 makes the classifiers predict POS less often (26.5% → 24.1%).
+- That moves the share closer to the real one (19.2%). Yet the POS score still falls, because some of the dropped POS predictions were correct ones.
+- 
+
+### Error rate by gold label and sarcasm
+
+| Group | Tweets | SR01 | SR07 | Change |
+|---|---|---|---|---|
+| Gold POS | 575 | 23.8% | 30.2% | **+6.4** |
+| Gold NEU | 748 | 58.8% | 59.3% | +0.5 |
+| Gold NEG | 1,677 | 23.1% | 22.1% | −1.0 |
+| Hard cases, gold NEG | 371 | 76.1% | 71.2% | −4.9 |
+| Sarcastic | 821 | 24.0% | 23.5% | −0.5 |
+| Not sarcastic | 2,179 | 35.2% | 36.5% | +1.3 |
+
+
+### What kind of mistakes grow on the ordinary tweets
+
+| Error (gold → predicted) | Change vs SR01 |
+|---|---|
+| POS → NEU | **+1.37** |
+| NEG → NEU | +0.58 |
+| NEU → NEG | +0.52 |
+| NEG → POS | −0.48 |
+
+- The biggest new error is sincere positive tweets read as neutral.
+- The one error that shrinks is negative tweets read as positive. That is the sarcastic-praise lesson working.
+- **Real POS tweets are where SG04 does the damage**, with 6.4 points more errors.
+- The probable cause: in SG04, praise words (sarcastic praise) and positive emoji (emoji context) appear on the NEG side of pairs. The classifiers learn to distrust positive words, and sincere POS tweets pay for it.
+- NEG improves, most clearly on the hard NEG tweets (−4.9). Sarcastic tweets improve slightly, while non-sarcastic ones get worse.
+
+**Take awawys**
+- improvement but need to generate more data, and more targeted on the normal cases so that the model doesnt overtrain on hard
+- a 2.4% gain on other test tweets was enough to reverse and make our progress look bad
+
+**Future runs** 
+- MUST find classification of `other test tweets`
+- may try other methods, but so far this is workng great (are we cheating?)
+- Need to keep the POS generations focused on the ones that were removed and the ones that made the loss when removed
+- keep the same generations for weak classes but generate more for POS
