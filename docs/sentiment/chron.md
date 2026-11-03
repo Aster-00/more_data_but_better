@@ -681,4 +681,4 @@ Your labels are saved in [sg04_review_ammar.csv](data/inspect/hard_cases/sg04_re
 
 - Sentiment split: NEG 1,800, NEU 1,200, POS 1,000.
 - This leans NEG, like the test set.
-- Keep a Fidelity at a minimum of 80% (generation repeats until each set reaches 80%.)
+- Keep a Fidelity at a minimum of 80% (generation repeats until each set reaches 80%.) using That is judge-based filtering with a set-level target. It ranks pairs by how many sides an external judge (the SR01 MARBERT ensemble) confirms. It then keeps generating until set reaches 80% agreement.

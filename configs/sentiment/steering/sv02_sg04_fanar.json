@@ -1,0 +1,22 @@
+{
+  "run_name": "sv02_sg04_fanar",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "data": "data/synthetic/sentiment/sg04_fanar.selected.jsonl",
+  "text_field": "text",
+  "varieties": ["msa", "egypt", "gulf", "levant"],
+  "user_prompt": "Write one tweet in Arabic.",
+  "batch_size": 8,
+  "max_text_tokens": 128,
+  "min_group_size": 30,
+  "seed": 42,
+  "folds": 5,
+  "pca_dims": 256,
+  "lape_top_entropy": 0.01,
+  "lape_prob_quantile": 0.95,
+  "top_neurons": 20,
+  "output_dir": "data/steering/sv02_sg04_fanar",
+  "report_dir": "results/sentiment/steering/sv02_sg04_fanar",
+  "_notes": "SV02: activations of QCRI/Fanar-1-9B-Instruct on its own SG04 selected texts (4,000 = 2,000 minimal pairs). Test-contaminated: the SG04 pair types come from test errors (D-023), so vectors and neurons from here inherit that. Labels are the requested ones (not judge-filtered). Same user prompt as SV01 so the two can be compared."
+}
