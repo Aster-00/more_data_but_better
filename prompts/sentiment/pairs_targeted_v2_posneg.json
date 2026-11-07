@@ -1,0 +1,119 @@
+{
+  "id": "sentiment_pairs_targeted_v2_posneg",
+  "version": 1,
+  "condition": "controlled",
+  "description": "Plan only, for SG04-PN (D-027, test-contaminated): the sarcastic praise and emoji types of pairs_targeted_v2 unchanged, targets 1,125 and 675 pairs (3,600 texts, the 5:3 ratio of SR12). Prompts come from pairs_targeted_v2.json.",
+  "types": {
+    "sarcastic_praise": {
+      "a": "POS",
+      "b": "NEG",
+      "target_pairs": 1125,
+      "varieties": [
+        "msa",
+        "egypt",
+        "gulf",
+        "levant"
+      ],
+      "task": "Write a pair of tweets about the same subject that both use words of praise or congratulation.\nTweet A means the praise sincerely: the writer is really pleased, proud or thankful, so its sentiment is positive.\nTweet B keeps the same words of praise but uses them sarcastically: the writer is mocking or criticising the subject, and the praise means the opposite, so its sentiment is negative.",
+      "source_ids": [
+        "s59877ee3e0ace5ef",
+        "s3d96325d0eb228a0",
+        "s9fd2b26640e452d5"
+      ],
+      "pairs": [
+        [
+          "ما شاء الله علي اللي هو عمله! أول مرة حد يقف موقف قوي كده ويسحب السفير بجد",
+          "ما شاء الله علي اللي هو عمله !! ... طب ما حسني كان بيعمل كدا بالزبط بيدين وبيشجب ولو ضغطوا عليه كان سحب السفير"
+        ],
+        [
+          "مبروك ومبروك - ولكل الزملاء واشكر كل من ساهم بانجاح هذا الانجاز الراقي اليوم #نقابة_الصحفيين",
+          "مبروك ومبروك على الانجاز الراقي اليوم.. نفس الوجوه ونفس الوعود، ونسيتوا الزملاء اللي في السجن #نقابة_الصحفيين"
+        ],
+        [
+          "USER مبروك عليك ويندوز 10 .. أسرع بكتير من القديم وهتنبسط بيه",
+          "USER مبروك عليك ويندوز 10 .. ربنا يخلهوللللللك"
+        ]
+      ],
+      "hints": [
+        "the electricity company",
+        "a new government decision",
+        "a football team that lost again",
+        "the internet provider",
+        "a minister's speech",
+        "a new road that is already broken",
+        "a phone update",
+        "the national team coach",
+        "a famous singer's new song",
+        "a TV talk show host",
+        "a bank's customer service",
+        "an airline delay",
+        "a new law on taxes",
+        "a university's exam schedule",
+        "the traffic police",
+        "a celebrity's new car",
+        "a city's new bridge",
+        "a referee's decision",
+        "the price of petrol",
+        "a company's new product",
+        "a hospital's waiting time",
+        "a parliament member",
+        "a school's new rules",
+        "a delivery app",
+        "a mobile network"
+      ]
+    },
+    "emoji_context": {
+      "a": "POS",
+      "b": "NEG",
+      "target_pairs": 675,
+      "varieties": [
+        "msa",
+        "egypt",
+        "gulf",
+        "levant"
+      ],
+      "task": "Write a pair of short tweets that both use the same emoji, such as 😭 or 😂💔, about the same subject.\nIn tweet A the emoji shows excitement, love or laughter: the writer is thrilled or delighted, so its sentiment is positive.\nIn tweet B the same emoji shows real sadness or disappointment: something went wrong for the writer, so its sentiment is negative. Only the context decides the sentiment, not the emoji.",
+      "source_ids": [
+        "s5935e6d217788544",
+        "s4a617dc756cd314f",
+        "s66a369808ba1a9f1"
+      ],
+      "pairs": [
+        [
+          "جيمين ثغيرر ثغيررر احبه😭😭😭😭",
+          "جيمين تعبان وما بيحضر الحفل 😭😭😭😭"
+        ],
+        [
+          "ياربي ببكي جبت تذاكر الحفل اخيراً 😭😭💕",
+          "ياربي ببكي راح علي الحفل وماكنا ادري انه فيه حفل 😭😭💔"
+        ],
+        [
+          "مططططر 😭💗💗💗💗💗💗",
+          "مطر وانا مسافره ومابشوفه 😭💔"
+        ]
+      ],
+      "hints": [
+        "a favourite singer's concert",
+        "a K-pop idol's new video",
+        "a football match",
+        "the first rain of winter",
+        "a gift from a friend",
+        "a cancelled trip",
+        "a new album",
+        "a pet cat",
+        "the exam results",
+        "a funny video",
+        "a sister's wedding",
+        "a lost phone",
+        "a series finale",
+        "a birthday surprise",
+        "a delayed flight",
+        "an actor's new film",
+        "a concert ticket sale",
+        "a holiday at the beach",
+        "a team's last-minute goal",
+        "a childhood photo"
+      ]
+    }
+  }
+}

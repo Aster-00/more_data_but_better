@@ -1,0 +1,114 @@
+{
+  "run_name": "sv01_aya",
+  "generator": "CohereLabs/aya-expanse-8b",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "train_data": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "text_field": "text",
+  "varieties": [
+    "msa",
+    "egypt",
+    "gulf",
+    "levant"
+  ],
+  "user_prompt": "Write one tweet in Arabic.",
+  "batch_size": 4,
+  "max_text_tokens": 128,
+  "text_vector_layer_step": 2,
+  "min_group_size": 30,
+  "seed": 42,
+  "output_dir": "data/steering/sv01_aya",
+  "vectors": {
+    "pos": {
+      "target": [
+        [
+          "POS",
+          false
+        ]
+      ],
+      "contrast": [
+        [
+          "NEG",
+          false
+        ],
+        [
+          "NEU",
+          false
+        ]
+      ]
+    },
+    "neg": {
+      "target": [
+        [
+          "NEG",
+          false
+        ]
+      ],
+      "contrast": [
+        [
+          "POS",
+          false
+        ],
+        [
+          "NEU",
+          false
+        ]
+      ]
+    },
+    "neu": {
+      "target": [
+        [
+          "NEU",
+          false
+        ]
+      ],
+      "contrast": [
+        [
+          "POS",
+          false
+        ],
+        [
+          "NEG",
+          false
+        ]
+      ]
+    },
+    "sarc": {
+      "target": [
+        [
+          "NEG",
+          true
+        ]
+      ],
+      "contrast": [
+        [
+          "NEG",
+          false
+        ]
+      ]
+    },
+    "neg_withsarc": {
+      "target": [
+        [
+          "NEG",
+          false
+        ],
+        [
+          "NEG",
+          true
+        ]
+      ],
+      "contrast": [
+        [
+          "POS",
+          false
+        ],
+        [
+          "NEU",
+          false
+        ]
+      ]
+    }
+  },
+  "_notes": "SV01 for CohereLabs/aya-expanse-8b: same tweets, user prompt and vectors as sv01_fanar, so the three generators can be compared on real tweets (Ammar, 2026-11-07). batch_size 4 instead of 8: this model peaked above Fanar in SV02 and only about 6 GB of the card is free. S1 train only, never dev or test."
+}

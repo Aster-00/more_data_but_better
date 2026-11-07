@@ -1,0 +1,24 @@
+{
+  "set_name": "sg04pn_aya",
+  "mode": "targeted",
+  "condition": "controlled",
+  "generator": "CohereLabs/aya-expanse-8b",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/pairs_targeted_v2.json",
+  "plan_template": "prompts/sentiment/pairs_targeted_v2_posneg.json",
+  "seed_source": "data/processed/sentiment/arsarcasm_v2_train.jsonl",
+  "scale": 0.75,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 160,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg04pn_aya_new.jsonl",
+  "_notes": "SG04-PN (D-027, test-contaminated): new sarcastic praise and emoji pairs, same prompts, sampling and batch size as SG04. Pooled with the old SG04 pairs by src.sentiment.sg04pn."
+}

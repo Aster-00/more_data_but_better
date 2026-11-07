@@ -1,0 +1,12 @@
+{
+  "name": "sx01",
+  "run_pattern": "^sr0[1-7]_.+_seed[0-9]+$",
+  "datasets": {
+    "mawqif": "data/processed/sentiment/mawqif_test.jsonl",
+    "eesa": "data/processed/sentiment/eesa_test.jsonl"
+  },
+  "text_field": "text",
+  "out_dir": "results/sentiment/cross_eval",
+  "check_texts": 50,
+  "check_min_agreement": 0.96
+}

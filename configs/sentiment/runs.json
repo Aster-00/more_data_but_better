@@ -1,5 +1,5 @@
 {
-  "_doc": "Sentiment run registry (separate from configs/runs.json). A run (SR<NN>) is one fixed setup: data and training settings. Each model tried under it is a member SR<NN>-<model>. 'members' maps a result folder under results/sentiment/runs/ (with _seed<N> removed) to its run and model tag. src.sentiment.summarize_runs groups the score tables by this file.",
+  "_doc": "Sentiment run registry (separate from configs/runs.json). A run (SR<NN>) is one fixed setup: data and training settings. Each model tried under it is a member SR<NN>-<model>. 'members' maps a result folder under results/sentiment/runs/ (with _seed<N> removed) to its run and model tag. 'run_data' gives each run on generated data its SG label and the corpus the set was generated for (D-029); real-only runs have no entry. src.sentiment.summarize_runs groups the score tables by this file.",
   "runs": {
     "SR01": "Real only (condition 1), S1 (ArSarcasm-v2), every roster classifier; BERTs 3 seeds, LLMs seed 42 first (SD-003)",
     "SR02": "Real + SG01 (open, zero-shot synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG01 generator; BERTs 3 seeds; Jais-2 (QLoRA, SR01 recipe) 3 seeds. Member = <classifier>_<generator>. The Jais-2 set could not fill its cells and was not trained.",
@@ -13,7 +13,22 @@
     "SR10": "Repair test on SR07 (D-025, test-contaminated like SR07): two-stage training, epochs 1-2 on S1 train + SG04, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.",
     "SR11": "Repair test on SR07 (D-025, test-contaminated like SR07): SR08 + SR10 together: SG04 without the prayer pairs, epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.",
     "SR12": "SR11 without the NEU generations (D-026, test-contaminated like SR07): S1 train + the whole POS/NEG pairs of SG04 (sarcastic praise, emoji in context; 1,600 texts), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>.",
-    "SR13": "SR12 + the NEG sides of the SG04 public jab and personal remark pairs (D-026, test-contaminated like SR07): 2,600 texts, pairs of those types broken, NEU sides dropped; otherwise SR12 recipe. SR13 - SR12 = effect of those 1,000 NEG sides. Member = <classifier>_<generator>."
+    "SR13": "SR12 + the NEG sides of the SG04 public jab and personal remark pairs (D-026, test-contaminated like SR07): 2,600 texts, pairs of those types broken, NEU sides dropped; otherwise SR12 recipe. SR13 - SR12 = effect of those 1,000 NEG sides. Member = <classifier>_<generator>.",
+    "SR12-3600": "SR12 at the size of SR11 (D-027, test-contaminated like SR07): S1 train + SG04-PN (1,800 POS/NEG pairs, 3,600 texts, fidelity of SR12 per type), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>."
+  },
+  "run_data": {
+    "SR02": {"generation": "SG01", "generation_corpus": "ArSarcasm-v2"},
+    "SR04": {"generation": "SG02", "generation_corpus": "ArSarcasm-v2"},
+    "SR05": {"generation": "SG03", "generation_corpus": "ArSarcasm-v2"},
+    "SR06": {"generation": "SG03-random", "generation_corpus": "ArSarcasm-v2"},
+    "SR07": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
+    "SR08": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
+    "SR09": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
+    "SR10": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
+    "SR11": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
+    "SR12": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
+    "SR12-3600": {"generation": "SG04-PN", "generation_corpus": "ArSarcasm-v2"},
+    "SR13": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"}
   },
   "members": {
     "sr01_marbertv2": {
@@ -734,6 +749,42 @@
     },
     "sr13_camelbert_mix_aya": {
       "run": "SR13",
+      "model": "camelbert_mix_aya"
+    },
+    "sr12_3600_marbertv2_fanar": {
+      "run": "SR12-3600",
+      "model": "marbertv2_fanar"
+    },
+    "sr12_3600_arabertv02_twitter_fanar": {
+      "run": "SR12-3600",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr12_3600_camelbert_mix_fanar": {
+      "run": "SR12-3600",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr12_3600_marbertv2_qwen3": {
+      "run": "SR12-3600",
+      "model": "marbertv2_qwen3"
+    },
+    "sr12_3600_arabertv02_twitter_qwen3": {
+      "run": "SR12-3600",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr12_3600_camelbert_mix_qwen3": {
+      "run": "SR12-3600",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr12_3600_marbertv2_aya": {
+      "run": "SR12-3600",
+      "model": "marbertv2_aya"
+    },
+    "sr12_3600_arabertv02_twitter_aya": {
+      "run": "SR12-3600",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr12_3600_camelbert_mix_aya": {
+      "run": "SR12-3600",
       "model": "camelbert_mix_aya"
     }
   }
