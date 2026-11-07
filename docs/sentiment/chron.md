@@ -825,12 +825,6 @@ Error rate = share of the subset's test tweets a run gets wrong; mean over seeds
 | Type 5 candidates: spam hashtag (not generated) | 26 | 91.2% | 92.0% | 90.9% | −0.3 |
 | Type 6 candidates: emoji | 47 | 87.7% | 84.1% | 87.2% | −0.6 |
 
-- SG04 fixes some of the hard cases: about 25 tweets (2.7% of 917), most clearly prayer (−18.8) and sarcastic praise (−6.1).
-- It breaks more of the ordinary tweets: about 50 tweets (2.4% of 2,083). SG03 did the same, but less (+0.9).
-- So the net test score falls: the loss on the easy tweets outweighs the gain on the hard ones.
-- Type 5 (not generated) does not move, as expected; emoji (type 6) does not move although it was generated.
-- Source: all SG04 analysis tables can be regenerated with `python -m src.sentiment.sg04_analysis` (output `docs/sentiment/tables/sg04_analysis.md`).
-- Count note: the script counts hard cases per test row, so one duplicated test tweet counts twice: 918 hard / 2,082 other (here 917 / 2,083), and 119 broken tweets in the flips below. The percentages are the same.
 
 ### Which labels the classifiers predict
 
@@ -841,9 +835,6 @@ Error rate = share of the subset's test tweets a run gets wrong; mean over seeds
 | SR05 (+ SG03) | 54.6% | 20.0% | 25.4% |
 | SR07 (+ SG04) | 56.2% | 19.7% | 24.1% |
 
-- SG04 makes the classifiers predict POS less often (26.5% → 24.1%).
-- That moves the share closer to the real one (19.2%). Yet the POS score still falls, because some of the dropped POS predictions were correct ones.
-- 
 
 ### Error rate by gold label and sarcasm
 
@@ -866,11 +857,7 @@ Error rate = share of the subset's test tweets a run gets wrong; mean over seeds
 | NEU → NEG | +0.52 |
 | NEG → POS | −0.48 |
 
-- The biggest new error is sincere positive tweets read as neutral.
-- The one error that shrinks is negative tweets read as positive. That is the sarcastic-praise lesson working.
-- **Real POS tweets are where SG04 does the damage**, with 6.4 points more errors.
-- The probable cause: in SG04, praise words (sarcastic praise) and positive emoji (emoji context) appear on the NEG side of pairs. The classifiers learn to distrust positive words, and sincere POS tweets pay for it.
-- NEG improves, most clearly on the hard NEG tweets (−4.9). Sarcastic tweets improve slightly, while non-sarcastic ones get worse.
+
 
 ### Tweets that flip from SR01 to SR07
 
@@ -907,7 +894,23 @@ Per tweet, the majority label over all runs of a condition.
 
 **Take awawys**
 - improvement but need to generate more data, and more targeted on the normal cases so that the model doesnt overtrain on hard
-- a 2.4% gain on other test tweets was enough to reverse and make our progress look bad
+- a 2.4% rise in error on other test tweets was enough to reverse and make our progress look bad
+**Where the errors come from**
+- SG04 fixes some of the hard cases: about 25 tweets (2.7% of 917), most clearly prayer (−18.8) and sarcastic praise (−6.1). SG03 barely moved them (−0.2).
+- It breaks more of the ordinary tweets: about 50 tweets (2.4% of 2,083). SG03 did the same, but less (+0.9).
+- So the net test score falls: the loss on the easy tweets outweighs the gain on the hard ones.
+**Which labels the classifiers predict**
+- SG04 makes the classifiers predict POS less often (26.5% → 24.1%) real is (19.2%). score still falls because some of the dropped POS predictions were correct ones.
+**What kind of mistakes grow from the ordinary tweets**
+- The biggest new error is sincere positive tweets read as neutral. It is not specific to SG04: POS → NEU also grows with SG03 and SG03-random (32 broken tweets here, 18 and 28 there). NEG → NEU is the same (33 here, 28 and 41 there).
+- The one error that shrinks is negative tweets read as positive (−0.48 points). That fits the sarcastic-praise lesson, but the change is small and SG03 shrinks it too (−0.20).
+- **SG04's own new error is NEU → NEG:** 28 broken tweets, against 10 with SG03 and 11 with SG03-random. They are mostly dry remarks and ironic questions, so the public-jab lesson seems over-applied. Some read like real digs, so part of this may be wrong gold labels (not read yet).
+- **Real POS tweets are where SG04 does the damage**, with 6.4 points more errors.
+- The clearest measured cause is the prayer rule. Gold POS tweets with a religious cue go from 8.6% to 28.5% error (SG03 8.5%, SG03-random 10.0%), about 13 of the roughly 37 extra POS errors. SG04 taught "a prayer alone is NEU", but real prayers are mostly POS (train 161 POS / 70 NEU, test 65 / 19). It fixed about 3 NEU prayers and broke about 13 POS ones.
+- Praise words and positive emoji on the NEG side of pairs may explain part of the rest. This is not tested.
+- NEG improves, most clearly on the hard NEG tweets (−4.9). Sarcastic tweets improve slightly, while non-sarcastic ones get worse.
+- The flip counts above are partly noise: two halves of the SR01 runs already disagree on 142 tweets (SR07 flips: 228). Only 41 of the 119 broken tweets are broken by all three generators.
+
 
 **Future runs** 
 - MUST find classification of `other test tweets`

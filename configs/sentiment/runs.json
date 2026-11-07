@@ -7,7 +7,11 @@
     "SR04": "Real + SG02 (open, few-shot k=5 synthetic; condition 2): S1 train + 6,000 tweets (500 per variety x sentiment cell) from one SG02 generator (Fanar, Qwen3, Aya); the 7 BERTs, 3 seeds, SR02 recipe (D-020). Member = <classifier>_<generator>.",
     "SR05": "Real + SG03 (targeted minimal pairs for the SR02 dev hard-case types, D-021; condition 3): S1 train + 4,000 texts (2,000 complete pairs) from one SG03 generator; 7 BERTs, 3 seeds, SR04 recipe. Member = <classifier>_<generator>.",
     "SR06": "Real + SG03-random (size-matched untargeted minimal pairs, the control for SR05, D-021): S1 train + 4,000 texts from one SG03-random generator; 7 BERTs, 3 seeds, SR04 recipe. Member = <classifier>_<generator>.",
-    "SR07": "Real + SG04 (targeted minimal pairs for the SR02 TEST hard-case types, D-023: TEST-CONTAMINATED, test scores are leakage analysis, not a result): S1 train + 4,000 texts (2,000 complete pairs, fidelity-first selection, min 80%) from one SG04 generator; 7 BERTs, 3 seeds, SR05 recipe. No random control. Member = <classifier>_<generator>."
+    "SR07": "Real + SG04 (targeted minimal pairs for the SR02 TEST hard-case types, D-023: TEST-CONTAMINATED, test scores are leakage analysis, not a result): S1 train + 4,000 texts (2,000 complete pairs, fidelity-first selection, min 80%) from one SG04 generator; 7 BERTs, 3 seeds, SR05 recipe. No random control. Member = <classifier>_<generator>.",
+    "SR08": "Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 without the prayer pairs (3,600 texts); 3 BERTs (MARBERTv2, AraBERTv02-Tw, CAMeLBERT-mix), 3 seeds, SR07 recipe. Member = <classifier>_<generator>.",
+    "SR09": "Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 Qwen3 without the pairs whose sides have the same words; 3 BERTs, 3 seeds, SR07 recipe. Member = <classifier>_qwen3.",
+    "SR10": "Repair test on SR07 (D-025, test-contaminated like SR07): two-stage training, epochs 1-2 on S1 train + SG04, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.",
+    "SR11": "Repair test on SR07 (D-025, test-contaminated like SR07): SR08 + SR10 together: SG04 without the prayer pairs, epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>."
   },
   "members": {
     "sr01_marbertv2": {
@@ -537,6 +541,126 @@
     "sr07_arbertv2_aya": {
       "run": "SR07",
       "model": "arbertv2_aya"
+    },
+    "sr08_marbertv2_fanar": {
+      "run": "SR08",
+      "model": "marbertv2_fanar"
+    },
+    "sr10_marbertv2_fanar": {
+      "run": "SR10",
+      "model": "marbertv2_fanar"
+    },
+    "sr08_marbertv2_qwen3": {
+      "run": "SR08",
+      "model": "marbertv2_qwen3"
+    },
+    "sr10_marbertv2_qwen3": {
+      "run": "SR10",
+      "model": "marbertv2_qwen3"
+    },
+    "sr08_marbertv2_aya": {
+      "run": "SR08",
+      "model": "marbertv2_aya"
+    },
+    "sr10_marbertv2_aya": {
+      "run": "SR10",
+      "model": "marbertv2_aya"
+    },
+    "sr09_marbertv2_qwen3": {
+      "run": "SR09",
+      "model": "marbertv2_qwen3"
+    },
+    "sr08_arabertv02_twitter_fanar": {
+      "run": "SR08",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr10_arabertv02_twitter_fanar": {
+      "run": "SR10",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr08_arabertv02_twitter_qwen3": {
+      "run": "SR08",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr10_arabertv02_twitter_qwen3": {
+      "run": "SR10",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr08_arabertv02_twitter_aya": {
+      "run": "SR08",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr10_arabertv02_twitter_aya": {
+      "run": "SR10",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr09_arabertv02_twitter_qwen3": {
+      "run": "SR09",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr08_camelbert_mix_fanar": {
+      "run": "SR08",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr10_camelbert_mix_fanar": {
+      "run": "SR10",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr08_camelbert_mix_qwen3": {
+      "run": "SR08",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr10_camelbert_mix_qwen3": {
+      "run": "SR10",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr08_camelbert_mix_aya": {
+      "run": "SR08",
+      "model": "camelbert_mix_aya"
+    },
+    "sr10_camelbert_mix_aya": {
+      "run": "SR10",
+      "model": "camelbert_mix_aya"
+    },
+    "sr09_camelbert_mix_qwen3": {
+      "run": "SR09",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr11_marbertv2_fanar": {
+      "run": "SR11",
+      "model": "marbertv2_fanar"
+    },
+    "sr11_marbertv2_qwen3": {
+      "run": "SR11",
+      "model": "marbertv2_qwen3"
+    },
+    "sr11_marbertv2_aya": {
+      "run": "SR11",
+      "model": "marbertv2_aya"
+    },
+    "sr11_arabertv02_twitter_fanar": {
+      "run": "SR11",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr11_arabertv02_twitter_qwen3": {
+      "run": "SR11",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr11_arabertv02_twitter_aya": {
+      "run": "SR11",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr11_camelbert_mix_fanar": {
+      "run": "SR11",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr11_camelbert_mix_qwen3": {
+      "run": "SR11",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr11_camelbert_mix_aya": {
+      "run": "SR11",
+      "model": "camelbert_mix_aya"
     }
   }
 }
