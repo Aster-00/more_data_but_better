@@ -11,7 +11,9 @@
     "SR08": "Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 without the prayer pairs (3,600 texts); 3 BERTs (MARBERTv2, AraBERTv02-Tw, CAMeLBERT-mix), 3 seeds, SR07 recipe. Member = <classifier>_<generator>.",
     "SR09": "Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 Qwen3 without the pairs whose sides have the same words; 3 BERTs, 3 seeds, SR07 recipe. Member = <classifier>_qwen3.",
     "SR10": "Repair test on SR07 (D-025, test-contaminated like SR07): two-stage training, epochs 1-2 on S1 train + SG04, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.",
-    "SR11": "Repair test on SR07 (D-025, test-contaminated like SR07): SR08 + SR10 together: SG04 without the prayer pairs, epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>."
+    "SR11": "Repair test on SR07 (D-025, test-contaminated like SR07): SR08 + SR10 together: SG04 without the prayer pairs, epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.",
+    "SR12": "SR11 without the NEU generations (D-026, test-contaminated like SR07): S1 train + the whole POS/NEG pairs of SG04 (sarcastic praise, emoji in context; 1,600 texts), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>.",
+    "SR13": "SR12 + the NEG sides of the SG04 public jab and personal remark pairs (D-026, test-contaminated like SR07): 2,600 texts, pairs of those types broken, NEU sides dropped; otherwise SR12 recipe. SR13 - SR12 = effect of those 1,000 NEG sides. Member = <classifier>_<generator>."
   },
   "members": {
     "sr01_marbertv2": {
@@ -660,6 +662,78 @@
     },
     "sr11_camelbert_mix_aya": {
       "run": "SR11",
+      "model": "camelbert_mix_aya"
+    },
+    "sr12_marbertv2_fanar": {
+      "run": "SR12",
+      "model": "marbertv2_fanar"
+    },
+    "sr12_marbertv2_qwen3": {
+      "run": "SR12",
+      "model": "marbertv2_qwen3"
+    },
+    "sr12_marbertv2_aya": {
+      "run": "SR12",
+      "model": "marbertv2_aya"
+    },
+    "sr12_arabertv02_twitter_fanar": {
+      "run": "SR12",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr12_arabertv02_twitter_qwen3": {
+      "run": "SR12",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr12_arabertv02_twitter_aya": {
+      "run": "SR12",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr12_camelbert_mix_fanar": {
+      "run": "SR12",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr12_camelbert_mix_qwen3": {
+      "run": "SR12",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr12_camelbert_mix_aya": {
+      "run": "SR12",
+      "model": "camelbert_mix_aya"
+    },
+    "sr13_marbertv2_fanar": {
+      "run": "SR13",
+      "model": "marbertv2_fanar"
+    },
+    "sr13_marbertv2_qwen3": {
+      "run": "SR13",
+      "model": "marbertv2_qwen3"
+    },
+    "sr13_marbertv2_aya": {
+      "run": "SR13",
+      "model": "marbertv2_aya"
+    },
+    "sr13_arabertv02_twitter_fanar": {
+      "run": "SR13",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr13_arabertv02_twitter_qwen3": {
+      "run": "SR13",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr13_arabertv02_twitter_aya": {
+      "run": "SR13",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr13_camelbert_mix_fanar": {
+      "run": "SR13",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr13_camelbert_mix_qwen3": {
+      "run": "SR13",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr13_camelbert_mix_aya": {
+      "run": "SR13",
       "model": "camelbert_mix_aya"
     }
   }
