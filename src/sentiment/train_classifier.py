@@ -11,6 +11,8 @@ weight decay 0.01, batch 24, max length 128. Differences, because the task is si
 The official test set is scored once at the end and never used for any choice.
 Conditions 2/3: an optional `synthetic_data` file (kept separate from the real data, source
 "synthetic") is appended to the real training texts; dev and test stay real only.
+Two-stage training (SR10, opt-in): with `finish_real_epochs` = k, the last k of the `epochs` use the
+real texts only, so the epoch budget is unchanged; the epoch is still chosen on dev over all epochs.
 
 Outputs in results/sentiment/runs/<run_name>/:
   model/                    best checkpoint (gitignored)
@@ -88,12 +90,16 @@ def train(cfg: dict, device: str) -> dict:
     dev_texts, dev_labels, _ = load_split(Path(cfg["dev_data"]), cfg["text_field"], cfg["limit"], classes)
     tokenizer = AutoTokenizer.from_pretrained(cfg["model"])
     loader = make_loader(tokenizer, train_texts, train_labels, cfg["max_length"], cfg["batch_size"], cfg["seed"])
+    # Optional second stage: the last k epochs see the real texts only.
+    finish_real = cfg.get("finish_real_epochs", 0)
+    real_loader = make_loader(tokenizer, train_texts[:n_real], train_labels[:n_real], cfg["max_length"], cfg["batch_size"],
+                              cfg["seed"]) if finish_real else None
 
     # Model, optimizer (trainable parameters only), warmup + linear decay, fp16 loss scaling.
     model = build_model(cfg["model"], cfg["dropout"], cfg["freeze_layers"], classes).to(device)
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad],
                                   lr=cfg["learning_rate"], weight_decay=cfg["weight_decay"])
-    total_steps = len(loader) * cfg["epochs"]
+    total_steps = len(loader) * (cfg["epochs"] - finish_real) + (len(real_loader) * finish_real if finish_real else 0)
     scheduler = get_linear_schedule_with_warmup(optimizer, int(cfg["warmup_ratio"] * total_steps), total_steps)
     use_amp = cfg["fp16"] and device == "cuda"
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
@@ -105,7 +111,8 @@ def train(cfg: dict, device: str) -> dict:
         # One pass over the training data (the model computes cross-entropy from the labels).
         model.train()
         start, running_loss = time.time(), 0.0
-        for input_ids, mask, y in loader:
+        batches = real_loader if epoch > cfg["epochs"] - finish_real else loader
+        for input_ids, mask, y in batches:
             with torch.autocast("cuda", dtype=torch.float16, enabled=use_amp):
                 loss = model(input_ids=input_ids.to(device), attention_mask=mask.to(device),
                              labels=y.to(device)).loss
@@ -121,10 +128,10 @@ def train(cfg: dict, device: str) -> dict:
             logits = predict_logits(model, tokenizer, dev_texts, cfg["max_length"], device)
         scores = sentiment_scores(dev_labels, logits.argmax(-1), classes)
         f1 = scores["macro"]["f1"]
-        log["epochs"].append({"epoch": epoch, "train_loss": running_loss / len(loader), "dev_macro_f1": f1,
+        log["epochs"].append({"epoch": epoch, "train_loss": running_loss / len(batches), "dev_macro_f1": f1,
                               "dev_accuracy": scores["accuracy"], "dev_f1_pn": scores["f1_pn"],
                               "seconds": round(time.time() - start)})
-        print(f"epoch {epoch}: train loss {running_loss / len(loader):.4f}  dev macro F1 {f1:.2f}  "
+        print(f"epoch {epoch}: train loss {running_loss / len(batches):.4f}  dev macro F1 {f1:.2f}  "
               f"acc {scores['accuracy']:.2f}  ({time.time() - start:.0f} s)", flush=True)
 
         # Keep the best checkpoint on disk; stop after `patience` epochs without improvement.

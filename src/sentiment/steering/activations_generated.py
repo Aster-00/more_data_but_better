@@ -53,8 +53,14 @@ def load_rows(cfg: dict, limit: int | None) -> list[dict]:
 
 
 @torch.no_grad()
-def collect(gen, rows: list[dict], ids: list[list[int]], n_prefix: int, cfg: dict) -> dict:
-    """Per-text residual means (all layers) and per-group sums of per-text neuron statistics."""
+def collect(gen, rows: list[dict], ids: list[list[int]], n_prefix: int, cfg: dict,
+            keys_of=lambda r: [neuron_key(r)], keep_text: bool = True, per_text_path: Path | None = None) -> dict:
+    """Per-text residual means (if `keep_text`) and per-group sums of per-text neuron statistics.
+
+    `keys_of(row)` gives the groups a text is summed into (one or several). With `per_text_path`,
+    every text's mean down_proj input of every neuron is also written there, fp16 [N, L * I] in the
+    order of `rows` (a .npy memmap, so it never has to fit in memory).
+    """
     layers = decoder_layers(gen.model)
     # Every layer must own its activation module, or one hook would see several layers.
     acts = [layer.mlp.act_fn for layer in layers]
@@ -84,7 +90,7 @@ def collect(gen, rows: list[dict], ids: list[list[int]], n_prefix: int, cfg: dic
     pad = gen.tokenizer.pad_token_id
     n_layers = len(layers)
     sums, counts = {}, Counter()
-    text_vecs, norm_sum, norm_tokens = None, None, 0
+    text_vecs, norm_sum, norm_tokens, per_text = None, None, 0, None
     # Length-sorted batches: little padding, so the GPU time goes to real tokens.
     order = sorted(range(len(rows)), key=lambda i: len(ids[i]))
     bs, t0 = cfg["batch_size"], time.time()
@@ -114,21 +120,32 @@ def collect(gen, rows: list[dict], ids: list[list[int]], n_prefix: int, cfg: dic
             norm_tokens += int(text.sum())
             stats = {s: torch.stack([state[s][k] for k in range(n_layers)]).cpu() for s in ("fire", "mean", "sq")}  # [L, B, I]
 
-            if text_vecs is None:
+            if per_text_path is not None:
+                if per_text is None:
+                    import numpy as np
+                    per_text = np.lib.format.open_memmap(per_text_path, mode="w+", dtype=np.float16,
+                                                         shape=(len(rows), stats["mean"].shape[0] * stats["mean"].shape[2]))
+                for j, i in enumerate(idx):
+                    per_text[i] = stats["mean"][:, j].reshape(-1).half().numpy()
+            if keep_text and text_vecs is None:
                 text_vecs = torch.empty((len(rows), means.shape[0], means.shape[-1]), dtype=torch.float16)
             for j, i in enumerate(idx):
-                text_vecs[i] = means[:, j].half()
-                key = neuron_key(rows[i])
-                if key not in sums:
-                    sums[key] = {s: torch.zeros_like(stats[s][:, j], dtype=torch.float64) for s in stats}
-                for s in stats:
-                    sums[key][s] += stats[s][:, j].double()
-                counts[key] += 1
+                if keep_text:
+                    text_vecs[i] = means[:, j].half()
+                for key in keys_of(rows[i]):
+                    if key not in sums:
+                        sums[key] = {s: torch.zeros_like(stats[s][:, j], dtype=torch.float64) for s in stats}
+                    for s in stats:
+                        sums[key][s] += stats[s][:, j].double()
+                    counts[key] += 1
             if b % 50 == 0 or start + bs >= len(order):
                 print(f"  batch {b}: {start + len(idx)}/{len(order)} texts, {(time.time() - t0) / 60:.1f} min", flush=True)
     finally:
         for h in handles:
             h.remove()
+        if per_text is not None:
+            per_text.flush()
+            del per_text
     # fp32 on disk: the sums are of per-text shares and means, so fp32 keeps ample precision.
     sums = {k: {s: v.float() for s, v in d.items()} for k, d in sums.items()}
     return {"text_vectors": text_vecs, "neuron_sums": sums, "counts": dict(counts),

@@ -19,6 +19,13 @@ gets k real tweets of its own (variety, sentiment) cell from S1 train, drawn afr
 and reproducibly from (seed, request_id). Only S1 train is allowed as the source (never dev or
 test); the example ids are stored in the record (few_shot_ids).
 
+Steering (optional, SD-009): with a `steering` block {vectors, mode, layer, alpha, strength,
+token_budget, by_sentiment} in the config, every row of a batch gets the vector of its sentiment
+added during generation (src/sentiment/steering/hook.py). With a `neuron_steering` block, the chosen
+neurons of its sentiment are changed (src/sentiment/steering/neuron_hook.py). Both can be combined.
+The settings are stored in every record. Neuron steering is never used with a template that leaves
+the sentiment out of the prompt (D-031).
+
 Output: one JSONL record per request, appended as batches finish; on restart, requests that
 already have a record are skipped. Sidecar <output>.meta.json: config, template hash,
 generator revision, git commit, timing.
@@ -44,6 +51,7 @@ import random
 import re
 import sys
 import time
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -163,6 +171,9 @@ def run(cfg: dict, config_file: str, limit: int | None, dry_run: bool) -> dict:
     template = Template.load(Path(cfg["template"]))
     if template.condition != cfg["condition"]:
         raise ValueError(f"template {template.id} is for {template.condition}, config says {cfg['condition']}")
+    # D-031: neurons could not induce a property absent from the prompt, so they need the label in it.
+    if cfg.get("neuron_steering") and "{sentiment_name}" not in template.user:
+        raise ValueError("neuron steering needs the sentiment in the prompt (D-031)")
     plan = build_plan(cfg)
     assign_few_shot(plan, cfg)
     # Tiny mode: the first `limit` requests (interleaving keeps every cell represented).
@@ -194,14 +205,35 @@ def run(cfg: dict, config_file: str, limit: int | None, dry_run: bool) -> dict:
     provenance = {"git_commit": git_commit(), "config_file": config_file}
     print(f"loaded {cfg['generator']} in {gen.load_seconds}s, VRAM {vram_mib()}", flush=True)
 
+    # Optional steering (vector, neuron or both); without the blocks nothing is hooked and the
+    # records keep their schema.
+    steer, steerer = cfg.get("steering"), None
+    if steer:
+        from src.sentiment.steering.hook import Steerer
+        steerer = Steerer(gen.model, steer)
+        provenance["steering"] = {**steer, "vectors_sha256": steerer.sha256,
+                                  "scales": {n: round(s, 4) for n, s in steerer.scales.items()}}
+        print(f"steering: layer {steer['layer']}, alpha {steer['alpha']}, added norms "
+              f"{ {n: round(s, 2) for n, s in steerer.scales.items()} }", flush=True)
+    nsteer, nsteerer = cfg.get("neuron_steering"), None
+    if nsteer:
+        from src.sentiment.steering.neuron_hook import NeuronSteerer
+        nsteerer = NeuronSteerer(gen.model, nsteer)
+        provenance["neuron_steering"] = {**nsteer, "neurons_sha256": nsteerer.sha256, "counts": nsteerer.counts}
+        print(f"neuron steering: {nsteer['method']}, {nsteer['intervention']}, neurons {nsteerer.counts}", flush=True)
+
     # Generate batch by batch and append immediately, so a crash loses at most one batch.
     started, n_done, n_failed, n_stripped, n_tokens = time.time(), 0, 0, 0, 0
     bs = cfg["batch_size"]
-    with open(out_path, "a", encoding="utf-8", newline="\n") as f:
+    with open(out_path, "a", encoding="utf-8", newline="\n") as f, steerer or nullcontext(), nsteerer or nullcontext():
         for b, start in enumerate(range(0, len(todo), bs), 1):
             batch = todo[start:start + bs]
             # Batch seed derived from the first request id, so a rerun gives the same text.
             seed = cfg["seed"] + int(hashlib.sha1(batch[0].request_id.encode()).hexdigest()[:6], 16)
+            if steerer:
+                steerer.set_rows([steer["by_sentiment"][r.sentiment] for r in batch])
+            if nsteerer:
+                nsteerer.set_rows([nsteer["by_sentiment"][r.sentiment] for r in batch])
             outs = gen.generate([render_messages(template, r) for r in batch], sampling, seed=seed)
             for req, out in zip(batch, outs):
                 out["seed"] = seed
