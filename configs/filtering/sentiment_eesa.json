@@ -1,0 +1,53 @@
+{
+  "cache_dir": "F:/Thesis/models",
+  "checks": {
+    "parse_ok": {
+      "enabled": true
+    },
+    "exact_dup_within": {
+      "enabled": true
+    },
+    "near_dup_within": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5
+    },
+    "dup_against_real": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/eesa_train.jsonl"
+    },
+    "dup_against_dev": {
+      "enabled": true,
+      "threshold": 0.8,
+      "ngram": 5,
+      "reference": "data/processed/sentiment/eesa_dev.jsonl"
+    },
+    "script": {
+      "enabled": true,
+      "min_share": 0.1,
+      "default_script": "arabic"
+    },
+    "length": {
+      "enabled": true,
+      "min_words": 2,
+      "max_words": 60
+    },
+    "did_nadi": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "did_madar": {
+      "enabled": false,
+      "mode": "top1",
+      "min_prob": 0.0
+    },
+    "aldi": {
+      "enabled": false,
+      "min_score": 0.3
+    }
+  },
+  "_notes": "EESA sets (D-032). As configs/filtering/sentiment.json, except: duplicate checks against EESA train and dev (EESA test is never used for filtering; overlap with it is only reported by select_synthetic --test); script check relaxed to at least 10% Arabic letters, because EESA is code-switched (D-010 exception): this keeps 99.8% of real EESA train+dev texts and drops English-only output."
+}

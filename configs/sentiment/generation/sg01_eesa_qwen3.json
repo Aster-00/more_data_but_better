@@ -1,0 +1,30 @@
+{
+  "set_name": "sg01_eesa_qwen3",
+  "condition": "open",
+  "generator": "Qwen/Qwen3-8B",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/open_eesa_v1.json",
+  "varieties": [
+    "egypt"
+  ],
+  "sentiments": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "per_cell": 572,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg01_eesa_qwen3.jsonl",
+  "_notes": "SG01-EESA (D-032): open zero-shot generation for EESA, same sampling and batch size as sg01_qwen3. One variety (egypt), 3 sentiment cells; 572 requests per cell = 440 kept (1,320 = 0.54 x EESA train, the SG01 share) + 30% margin. Code-switched as EESA (D-010 exception), so the same-line translation cut is off (strip_translation false).",
+  "strip_translation": false
+}

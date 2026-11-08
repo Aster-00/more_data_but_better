@@ -14,21 +14,88 @@
     "SR11": "Repair test on SR07 (D-025, test-contaminated like SR07): SR08 + SR10 together: SG04 without the prayer pairs, epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.",
     "SR12": "SR11 without the NEU generations (D-026, test-contaminated like SR07): S1 train + the whole POS/NEG pairs of SG04 (sarcastic praise, emoji in context; 1,600 texts), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>.",
     "SR13": "SR12 + the NEG sides of the SG04 public jab and personal remark pairs (D-026, test-contaminated like SR07): 2,600 texts, pairs of those types broken, NEU sides dropped; otherwise SR12 recipe. SR13 - SR12 = effect of those 1,000 NEG sides. Member = <classifier>_<generator>.",
-    "SR12-3600": "SR12 at the size of SR11 (D-027, test-contaminated like SR07): S1 train + SG04-PN (1,800 POS/NEG pairs, 3,600 texts, fidelity of SR12 per type), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>."
+    "SR12-3600": "SR12 at the size of SR11 (D-027, test-contaminated like SR07): S1 train + SG04-PN (1,800 POS/NEG pairs, 3,600 texts, fidelity of SR12 per type), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>.",
+    "SR01-EESA": "Real only on EESA (data version E2, D-032): EESA train 2,463 / dev 818 / test 818, the 7 BERTs, 3 seeds, SR01 recipe. Baseline for SR02-EESA, SR05-EESA and SR06-EESA.",
+    "SR02-EESA": "EESA real + SG01-EESA (D-032): EESA train + 1,320 texts generated for EESA (prompt open_eesa_v1, 440 per sentiment, 0.54 x real as in SR02), from one generator; 7 BERTs, 3 seeds. Member = <classifier>_<generator>.",
+    "SR05-EESA": "EESA real + SG03-EESA (D-032): EESA train + 880 targeted minimal-pair texts generated for EESA (440 pairs; types from SR02-EESA dev errors, agreed with Ammar); 7 BERTs, 3 seeds. Member = <classifier>_<generator>.",
+    "SR06-EESA": "EESA real + SG03-random-EESA (D-032), the size-matched control for SR05-EESA: 880 untargeted pair texts generated for EESA; 7 BERTs, 3 seeds. Member = <classifier>_<generator>.",
+    "SR02-EESA-XFER": "TRANSFER RUN, not an EESA result (D-032 revised): EESA real + SG01 subset (D-032): EESA train + 1,320 SG01 texts (110 per variety x sentiment cell, 22% of the set, so synthetic = 0.54 x real as in SR02), from one generator; 7 BERTs, 3 seeds. Member = <classifier>_<generator>. Stopped 2026-11-08 07:08 after 15 runs (seed 42, MARBERTv2 and MARBERT); renamed from sr0N_eesa_* (results/sentiment/renames_2026-11-08.json).",
+    "SR05-EESA-XFER": "TRANSFER RUN, not an EESA result (D-032 revised): EESA real + SG03 subset (D-032): EESA train + 880 SG03 texts (440 whole pairs, pair types in SR05 shares; synthetic = 0.36 x real as in SR05); 7 BERTs, 3 seeds. SG03 targets ArSarcasm-v2 dev hard cases, not EESA. Member = <classifier>_<generator>. Stopped 2026-11-08 07:08 after 15 runs (seed 42, MARBERTv2 and MARBERT); renamed from sr0N_eesa_* (results/sentiment/renames_2026-11-08.json).",
+    "SR06-EESA-XFER": "TRANSFER RUN, not an EESA result (D-032 revised): EESA real + SG03-random subset (D-032), the size-matched control for SR05-EESA: EESA train + 880 SG03-random texts (440 whole pairs, 0.36 x real); 7 BERTs, 3 seeds. Member = <classifier>_<generator>. Stopped 2026-11-08 07:08 after 15 runs (seed 42, MARBERTv2 and MARBERT); renamed from sr0N_eesa_* (results/sentiment/renames_2026-11-08.json)."
   },
   "run_data": {
-    "SR02": {"generation": "SG01", "generation_corpus": "ArSarcasm-v2"},
-    "SR04": {"generation": "SG02", "generation_corpus": "ArSarcasm-v2"},
-    "SR05": {"generation": "SG03", "generation_corpus": "ArSarcasm-v2"},
-    "SR06": {"generation": "SG03-random", "generation_corpus": "ArSarcasm-v2"},
-    "SR07": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
-    "SR08": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
-    "SR09": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
-    "SR10": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
-    "SR11": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
-    "SR12": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"},
-    "SR12-3600": {"generation": "SG04-PN", "generation_corpus": "ArSarcasm-v2"},
-    "SR13": {"generation": "SG04", "generation_corpus": "ArSarcasm-v2"}
+    "SR02": {
+      "generation": "SG01",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR04": {
+      "generation": "SG02",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR05": {
+      "generation": "SG03",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR06": {
+      "generation": "SG03-random",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR07": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR08": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR09": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR10": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR11": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR12": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR12-3600": {
+      "generation": "SG04-PN",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR13": {
+      "generation": "SG04",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR02-EESA": {
+      "generation": "SG01",
+      "generation_corpus": "EESA"
+    },
+    "SR05-EESA": {
+      "generation": "SG03",
+      "generation_corpus": "EESA"
+    },
+    "SR06-EESA": {
+      "generation": "SG03-random",
+      "generation_corpus": "EESA"
+    },
+    "SR02-EESA-XFER": {
+      "generation": "SG01",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR05-EESA-XFER": {
+      "generation": "SG03",
+      "generation_corpus": "ArSarcasm-v2"
+    },
+    "SR06-EESA-XFER": {
+      "generation": "SG03-random",
+      "generation_corpus": "ArSarcasm-v2"
+    }
   },
   "members": {
     "sr01_marbertv2": {
@@ -786,6 +853,538 @@
     "sr12_3600_camelbert_mix_aya": {
       "run": "SR12-3600",
       "model": "camelbert_mix_aya"
+    },
+    "sr01_eesa_arabertv02_twitter": {
+      "run": "SR01-EESA",
+      "model": "arabertv02_twitter"
+    },
+    "sr02_eesaxfer_arabertv02_twitter_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr02_eesa_arabertv02_twitter_aya": {
+      "run": "SR02-EESA",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr02_eesaxfer_arabertv02_twitter_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr02_eesa_arabertv02_twitter_fanar": {
+      "run": "SR02-EESA",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr02_eesaxfer_arabertv02_twitter_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr02_eesa_arabertv02_twitter_qwen3": {
+      "run": "SR02-EESA",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr05_eesaxfer_arabertv02_twitter_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr05_eesa_arabertv02_twitter_aya": {
+      "run": "SR05-EESA",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr05_eesaxfer_arabertv02_twitter_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr05_eesa_arabertv02_twitter_fanar": {
+      "run": "SR05-EESA",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr05_eesaxfer_arabertv02_twitter_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr05_eesa_arabertv02_twitter_qwen3": {
+      "run": "SR05-EESA",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr06_eesaxfer_arabertv02_twitter_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr06_eesa_arabertv02_twitter_aya": {
+      "run": "SR06-EESA",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr06_eesaxfer_arabertv02_twitter_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr06_eesa_arabertv02_twitter_fanar": {
+      "run": "SR06-EESA",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr06_eesaxfer_arabertv02_twitter_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr06_eesa_arabertv02_twitter_qwen3": {
+      "run": "SR06-EESA",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr01_eesa_arbert": {
+      "run": "SR01-EESA",
+      "model": "arbert"
+    },
+    "sr02_eesaxfer_arbert_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "arbert_aya"
+    },
+    "sr02_eesa_arbert_aya": {
+      "run": "SR02-EESA",
+      "model": "arbert_aya"
+    },
+    "sr02_eesaxfer_arbert_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "arbert_fanar"
+    },
+    "sr02_eesa_arbert_fanar": {
+      "run": "SR02-EESA",
+      "model": "arbert_fanar"
+    },
+    "sr02_eesaxfer_arbert_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "arbert_qwen3"
+    },
+    "sr02_eesa_arbert_qwen3": {
+      "run": "SR02-EESA",
+      "model": "arbert_qwen3"
+    },
+    "sr05_eesaxfer_arbert_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "arbert_aya"
+    },
+    "sr05_eesa_arbert_aya": {
+      "run": "SR05-EESA",
+      "model": "arbert_aya"
+    },
+    "sr05_eesaxfer_arbert_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "arbert_fanar"
+    },
+    "sr05_eesa_arbert_fanar": {
+      "run": "SR05-EESA",
+      "model": "arbert_fanar"
+    },
+    "sr05_eesaxfer_arbert_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "arbert_qwen3"
+    },
+    "sr05_eesa_arbert_qwen3": {
+      "run": "SR05-EESA",
+      "model": "arbert_qwen3"
+    },
+    "sr06_eesaxfer_arbert_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "arbert_aya"
+    },
+    "sr06_eesa_arbert_aya": {
+      "run": "SR06-EESA",
+      "model": "arbert_aya"
+    },
+    "sr06_eesaxfer_arbert_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "arbert_fanar"
+    },
+    "sr06_eesa_arbert_fanar": {
+      "run": "SR06-EESA",
+      "model": "arbert_fanar"
+    },
+    "sr06_eesaxfer_arbert_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "arbert_qwen3"
+    },
+    "sr06_eesa_arbert_qwen3": {
+      "run": "SR06-EESA",
+      "model": "arbert_qwen3"
+    },
+    "sr01_eesa_arbertv2": {
+      "run": "SR01-EESA",
+      "model": "arbertv2"
+    },
+    "sr02_eesaxfer_arbertv2_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "arbertv2_aya"
+    },
+    "sr02_eesa_arbertv2_aya": {
+      "run": "SR02-EESA",
+      "model": "arbertv2_aya"
+    },
+    "sr02_eesaxfer_arbertv2_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "arbertv2_fanar"
+    },
+    "sr02_eesa_arbertv2_fanar": {
+      "run": "SR02-EESA",
+      "model": "arbertv2_fanar"
+    },
+    "sr02_eesaxfer_arbertv2_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "arbertv2_qwen3"
+    },
+    "sr02_eesa_arbertv2_qwen3": {
+      "run": "SR02-EESA",
+      "model": "arbertv2_qwen3"
+    },
+    "sr05_eesaxfer_arbertv2_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "arbertv2_aya"
+    },
+    "sr05_eesa_arbertv2_aya": {
+      "run": "SR05-EESA",
+      "model": "arbertv2_aya"
+    },
+    "sr05_eesaxfer_arbertv2_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "arbertv2_fanar"
+    },
+    "sr05_eesa_arbertv2_fanar": {
+      "run": "SR05-EESA",
+      "model": "arbertv2_fanar"
+    },
+    "sr05_eesaxfer_arbertv2_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "arbertv2_qwen3"
+    },
+    "sr05_eesa_arbertv2_qwen3": {
+      "run": "SR05-EESA",
+      "model": "arbertv2_qwen3"
+    },
+    "sr06_eesaxfer_arbertv2_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "arbertv2_aya"
+    },
+    "sr06_eesa_arbertv2_aya": {
+      "run": "SR06-EESA",
+      "model": "arbertv2_aya"
+    },
+    "sr06_eesaxfer_arbertv2_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "arbertv2_fanar"
+    },
+    "sr06_eesa_arbertv2_fanar": {
+      "run": "SR06-EESA",
+      "model": "arbertv2_fanar"
+    },
+    "sr06_eesaxfer_arbertv2_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "arbertv2_qwen3"
+    },
+    "sr06_eesa_arbertv2_qwen3": {
+      "run": "SR06-EESA",
+      "model": "arbertv2_qwen3"
+    },
+    "sr01_eesa_camelbert_da": {
+      "run": "SR01-EESA",
+      "model": "camelbert_da"
+    },
+    "sr02_eesaxfer_camelbert_da_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "camelbert_da_aya"
+    },
+    "sr02_eesa_camelbert_da_aya": {
+      "run": "SR02-EESA",
+      "model": "camelbert_da_aya"
+    },
+    "sr02_eesaxfer_camelbert_da_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "camelbert_da_fanar"
+    },
+    "sr02_eesa_camelbert_da_fanar": {
+      "run": "SR02-EESA",
+      "model": "camelbert_da_fanar"
+    },
+    "sr02_eesaxfer_camelbert_da_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr02_eesa_camelbert_da_qwen3": {
+      "run": "SR02-EESA",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr05_eesaxfer_camelbert_da_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "camelbert_da_aya"
+    },
+    "sr05_eesa_camelbert_da_aya": {
+      "run": "SR05-EESA",
+      "model": "camelbert_da_aya"
+    },
+    "sr05_eesaxfer_camelbert_da_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "camelbert_da_fanar"
+    },
+    "sr05_eesa_camelbert_da_fanar": {
+      "run": "SR05-EESA",
+      "model": "camelbert_da_fanar"
+    },
+    "sr05_eesaxfer_camelbert_da_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr05_eesa_camelbert_da_qwen3": {
+      "run": "SR05-EESA",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr06_eesaxfer_camelbert_da_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "camelbert_da_aya"
+    },
+    "sr06_eesa_camelbert_da_aya": {
+      "run": "SR06-EESA",
+      "model": "camelbert_da_aya"
+    },
+    "sr06_eesaxfer_camelbert_da_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "camelbert_da_fanar"
+    },
+    "sr06_eesa_camelbert_da_fanar": {
+      "run": "SR06-EESA",
+      "model": "camelbert_da_fanar"
+    },
+    "sr06_eesaxfer_camelbert_da_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr06_eesa_camelbert_da_qwen3": {
+      "run": "SR06-EESA",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr01_eesa_camelbert_mix": {
+      "run": "SR01-EESA",
+      "model": "camelbert_mix"
+    },
+    "sr02_eesaxfer_camelbert_mix_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "camelbert_mix_aya"
+    },
+    "sr02_eesa_camelbert_mix_aya": {
+      "run": "SR02-EESA",
+      "model": "camelbert_mix_aya"
+    },
+    "sr02_eesaxfer_camelbert_mix_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr02_eesa_camelbert_mix_fanar": {
+      "run": "SR02-EESA",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr02_eesaxfer_camelbert_mix_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr02_eesa_camelbert_mix_qwen3": {
+      "run": "SR02-EESA",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr05_eesaxfer_camelbert_mix_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "camelbert_mix_aya"
+    },
+    "sr05_eesa_camelbert_mix_aya": {
+      "run": "SR05-EESA",
+      "model": "camelbert_mix_aya"
+    },
+    "sr05_eesaxfer_camelbert_mix_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr05_eesa_camelbert_mix_fanar": {
+      "run": "SR05-EESA",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr05_eesaxfer_camelbert_mix_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr05_eesa_camelbert_mix_qwen3": {
+      "run": "SR05-EESA",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr06_eesaxfer_camelbert_mix_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "camelbert_mix_aya"
+    },
+    "sr06_eesa_camelbert_mix_aya": {
+      "run": "SR06-EESA",
+      "model": "camelbert_mix_aya"
+    },
+    "sr06_eesaxfer_camelbert_mix_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr06_eesa_camelbert_mix_fanar": {
+      "run": "SR06-EESA",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr06_eesaxfer_camelbert_mix_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr06_eesa_camelbert_mix_qwen3": {
+      "run": "SR06-EESA",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr01_eesa_marbert": {
+      "run": "SR01-EESA",
+      "model": "marbert"
+    },
+    "sr02_eesaxfer_marbert_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "marbert_aya"
+    },
+    "sr02_eesa_marbert_aya": {
+      "run": "SR02-EESA",
+      "model": "marbert_aya"
+    },
+    "sr02_eesaxfer_marbert_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "marbert_fanar"
+    },
+    "sr02_eesa_marbert_fanar": {
+      "run": "SR02-EESA",
+      "model": "marbert_fanar"
+    },
+    "sr02_eesaxfer_marbert_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "marbert_qwen3"
+    },
+    "sr02_eesa_marbert_qwen3": {
+      "run": "SR02-EESA",
+      "model": "marbert_qwen3"
+    },
+    "sr05_eesaxfer_marbert_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "marbert_aya"
+    },
+    "sr05_eesa_marbert_aya": {
+      "run": "SR05-EESA",
+      "model": "marbert_aya"
+    },
+    "sr05_eesaxfer_marbert_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "marbert_fanar"
+    },
+    "sr05_eesa_marbert_fanar": {
+      "run": "SR05-EESA",
+      "model": "marbert_fanar"
+    },
+    "sr05_eesaxfer_marbert_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "marbert_qwen3"
+    },
+    "sr05_eesa_marbert_qwen3": {
+      "run": "SR05-EESA",
+      "model": "marbert_qwen3"
+    },
+    "sr06_eesaxfer_marbert_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "marbert_aya"
+    },
+    "sr06_eesa_marbert_aya": {
+      "run": "SR06-EESA",
+      "model": "marbert_aya"
+    },
+    "sr06_eesaxfer_marbert_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "marbert_fanar"
+    },
+    "sr06_eesa_marbert_fanar": {
+      "run": "SR06-EESA",
+      "model": "marbert_fanar"
+    },
+    "sr06_eesaxfer_marbert_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "marbert_qwen3"
+    },
+    "sr06_eesa_marbert_qwen3": {
+      "run": "SR06-EESA",
+      "model": "marbert_qwen3"
+    },
+    "sr01_eesa_marbertv2": {
+      "run": "SR01-EESA",
+      "model": "marbertv2"
+    },
+    "sr02_eesaxfer_marbertv2_aya": {
+      "run": "SR02-EESA-XFER",
+      "model": "marbertv2_aya"
+    },
+    "sr02_eesa_marbertv2_aya": {
+      "run": "SR02-EESA",
+      "model": "marbertv2_aya"
+    },
+    "sr02_eesaxfer_marbertv2_fanar": {
+      "run": "SR02-EESA-XFER",
+      "model": "marbertv2_fanar"
+    },
+    "sr02_eesa_marbertv2_fanar": {
+      "run": "SR02-EESA",
+      "model": "marbertv2_fanar"
+    },
+    "sr02_eesaxfer_marbertv2_qwen3": {
+      "run": "SR02-EESA-XFER",
+      "model": "marbertv2_qwen3"
+    },
+    "sr02_eesa_marbertv2_qwen3": {
+      "run": "SR02-EESA",
+      "model": "marbertv2_qwen3"
+    },
+    "sr05_eesaxfer_marbertv2_aya": {
+      "run": "SR05-EESA-XFER",
+      "model": "marbertv2_aya"
+    },
+    "sr05_eesa_marbertv2_aya": {
+      "run": "SR05-EESA",
+      "model": "marbertv2_aya"
+    },
+    "sr05_eesaxfer_marbertv2_fanar": {
+      "run": "SR05-EESA-XFER",
+      "model": "marbertv2_fanar"
+    },
+    "sr05_eesa_marbertv2_fanar": {
+      "run": "SR05-EESA",
+      "model": "marbertv2_fanar"
+    },
+    "sr05_eesaxfer_marbertv2_qwen3": {
+      "run": "SR05-EESA-XFER",
+      "model": "marbertv2_qwen3"
+    },
+    "sr05_eesa_marbertv2_qwen3": {
+      "run": "SR05-EESA",
+      "model": "marbertv2_qwen3"
+    },
+    "sr06_eesaxfer_marbertv2_aya": {
+      "run": "SR06-EESA-XFER",
+      "model": "marbertv2_aya"
+    },
+    "sr06_eesa_marbertv2_aya": {
+      "run": "SR06-EESA",
+      "model": "marbertv2_aya"
+    },
+    "sr06_eesaxfer_marbertv2_fanar": {
+      "run": "SR06-EESA-XFER",
+      "model": "marbertv2_fanar"
+    },
+    "sr06_eesa_marbertv2_fanar": {
+      "run": "SR06-EESA",
+      "model": "marbertv2_fanar"
+    },
+    "sr06_eesaxfer_marbertv2_qwen3": {
+      "run": "SR06-EESA-XFER",
+      "model": "marbertv2_qwen3"
+    },
+    "sr06_eesa_marbertv2_qwen3": {
+      "run": "SR06-EESA",
+      "model": "marbertv2_qwen3"
     }
   }
 }

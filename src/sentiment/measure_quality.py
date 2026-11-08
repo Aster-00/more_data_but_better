@@ -22,7 +22,7 @@ sample; fidelity = the same classifiers' accuracy on S1 dev (on train it would b
 The official test set is not used. Size-dependent measures use equal-size samples.
 
 Outputs: results/quality/sentiment/<set>_quality.json; then the combined table
-docs/sentiment/tables/dataset_quality.{csv,md} is rebuilt (src.sentiment.summarize_quality)
+docs/sentiment/datasets/dataset_quality.{csv,md} is rebuilt (src.sentiment.summarize_quality)
 (<set> = sg01, the default, sg02, sg03, sg03r, sg04 or sg04pn: same measures, k-means seed and sample seed, so rows compare).
 
 EESA sets (sg01_eesa, sg03_eesa, sg03r_eesa; D-032) use the EESA corpus instead of S1: EESA train as the real
