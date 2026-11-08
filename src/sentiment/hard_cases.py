@@ -10,11 +10,15 @@ src.sentiment.error_by_type; "other" = none), cue_tags = rough keyword cues for 
 test errors (CUES below; a tweet can have several, "-" = none). Kept: tweets with wrong_runs >= --min-wrong (default: a majority, 32 of 63, as
 the dev list), sorted by wrong_runs, then file order.
 
-Outputs: data/inspect/hard_cases/sr02_<split>_hard_cases.{csv,md}.
+EESA (D-032, --corpus eesa): the same rule over the 63 SR02-EESA runs on EESA dev, for the SG03-EESA types.
+Dev only: EESA test must not shape any generation.
+
+Outputs: data/inspect/hard_cases/sr02_<split>_hard_cases.{csv,md}; EESA: sr02_eesa_dev_hard_cases.{csv,md}.
 
 Usage:
   python -m src.sentiment.hard_cases --split test
   python -m src.sentiment.hard_cases --split dev --min-wrong 60
+  python -m src.sentiment.hard_cases --split dev --corpus eesa
 """
 from __future__ import annotations
 
@@ -62,10 +66,14 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--split", choices=["dev", "test"], required=True)
     p.add_argument("--min-wrong", type=int, default=None, help="default: a majority of the runs")
+    p.add_argument("--corpus", choices=["arsarcasm_v2", "eesa"], default="arsarcasm_v2")
     args = p.parse_args()
+    if args.corpus == "eesa" and args.split != "dev":
+        sys.exit("EESA hard cases come from dev only (D-032): EESA test must not shape generation")
+    run = "sr02" if args.corpus == "arsarcasm_v2" else "sr02_eesa"
 
     # Wrong predictions per tweet over the 63 SR02 BERT runs.
-    runs = [RUNS_DIR / f"sr02_{b}_{g}_seed{s}" / f"{args.split}_predictions.jsonl" for b in BERTS for g in GENS for s in SEEDS]
+    runs = [RUNS_DIR / f"{run}_{b}_{g}_seed{s}" / f"{args.split}_predictions.jsonl" for b in BERTS for g in GENS for s in SEEDS]
     missing = [r for r in runs if not r.exists()]
     if missing:
         sys.exit(f"missing predictions: {missing[:3]} ... ({len(missing)})")
@@ -82,7 +90,7 @@ def main() -> None:
 
     # Keep the hard tweets with their data fields.
     rows = []
-    with open(f"data/processed/sentiment/arsarcasm_v2_{args.split}.jsonl", encoding="utf-8") as f:
+    with open(f"data/processed/sentiment/{args.corpus}_{args.split}.jsonl", encoding="utf-8") as f:
         for i, line in enumerate(f):
             r = json.loads(line)
             c = wrong[i]
@@ -94,14 +102,14 @@ def main() -> None:
 
     # CSV (with BOM, as the dev file, so Excel shows Arabic) and a markdown view.
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    stem = OUT_DIR / f"sr02_{args.split}_hard_cases"
+    stem = OUT_DIR / f"{run}_{args.split}_hard_cases"
     with open(stem.with_suffix(".csv"), "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLS, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
     md = ["| # | Wrong | Gold → pred | SG03 type | Cues | Sarc. | Dialect | Text |", "|---|---|---|---|---|---|---|---|"]
     md += [f"| {k} | {r['wrong_runs']}/{r['of_runs']} | {r['sentiment']} → {r['majority_wrong_pred']} | "
-           f"{r['sg03_types']} | {r['cue_tags']} | {'yes' if r['sarcasm'] else ''} | {r['dialect']} | {r['text'].replace('|', '/').replace(chr(10), ' ')} |"
+           f"{r['sg03_types']} | {r['cue_tags']} | {'yes' if r.get('sarcasm') else ''} | {r['dialect']} | {r['text'].replace('|', '/').replace(chr(10), ' ')} |"
            for k, r in enumerate(rows, 1)]
     stem.with_suffix(".md").write_text("\n".join(md) + "\n", encoding="utf-8", newline="\n")
     print(f"{args.split}: {len(rows)} tweets wrong in >= {min_wrong}/{len(runs)} runs -> {stem}.md")

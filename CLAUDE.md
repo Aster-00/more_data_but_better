@@ -62,7 +62,7 @@ The same classifier is trained under three conditions and evaluated on the same 
 2. **Real + open synthetic** (ordinary, unconstrained LLM generation)
 3. **Real + controlled synthetic** (prompts specify the control factors)
 
-Control factors for condition 3: dialect, class, topic, sentence length. Script and code-switching are not control factors (D-010, 2026-10-27): every generated text is Arabic script with Arabic words only; script and code-switching are only measured, as dataset properties (quality row 8). The augmentation should aim for class balance and for diversity across topics and dialects.
+Control factors for condition 3: dialect, class, topic, sentence length. Script and code-switching are not control factors (D-010, 2026-10-27): every generated text is Arabic script with Arabic words only (exception: EESA generations keep EESA-style code-switching, D-032); script and code-switching are only measured, as dataset properties (quality row 8). The augmentation should aim for class balance and for diversity across topics and dialects.
 
 Before training, the generated sets are compared with:
 
@@ -158,6 +158,7 @@ One E5 topic list for all texts from all datasets (Ammar, 2026-10-28), cleaned a
 - The test set is used for final evaluation only. Never use it for training, model selection, prompt design, few-shot examples or filtering thresholds. Use a dev split carved out of the training data for all of those.
 - All three conditions must share the same classifier, hyperparameter budget, splits and metrics. If something differs between conditions, call it out.
 - Report multi-label metrics, macro-averaged at minimum, with per-dialect breakdowns.
+- Sentiment metrics per corpus (D-033): F1-PN (mean F1 of POS and NEG, the WANLP metric) belongs to ArSarcasm-v2 only. Do not report it for any other corpus (EESA, Mawqif, others) unless Ammar asks for it. For EESA the main metric is micro F1; on single-label 3-class data it equals accuracy (the `accuracy` column in the tables).
 - Run multiple seeds and report mean and spread. A single-seed difference is not a result.
 - befre running any model or long task tell me an estimate of how long it will take
 

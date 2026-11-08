@@ -38,6 +38,7 @@ def main() -> None:
     p.add_argument("--data", type=Path, required=True, help="<set>.filtered.jsonl")
     p.add_argument("--per-cell", type=int, default=500)
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--test", type=Path, default=TEST, help="test set for the report-only overlap (EESA sets: eesa_test)")
     args = p.parse_args()
 
     # Group the filtered records by cell, in file order.
@@ -58,7 +59,7 @@ def main() -> None:
                                 "shortfall": max(0, args.per_cell - len(recs))}
 
     # Report-only overlap with the official test set.
-    with open(TEST, encoding="utf-8") as f:
+    with open(args.test, encoding="utf-8") as f:
         test_keys = {dedup_key(json.loads(l)["text"]) for l in f if l.strip()}
     test_hits = [r["text_id"] for r in selected if dedup_key(r["text"]) in test_keys]
 
@@ -70,7 +71,7 @@ def main() -> None:
     stats = {"data": str(args.data), "data_sha256": sha256(args.data), "output": str(out),
              "output_sha256": sha256(out), "per_cell_target": args.per_cell, "seed": args.seed,
              "n_selected": len(selected), "cells": per_cell,
-             "exact_matches_with_test": len(test_hits), "test_match_ids": test_hits,
+             "test_set": str(args.test), "exact_matches_with_test": len(test_hits), "test_match_ids": test_hits,
              "git_commit": git_commit(), "finished": time.strftime("%Y-%m-%d %H:%M")}
     Path("results/filtering").mkdir(parents=True, exist_ok=True)
     with open(Path("results/filtering") / f"{stem}.selection.json", "w", encoding="utf-8", newline="\n") as f:

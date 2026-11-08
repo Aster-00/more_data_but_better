@@ -9,7 +9,8 @@ Requests are interleaved over cells, so a tiny run (--limit) or a partial run st
 Reuses the dialect track's generator loader (src/generation/llm.py) and output parser
 (src/generation/prompts.py). One addition, sentiment track only: `strip_translation`
 removes an English translation appended on the same line as the tweet (Fanar did this in
-16/20 G01 outputs; the shared parser only drops translations on their own line), and
+16/20 G01 outputs; the shared parser only drops translations on their own line; config
+`strip_translation: false` turns it off, for the code-switched EESA sets, D-032), and
 Markdown bold markers (**) are removed before parsing (the shared parser drops lines
 starting with ** as preambles; Jais-2 bolds whole tweets). Then the same link/mention
 cleaning as the real S1 data (URL, USER) is applied; the uncleaned text is kept as text_raw.
@@ -238,7 +239,11 @@ def run(cfg: dict, config_file: str, limit: int | None, dry_run: bool) -> dict:
             for req, out in zip(batch, outs):
                 out["seed"] = seed
                 parsed = parse_output(out["raw_output"].replace("**", ""), 1, "arabic")
-                text_raw, stripped = strip_translation(parsed[0]) if parsed else (None, False)
+                # EESA sets (D-032) keep their English words, so the translation cut can be switched off.
+                if parsed and cfg.get("strip_translation", True):
+                    text_raw, stripped = strip_translation(parsed[0])
+                else:
+                    text_raw, stripped = (parsed[0] if parsed else None), False
                 text_raw = text_raw or None
                 # Same link/mention cleaning as the real S1 tweets.
                 text = clean_text(text_raw, CLEAN_STEPS)[0] if text_raw else None

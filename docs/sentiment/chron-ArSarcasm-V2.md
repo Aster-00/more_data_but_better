@@ -1002,8 +1002,22 @@ removed the 200 prayer pairs per generator. Errors on real POS prayers jumped in
 | CAMeLBERT-mix | 74.46 ± 0.74 | 74.22 ± 0.42 | 74.03 ± 0.32 | 69.24 ± 0.61 | 70.04 ± 0.54 | 68.68 ± 0.55 |
 | **Mean** | **75.85** | **75.23** | **75.76** | **70.61** | **71.11** | **70.09** |
 
+**Was it useful? SR08 against SR07** (same 9 cells; Δ = mean change, cells better, sign test; judge on dev, test is leakage analysis; source `datasets/SG04/sg04_repair.md`)
+
+| Measure | SR01 real only | SR07 | SR08 | Δ SR08 − SR07 |
+|---|---|---|---|---|
+| Dev macro F1 | 77.47 | 76.38 | 77.07 | +0.69 (8/9, p = 0.039) |
+| Dev F1-PN | 76.31 | 74.83 | 75.61 | +0.78 (8/9, p = 0.039) |
+| Test macro F1 | 63.14 | 61.90 | 62.51 | +0.61 (9/9, p = 0.004) |
+| Test F1-PN | 71.10 | 70.01 | 70.60 | +0.60 (8/9, p = 0.039) |
+| Test error, gold POS with religious cue (lower is better) | 8.0% | 24.5% | 9.7% | −14.8 pts |
+| Test error, hard cases | 83.4% | 80.2% | 81.3% | +1.1 pts |
+| Test error, other tweets | 9.2% | 11.7% | 11.0% | −0.7 pts |
+
+**Useful: better than SR07 on dev and test, and the prayer error is back near SR01. Still below real only.**
+
 ## SR09 on SG04
-removes the 116 Qwen3 pairs where A and B have the same words. Qwen3 only. with only "!" or an emoji different, yet they carried opposite labels. That is label noise, so we tested whether it was hurting the classifiers.
+removes the 116/2000 Qwen3 pairs where A and B have the same words. Qwen3 only. with only "!" or an emoji different, yet they carried opposite labels. That is label noise, so we tested whether it was hurting the classifiers.
 
 **Takeaways**
 - no clear effect. With only 3 cells, it can't show much either way.
@@ -1025,6 +1039,20 @@ removes the 116 Qwen3 pairs where A and B have the same words. Qwen3 only. with 
 | AraBERTv02-Tw | 75.29 ± 0.22 | 70.17 ± 0.48 |
 | CAMeLBERT-mix | 74.31 ± 1.71 | 69.54 ± 0.60 |
 | **Mean** | **75.34** | **70.48** |
+
+**Was it useful? SR09 against SR07** (same 3 cells: Qwen3 only; Δ = mean change, cells better, sign test; judge on dev, test is leakage analysis; source `datasets/SG04/sg04_repair.md`)
+
+| Measure | SR01 real only | SR07 (Qwen3) | SR09 | Δ SR09 − SR07 |
+|---|---|---|---|---|
+| Dev macro F1 | 77.47 | 76.24 | 76.70 | +0.46 (2/3, p = 1.00) |
+| Dev F1-PN | 76.31 | 74.69 | 75.34 | +0.65 (2/3, p = 1.00) |
+| Test macro F1 | 63.14 | 62.20 | 62.01 | −0.19 (1/3, p = 1.00) |
+| Test F1-PN | 71.10 | 70.76 | 70.48 | −0.28 (1/3, p = 1.00) |
+| Test error, gold POS with religious cue (lower is better) | 8.0% | 18.1% | 16.2% | −1.9 pts |
+| Test error, hard cases | 83.4% | 77.9% | 79.4% | +1.5 pts |
+| Test error, other tweets | 9.2% | 12.2% | 12.1% | −0.1 pts |
+
+**Not shown useful: small dev gain, small test loss, and 3 cells cannot show either.**
 
 ## SR10 on SG04
 same data, but the last epoch uses real tweets only. SG04 fixed some hard cases but broke more ordinary tweets. A last epoch on real data might remind the model of normal tweets, while keeping what it learned from SG04.
@@ -1061,6 +1089,20 @@ same data, but the last epoch uses real tweets only. SG04 fixed some hard cases 
 | AraBERTv02-Tw | 75.04 ± 0.56 | 74.39 ± 0.62 | 76.17 ± 0.50 | 70.32 ± 0.28 | 70.77 ± 0.50 | 70.10 ± 0.33 |
 | CAMeLBERT-mix | 73.92 ± 0.19 | 74.23 ± 0.93 | 73.34 ± 0.45 | 69.03 ± 0.45 | 69.42 ± 0.63 | 68.47 ± 0.28 |
 | **Mean** | **75.37** | **75.39** | **75.60** | **70.28** | **70.77** | **70.19** |
+
+**Was it useful? SR10 against SR07** (same 9 cells; Δ = mean change, cells better, sign test; judge on dev, test is leakage analysis; source `datasets/SG04/sg04_repair.md`)
+
+| Measure | SR01 real only | SR07 | SR10 | Δ SR10 − SR07 |
+|---|---|---|---|---|
+| Dev macro F1 | 77.47 | 76.38 | 76.86 | +0.49 (9/9, p = 0.004) |
+| Dev F1-PN | 76.31 | 74.83 | 75.46 | +0.63 (9/9, p = 0.004) |
+| Test macro F1 | 63.14 | 61.90 | 62.55 | +0.65 (8/9, p = 0.039) |
+| Test F1-PN | 71.10 | 70.01 | 70.41 | +0.41 (8/9, p = 0.039) |
+| Test error, gold POS with religious cue (lower is better) | 8.0% | 24.5% | 17.3% | −7.2 pts |
+| Test error, hard cases | 83.4% | 80.2% | 82.1% | +1.9 pts |
+| Test error, other tweets | 9.2% | 11.7% | 10.6% | −1.1 pts |
+
+**Useful: better than SR07 in every cell on dev, but the dev gain is smaller than SR08's and most of the hard-case gain is lost. Still below real only.**
 
 ## SR11
 both the SR08 and SR10 changes: the prayer rule and the loss on ordinary tweets. We combined them to see whether their gains add up. They didn't.
@@ -1120,6 +1162,20 @@ both the SR08 and SR10 changes: the prayer rule and the loss on ordinary tweets.
 | CAMeLBERT-mix | 74.79 ± 0.26 | 74.52 ± 0.21 | 74.15 ± 0.29 | 69.49 ± 0.19 | 69.58 ± 0.52 | 68.78 ± 0.32 |
 | **Mean** | **75.94** | **75.20** | **75.88** | **70.69** | **70.70** | **70.43** |
 
+**Was it useful? SR11 against its two parts, SR08 and SR10** (same 9 cells; Δ = mean change, cells better, sign test, computed from the per-cell tables above; judge on dev, test is leakage analysis)
+
+| Measure | SR01 real only | SR08 | SR10 | SR11 | Δ SR11 − SR08 | Δ SR11 − SR10 |
+|---|---|---|---|---|---|---|
+| Dev macro F1 | 77.47 | 77.07 | 76.86 | 77.08 | +0.01 (5/9, p = 1.00) | +0.21 (6/9, p = 0.51) |
+| Dev F1-PN | 76.31 | 75.61 | 75.46 | 75.67 | +0.06 (6/9, p = 0.51) | +0.22 (6/9, p = 0.51) |
+| Test macro F1 | 63.14 | 62.51 | 62.55 | 62.56 | +0.05 (5/9, p = 1.00) | +0.01 (5/9, p = 1.00) |
+| Test F1-PN | 71.10 | 70.60 | 70.41 | 70.61 | +0.00 (6/9, p = 0.51) | +0.19 (7/9, p = 0.18) |
+| Test error, gold POS with religious cue (lower is better) | 8.0% | 9.7% | 17.3% | 9.3% | −0.4 pts | −8.0 pts |
+| Test error, hard cases | 83.4% | 81.3% | 82.1% | 82.1% | +0.8 pts | 0.0 pts |
+| Test error, other tweets | 9.2% | 11.0% | 10.6% | 10.5% | −0.5 pts | −0.1 pts |
+
+**Not useful: SR11 scores the same as SR08 alone, so adding the two-stage step on top brings nothing clear.**
+
 ## SR12
 
 **All classifiers and classes, SR12 (S1 train + SG04 POS/NEG pairs only, two-stage training)**
@@ -1143,6 +1199,22 @@ both the SR08 and SR10 changes: the prayer rule and the loss on ordinary tweets.
 | **CAMeLBERT-mix** | **Mean** | **76.24** | **74.89** | **78.35** | **78.93** | **71.44** | **61.62** | **69.84** | **77.50** | **45.20** | **62.17** |
 | **Mean** | **All** | **77.44** | **76.30** | **79.82** | **79.71** | **72.79** | **62.61** | **70.82** | **77.67** | **46.19** | **63.97** |
 
+**Was it useful? SR12 against SR11** (same 9 cells; Δ = mean change, cells better, sign test; judge on dev, test is leakage analysis; source `datasets/SG04/sg04_repair.md` and the per-cell tables above)
+
+| Measure | SR01 real only | SR11 | SR12 | Δ SR12 − SR11 |
+|---|---|---|---|---|
+| Synthetic texts | 0 | 3,600 | 1,600 | −2,000 |
+| Dev macro F1 | 77.47 | 77.08 | 77.44 | +0.36 (8/9, p = 0.039) |
+| Dev F1-PN | 76.31 | 75.67 | 76.30 | +0.63 (8/9, p = 0.039) |
+| Test macro F1 | 63.14 | 62.56 | 62.61 | +0.05 (4/9, p = 1.00) |
+| Test F1-PN | 71.10 | 70.61 | 70.82 | +0.21 (6/9, p = 0.51) |
+| Test error, gold POS with religious cue (lower is better) | 8.0% | 9.3% | 8.6% | −0.7 pts |
+| Test error, all gold POS | 23.5% | 24.5% | 21.9% | −2.6 pts |
+| Test error, hard cases | 83.4% | 82.1% | 81.9% | −0.2 pts |
+| Test error, other tweets | 9.2% | 10.5% | 10.2% | −0.3 pts |
+
+**Useful on dev: better than SR11 in 8 of 9 cells, and level with real only (−0.03). Test does not move. Size also falls, so content and size are not separated.**
+
 ## SR13
 
 **All classifiers and classes, SR13 (S1 train + SG04 POS/NEG pairs + NEG sides of jab and remark, two-stage training)**
@@ -1165,3 +1237,20 @@ both the SR08 and SR10 changes: the prayer rule and the loss on ordinary tweets.
 | **AraBERTv02-Tw** | **Mean** | **77.78** | **76.54** | **79.64** | **80.26** | **73.45** | **63.37** | **71.38** | **77.87** | **47.35** | **64.88** |
 | **CAMeLBERT-mix** | **Mean** | **76.04** | **74.62** | **77.50** | **78.90** | **71.73** | **62.10** | **69.97** | **77.46** | **46.37** | **62.48** |
 | **Mean** | **All** | **77.28** | **76.04** | **79.36** | **79.75** | **72.72** | **62.94** | **71.10** | **77.77** | **46.63** | **64.42** |
+
+**Was it useful? SR13 against SR12** (same 9 cells; the only change is the 1,000 NEG sides of public jab and personal remark; Δ = mean change, cells better, sign test; judge on dev, test is leakage analysis; source `datasets/SG04/sg04_repair.md` and the per-cell tables above)
+
+| Measure | SR01 real only | SR12 | SR13 | Δ SR13 − SR12 |
+|---|---|---|---|---|
+| Synthetic texts | 0 | 1,600 | 2,600 | +1,000 |
+| Dev macro F1 | 77.47 | 77.44 | 77.28 | −0.16 (4/9, p = 1.00) |
+| Dev F1-PN | 76.31 | 76.30 | 76.04 | −0.26 (1/9, p = 0.039) |
+| Test macro F1 | 63.14 | 62.61 | 62.94 | +0.33 (9/9, p = 0.004) |
+| Test F1-PN | 71.10 | 70.82 | 71.10 | +0.28 (8/9, p = 0.039) |
+| Test error, gold POS with religious cue (lower is better) | 8.0% | 8.6% | 9.2% | +0.6 pts |
+| Test error, all gold POS | 23.5% | 21.9% | 23.3% | +1.4 pts |
+| Test error, hard cases | 83.4% | 81.9% | 81.7% | −0.2 pts |
+| Test error, other tweets | 9.2% | 10.2% | 10.0% | −0.2 pts |
+| Test gold NEU predicted NEG | 38.2% | 38.4% | 39.2% | +0.8 pts |
+
+**Not useful on dev: F1-PN falls in 8 of 9 cells. Test rises in every cell, but test is leakage analysis, so it does not count.**

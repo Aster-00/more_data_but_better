@@ -3,7 +3,7 @@
 Post-hoc, on finished runs only; SR07 is test-contaminated (the SG04 types came from the SR02
 test errors), so every number here is leakage analysis, not an unbiased result.
 
-Tables (macro F1 and F1-PN from docs/sentiment/tables/sentiment_summary.csv; the rest from the runs'
+Tables (macro F1 and F1-PN from docs/sentiment/tables/sentiment_summary_ar_sarcv2.csv; the rest from the runs'
 test_predictions.jsonl; BERTs only, seeds 42/43/44):
   1. performance     SR07 per BERT x generator, mean +- std over seeds
   2. deltas          SR07 - SR01 / SR05 / SR06 per BERT x generator, and a summary over the 21
@@ -43,7 +43,7 @@ from src.sentiment.hard_cases import CUES
 
 TEST = Path("data/processed/sentiment/arsarcasm_v2_test.jsonl")
 RUNS_DIR = Path("results/sentiment/runs")
-SUMMARY = Path("docs/sentiment/tables/sentiment_summary.csv")
+SUMMARY = Path("docs/sentiment/tables/sentiment_summary_ar_sarcv2.csv")
 HARD = Path("data/inspect/hard_cases/sr02_test_hard_cases.csv")
 CANDIDATES = Path("data/inspect/hard_cases/sg04_type_candidates.csv")
 BERTS = [("marbertv2", "MARBERTv2"), ("marbert", "MARBERT"), ("arabertv02_twitter", "AraBERTv02-Tw"),
