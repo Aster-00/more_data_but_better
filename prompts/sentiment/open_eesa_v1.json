@@ -1,0 +1,18 @@
+{
+  "id": "sentiment_open_eesa_v1",
+  "version": 1,
+  "condition": "open",
+  "description": "Sentiment track, open generation for EESA (SG01-EESA, D-032): zero-shot, one variety (Egyptian), the sentiment class only; no topic, length or style control. The setting is EESA's: comments under Egyptian YouTube videos, code-switched as in EESA (exception to D-010). Class definitions follow EESA's labelling as seen in EESA train and dev only (never test): insults of the people who disliked a video are NEG; channel promotion, like requests and plain questions are NEU. DRAFT for Ammar's review. Placeholders: {variety_name} {variety_instruction} {sentiment_name} {sentiment_definition}.",
+  "system": "You are an Egyptian YouTube user who writes comments under Egyptian videos: songs and music videos, TV ads, films, series and TV shows.",
+  "user": "Write one YouTube comment in {variety_name}. {variety_instruction}\nThe comment must express a {sentiment_name} sentiment: {sentiment_definition}\nOutput only the comment itself, on one line, with no quotes, translation or explanation.",
+  "options": {
+    "variety": {
+      "egypt": {"name": "Egyptian Arabic", "instruction": "Write it the way Egyptians comment on YouTube: mostly in Arabic script, mixing in English words where they come naturally (for example like, dislike, subscribe, views, love, nice, or the names of songs, films, brands and stars)."}
+    },
+    "sentiment": {
+      "NEG": {"name": "negative", "definition": "the writer criticises, mocks or insults something or someone (the video, a singer or actor, an ad, a company, or the people who disliked the video), or says it is bad, boring, fake or copied."},
+      "NEU": {"name": "neutral", "definition": "the writer asks a question, shares information, makes a remark, or asks for something (for example to subscribe to their channel or like their comment), without praising or criticising."},
+      "POS": {"name": "positive", "definition": "the writer praises, loves, admires or thanks someone or something (the song, a star, an ad, a film), or sends greetings and good wishes."}
+    }
+  }
+}
