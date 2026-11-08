@@ -16,6 +16,8 @@ Raw files as released:
 
 ## Versions
 
+Generated sets are named by prompt style and corpus (D-029): SG01 zero-shot, SG02 few-shot, SG03 and SG04 minimal pairs. Every set so far is an ArSarcasm-v2 generation; a set for another corpus keeps the SG label, with the corpus in `generation_corpus`.
+
 | ID | Files | SHA-256 (first 12) | Texts | Contents | Built by |
 |---|---|---|---|---|---|
 | S1 | `data/processed/sentiment/arsarcasm_v2_train.jsonl` | `8244d8a1ed18` | 11,208 | Official train, deduplicated on cleaned text, 25 sentiment-conflict texts (50 rows) and 4 test-overlapping texts dropped, minus dev. Links → `URL`, mentions → `USER`; no other normalization | `python -m src.sentiment.build_dataset` (seed 42, dev fraction 0.1) |
@@ -105,3 +107,24 @@ Built 2026-10-31 by `python -m src.sentiment.build_mawqif` (dev fraction 0.15, s
 
 - Train: 3,502 rows → 3,493 unique texts; 5 rows dropped (copies disagree on sentiment), 3 dropped (also in test). No text in two splits.
 - Fields kept: target, stance, sarcasm, sentiment and stance confidence, date. `dialect` is null (Mawqif has no dialect label).
+
+## EESA test (E1), evaluation only (D-028)
+
+Built 2026-11-07 by `python -m src.sentiment.build_eesa`; statistics `results/data_stats/sentiment/eesa_stats.json`. Source `data/datasets/sa/EESA-Corpus-main/EESA-Test.csv` (no header row). Output `data/processed/sentiment/eesa_test.jsonl`. Same cleaning as S1 (links → URL, mentions → USER). All rows kept as released, including mostly English comments.
+
+- 818 texts: NEG 197, NEU 258, POS 363. 2 repeated texts after cleaning, kept.
+- Train and dev are not built: EESA is not used for training here.
+
+## EESA train and dev (E2), for the SRxx-EESA runs (D-032)
+
+Built 2026-11-08 by `python -m src.sentiment.build_eesa` (now builds all three splits); statistics `results/data_stats/sentiment/eesa_stats_e2.json` (E1 statistics stay in `eesa_stats.json`). Sources `EESA-{Train,Dev,Test}.csv`, official splits, same cleaning as E1. Test file byte-identical to E1.
+
+| Split | Texts | NEG / NEU / POS |
+|---|---|---|
+| Train | 2,463 | 594 / 778 / 1,091 |
+| Dev | 818 | 197 / 258 / 363 |
+| Test | 818 | 197 / 258 / 363 |
+
+- Train: 2,464 rows; 1 dropped (also in dev). No text in two splits. Repeats within a split kept (test 2).
+- Train and dev ids hash the split as well as the row number; test ids keep the E1 form.
+- Synthetic subsets for these runs: `data/synthetic/sentiment/{sg01,sg03,sg03r}_<generator>.eesa_ratio.jsonl` (1,320 / 880 / 880 texts, seed 0; `src.sentiment.eesa_ratio_subsets`).

@@ -53,5 +53,6 @@ for seed in 42 43 44; do
     done
   done
 done
-$PY -m src.sentiment.summarize_runs > /dev/null 2>&1
+# Tables are not rebuilt here: sentiment_summary.csv is being split per corpus by Ammar (2026-11-08);
+# run src.sentiment.summarize_runs by hand once that layout is settled.
 say "DONE"
