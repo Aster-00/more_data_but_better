@@ -23,7 +23,7 @@ The official test set is not used. Size-dependent measures use equal-size sample
 
 Outputs: results/quality/sentiment/<set>_quality.json; then the combined table
 docs/sentiment/tables/dataset_quality.{csv,md} is rebuilt (src.sentiment.summarize_quality)
-(<set> = sg01, the default, sg02, sg03, sg03r or sg04: same measures, k-means seed and sample seed, so rows compare).
+(<set> = sg01, the default, sg02, sg03, sg03r, sg04 or sg04pn: same measures, k-means seed and sample seed, so rows compare).
 
 Usage:
   python -m src.sentiment.measure_quality
@@ -51,10 +51,10 @@ GENERATOR_NAMES = {"jais2": "Jais-2-8B", "fanar": "Fanar-1-9B", "qwen3": "Qwen3-
 # Generators per synthetic set (SG02 without Jais-2, SD-006).
 SET_GENERATORS = {"sg01": ["jais2", "fanar", "qwen3", "aya"], "sg02": ["fanar", "qwen3", "aya"],
                   "sg03": ["fanar", "qwen3", "aya"], "sg03r": ["fanar", "qwen3", "aya"],
-                  "sg04": ["fanar", "qwen3", "aya"]}
+                  "sg04": ["fanar", "qwen3", "aya"], "sg04pn": ["fanar", "qwen3", "aya"]}
 # Minimal-pair sets request only some variety x sentiment cells (e.g. no msa complaints); their
 # imbalance is over the requested (non-empty) cells only.
-PAIR_SETS = {"sg03", "sg03r", "sg04"}
+PAIR_SETS = {"sg03", "sg03r", "sg04", "sg04pn"}
 VARIETIES, SENTIMENTS = ["msa", "egypt", "gulf", "levant"], ["NEG", "NEU", "POS"]
 DIALECTS = {"egypt", "gulf", "levant"}
 TRAIN = Path("data/processed/sentiment/arsarcasm_v2_train.jsonl")

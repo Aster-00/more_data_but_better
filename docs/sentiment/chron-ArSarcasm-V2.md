@@ -41,74 +41,6 @@ e.g. a question about how many qualifier matches someone played, or a news-style
 | SR01-arbertv2 | dev | `sr01_arbertv2` | 3 | 75.56 | 74.81 | 76.85 | 0.16 | 77.07 | 73.72 | 0.56 | 79.05 | 79.23 | 68.39 |
 | SR01-arbertv2 | test | `sr01_arbertv2` | 3 | 61.10 | 61.92 | 64.05 | 0.84 | 66.23 | 69.28 | 1.16 | 76.13 | 44.74 | 62.43 |
 
-## SG01 0 shot Prompt Generation
-
-Each cell: requested → kept after filter → selected (target 500 per cell).
-
-**Jais-2-8B**
-
-| Variety | NEG | NEU | POS | Total selected |
-|---|---|---|---|---|
-| msa | 1,300 → 38 → 38 | 1,300 → 8 → 8 | 1,300 → 186 → 186 | 232 |
-| egypt | 1,300 → 247 → 247 | 1,300 → 122 → 122 | 1,300 → 514 → 500 | 869 |
-| gulf | 1,300 → 482 → 482 | 1,300 → 252 → 252 | 1,300 → 361 → 361 | 1,095 |
-| levant | 1,300 → 469 → 469 | 1,300 → 237 → 237 | 1,300 → 516 → 500 | 1,206 |
-| **Total** | 5,200 → 1,236 → 1,236 | 5,200 → 619 → 619 | 5,200 → 1,577 → 1,547 | 3,402 |
-
-**Fanar-1-9B**
-
-| Variety | NEG | NEU | POS | Total selected |
-|---|---|---|---|---|
-| msa | 650 → 646 → 500 | 650 → 644 → 500 | 650 → 649 → 500 | 1,500 |
-| egypt | 650 → 646 → 500 | 650 → 647 → 500 | 650 → 648 → 500 | 1,500 |
-| gulf | 650 → 646 → 500 | 650 → 647 → 500 | 650 → 649 → 500 | 1,500 |
-| levant | 650 → 645 → 500 | 650 → 647 → 500 | 650 → 646 → 500 | 1,500 |
-| **Total** | 2,600 → 2,583 → 2,000 | 2,600 → 2,585 → 2,000 | 2,600 → 2,592 → 2,000 | 6,000 |
-
-**Qwen3-8B**
-
-| Variety | NEG | NEU | POS | Total selected |
-|---|---|---|---|---|
-| msa | 650 → 648 → 500 | 650 → 645 → 500 | 650 → 648 → 500 | 1,500 |
-| egypt | 650 → 643 → 500 | 650 → 650 → 500 | 650 → 635 → 500 | 1,500 |
-| gulf | 650 → 648 → 500 | 650 → 650 → 500 | 650 → 646 → 500 | 1,500 |
-| levant | 650 → 648 → 500 | 650 → 649 → 500 | 650 → 642 → 500 | 1,500 |
-| **Total** | 2,600 → 2,587 → 2,000 | 2,600 → 2,594 → 2,000 | 2,600 → 2,571 → 2,000 | 6,000 |
-
-**Aya-Expanse-8B**
-
-| Variety | NEG | NEU | POS | Total selected |
-|---|---|---|---|---|
-| msa | 650 → 559 → 500 | 650 → 613 → 500 | 650 → 572 → 500 | 1,500 |
-| egypt | 650 → 640 → 500 | 650 → 644 → 500 | 650 → 641 → 500 | 1,500 |
-| gulf | 650 → 647 → 500 | 650 → 628 → 500 | 650 → 624 → 500 | 1,500 |
-| levant | 650 → 641 → 500 | 650 → 648 → 500 | 650 → 642 → 500 | 1,500 |
-| **Total** | 2,600 → 2,487 → 2,000 | 2,600 → 2,533 → 2,000 | 2,600 → 2,479 → 2,000 | 6,000 |
-
-SG01 Jais-2, Fanar, Qwen3, Aya.
-
-| Generator | Requested | Distinct texts | Kept after filter | Exact dup. | Near dup. | Script | Length | Unparsed | Selected | Short cells | Test matches | Translations cut | Texts/s | Mean words (selected) | Imbalance (max : min) | MSA share | Dialectness | Lexical diversity | Topic spread (of 30) | Semantic diversity (Vendi) | Repeats | Fidelity |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Jais-2-8B | 15,600 | 4,398 (28.2%) | 3,432 (22.0%) | 11,168 | 950 | 14 | 1 | 35 | 3,402 | 10 of 12 | 0 | 264 | 4.07 | 12.4 | 62.5 : 1 | 9.6% | 0.69 | 339 | 9 | 2.8 | 77.7% | 98.0% |
-| Fanar-1-9B | 7,800 | 7,794 (99.9%) | 7,760 (99.5%) | 6 | 1 | 26 | 7 | 0 | 6,000 | 0 of 12 | 0 | 116 | 1.28 | 13.8 | 1.0 : 1 | 25.0% | 0.48 | 1123 | 11 | 3.1 | 0.1% | 94.9% |
-| Qwen3-8B | 7,800 | 7,772 (99.6%) | 7,752 (99.4%) | 28 | 5 | 6 | 9 | 0 | 6,000 | 0 of 12 | 0 | 2 | 1.93 | 13.9 | 1.0 : 1 | 22.1% | 0.56 | 323 | 8 | 3.2 | 0.4% | 88.7% |
-| Aya-Expanse-8B | 7,800 | 7,714 (98.9%) | 7,499 (96.1%) | 86 | 213 | 1 | 1 | 0 | 6,000 | 0 of 12 | 0 | 4 | 2.20 | 17.4 | 1.0 : 1 | 20.4% | 0.57 | 499 | 7 | 2.8 | 3.8% | 91.2% |
-| S1 real (reference) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | 37.7 : 1 | 22.4% | 0.54 | 2518 | 29 | 4.0 | 1.0% | 80.3% |
-
-
-
-**Column explanation:**
--  Script: Rejected because under 70% of the letters are Arabic script, e.g. mostly English, or Chinese characters mixed in
-- Length: Rejected because the tweet has fewer than 2 or more than 60 words
-- Unparsed: The output held no usable tweet: the parser found no Arabic line, only an explanation or English
-
-**Takeaway:**
-- Jais-2 repeats itself almost word for word.
-- TODO: check what each model generations looked like, what they got wrong, any drifts and any mislabeling
-
-**Future runs:**
-- 
-
 ## Sr02 
 which is a run that uses SG01, which is a run that uses 0 shot prompting and generates 500 for every sentiment in every dialect.
 
@@ -267,35 +199,44 @@ Takeaway:
 
 **All classifiers and classes, SR02 (S1 train + SG01)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 79.27 ± 0.62 | 82.63 | 80.85 | 74.34 | 64.45 ± 0.53 | 78.45 | 48.62 | 66.28 | 78.48 ± 0.66 | 72.37 ± 0.37 |
-| MARBERTv2 | Qwen3 | 78.28 ± 0.60 | 81.35 | 80.08 | 73.42 | 64.08 ± 0.46 | 77.87 | 48.63 | 65.73 | 77.39 ± 0.68 | 71.80 ± 0.45 |
-| MARBERTv2 | Aya | 78.99 ± 0.28 | 82.05 | 81.17 | 73.76 | 64.09 ± 0.23 | 77.81 | 48.36 | 66.11 | 77.90 ± 0.23 | 71.96 ± 0.33 |
-| MARBERT | Fanar | 78.35 ± 0.66 | 80.80 | 80.37 | 73.90 | 65.62 ± 0.92 | 79.48 | 48.98 | 68.40 | 77.35 ± 0.80 | 73.94 ± 0.20 |
-| MARBERT | Qwen3 | 78.20 ± 0.63 | 80.25 | 79.66 | 74.70 | 64.65 ± 0.55 | 78.36 | 48.47 | 67.13 | 77.47 ± 0.83 | 72.74 ± 1.43 |
-| MARBERT | Aya | 78.18 ± 0.99 | 80.52 | 80.16 | 73.85 | 64.48 ± 0.54 | 77.78 | 48.73 | 66.94 | 77.19 ± 0.93 | 72.36 ± 0.91 |
-| AraBERTv02-Tw | Fanar | 77.81 ± 0.41 | 81.07 | 80.14 | 72.23 | 63.82 ± 0.36 | 77.75 | 48.96 | 64.74 | 76.65 ± 0.43 | 71.25 ± 0.37 |
-| AraBERTv02-Tw | Qwen3 | 77.85 ± 0.67 | 80.78 | 80.52 | 72.26 | 63.88 ± 0.39 | 77.63 | 49.35 | 64.65 | 76.52 ± 0.79 | 71.14 ± 0.44 |
-| AraBERTv02-Tw | Aya | 77.49 ± 0.95 | 79.95 | 80.08 | 72.43 | 63.63 ± 0.54 | 76.66 | 49.40 | 64.84 | 76.19 ± 1.14 | 70.75 ± 0.74 |
-| CAMeLBERT-mix | Fanar | 75.71 ± 0.77 | 77.84 | 79.01 | 70.29 | 61.71 ± 0.35 | 76.63 | 46.18 | 62.33 | 74.06 ± 1.02 | 69.48 ± 0.59 |
-| CAMeLBERT-mix | Qwen3 | 76.50 ± 1.16 | 78.65 | 78.75 | 72.09 | 61.56 ± 0.63 | 76.39 | 46.42 | 61.86 | 75.37 ± 1.46 | 69.12 ± 0.31 |
-| CAMeLBERT-mix | Aya | 75.62 ± 0.50 | 76.99 | 78.48 | 71.40 | 61.45 ± 0.51 | 75.99 | 46.70 | 61.65 | 74.20 ± 0.65 | 68.82 ± 0.84 |
-| CAMeLBERT-DA | Fanar | 74.28 ± 0.29 | 75.33 | 78.41 | 69.11 | 62.07 ± 0.69 | 76.00 | 48.10 | 62.09 | 72.22 ± 0.40 | 69.05 ± 0.57 |
-| CAMeLBERT-DA | Qwen3 | 74.45 ± 0.21 | 76.03 | 77.41 | 69.90 | 62.11 ± 0.56 | 77.00 | 46.80 | 62.52 | 72.96 ± 0.47 | 69.76 ± 0.53 |
-| CAMeLBERT-DA | Aya | 74.23 ± 0.82 | 74.86 | 77.68 | 70.16 | 61.87 ± 0.49 | 76.66 | 46.11 | 62.84 | 72.51 ± 1.14 | 69.75 ± 1.00 |
-| ARBERT | Fanar | 76.92 ± 0.43 | 80.32 | 80.92 | 69.53 | 62.88 ± 0.49 | 76.12 | 49.79 | 62.74 | 74.92 ± 0.83 | 69.43 ± 1.00 |
-| ARBERT | Qwen3 | 76.29 ± 0.35 | 80.36 | 79.87 | 68.65 | 63.04 ± 0.48 | 77.37 | 49.38 | 62.37 | 74.51 ± 0.58 | 69.87 ± 0.33 |
-| ARBERT | Aya | 75.88 ± 0.29 | 79.73 | 79.74 | 68.18 | 62.53 ± 0.15 | 75.93 | 48.71 | 62.94 | 73.96 ± 0.67 | 69.43 ± 0.10 |
-| ARBERTv2 | Fanar | 76.06 ± 0.04 | 79.47 | 79.72 | 68.98 | 63.26 ± 1.26 | 77.18 | 48.29 | 64.31 | 74.23 ± 0.07 | 70.75 ± 1.53 |
-| ARBERTv2 | Qwen3 | 75.72 ± 0.20 | 78.92 | 78.99 | 69.25 | 63.25 ± 0.47 | 77.50 | 47.49 | 64.76 | 74.08 ± 0.50 | 71.13 ± 0.60 |
-| ARBERTv2 | Aya | 75.64 ± 0.45 | 78.40 | 78.99 | 69.52 | 62.44 ± 0.71 | 76.25 | 47.60 | 63.47 | 73.96 ± 0.40 | 69.86 ± 1.18 |
-| Jais-2-8B | Fanar | 79.46 ± 0.28 | 82.77 | 81.07 | 74.53 | 66.34 ± 0.60 | 79.40 | 51.94 | 67.68 | 78.65 ± 0.26 | 73.54 ± 1.48 |
-| Jais-2-8B | Qwen3 | 79.87 ± 0.32 | 82.13 | 81.74 | 75.75 | 66.11 ± 0.70 | 79.25 | 51.80 | 67.29 | 78.94 ± 0.16 | 73.27 ± 1.86 |
-| Jais-2-8B | Aya | 79.65 ± 0.78 | 82.25 | 80.95 | 75.76 | 66.90 ± 0.31 | 80.55 | 51.90 | 68.26 | 79.00 ± 0.76 | 74.40 ± 0.22 |
-| **Mean** | **Fanar** | **77.23** | **80.03** | **80.06** | **71.61** | **63.77** | **77.63** | **48.86** | **64.82** | **75.82** | **71.23** |
-| **Mean** | **Qwen3** | **77.14** | **79.81** | **79.63** | **72.00** | **63.59** | **77.67** | **48.54** | **64.54** | **75.91** | **71.10** |
-| **Mean** | **Aya** | **76.96** | **79.34** | **79.66** | **71.88** | **63.42** | **77.20** | **48.44** | **64.63** | **75.61** | **70.92** |
+| MARBERTv2 | Fanar | 79.27 ± 0.62 | 78.48 ± 0.66 | 82.63 | 80.85 | 74.34 | 64.45 ± 0.53 | 72.37 ± 0.37 | 78.45 | 48.62 | 66.28 |
+| MARBERTv2 | Qwen3 | 78.28 ± 0.60 | 77.39 ± 0.68 | 81.35 | 80.08 | 73.42 | 64.08 ± 0.46 | 71.80 ± 0.45 | 77.87 | 48.63 | 65.73 |
+| MARBERTv2 | Aya | 78.99 ± 0.28 | 77.90 ± 0.23 | 82.05 | 81.17 | 73.76 | 64.09 ± 0.23 | 71.96 ± 0.33 | 77.81 | 48.36 | 66.11 |
+| MARBERT | Fanar | 78.35 ± 0.66 | 77.35 ± 0.80 | 80.80 | 80.37 | 73.90 | 65.62 ± 0.92 | 73.94 ± 0.20 | 79.48 | 48.98 | 68.40 |
+| MARBERT | Qwen3 | 78.20 ± 0.63 | 77.47 ± 0.83 | 80.25 | 79.66 | 74.70 | 64.65 ± 0.55 | 72.74 ± 1.43 | 78.36 | 48.47 | 67.13 |
+| MARBERT | Aya | 78.18 ± 0.99 | 77.19 ± 0.93 | 80.52 | 80.16 | 73.85 | 64.48 ± 0.54 | 72.36 ± 0.91 | 77.78 | 48.73 | 66.94 |
+| AraBERTv02-Tw | Fanar | 77.81 ± 0.41 | 76.65 ± 0.43 | 81.07 | 80.14 | 72.23 | 63.82 ± 0.36 | 71.25 ± 0.37 | 77.75 | 48.96 | 64.74 |
+| AraBERTv02-Tw | Qwen3 | 77.85 ± 0.67 | 76.52 ± 0.79 | 80.78 | 80.52 | 72.26 | 63.88 ± 0.39 | 71.14 ± 0.44 | 77.63 | 49.35 | 64.65 |
+| AraBERTv02-Tw | Aya | 77.49 ± 0.95 | 76.19 ± 1.14 | 79.95 | 80.08 | 72.43 | 63.63 ± 0.54 | 70.75 ± 0.74 | 76.66 | 49.40 | 64.84 |
+| CAMeLBERT-mix | Fanar | 75.71 ± 0.77 | 74.06 ± 1.02 | 77.84 | 79.01 | 70.29 | 61.71 ± 0.35 | 69.48 ± 0.59 | 76.63 | 46.18 | 62.33 |
+| CAMeLBERT-mix | Qwen3 | 76.50 ± 1.16 | 75.37 ± 1.46 | 78.65 | 78.75 | 72.09 | 61.56 ± 0.63 | 69.12 ± 0.31 | 76.39 | 46.42 | 61.86 |
+| CAMeLBERT-mix | Aya | 75.62 ± 0.50 | 74.20 ± 0.65 | 76.99 | 78.48 | 71.40 | 61.45 ± 0.51 | 68.82 ± 0.84 | 75.99 | 46.70 | 61.65 |
+| CAMeLBERT-DA | Fanar | 74.28 ± 0.29 | 72.22 ± 0.40 | 75.33 | 78.41 | 69.11 | 62.07 ± 0.69 | 69.05 ± 0.57 | 76.00 | 48.10 | 62.09 |
+| CAMeLBERT-DA | Qwen3 | 74.45 ± 0.21 | 72.96 ± 0.47 | 76.03 | 77.41 | 69.90 | 62.11 ± 0.56 | 69.76 ± 0.53 | 77.00 | 46.80 | 62.52 |
+| CAMeLBERT-DA | Aya | 74.23 ± 0.82 | 72.51 ± 1.14 | 74.86 | 77.68 | 70.16 | 61.87 ± 0.49 | 69.75 ± 1.00 | 76.66 | 46.11 | 62.84 |
+| ARBERT | Fanar | 76.92 ± 0.43 | 74.92 ± 0.83 | 80.32 | 80.92 | 69.53 | 62.88 ± 0.49 | 69.43 ± 1.00 | 76.12 | 49.79 | 62.74 |
+| ARBERT | Qwen3 | 76.29 ± 0.35 | 74.51 ± 0.58 | 80.36 | 79.87 | 68.65 | 63.04 ± 0.48 | 69.87 ± 0.33 | 77.37 | 49.38 | 62.37 |
+| ARBERT | Aya | 75.88 ± 0.29 | 73.96 ± 0.67 | 79.73 | 79.74 | 68.18 | 62.53 ± 0.15 | 69.43 ± 0.10 | 75.93 | 48.71 | 62.94 |
+| ARBERTv2 | Fanar | 76.06 ± 0.04 | 74.23 ± 0.07 | 79.47 | 79.72 | 68.98 | 63.26 ± 1.26 | 70.75 ± 1.53 | 77.18 | 48.29 | 64.31 |
+| ARBERTv2 | Qwen3 | 75.72 ± 0.20 | 74.08 ± 0.50 | 78.92 | 78.99 | 69.25 | 63.25 ± 0.47 | 71.13 ± 0.60 | 77.50 | 47.49 | 64.76 |
+| ARBERTv2 | Aya | 75.64 ± 0.45 | 73.96 ± 0.40 | 78.40 | 78.99 | 69.52 | 62.44 ± 0.71 | 69.86 ± 1.18 | 76.25 | 47.60 | 63.47 |
+| Jais-2-8B | Fanar | 79.46 ± 0.28 | 78.65 ± 0.26 | 82.77 | 81.07 | 74.53 | 66.34 ± 0.60 | 73.54 ± 1.48 | 79.40 | 51.94 | 67.68 |
+| Jais-2-8B | Qwen3 | 79.87 ± 0.32 | 78.94 ± 0.16 | 82.13 | 81.74 | 75.75 | 66.11 ± 0.70 | 73.27 ± 1.86 | 79.25 | 51.80 | 67.29 |
+| Jais-2-8B | Aya | 79.65 ± 0.78 | 79.00 ± 0.76 | 82.25 | 80.95 | 75.76 | 66.90 ± 0.31 | 74.40 ± 0.22 | 80.55 | 51.90 | 68.26 |
+| **Mean** | **Fanar** | **77.23** | **75.82** | **80.03** | **80.06** | **71.61** | **63.77** | **71.23** | **77.63** | **48.86** | **64.82** |
+| **Mean** | **Qwen3** | **77.14** | **75.91** | **79.81** | **79.63** | **72.00** | **63.59** | **71.10** | **77.67** | **48.54** | **64.54** |
+| **Mean** | **Aya** | **76.96** | **75.61** | **79.34** | **79.66** | **71.88** | **63.42** | **70.92** | **77.20** | **48.44** | **64.63** |
+| **MARBERTv2** | **Mean** | **78.85** | **77.92** | **82.01** | **80.70** | **73.84** | **64.21** | **72.04** | **78.04** | **48.54** | **66.04** |
+| **MARBERT** | **Mean** | **78.24** | **77.34** | **80.52** | **80.06** | **74.15** | **64.92** | **73.01** | **78.54** | **48.73** | **67.49** |
+| **AraBERTv02-Tw** | **Mean** | **77.72** | **76.45** | **80.60** | **80.25** | **72.31** | **63.78** | **71.05** | **77.35** | **49.24** | **64.74** |
+| **CAMeLBERT-mix** | **Mean** | **75.94** | **74.54** | **77.83** | **78.75** | **71.26** | **61.57** | **69.14** | **76.34** | **46.43** | **61.95** |
+| **CAMeLBERT-DA** | **Mean** | **74.32** | **72.56** | **75.41** | **77.83** | **69.72** | **62.02** | **69.52** | **76.55** | **47.00** | **62.48** |
+| **ARBERT** | **Mean** | **76.36** | **74.46** | **80.14** | **80.18** | **68.79** | **62.82** | **69.58** | **76.47** | **49.29** | **62.68** |
+| **ARBERTv2** | **Mean** | **75.81** | **74.09** | **78.93** | **79.23** | **69.25** | **62.98** | **70.58** | **76.98** | **47.79** | **64.18** |
+| **Jais-2-8B** | **Mean** | **79.66** | **78.86** | **82.38** | **81.25** | **75.35** | **66.45** | **73.74** | **79.73** | **51.88** | **67.74** |
+| **Mean** | **All** | **77.11** | **75.78** | **79.73** | **79.78** | **71.83** | **63.59** | **71.08** | **77.50** | **48.61** | **64.66** |
 
 ## SR03 real data only, NEU dropped
 
@@ -340,84 +281,6 @@ S1 train / dev / test without NEU tweets (6,069 / 675 / 2,252), 2-class NEG/POS 
   - after understanding the neurons activation from the ArSar2 we need to monitor if any trend happens for a specific class or dialect that fires unfamiliar neurons and look at that text and figure out how different that text is from the text from the other neurons. For generation and learning text
 - SG07 but vector Steered
 - SG08 neuron activated and vector steered (if possible)
-
-## Universal Topic Clustering
-
-One frozen topic list for every dataset, real or generated, so the topic mix of any two sets can be compared (quality row 5). Both tracks use it (D-018, D-019).
-
-- **Pool:** 555,820 unique texts from 19 datasets, both tracks (`data/topics/pool/universal_v1.jsonl`, `scripts/topics/build_topic_pool.py`). Only Arabic-script texts (at least 70% Arabic letters), only human-written (no machine translation, no LLM output), no song lyrics. MLADI dev, ArSarcasm-v2 test and all synthetic sets are left out.
-- **Cleaning (D-015):** placeholders, links and mentions removed, hashtags turned into words, laughter shortened, texts under 5 words dropped: 489,815 texts.
-- **Cap:** at most 20,000 texts per dataset, so no single dataset sets the topics: 181,905 texts.
-- **Clustering:** E5 embeddings, k-means with 50 clusters, seed 0 (`configs/quality/topics_universal_clean_k50.json`, 18 min). Ammar reviewed every cluster and named 18 topics. Report with tweets per cluster: `data/topics/universal_clean_k50_seed0/report.md`. Backup: private Hub dataset `Ammar-06/thesis-topic-embeddings`.
-
-| Topic | Clusters | Texts | Share |
-|---|---|---|---|
-| Books and novels | 20, 19, 29, 40, 11 | 22,957 | 12.6% |
-| COVID-19 | 18, 12, 22, 7, 21 | 18,835 | 10.4% |
-| Hotels and stays | 33, 42, 31, 24, 49, 8 | 18,138 | 10.0% |
-| Religion and prayer | 15, 34 | 9,325 | 5.1% |
-| Politics and government | 30, 10 | 9,286 | 5.1% |
-| War and conflict | 39, 5 | 9,144 | 5.0% |
-| Restaurants and food | 46, 6, 25 | 9,126 | 5.0% |
-| Love and feelings | 26, 47 | 8,634 | 4.7% |
-| News and official announcements | 28, 2 | 6,455 | 3.5% |
-| Products and shopping | 37, 13 | 6,298 | 3.5% |
-| Greetings | 23, 32 | 5,357 | 2.9% |
-| Films, TV, music and celebrities | 9, 36 | 5,331 | 2.9% |
-| Football | 0 | 4,494 | 2.5% |
-| Friendship and affection | 4 | 4,284 | 2.4% |
-| Places, malls and attractions | 1 | 2,718 | 1.5% |
-| Apps, phones and technology | 48 | 2,591 | 1.4% |
-| Women's empowerment | 27 | 1,587 | 0.9% |
-| Digital transformation | 38 | 1,407 | 0.8% |
-| Not named | 14, 45, 3, 43, 44, 35, 17, 41, 16 | 35,938 | 19.8% |
-
-**Takeaways:**
-- Unlike D1, one subject is split by sentiment and length (hotels 6 clusters, books 5, COVID-19 5); these splits were merged, since only the subject counts.
-- Books, COVID-19 and hotels are a third of the pool, and each comes mainly from one or two datasets (LABR and 100k Reviews; ArSen-20; TripAdvisor and 100k Reviews).
-- Unnamed clusters are grouped by form, not subject: mixed chatter, very short emoji replies, stretched letters, questions (C16) and short negative statements (C17, a tone).
-- The list is for measurement only. Generation topics stay the 24 of D-016.
-
-## SG02
-
-**Topic spread across the universal topic list**
-Few shot Generation
-
-Frozen list `universal_clean_k50_seed0` (50 E5 clusters, 18 named topics, D-019). Texts cleaned as the pool (D-015), under 5 words not scored. Effective topics = exp(entropy), mean ± std over 10 samples of 800 texts. Distance to real = Jensen-Shannon divergence (base 2, 0 = same mix, 1 = no overlap) between the set's topic shares (18 named topics + unnamed) and S1 real train. Generated by `python -m src.quality.topic_spread` (`results/quality/sentiment/universal_topics.json`).
-
-| Set | Effective clusters (of 50) | Effective named topics (of 18) | Unnamed | Distance to real | War | Politics | News | Religion | Greetings | Love |
-|---|---|---|---|---|---|---|---|---|---|---|
-| S1 real train | 15.6 ± 0.7 | 6.5 ± 0.5 | 19% | 0.000 | 38% | 6% | 7% | 3% | 3% | 4% |
-| SG01 Jais-2 | 17.6 ± 0.5 | 7.0 ± 0.3 | 36% | 0.336 | 0% | 3% | 8% | 23% | 12% | 7% |
-| SG01 Fanar | 16.8 ± 0.7 | 8.7 ± 0.4 | 25% | 0.257 | 4% | 10% | 9% | 15% | 19% | 6% |
-| SG02 Fanar | 17.9 ± 0.5 | 10.2 ± 0.2 | 10% | 0.179 | 9% | 15% | 15% | 14% | 9% | 5% |
-| SG01 Qwen3 | 15.7 ± 0.4 | 7.7 ± 0.3 | 39% | 0.272 | 1% | 9% | 9% | 14% | 2% | 16% |
-| SG02 Qwen3 | 20.4 ± 0.5 | 10.3 ± 0.3 | 35% | 0.143 | 6% | 10% | 10% | 9% | 2% | 8% |
-| SG01 Aya | 16.7 ± 0.4 | 8.8 ± 0.3 | 31% | 0.318 | 1% | 8% | 5% | 14% | 17% | 7% |
-| SG02 Aya | 18.8 ± 0.3 | 10.9 ± 0.2 | 16% | 0.190 | 9% | 14% | 7% | 10% | 15% | 3% |
-
-
-
-**Fidelity against diversity**
-
-
-| Set | Fidelity | Fidelity NEU | MTLD | Vendi | Topic spread (of 30) | Effective universal topics (of 18) | Distance to real |
-|---|---|---|---|---|---|---|---|
-| S1 real (reference) | 80.3% | 78.9% | 2518 | 4.01 | 29 | 6.5 | 0.000 |
-| SG01 Jais-2 | 98.0% | 90.1% | 339 | 2.76 | 9 | 7.0 | 0.336 |
-| SG01 Fanar | 94.9% | 85.2% | 1123 | 3.09 | 11 | 8.7 | 0.257 |
-| SG02 Fanar | 95.4% | 87.0% | 1756 | 3.41 | 13 | 10.2 | 0.179 |
-| SG01 Qwen3 | 88.7% | 74.5% | 323 | 3.22 | 8 | 7.7 | 0.272 |
-| SG02 Qwen3 | 88.2% | 74.8% | 507 | 3.62 | 17 | 10.3 | 0.143 |
-| SG01 Aya | 91.2% | 73.7% | 499 | 2.77 | 7 | 8.8 | 0.318 |
-| SG02 Aya | 89.0% | 67.7% | 1053 | 3.15 | 10 | 10.9 | 0.190 |
-
-**Takeaway:**
-- ArSarcasm-v2 is very focused on war
-- need to identify the unnamed topics to train the E5 on them to generate better
-- why is topic spread of 30 lower than topic spread of 18?
-- need to increase MTLD, Vendi and possibly Topic spread of 30 if found to be useful
-
 ## SR04 Real + SG02
 
 
@@ -558,32 +421,40 @@ Mean of the 7 BERTs (each a 3-seed mean):
 
 **All classifiers and classes, SR04 (S1 train + SG02)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 79.10 ± 0.03 | 82.44 | 80.88 | 73.98 | 63.63 ± 0.57 | 77.69 | 48.16 | 65.06 | 78.21 ± 0.02 | 71.37 ± 0.70 |
-| MARBERTv2 | Qwen3 | 78.51 ± 0.25 | 81.28 | 80.67 | 73.57 | 64.92 ± 0.29 | 79.13 | 48.33 | 67.31 | 77.43 ± 0.29 | 73.22 ± 0.50 |
-| MARBERTv2 | Aya | 78.50 ± 0.58 | 81.85 | 80.92 | 72.72 | 64.08 ± 0.57 | 77.79 | 48.24 | 66.20 | 77.29 ± 0.80 | 71.99 ± 0.49 |
-| MARBERT | Fanar | 78.46 ± 0.30 | 80.64 | 80.27 | 74.47 | 64.78 ± 0.57 | 79.19 | 47.13 | 68.02 | 77.55 ± 0.39 | 73.61 ± 0.21 |
-| MARBERT | Qwen3 | 78.79 ± 0.46 | 80.65 | 80.64 | 75.08 | 64.28 ± 0.71 | 78.46 | 47.57 | 66.80 | 77.87 ± 0.49 | 72.63 ± 0.90 |
-| MARBERT | Aya | 78.46 ± 0.28 | 80.50 | 80.27 | 74.61 | 64.90 ± 0.37 | 78.44 | 48.47 | 67.79 | 77.55 ± 0.32 | 73.11 ± 0.97 |
-| AraBERTv02-Tw | Fanar | 77.52 ± 0.27 | 80.63 | 80.14 | 71.78 | 63.96 ± 0.38 | 77.45 | 49.96 | 64.47 | 76.20 ± 0.31 | 70.96 ± 0.17 |
-| AraBERTv02-Tw | Qwen3 | 77.90 ± 0.92 | 80.61 | 80.39 | 72.71 | 63.72 ± 0.27 | 77.48 | 48.69 | 65.00 | 76.66 ± 1.15 | 71.24 ± 0.74 |
-| AraBERTv02-Tw | Aya | 76.92 ± 0.84 | 79.87 | 79.99 | 70.90 | 63.74 ± 0.50 | 76.78 | 49.34 | 65.09 | 75.38 ± 1.20 | 70.94 ± 0.33 |
-| CAMeLBERT-mix | Fanar | 75.65 ± 0.08 | 77.71 | 78.52 | 70.71 | 61.24 ± 0.56 | 75.87 | 46.68 | 61.17 | 74.21 ± 0.34 | 68.52 ± 0.36 |
-| CAMeLBERT-mix | Qwen3 | 76.82 ± 0.93 | 79.07 | 79.40 | 71.98 | 61.80 ± 0.47 | 76.70 | 45.60 | 63.11 | 75.53 ± 1.34 | 69.90 ± 0.24 |
-| CAMeLBERT-mix | Aya | 75.72 ± 0.76 | 77.35 | 78.86 | 70.95 | 61.21 ± 0.49 | 75.39 | 46.70 | 61.53 | 74.15 ± 0.83 | 68.46 ± 0.68 |
-| CAMeLBERT-DA | Fanar | 74.16 ± 0.12 | 75.27 | 77.92 | 69.28 | 62.05 ± 0.43 | 76.06 | 48.07 | 62.03 | 72.27 ± 0.30 | 69.05 ± 1.13 |
-| CAMeLBERT-DA | Qwen3 | 74.91 ± 0.61 | 76.43 | 78.22 | 70.09 | 62.03 ± 0.41 | 76.89 | 47.01 | 62.21 | 73.26 ± 0.92 | 69.55 ± 0.65 |
-| CAMeLBERT-DA | Aya | 73.75 ± 0.29 | 74.95 | 77.59 | 68.70 | 61.57 ± 0.23 | 75.21 | 47.14 | 62.37 | 71.82 ± 0.53 | 68.79 ± 0.41 |
-| ARBERT | Fanar | 75.99 ± 0.46 | 79.36 | 80.10 | 68.49 | 62.30 ± 0.56 | 76.13 | 48.98 | 61.78 | 73.93 ± 0.62 | 68.95 ± 0.47 |
-| ARBERT | Qwen3 | 76.64 ± 0.29 | 80.81 | 80.07 | 69.03 | 63.56 ± 0.38 | 77.17 | 49.18 | 64.33 | 74.92 ± 0.50 | 70.75 ± 0.66 |
-| ARBERT | Aya | 75.79 ± 0.87 | 79.98 | 79.89 | 67.49 | 62.76 ± 0.95 | 76.29 | 49.24 | 62.76 | 73.74 ± 1.13 | 69.53 ± 0.76 |
-| ARBERTv2 | Fanar | 76.06 ± 0.30 | 79.06 | 79.29 | 69.83 | 62.55 ± 0.66 | 76.45 | 48.28 | 62.93 | 74.44 ± 0.27 | 69.69 ± 0.89 |
-| ARBERTv2 | Qwen3 | 75.82 ± 0.30 | 78.93 | 79.28 | 69.26 | 63.43 ± 1.04 | 76.92 | 48.75 | 64.62 | 74.10 ± 0.62 | 70.77 ± 0.50 |
-| ARBERTv2 | Aya | 75.63 ± 0.47 | 78.57 | 79.08 | 69.25 | 62.80 ± 0.09 | 77.40 | 46.91 | 64.09 | 73.91 ± 0.63 | 70.75 ± 0.60 |
-| **Mean** | **Fanar** | **76.71** | **79.30** | **79.59** | **71.22** | **62.93** | **76.98** | **48.18** | **63.64** | **75.26** | **70.31** |
-| **Mean** | **Qwen3** | **77.06** | **79.68** | **79.81** | **71.67** | **63.39** | **77.54** | **47.88** | **64.77** | **75.68** | **71.15** |
-| **Mean** | **Aya** | **76.40** | **79.01** | **79.51** | **70.66** | **63.01** | **76.76** | **48.01** | **64.26** | **74.83** | **70.51** |
+| MARBERTv2 | Fanar | 79.10 ± 0.03 | 78.21 ± 0.02 | 82.44 | 80.88 | 73.98 | 63.63 ± 0.57 | 71.37 ± 0.70 | 77.69 | 48.16 | 65.06 |
+| MARBERTv2 | Qwen3 | 78.51 ± 0.25 | 77.43 ± 0.29 | 81.28 | 80.67 | 73.57 | 64.92 ± 0.29 | 73.22 ± 0.50 | 79.13 | 48.33 | 67.31 |
+| MARBERTv2 | Aya | 78.50 ± 0.58 | 77.29 ± 0.80 | 81.85 | 80.92 | 72.72 | 64.08 ± 0.57 | 71.99 ± 0.49 | 77.79 | 48.24 | 66.20 |
+| MARBERT | Fanar | 78.46 ± 0.30 | 77.55 ± 0.39 | 80.64 | 80.27 | 74.47 | 64.78 ± 0.57 | 73.61 ± 0.21 | 79.19 | 47.13 | 68.02 |
+| MARBERT | Qwen3 | 78.79 ± 0.46 | 77.87 ± 0.49 | 80.65 | 80.64 | 75.08 | 64.28 ± 0.71 | 72.63 ± 0.90 | 78.46 | 47.57 | 66.80 |
+| MARBERT | Aya | 78.46 ± 0.28 | 77.55 ± 0.32 | 80.50 | 80.27 | 74.61 | 64.90 ± 0.37 | 73.11 ± 0.97 | 78.44 | 48.47 | 67.79 |
+| AraBERTv02-Tw | Fanar | 77.52 ± 0.27 | 76.20 ± 0.31 | 80.63 | 80.14 | 71.78 | 63.96 ± 0.38 | 70.96 ± 0.17 | 77.45 | 49.96 | 64.47 |
+| AraBERTv02-Tw | Qwen3 | 77.90 ± 0.92 | 76.66 ± 1.15 | 80.61 | 80.39 | 72.71 | 63.72 ± 0.27 | 71.24 ± 0.74 | 77.48 | 48.69 | 65.00 |
+| AraBERTv02-Tw | Aya | 76.92 ± 0.84 | 75.38 ± 1.20 | 79.87 | 79.99 | 70.90 | 63.74 ± 0.50 | 70.94 ± 0.33 | 76.78 | 49.34 | 65.09 |
+| CAMeLBERT-mix | Fanar | 75.65 ± 0.08 | 74.21 ± 0.34 | 77.71 | 78.52 | 70.71 | 61.24 ± 0.56 | 68.52 ± 0.36 | 75.87 | 46.68 | 61.17 |
+| CAMeLBERT-mix | Qwen3 | 76.82 ± 0.93 | 75.53 ± 1.34 | 79.07 | 79.40 | 71.98 | 61.80 ± 0.47 | 69.90 ± 0.24 | 76.70 | 45.60 | 63.11 |
+| CAMeLBERT-mix | Aya | 75.72 ± 0.76 | 74.15 ± 0.83 | 77.35 | 78.86 | 70.95 | 61.21 ± 0.49 | 68.46 ± 0.68 | 75.39 | 46.70 | 61.53 |
+| CAMeLBERT-DA | Fanar | 74.16 ± 0.12 | 72.27 ± 0.30 | 75.27 | 77.92 | 69.28 | 62.05 ± 0.43 | 69.05 ± 1.13 | 76.06 | 48.07 | 62.03 |
+| CAMeLBERT-DA | Qwen3 | 74.91 ± 0.61 | 73.26 ± 0.92 | 76.43 | 78.22 | 70.09 | 62.03 ± 0.41 | 69.55 ± 0.65 | 76.89 | 47.01 | 62.21 |
+| CAMeLBERT-DA | Aya | 73.75 ± 0.29 | 71.82 ± 0.53 | 74.95 | 77.59 | 68.70 | 61.57 ± 0.23 | 68.79 ± 0.41 | 75.21 | 47.14 | 62.37 |
+| ARBERT | Fanar | 75.99 ± 0.46 | 73.93 ± 0.62 | 79.36 | 80.10 | 68.49 | 62.30 ± 0.56 | 68.95 ± 0.47 | 76.13 | 48.98 | 61.78 |
+| ARBERT | Qwen3 | 76.64 ± 0.29 | 74.92 ± 0.50 | 80.81 | 80.07 | 69.03 | 63.56 ± 0.38 | 70.75 ± 0.66 | 77.17 | 49.18 | 64.33 |
+| ARBERT | Aya | 75.79 ± 0.87 | 73.74 ± 1.13 | 79.98 | 79.89 | 67.49 | 62.76 ± 0.95 | 69.53 ± 0.76 | 76.29 | 49.24 | 62.76 |
+| ARBERTv2 | Fanar | 76.06 ± 0.30 | 74.44 ± 0.27 | 79.06 | 79.29 | 69.83 | 62.55 ± 0.66 | 69.69 ± 0.89 | 76.45 | 48.28 | 62.93 |
+| ARBERTv2 | Qwen3 | 75.82 ± 0.30 | 74.10 ± 0.62 | 78.93 | 79.28 | 69.26 | 63.43 ± 1.04 | 70.77 ± 0.50 | 76.92 | 48.75 | 64.62 |
+| ARBERTv2 | Aya | 75.63 ± 0.47 | 73.91 ± 0.63 | 78.57 | 79.08 | 69.25 | 62.80 ± 0.09 | 70.75 ± 0.60 | 77.40 | 46.91 | 64.09 |
+| **Mean** | **Fanar** | **76.71** | **75.26** | **79.30** | **79.59** | **71.22** | **62.93** | **70.31** | **76.98** | **48.18** | **63.64** |
+| **Mean** | **Qwen3** | **77.06** | **75.68** | **79.68** | **79.81** | **71.67** | **63.39** | **71.15** | **77.54** | **47.88** | **64.77** |
+| **Mean** | **Aya** | **76.40** | **74.83** | **79.01** | **79.51** | **70.66** | **63.01** | **70.51** | **76.76** | **48.01** | **64.26** |
+| **MARBERTv2** | **Mean** | **78.70** | **77.64** | **81.86** | **80.82** | **73.42** | **64.21** | **72.19** | **78.20** | **48.24** | **66.19** |
+| **MARBERT** | **Mean** | **78.57** | **77.66** | **80.60** | **80.39** | **74.72** | **64.65** | **73.12** | **78.70** | **47.72** | **67.54** |
+| **AraBERTv02-Tw** | **Mean** | **77.45** | **76.08** | **80.37** | **80.17** | **71.80** | **63.81** | **71.05** | **77.24** | **49.33** | **64.85** |
+| **CAMeLBERT-mix** | **Mean** | **76.06** | **74.63** | **78.04** | **78.93** | **71.21** | **61.42** | **68.96** | **75.99** | **46.33** | **61.94** |
+| **CAMeLBERT-DA** | **Mean** | **74.27** | **72.45** | **75.55** | **77.91** | **69.36** | **61.88** | **69.13** | **76.05** | **47.41** | **62.20** |
+| **ARBERT** | **Mean** | **76.14** | **74.20** | **80.05** | **80.02** | **68.34** | **62.87** | **69.74** | **76.53** | **49.13** | **62.96** |
+| **ARBERTv2** | **Mean** | **75.84** | **74.15** | **78.85** | **79.22** | **69.45** | **62.93** | **70.40** | **76.92** | **47.98** | **63.88** |
+| **Mean** | **All** | **76.72** | **75.26** | **79.33** | **79.64** | **71.18** | **63.11** | **70.66** | **77.09** | **48.02** | **64.22** |
 
 **F1-PN, SR04** (official metric: mean F1 of POS and NEG; mean ± std over seeds)
 
@@ -597,61 +468,6 @@ Mean of the 7 BERTs (each a 3-seed mean):
 | ARBERT | 73.93 ± 0.62 | 74.92 ± 0.50 | 73.74 ± 1.13 | 68.95 ± 0.47 | 70.75 ± 0.66 | 69.53 ± 0.76 |
 | ARBERTv2 | 74.44 ± 0.27 | 74.10 ± 0.62 | 73.91 ± 0.63 | 69.69 ± 0.89 | 70.77 ± 0.50 | 70.75 ± 0.60 |
 | **Mean** | **75.26** | **75.68** | **74.83** | **70.31** | **71.15** | **70.51** |
-
-## SG03
-**Why**: Open Synthetic data doesnt help we need few shot.
-
-**Thought Process**: 
-- i wanted to give the shots to focus on the examples, phenomenons or scentence types that create more errors. 
-- **issues**: 
-  - as per the annotation guidelines, News should be NEU, but many annotators have chosen POS or NEG based on the news itself not on the writers emotion, which is wrong.
-  
-| Type | Tweets | NEG | NEU | POS |
-  |---|---|---|---|---|
-  | Bad-news headline | 468 | 36% | 60% | 4% |
-  | Good-news headline | 158 | 4% | 67% | 29% |
-- i then went through all the cases that all the models got wrong (63) `@data/inspect/hard_cases/sr02_dev_hard_cases.md` and classified them into groups (Complaint, Lyric/praise, Lyric/sadness, Fan/ad post)
-- wrote the opposing pair by changing only the part that decides the sentiment. 
-
-- so this is how i constructed the prompt
-  | Pair type | Tweet A → Tweet B | Pairs | What the model had to learn |
-  |---|---|---|---|
-  | Bad-news headline | NEU → NEG | 250 | A report is neutral; the writer's own anger makes it NEG |
-  | Good-news headline | NEU → POS | 250 | A report is neutral; the writer's own joy makes it POS |
-  | **Short dialect complaint** | NEG → NEU | **500** | A short dialect tweet with a complaint word isn't always NEG; some are neutral remarks |
-  | Quoted lyric, praise | NEU → POS | 250 | Quoting a song is neutral; the writer's own praise makes it POS |
-  | Quoted lyric, sadness | NEU → NEG | 250 | Quoting a song is neutral; the writer's own sadness makes it NEG |
-  | **Fan / ad post** | POS → NEU | **500** | Hearts and hashtags on a promo or fan post don't always mean POS |
-  - we also followed the annotation guidelines of the majority not of on the guidelines. 
-
-**Dataset quality metrics (SQ04)**
-
-Topic spread on the frozen universal list `universal_clean_k50_seed0` (50 E5 clusters, 18 named topics, D-019), as for SG02. Effective topics = exp(entropy), mean ± std over 10 samples of 800 texts. Distance to real = Jensen-Shannon divergence (base 2) between the set's topic shares (18 named topics + unnamed) and S1 real train. Source `results/quality/sentiment/universal_topics_sg03.json`.
-
-| Set | Effective clusters (of 50) | Effective named topics (of 18) | Unnamed | Distance to real | War | Politics | News | Religion | Greetings | Love | Films, TV, music |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| S1 real train | 15.6 ± 0.7 | 6.5 ± 0.5 | 19% | 0.000 | 38% | 6% | 7% | 3% | 3% | 4% | 7% |
-| SG03 Fanar | 14.8 ± 0.5 | 8.0 ± 0.2 | 27% | 0.255 | 1% | 2% | 17% | 1% | 2% | 15% | 19% |
-| SG03-random Fanar | 19.7 ± 0.6 | 11.4 ± 0.4 | 19% | 0.147 | 7% | 18% | 8% | 4% | 2% | 6% | 12% |
-| SG03 Qwen3 | 11.2 ± 0.3 | 6.5 ± 0.2 | 35% | 0.300 | 1% | 1% | 18% | 0% | 0% | 20% | 12% |
-| SG03-random Qwen3 | 19.5 ± 0.7 | 9.2 ± 0.3 | 31% | 0.130 | 10% | 8% | 7% | 2% | 1% | 18% | 6% |
-| SG03 Aya | 16.2 ± 0.7 | 8.6 ± 0.3 | 19% | 0.233 | 3% | 5% | 15% | 0% | 2% | 14% | 21% |
-| SG03-random Aya | 21.6 ± 0.5 | 12.4 ± 0.4 | 25% | 0.110 | 10% | 10% | 8% | 4% | 3% | 7% | 9% |
-
-Fidelity = share of texts whose requested label the SR01 MARBERT ensemble agrees with (real: accuracy on S1 dev). Imbalance over the requested variety × sentiment cells only. Source `results/quality/sentiment/{sg03,sg03r}_quality.json`; all sets in `tables/dataset_quality.md`.
-
-| Set | Fidelity | Fidelity NEG / NEU / POS | MTLD | Vendi | Topic spread (of 30) | Effective universal topics (of 18) | Distance to real | MSA share | Dialectness | Repeats | Imbalance |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| S1 real (reference) | 80.3% | 85% / 79% / 75% | 2518 | 4.01 | 29 | 6.5 | 0.000 | 22.4% | 0.54 | 1.0% | 37.7 : 1 |
-| SG03 Fanar | 73.9% | 91% / 59% / 87% | 1865 | 3.83 | 18 | 8.0 | 0.255 | 31.0% | 0.46 | 0.0% | 4.3 : 1 |
-| SG03-random Fanar | 68.8% | 87% / 48% / 91% | 2817 | 3.76 | 19 | 11.4 | 0.147 | 28.9% | 0.46 | 0.0% | 4.1 : 1 |
-| SG03 Qwen3 | 68.5% | 78% / 56% / 84% | 989 | 3.94 | 18 | 6.5 | 0.300 | 24.7% | 0.51 | 5.0% | 4.1 : 1 |
-| SG03-random Qwen3 | 55.9% | 65% / 46% / 67% | 1496 | 3.98 | 22 | 9.2 | 0.130 | 9.8% | 0.66 | 8.1% | 3.9 : 1 |
-| SG03 Aya | 77.7% | 98% / 58% / 97% | 1435 | 3.63 | 16 | 8.6 | 0.233 | 23.8% | 0.53 | 1.1% | 4.0 : 1 |
-| SG03-random Aya | 65.1% | 92% / 39% / 91% | 2162 | 3.50 | 17 | 12.4 | 0.110 | 11.0% | 0.61 | 0.0% | 4.0 : 1 |
-
-SG03 changes four things besides the targeting: quantity (from 11,208 to 15,208 texts), source (LLM-written instead of human), format (minimal pairs instead of single tweets) and label mix (50% NEU). I built SG03-random to keep all four the same and remove only the targeting, so the comparison is fair and tests only the targeting.
-
 ## SR05 + SG03
 Macro F1, mean ± std over seeds 42/43/44. Source `tables/sentiment_summary.csv`. Columns = the generator of the SG03 set.
 
@@ -711,32 +527,40 @@ Macro F1, mean ± std over seeds 42/43/44. Source `tables/sentiment_summary.csv`
 
 **All classifiers and classes, SR05 (S1 train + SG03)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 78.68 ± 0.44 | 82.29 | 80.44 | 73.31 | 63.82 ± 0.57 | 78.29 | 48.59 | 64.59 | 77.80 ± 0.51 | 71.44 ± 0.51 |
-| MARBERTv2 | Qwen3 | 78.40 ± 0.54 | 81.97 | 80.20 | 73.02 | 63.85 ± 0.73 | 78.45 | 47.73 | 65.36 | 77.49 ± 0.43 | 71.91 ± 0.77 |
-| MARBERTv2 | Aya | 78.95 ± 0.12 | 82.35 | 80.65 | 73.85 | 64.05 ± 0.68 | 78.14 | 49.28 | 64.74 | 78.10 ± 0.39 | 71.44 ± 0.72 |
-| MARBERT | Fanar | 78.58 ± 0.93 | 80.54 | 80.97 | 74.24 | 64.43 ± 0.72 | 78.92 | 48.87 | 65.49 | 77.39 ± 1.18 | 72.21 ± 0.14 |
-| MARBERT | Qwen3 | 78.17 ± 0.78 | 80.69 | 80.17 | 73.64 | 63.50 ± 0.70 | 77.96 | 47.47 | 65.06 | 77.17 ± 0.87 | 71.51 ± 0.77 |
-| MARBERT | Aya | 78.53 ± 0.74 | 80.80 | 80.67 | 74.11 | 64.79 ± 1.09 | 78.24 | 50.05 | 66.09 | 77.45 ± 1.11 | 72.17 ± 1.19 |
-| AraBERTv02-Tw | Fanar | 77.99 ± 0.55 | 79.80 | 80.78 | 73.37 | 62.89 ± 0.50 | 77.37 | 48.66 | 62.64 | 76.59 ± 0.70 | 70.00 ± 0.05 |
-| AraBERTv02-Tw | Qwen3 | 77.59 ± 0.58 | 80.12 | 80.38 | 72.25 | 62.65 ± 0.46 | 78.22 | 45.18 | 64.55 | 76.19 ± 0.68 | 71.38 ± 0.42 |
-| AraBERTv02-Tw | Aya | 77.37 ± 0.47 | 79.63 | 80.74 | 71.74 | 62.91 ± 0.55 | 76.90 | 48.54 | 63.29 | 75.68 ± 0.49 | 70.09 ± 0.18 |
-| CAMeLBERT-mix | Fanar | 76.55 ± 0.56 | 78.96 | 79.47 | 71.22 | 61.37 ± 0.86 | 77.05 | 46.55 | 60.52 | 75.09 ± 0.79 | 68.78 ± 0.23 |
-| CAMeLBERT-mix | Qwen3 | 75.42 ± 0.83 | 77.54 | 78.34 | 70.38 | 61.14 ± 0.83 | 77.71 | 44.12 | 61.61 | 73.96 ± 0.84 | 69.66 ± 0.08 |
-| CAMeLBERT-mix | Aya | 75.63 ± 0.76 | 77.43 | 79.06 | 70.42 | 61.08 ± 0.27 | 76.64 | 46.32 | 60.28 | 73.92 ± 0.91 | 68.46 ± 0.59 |
-| CAMeLBERT-DA | Fanar | 74.08 ± 0.52 | 75.86 | 77.95 | 68.41 | 60.88 ± 0.32 | 76.62 | 46.59 | 59.43 | 72.14 ± 0.64 | 68.02 ± 0.85 |
-| CAMeLBERT-DA | Qwen3 | 73.88 ± 0.39 | 75.39 | 77.97 | 68.29 | 60.57 ± 0.74 | 76.84 | 45.06 | 59.82 | 71.84 ± 0.46 | 68.33 ± 1.24 |
-| CAMeLBERT-DA | Aya | 74.47 ± 0.32 | 75.59 | 78.19 | 69.64 | 60.48 ± 0.48 | 75.71 | 46.20 | 59.53 | 72.61 ± 0.36 | 67.62 ± 0.64 |
-| ARBERT | Fanar | 76.27 ± 0.55 | 80.71 | 79.54 | 68.56 | 61.48 ± 0.53 | 77.23 | 47.67 | 59.53 | 74.63 ± 0.75 | 68.38 ± 1.32 |
-| ARBERT | Qwen3 | 75.13 ± 0.56 | 79.76 | 78.20 | 67.42 | 62.30 ± 0.88 | 77.58 | 47.24 | 62.08 | 73.59 ± 0.79 | 69.83 ± 1.57 |
-| ARBERT | Aya | 76.41 ± 0.46 | 80.63 | 80.24 | 68.37 | 61.73 ± 0.93 | 76.60 | 48.60 | 59.98 | 74.50 ± 0.81 | 68.29 ± 1.34 |
-| ARBERTv2 | Fanar | 75.03 ± 0.10 | 78.88 | 78.51 | 67.70 | 60.99 ± 0.14 | 77.08 | 44.97 | 60.92 | 73.29 ± 0.30 | 69.00 ± 0.64 |
-| ARBERTv2 | Qwen3 | 74.98 ± 0.33 | 79.08 | 77.72 | 68.14 | 61.42 ± 0.40 | 77.69 | 44.00 | 62.56 | 73.61 ± 0.81 | 70.12 ± 0.53 |
-| ARBERTv2 | Aya | 75.22 ± 0.53 | 79.00 | 79.14 | 67.51 | 61.22 ± 0.40 | 76.82 | 46.17 | 60.68 | 73.26 ± 0.87 | 68.75 ± 0.75 |
-| **Mean** | **Fanar** | **76.74** | **79.58** | **79.67** | **70.97** | **62.27** | **77.51** | **47.41** | **61.87** | **75.28** | **69.69** |
-| **Mean** | **Qwen3** | **76.22** | **79.22** | **79.00** | **70.45** | **62.20** | **77.78** | **45.83** | **63.01** | **74.84** | **70.39** |
-| **Mean** | **Aya** | **76.65** | **79.35** | **79.81** | **70.81** | **62.32** | **77.01** | **47.88** | **62.08** | **75.07** | **69.55** |
+| MARBERTv2 | Fanar | 78.68 ± 0.44 | 77.80 ± 0.51 | 82.29 | 80.44 | 73.31 | 63.82 ± 0.57 | 71.44 ± 0.51 | 78.29 | 48.59 | 64.59 |
+| MARBERTv2 | Qwen3 | 78.40 ± 0.54 | 77.49 ± 0.43 | 81.97 | 80.20 | 73.02 | 63.85 ± 0.73 | 71.91 ± 0.77 | 78.45 | 47.73 | 65.36 |
+| MARBERTv2 | Aya | 78.95 ± 0.12 | 78.10 ± 0.39 | 82.35 | 80.65 | 73.85 | 64.05 ± 0.68 | 71.44 ± 0.72 | 78.14 | 49.28 | 64.74 |
+| MARBERT | Fanar | 78.58 ± 0.93 | 77.39 ± 1.18 | 80.54 | 80.97 | 74.24 | 64.43 ± 0.72 | 72.21 ± 0.14 | 78.92 | 48.87 | 65.49 |
+| MARBERT | Qwen3 | 78.17 ± 0.78 | 77.17 ± 0.87 | 80.69 | 80.17 | 73.64 | 63.50 ± 0.70 | 71.51 ± 0.77 | 77.96 | 47.47 | 65.06 |
+| MARBERT | Aya | 78.53 ± 0.74 | 77.45 ± 1.11 | 80.80 | 80.67 | 74.11 | 64.79 ± 1.09 | 72.17 ± 1.19 | 78.24 | 50.05 | 66.09 |
+| AraBERTv02-Tw | Fanar | 77.99 ± 0.55 | 76.59 ± 0.70 | 79.80 | 80.78 | 73.37 | 62.89 ± 0.50 | 70.00 ± 0.05 | 77.37 | 48.66 | 62.64 |
+| AraBERTv02-Tw | Qwen3 | 77.59 ± 0.58 | 76.19 ± 0.68 | 80.12 | 80.38 | 72.25 | 62.65 ± 0.46 | 71.38 ± 0.42 | 78.22 | 45.18 | 64.55 |
+| AraBERTv02-Tw | Aya | 77.37 ± 0.47 | 75.68 ± 0.49 | 79.63 | 80.74 | 71.74 | 62.91 ± 0.55 | 70.09 ± 0.18 | 76.90 | 48.54 | 63.29 |
+| CAMeLBERT-mix | Fanar | 76.55 ± 0.56 | 75.09 ± 0.79 | 78.96 | 79.47 | 71.22 | 61.37 ± 0.86 | 68.78 ± 0.23 | 77.05 | 46.55 | 60.52 |
+| CAMeLBERT-mix | Qwen3 | 75.42 ± 0.83 | 73.96 ± 0.84 | 77.54 | 78.34 | 70.38 | 61.14 ± 0.83 | 69.66 ± 0.08 | 77.71 | 44.12 | 61.61 |
+| CAMeLBERT-mix | Aya | 75.63 ± 0.76 | 73.92 ± 0.91 | 77.43 | 79.06 | 70.42 | 61.08 ± 0.27 | 68.46 ± 0.59 | 76.64 | 46.32 | 60.28 |
+| CAMeLBERT-DA | Fanar | 74.08 ± 0.52 | 72.14 ± 0.64 | 75.86 | 77.95 | 68.41 | 60.88 ± 0.32 | 68.02 ± 0.85 | 76.62 | 46.59 | 59.43 |
+| CAMeLBERT-DA | Qwen3 | 73.88 ± 0.39 | 71.84 ± 0.46 | 75.39 | 77.97 | 68.29 | 60.57 ± 0.74 | 68.33 ± 1.24 | 76.84 | 45.06 | 59.82 |
+| CAMeLBERT-DA | Aya | 74.47 ± 0.32 | 72.61 ± 0.36 | 75.59 | 78.19 | 69.64 | 60.48 ± 0.48 | 67.62 ± 0.64 | 75.71 | 46.20 | 59.53 |
+| ARBERT | Fanar | 76.27 ± 0.55 | 74.63 ± 0.75 | 80.71 | 79.54 | 68.56 | 61.48 ± 0.53 | 68.38 ± 1.32 | 77.23 | 47.67 | 59.53 |
+| ARBERT | Qwen3 | 75.13 ± 0.56 | 73.59 ± 0.79 | 79.76 | 78.20 | 67.42 | 62.30 ± 0.88 | 69.83 ± 1.57 | 77.58 | 47.24 | 62.08 |
+| ARBERT | Aya | 76.41 ± 0.46 | 74.50 ± 0.81 | 80.63 | 80.24 | 68.37 | 61.73 ± 0.93 | 68.29 ± 1.34 | 76.60 | 48.60 | 59.98 |
+| ARBERTv2 | Fanar | 75.03 ± 0.10 | 73.29 ± 0.30 | 78.88 | 78.51 | 67.70 | 60.99 ± 0.14 | 69.00 ± 0.64 | 77.08 | 44.97 | 60.92 |
+| ARBERTv2 | Qwen3 | 74.98 ± 0.33 | 73.61 ± 0.81 | 79.08 | 77.72 | 68.14 | 61.42 ± 0.40 | 70.12 ± 0.53 | 77.69 | 44.00 | 62.56 |
+| ARBERTv2 | Aya | 75.22 ± 0.53 | 73.26 ± 0.87 | 79.00 | 79.14 | 67.51 | 61.22 ± 0.40 | 68.75 ± 0.75 | 76.82 | 46.17 | 60.68 |
+| **Mean** | **Fanar** | **76.74** | **75.28** | **79.58** | **79.67** | **70.97** | **62.27** | **69.69** | **77.51** | **47.41** | **61.87** |
+| **Mean** | **Qwen3** | **76.22** | **74.84** | **79.22** | **79.00** | **70.45** | **62.20** | **70.39** | **77.78** | **45.83** | **63.01** |
+| **Mean** | **Aya** | **76.65** | **75.07** | **79.35** | **79.81** | **70.81** | **62.32** | **69.55** | **77.01** | **47.88** | **62.08** |
+| **MARBERTv2** | **Mean** | **78.68** | **77.80** | **82.20** | **80.43** | **73.39** | **63.91** | **71.60** | **78.29** | **48.53** | **64.90** |
+| **MARBERT** | **Mean** | **78.43** | **77.34** | **80.68** | **80.60** | **74.00** | **64.24** | **71.96** | **78.37** | **48.80** | **65.55** |
+| **AraBERTv02-Tw** | **Mean** | **77.65** | **76.15** | **79.85** | **80.63** | **72.45** | **62.82** | **70.49** | **77.50** | **47.46** | **63.49** |
+| **CAMeLBERT-mix** | **Mean** | **75.87** | **74.32** | **77.98** | **78.96** | **70.67** | **61.20** | **68.97** | **77.13** | **45.66** | **60.80** |
+| **CAMeLBERT-DA** | **Mean** | **74.14** | **72.20** | **75.61** | **78.04** | **68.78** | **60.64** | **67.99** | **76.39** | **45.95** | **59.59** |
+| **ARBERT** | **Mean** | **75.94** | **74.24** | **80.37** | **79.33** | **68.12** | **61.84** | **68.83** | **77.14** | **47.84** | **60.53** |
+| **ARBERTv2** | **Mean** | **75.08** | **73.39** | **78.99** | **78.46** | **67.78** | **61.21** | **69.29** | **77.20** | **45.05** | **61.39** |
+| **Mean** | **All** | **76.54** | **75.06** | **79.38** | **79.49** | **70.74** | **62.26** | **69.88** | **77.43** | **47.04** | **62.32** |
 
 ## SR06 + SG03-random
 Same layout as SR05.
@@ -820,133 +644,40 @@ Same layout as SR05.
 
 **All classifiers and classes, SR06 (S1 train + SG03-random)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 78.12 ± 0.32 | 82.35 | 80.70 | 71.31 | 64.25 ± 0.19 | 79.07 | 48.14 | 65.54 | 76.83 ± 0.59 | 72.30 ± 0.36 |
-| MARBERTv2 | Qwen3 | 77.78 ± 0.34 | 81.79 | 79.82 | 71.72 | 63.95 ± 0.57 | 79.16 | 47.07 | 65.60 | 76.75 ± 0.29 | 72.38 ± 0.96 |
-| MARBERTv2 | Aya | 78.04 ± 0.68 | 81.88 | 80.64 | 71.59 | 63.39 ± 0.53 | 77.67 | 48.56 | 63.95 | 76.73 ± 0.93 | 70.81 ± 0.74 |
-| MARBERT | Fanar | 78.69 ± 0.16 | 81.24 | 80.62 | 74.22 | 64.00 ± 0.63 | 78.41 | 48.05 | 65.54 | 77.73 ± 0.12 | 71.97 ± 1.23 |
-| MARBERT | Qwen3 | 77.95 ± 1.03 | 80.43 | 79.76 | 73.65 | 64.70 ± 0.75 | 78.84 | 48.56 | 66.70 | 77.04 ± 0.96 | 72.77 ± 0.64 |
-| MARBERT | Aya | 78.50 ± 0.27 | 80.27 | 80.64 | 74.59 | 64.50 ± 0.20 | 78.06 | 49.57 | 65.86 | 77.43 ± 0.35 | 71.96 ± 0.39 |
-| AraBERTv02-Tw | Fanar | 77.03 ± 0.49 | 79.89 | 80.30 | 70.90 | 63.78 ± 0.59 | 77.75 | 49.17 | 64.44 | 75.39 ± 0.72 | 71.09 ± 0.97 |
-| AraBERTv02-Tw | Qwen3 | 77.03 ± 0.52 | 79.68 | 80.27 | 71.16 | 63.44 ± 0.27 | 77.04 | 49.00 | 64.29 | 75.42 ± 0.67 | 70.66 ± 0.37 |
-| AraBERTv02-Tw | Aya | 76.96 ± 0.34 | 79.44 | 80.41 | 71.04 | 62.85 ± 0.34 | 75.97 | 49.70 | 62.89 | 75.24 ± 0.65 | 69.43 ± 0.54 |
-| CAMeLBERT-mix | Fanar | 74.75 ± 0.43 | 76.93 | 78.11 | 69.22 | 61.25 ± 0.06 | 76.50 | 47.32 | 59.94 | 73.07 ± 0.68 | 68.22 ± 0.97 |
-| CAMeLBERT-mix | Qwen3 | 75.19 ± 0.19 | 76.83 | 78.13 | 70.62 | 61.03 ± 0.61 | 75.69 | 46.49 | 60.90 | 73.72 ± 0.23 | 68.30 ± 0.20 |
-| CAMeLBERT-mix | Aya | 74.27 ± 0.55 | 76.53 | 77.99 | 68.31 | 60.85 ± 0.80 | 75.54 | 47.92 | 59.09 | 72.42 ± 0.80 | 67.32 ± 1.20 |
-| CAMeLBERT-DA | Fanar | 73.64 ± 0.34 | 75.24 | 77.33 | 68.35 | 61.62 ± 0.40 | 76.35 | 47.65 | 60.85 | 71.80 ± 0.26 | 68.60 ± 0.66 |
-| CAMeLBERT-DA | Qwen3 | 73.92 ± 0.19 | 75.32 | 76.55 | 69.89 | 61.21 ± 1.72 | 76.63 | 45.44 | 61.56 | 72.61 ± 0.41 | 69.10 ± 1.45 |
-| CAMeLBERT-DA | Aya | 73.52 ± 0.26 | 75.06 | 76.86 | 68.65 | 60.24 ± 0.72 | 75.01 | 45.51 | 60.21 | 71.85 ± 0.61 | 67.61 ± 0.43 |
-| ARBERT | Fanar | 75.80 ± 0.52 | 80.31 | 78.89 | 68.20 | 61.68 ± 1.18 | 77.25 | 46.79 | 61.00 | 74.26 ± 0.53 | 69.13 ± 1.56 |
-| ARBERT | Qwen3 | 74.62 ± 0.38 | 78.93 | 78.58 | 66.36 | 61.49 ± 0.81 | 76.04 | 47.58 | 60.84 | 72.65 ± 0.92 | 68.44 ± 1.29 |
-| ARBERT | Aya | 75.53 ± 0.32 | 79.97 | 79.86 | 66.77 | 61.31 ± 1.03 | 76.64 | 47.76 | 59.53 | 73.37 ± 0.61 | 68.08 ± 1.70 |
-| ARBERTv2 | Fanar | 75.48 ± 0.47 | 79.47 | 78.89 | 68.06 | 62.43 ± 0.59 | 78.04 | 46.02 | 63.22 | 73.77 ± 0.47 | 70.63 ± 0.55 |
-| ARBERTv2 | Qwen3 | 74.64 ± 0.54 | 78.33 | 78.24 | 67.35 | 61.70 ± 0.31 | 76.42 | 45.69 | 62.99 | 72.84 ± 0.81 | 69.70 ± 1.20 |
-| ARBERTv2 | Aya | 75.13 ± 0.93 | 78.64 | 79.34 | 67.42 | 61.25 ± 0.28 | 76.06 | 46.62 | 61.09 | 73.03 ± 0.84 | 68.57 ± 0.53 |
-| **Mean** | **Fanar** | **76.22** | **79.35** | **79.26** | **70.04** | **62.72** | **77.62** | **47.59** | **62.93** | **74.69** | **70.28** |
-| **Mean** | **Qwen3** | **75.88** | **78.76** | **78.76** | **70.11** | **62.50** | **77.12** | **47.12** | **63.27** | **74.43** | **70.19** |
-| **Mean** | **Aya** | **75.99** | **78.83** | **79.39** | **69.77** | **62.06** | **76.42** | **47.95** | **61.80** | **74.30** | **69.11** |
-
-## SG04
-Test Set
-| Type | Tweets |
-|---|---|
-| 1. Sarcastic praise (NEG → POS) | 141 |
-| 2. Dry sarcastic jab (NEG → NEU) | 162 |
-| 3. Maxim / reflection (NEU → NEG) | 194 |
-| 4. Prayer / verse / greeting (NEU → POS) | 13 |
-| 5. Election / promo hashtag (NEU → POS) | 26 |
-| 6. Crying / laughing emoji | 47 |
-
-These are the errors from test where at least 32/63 runs classified them wrong classified into groups.
-This generation will focus on the errors from test instead of dev because in ArSarcasm-V2 the errors in dev almost dont exist in test, because test and dev are not equally balanced. This could be considered cheating the model, but how else will we generate data for the models weakness.
-
-Your labels are saved in [sg04_review_ammar.csv](data/inspect/hard_cases/sg04_review_ammar.csv). The test gold labels are not changed.
-
-
-
-
-| Type | Change | Pairs |
-|---|---|---|
-| 1. Sarcastic praise, POS → NEG | Keep. The task text says sincere praise or encouragement stays POS. | 500 |
-| 2. Dry sarcastic jab, NEU → NEG | Keep. Merge in the reproach / disapproval tweets from type 3 (3.5, 3.10, 3.24): disapproval without negative words is NEG. | 600 |
-| 3. Maxim / reflection | Narrow to real general sayings (لهفة البدايات ليست حبّ…), which stay NEU. Pair: saying NEU ↔ the writer's own sad or happy use of it, NEG / POS. | 400 |
-| 4. Prayer / verse, NEU → POS | Keep. Only 13 test tweets, so it stays small. | 200 |
-| 5. Spam hashtag | Drop. | 0 |
-| 6. 😭 / 😂💔 | Redefine as a context pair. The same emoji appears in both tweets, and only the context decides: POS (excitement) ↔ NEG (sadness). That turns your "depends on context" into what the pair teaches. | 300 |
-
-| Type | Read | Gold label wrong | Share |
-|---|---|---|---|
-| 1. Sarcastic praise | 32 | 6 | 19% |
-| 2. Dry sarcastic jab | 32 | 0 | 0% |
-| 3. Maxim / reflection | 32 | 4 | 13% |
-- So the example tweets in the prompts must use my label, not the gold one.
-
-**Type 1: sarcastic praise (keep)**
-- Tweet A: real praise, POS.
-- Tweet B: the same praise, but sarcastic, NEG.
-- What the model learns: nice words can be mockery.
-- Change: the prompt says real praise or encouragement stays POS.
-**Types 2 + 3: neutral remark vs a dig (merge into one type)**
-- Tweet A: a plain remark or joke, NEU.
-- Tweet B: the same remark, but with a real dig at someone, NEG.
-- Why merge: both types make this same pair. Type 2 errors miss the dig, and type 3 errors see a dig that isn't there. One pair fixes both.
-
-**Type 4: prayer or verse (keep, small)**
-- Tweet A: a prayer or verse alone, NEU.
-- Tweet B: the same prayer plus the writer's own joy or thanks, POS.
-- What the model learns: religious words alone are not POS.
-
-**Type 5: spam hashtags (drop)**
-- These tweets can't be read, as you said.
-
-**Type 6: 😭 and 😂💔 (redefine)**
-- Both tweets use the same emoji.
-- Tweet A: excitement (e.g. a fan seeing their idol), POS.
-- Tweet B: real sadness, NEG.
-- What the model learns: the emoji alone doesn't decide; the context does. That is your "depends on context".
-
-
-## Size
-
-| Type | Pairs |
-|---|---|
-| 1. Sarcastic praise | 500 |
-| 2+3. Remark vs dig | 1,000 |
-| 4. Prayer / verse | 200 |
-| 6. Emoji in context | 300 |
-| **Total** | **2,000** (4,000 tweets, same as SG03) |
-
-- Sentiment split: NEG 1,800, NEU 1,200, POS 1,000.
-- This leans NEG, like the test set.
-- Keep a Fidelity at a minimum of 80% (generation repeats until each set reaches 80%.) using That is judge-based filtering with a set-level target. It ranks pairs by how many sides an external judge (the SR01 MARBERT ensemble) confirms. It then keeps generating until set reaches 80% agreement.
-
-
-**Dataset quality** (source `tables/dataset_quality.md`; fidelity = SR01 MARBERT judge, which SG04 was also selected by, so its ≥ 80% holds by construction)
-
-| Dataset | Texts | Imbalance | MSA share | Dialectness | MTLD | Topics (of 30) | Universal clusters (of 50) | Vendi | Repeats | Fidelity (NEG / NEU / POS) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| S1 real (train) | 11,171 | 37.7 : 1 | 22.4% | 0.54 | 2518 | 29 | 15.6 | 4.0 | 1.0% | 80.3% (85% / 79% / 75%) |
-| SG03 Fanar | 4,000 | 4.3 : 1 | 31.0% | 0.46 | 1865 | 18 | 14.8 | 3.8 | 0.0% | 73.9% (91% / 59% / 87%) |
-| SG03 Qwen3 | 4,000 | 4.1 : 1 | 24.7% | 0.51 | 989 | 18 | 11.2 | 3.9 | 5.0% | 68.5% (78% / 56% / 84%) |
-| SG03 Aya | 4,000 | 4.0 : 1 | 23.8% | 0.53 | 1435 | 16 | 16.2 | 3.6 | 1.1% | 77.7% (98% / 58% / 97%) |
-| SG04 (test-contaminated) Fanar | 4,000 | 2.4 : 1 | 22.6% | 0.51 | 1749 | 12 | 20.9 | 3.5 | 0.0% | 81.3% (90% / 53% / 99%) |
-| SG04 (test-contaminated) Qwen3 | 4,000 | 3.2 : 1 | 25.8% | 0.49 | 901 | 9 | 18.6 | 3.5 | 3.0% | 80.7% (80% / 72% / 91%) |
-| SG04 (test-contaminated) Aya | 4,000 | 2.6 : 1 | 18.8% | 0.58 | 1159 | 10 | 17.8 | 3.1 | 0.4% | 82.4% (98% / 44% / 100%) |
-
-- Fidelity per type after selection (`results/filtering/sg04_<gen>.selection.json`):
-
-| Type | Fanar | Qwen3 | Aya |
-|---|---|---|---|
-| Sarcastic praise | 86.0% | 64.2% | 100% |
-| Public jab | 91.2% | 93.9% | 83.3% |
-| Personal remark | 68.0% | 81.8% | 66.4% |
-| Prayer | 50.5% | 57.3% | 50.0% |
-| Emoji in context | 100% | 100% | 100% |
-| **Set** | **81.3%** (2.0× requests) | **80.7%** (3.0×) | **82.4%** (2.0×) |
-
-- Prayer stays near 50% for every generator: the judge reads neutral prayers as POS (the error the type targets).
-- Note: types 2 and 3 were finally kept as two types (public jab 500, personal remark 500), not merged.
+| MARBERTv2 | Fanar | 78.12 ± 0.32 | 76.83 ± 0.59 | 82.35 | 80.70 | 71.31 | 64.25 ± 0.19 | 72.30 ± 0.36 | 79.07 | 48.14 | 65.54 |
+| MARBERTv2 | Qwen3 | 77.78 ± 0.34 | 76.75 ± 0.29 | 81.79 | 79.82 | 71.72 | 63.95 ± 0.57 | 72.38 ± 0.96 | 79.16 | 47.07 | 65.60 |
+| MARBERTv2 | Aya | 78.04 ± 0.68 | 76.73 ± 0.93 | 81.88 | 80.64 | 71.59 | 63.39 ± 0.53 | 70.81 ± 0.74 | 77.67 | 48.56 | 63.95 |
+| MARBERT | Fanar | 78.69 ± 0.16 | 77.73 ± 0.12 | 81.24 | 80.62 | 74.22 | 64.00 ± 0.63 | 71.97 ± 1.23 | 78.41 | 48.05 | 65.54 |
+| MARBERT | Qwen3 | 77.95 ± 1.03 | 77.04 ± 0.96 | 80.43 | 79.76 | 73.65 | 64.70 ± 0.75 | 72.77 ± 0.64 | 78.84 | 48.56 | 66.70 |
+| MARBERT | Aya | 78.50 ± 0.27 | 77.43 ± 0.35 | 80.27 | 80.64 | 74.59 | 64.50 ± 0.20 | 71.96 ± 0.39 | 78.06 | 49.57 | 65.86 |
+| AraBERTv02-Tw | Fanar | 77.03 ± 0.49 | 75.39 ± 0.72 | 79.89 | 80.30 | 70.90 | 63.78 ± 0.59 | 71.09 ± 0.97 | 77.75 | 49.17 | 64.44 |
+| AraBERTv02-Tw | Qwen3 | 77.03 ± 0.52 | 75.42 ± 0.67 | 79.68 | 80.27 | 71.16 | 63.44 ± 0.27 | 70.66 ± 0.37 | 77.04 | 49.00 | 64.29 |
+| AraBERTv02-Tw | Aya | 76.96 ± 0.34 | 75.24 ± 0.65 | 79.44 | 80.41 | 71.04 | 62.85 ± 0.34 | 69.43 ± 0.54 | 75.97 | 49.70 | 62.89 |
+| CAMeLBERT-mix | Fanar | 74.75 ± 0.43 | 73.07 ± 0.68 | 76.93 | 78.11 | 69.22 | 61.25 ± 0.06 | 68.22 ± 0.97 | 76.50 | 47.32 | 59.94 |
+| CAMeLBERT-mix | Qwen3 | 75.19 ± 0.19 | 73.72 ± 0.23 | 76.83 | 78.13 | 70.62 | 61.03 ± 0.61 | 68.30 ± 0.20 | 75.69 | 46.49 | 60.90 |
+| CAMeLBERT-mix | Aya | 74.27 ± 0.55 | 72.42 ± 0.80 | 76.53 | 77.99 | 68.31 | 60.85 ± 0.80 | 67.32 ± 1.20 | 75.54 | 47.92 | 59.09 |
+| CAMeLBERT-DA | Fanar | 73.64 ± 0.34 | 71.80 ± 0.26 | 75.24 | 77.33 | 68.35 | 61.62 ± 0.40 | 68.60 ± 0.66 | 76.35 | 47.65 | 60.85 |
+| CAMeLBERT-DA | Qwen3 | 73.92 ± 0.19 | 72.61 ± 0.41 | 75.32 | 76.55 | 69.89 | 61.21 ± 1.72 | 69.10 ± 1.45 | 76.63 | 45.44 | 61.56 |
+| CAMeLBERT-DA | Aya | 73.52 ± 0.26 | 71.85 ± 0.61 | 75.06 | 76.86 | 68.65 | 60.24 ± 0.72 | 67.61 ± 0.43 | 75.01 | 45.51 | 60.21 |
+| ARBERT | Fanar | 75.80 ± 0.52 | 74.26 ± 0.53 | 80.31 | 78.89 | 68.20 | 61.68 ± 1.18 | 69.13 ± 1.56 | 77.25 | 46.79 | 61.00 |
+| ARBERT | Qwen3 | 74.62 ± 0.38 | 72.65 ± 0.92 | 78.93 | 78.58 | 66.36 | 61.49 ± 0.81 | 68.44 ± 1.29 | 76.04 | 47.58 | 60.84 |
+| ARBERT | Aya | 75.53 ± 0.32 | 73.37 ± 0.61 | 79.97 | 79.86 | 66.77 | 61.31 ± 1.03 | 68.08 ± 1.70 | 76.64 | 47.76 | 59.53 |
+| ARBERTv2 | Fanar | 75.48 ± 0.47 | 73.77 ± 0.47 | 79.47 | 78.89 | 68.06 | 62.43 ± 0.59 | 70.63 ± 0.55 | 78.04 | 46.02 | 63.22 |
+| ARBERTv2 | Qwen3 | 74.64 ± 0.54 | 72.84 ± 0.81 | 78.33 | 78.24 | 67.35 | 61.70 ± 0.31 | 69.70 ± 1.20 | 76.42 | 45.69 | 62.99 |
+| ARBERTv2 | Aya | 75.13 ± 0.93 | 73.03 ± 0.84 | 78.64 | 79.34 | 67.42 | 61.25 ± 0.28 | 68.57 ± 0.53 | 76.06 | 46.62 | 61.09 |
+| **Mean** | **Fanar** | **76.22** | **74.69** | **79.35** | **79.26** | **70.04** | **62.72** | **70.28** | **77.62** | **47.59** | **62.93** |
+| **Mean** | **Qwen3** | **75.88** | **74.43** | **78.76** | **78.76** | **70.11** | **62.50** | **70.19** | **77.12** | **47.12** | **63.27** |
+| **Mean** | **Aya** | **75.99** | **74.30** | **78.83** | **79.39** | **69.77** | **62.06** | **69.11** | **76.42** | **47.95** | **61.80** |
+| **MARBERTv2** | **Mean** | **77.98** | **76.77** | **82.01** | **80.39** | **71.54** | **63.86** | **71.83** | **78.63** | **47.92** | **65.03** |
+| **MARBERT** | **Mean** | **78.38** | **77.40** | **80.65** | **80.34** | **74.15** | **64.40** | **72.23** | **78.44** | **48.73** | **66.03** |
+| **AraBERTv02-Tw** | **Mean** | **77.01** | **75.35** | **79.67** | **80.33** | **71.03** | **63.36** | **70.39** | **76.92** | **49.29** | **63.87** |
+| **CAMeLBERT-mix** | **Mean** | **74.74** | **73.07** | **76.76** | **78.08** | **69.38** | **61.04** | **67.95** | **75.91** | **47.24** | **59.98** |
+| **CAMeLBERT-DA** | **Mean** | **73.69** | **72.09** | **75.21** | **76.91** | **68.96** | **61.02** | **68.44** | **76.00** | **46.20** | **60.87** |
+| **ARBERT** | **Mean** | **75.32** | **73.43** | **79.74** | **79.11** | **67.11** | **61.49** | **68.55** | **76.64** | **47.38** | **60.46** |
+| **ARBERTv2** | **Mean** | **75.08** | **73.21** | **78.81** | **78.82** | **67.61** | **61.79** | **69.63** | **76.84** | **46.11** | **62.43** |
+| **Mean** | **All** | **76.03** | **74.47** | **78.98** | **79.14** | **69.97** | **62.42** | **69.86** | **77.05** | **47.55** | **62.67** |
 
 ## SG04 / SR07
 **Performance** (macro F1, mean ± std over seeds 42/43/44; source `tables/sentiment_summary.csv`; columns = generator of the SG04 set)
@@ -1198,32 +929,40 @@ Per tweet, the majority label over all runs of a condition.
 
 **All classifiers and classes, SR07 (S1 train + SG04)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 78.13 ± 0.50 | 81.68 | 80.11 | 72.60 | 62.49 ± 0.12 | 78.51 | 45.17 | 63.78 | 77.14 ± 0.89 | 71.15 ± 0.09 |
-| MARBERTv2 | Qwen3 | 77.87 ± 0.49 | 81.21 | 79.91 | 72.50 | 63.22 ± 1.13 | 78.90 | 44.85 | 65.91 | 76.85 ± 0.39 | 72.40 ± 1.23 |
-| MARBERTv2 | Aya | 77.76 ± 0.20 | 81.20 | 80.07 | 72.00 | 63.57 ± 0.84 | 77.95 | 47.56 | 65.21 | 76.60 ± 0.20 | 71.58 ± 1.11 |
-| MARBERT | Fanar | 77.70 ± 0.36 | 80.21 | 80.04 | 72.83 | 63.36 ± 1.09 | 79.23 | 46.22 | 64.62 | 76.52 ± 0.37 | 71.93 ± 1.07 |
-| MARBERT | Qwen3 | 78.37 ± 0.56 | 79.94 | 80.43 | 74.74 | 63.92 ± 0.76 | 79.39 | 45.84 | 66.52 | 77.34 ± 0.71 | 72.96 ± 1.07 |
-| MARBERT | Aya | 77.88 ± 0.35 | 80.14 | 79.85 | 73.65 | 63.98 ± 1.02 | 78.10 | 48.62 | 65.21 | 76.89 ± 0.31 | 71.65 ± 1.16 |
-| AraBERTv02-Tw | Fanar | 76.15 ± 0.54 | 79.58 | 80.08 | 68.80 | 61.62 ± 0.25 | 77.85 | 46.85 | 60.15 | 74.19 ± 0.82 | 69.00 ± 0.79 |
-| AraBERTv02-Tw | Qwen3 | 76.03 ± 0.69 | 78.86 | 79.85 | 69.38 | 62.67 ± 0.96 | 78.06 | 46.68 | 63.26 | 74.12 ± 0.67 | 70.66 ± 1.39 |
-| AraBERTv02-Tw | Aya | 76.91 ± 0.37 | 80.22 | 79.83 | 70.67 | 62.24 ± 0.72 | 77.16 | 47.69 | 61.87 | 75.45 ± 0.43 | 69.52 ± 1.01 |
-| CAMeLBERT-mix | Fanar | 75.16 ± 0.27 | 77.63 | 78.70 | 69.16 | 60.33 ± 0.84 | 77.32 | 43.83 | 59.83 | 73.39 ± 0.44 | 68.57 ± 1.50 |
-| CAMeLBERT-mix | Qwen3 | 74.83 ± 0.96 | 76.29 | 78.29 | 69.91 | 60.73 ± 0.66 | 76.97 | 43.75 | 61.46 | 73.10 ± 1.12 | 69.21 ± 1.02 |
-| CAMeLBERT-mix | Aya | 74.57 ± 0.38 | 76.65 | 78.45 | 68.60 | 60.24 ± 0.89 | 77.05 | 44.79 | 58.86 | 72.62 ± 0.50 | 67.96 ± 1.33 |
-| CAMeLBERT-DA | Fanar | 74.32 ± 0.30 | 75.35 | 78.14 | 69.48 | 60.32 ± 1.17 | 76.51 | 45.42 | 59.04 | 72.41 ± 0.35 | 67.77 ± 0.85 |
-| CAMeLBERT-DA | Qwen3 | 73.50 ± 0.42 | 73.92 | 77.49 | 69.09 | 60.66 ± 0.44 | 77.08 | 43.66 | 61.23 | 71.50 ± 0.77 | 69.15 ± 1.09 |
-| CAMeLBERT-DA | Aya | 74.21 ± 0.73 | 75.77 | 77.92 | 68.93 | 60.09 ± 0.97 | 75.96 | 44.64 | 59.67 | 72.35 ± 0.84 | 67.81 ± 0.78 |
-| ARBERT | Fanar | 75.45 ± 0.80 | 80.46 | 79.17 | 66.71 | 60.32 ± 0.05 | 77.54 | 45.03 | 58.39 | 73.58 ± 1.21 | 67.97 ± 0.77 |
-| ARBERT | Qwen3 | 75.16 ± 0.56 | 79.27 | 78.90 | 67.31 | 61.81 ± 0.26 | 77.17 | 45.75 | 62.51 | 73.29 ± 0.48 | 69.84 ± 0.62 |
-| ARBERT | Aya | 75.50 ± 0.65 | 80.04 | 79.39 | 67.06 | 60.82 ± 0.61 | 77.50 | 46.52 | 58.43 | 73.55 ± 0.90 | 67.97 ± 1.46 |
-| ARBERTv2 | Fanar | 74.72 ± 0.68 | 79.36 | 78.53 | 66.28 | 60.70 ± 1.08 | 78.43 | 43.07 | 60.59 | 72.82 ± 0.79 | 69.51 ± 1.86 |
-| ARBERTv2 | Qwen3 | 74.75 ± 0.66 | 78.74 | 78.43 | 67.09 | 61.26 ± 0.90 | 77.44 | 43.71 | 62.62 | 72.91 ± 0.71 | 70.03 ± 1.60 |
-| ARBERTv2 | Aya | 74.45 ± 0.33 | 79.18 | 78.72 | 65.44 | 59.98 ± 0.41 | 76.36 | 44.83 | 58.74 | 72.31 ± 0.29 | 67.55 ± 0.68 |
-| **Mean** | **Fanar** | **75.95** | **79.18** | **79.25** | **69.41** | **61.31** | **77.91** | **45.08** | **60.91** | **74.29** | **69.41** |
-| **Mean** | **Qwen3** | **75.79** | **78.32** | **79.04** | **70.00** | **62.04** | **77.86** | **44.89** | **63.36** | **74.16** | **70.61** |
-| **Mean** | **Aya** | **75.90** | **79.03** | **79.18** | **69.48** | **61.56** | **77.15** | **46.38** | **61.14** | **74.25** | **69.15** |
+| MARBERTv2 | Fanar | 78.13 ± 0.50 | 77.14 ± 0.89 | 81.68 | 80.11 | 72.60 | 62.49 ± 0.12 | 71.15 ± 0.09 | 78.51 | 45.17 | 63.78 |
+| MARBERTv2 | Qwen3 | 77.87 ± 0.49 | 76.85 ± 0.39 | 81.21 | 79.91 | 72.50 | 63.22 ± 1.13 | 72.40 ± 1.23 | 78.90 | 44.85 | 65.91 |
+| MARBERTv2 | Aya | 77.76 ± 0.20 | 76.60 ± 0.20 | 81.20 | 80.07 | 72.00 | 63.57 ± 0.84 | 71.58 ± 1.11 | 77.95 | 47.56 | 65.21 |
+| MARBERT | Fanar | 77.70 ± 0.36 | 76.52 ± 0.37 | 80.21 | 80.04 | 72.83 | 63.36 ± 1.09 | 71.93 ± 1.07 | 79.23 | 46.22 | 64.62 |
+| MARBERT | Qwen3 | 78.37 ± 0.56 | 77.34 ± 0.71 | 79.94 | 80.43 | 74.74 | 63.92 ± 0.76 | 72.96 ± 1.07 | 79.39 | 45.84 | 66.52 |
+| MARBERT | Aya | 77.88 ± 0.35 | 76.89 ± 0.31 | 80.14 | 79.85 | 73.65 | 63.98 ± 1.02 | 71.65 ± 1.16 | 78.10 | 48.62 | 65.21 |
+| AraBERTv02-Tw | Fanar | 76.15 ± 0.54 | 74.19 ± 0.82 | 79.58 | 80.08 | 68.80 | 61.62 ± 0.25 | 69.00 ± 0.79 | 77.85 | 46.85 | 60.15 |
+| AraBERTv02-Tw | Qwen3 | 76.03 ± 0.69 | 74.12 ± 0.67 | 78.86 | 79.85 | 69.38 | 62.67 ± 0.96 | 70.66 ± 1.39 | 78.06 | 46.68 | 63.26 |
+| AraBERTv02-Tw | Aya | 76.91 ± 0.37 | 75.45 ± 0.43 | 80.22 | 79.83 | 70.67 | 62.24 ± 0.72 | 69.52 ± 1.01 | 77.16 | 47.69 | 61.87 |
+| CAMeLBERT-mix | Fanar | 75.16 ± 0.27 | 73.39 ± 0.44 | 77.63 | 78.70 | 69.16 | 60.33 ± 0.84 | 68.57 ± 1.50 | 77.32 | 43.83 | 59.83 |
+| CAMeLBERT-mix | Qwen3 | 74.83 ± 0.96 | 73.10 ± 1.12 | 76.29 | 78.29 | 69.91 | 60.73 ± 0.66 | 69.21 ± 1.02 | 76.97 | 43.75 | 61.46 |
+| CAMeLBERT-mix | Aya | 74.57 ± 0.38 | 72.62 ± 0.50 | 76.65 | 78.45 | 68.60 | 60.24 ± 0.89 | 67.96 ± 1.33 | 77.05 | 44.79 | 58.86 |
+| CAMeLBERT-DA | Fanar | 74.32 ± 0.30 | 72.41 ± 0.35 | 75.35 | 78.14 | 69.48 | 60.32 ± 1.17 | 67.77 ± 0.85 | 76.51 | 45.42 | 59.04 |
+| CAMeLBERT-DA | Qwen3 | 73.50 ± 0.42 | 71.50 ± 0.77 | 73.92 | 77.49 | 69.09 | 60.66 ± 0.44 | 69.15 ± 1.09 | 77.08 | 43.66 | 61.23 |
+| CAMeLBERT-DA | Aya | 74.21 ± 0.73 | 72.35 ± 0.84 | 75.77 | 77.92 | 68.93 | 60.09 ± 0.97 | 67.81 ± 0.78 | 75.96 | 44.64 | 59.67 |
+| ARBERT | Fanar | 75.45 ± 0.80 | 73.58 ± 1.21 | 80.46 | 79.17 | 66.71 | 60.32 ± 0.05 | 67.97 ± 0.77 | 77.54 | 45.03 | 58.39 |
+| ARBERT | Qwen3 | 75.16 ± 0.56 | 73.29 ± 0.48 | 79.27 | 78.90 | 67.31 | 61.81 ± 0.26 | 69.84 ± 0.62 | 77.17 | 45.75 | 62.51 |
+| ARBERT | Aya | 75.50 ± 0.65 | 73.55 ± 0.90 | 80.04 | 79.39 | 67.06 | 60.82 ± 0.61 | 67.97 ± 1.46 | 77.50 | 46.52 | 58.43 |
+| ARBERTv2 | Fanar | 74.72 ± 0.68 | 72.82 ± 0.79 | 79.36 | 78.53 | 66.28 | 60.70 ± 1.08 | 69.51 ± 1.86 | 78.43 | 43.07 | 60.59 |
+| ARBERTv2 | Qwen3 | 74.75 ± 0.66 | 72.91 ± 0.71 | 78.74 | 78.43 | 67.09 | 61.26 ± 0.90 | 70.03 ± 1.60 | 77.44 | 43.71 | 62.62 |
+| ARBERTv2 | Aya | 74.45 ± 0.33 | 72.31 ± 0.29 | 79.18 | 78.72 | 65.44 | 59.98 ± 0.41 | 67.55 ± 0.68 | 76.36 | 44.83 | 58.74 |
+| **Mean** | **Fanar** | **75.95** | **74.29** | **79.18** | **79.25** | **69.41** | **61.31** | **69.41** | **77.91** | **45.08** | **60.91** |
+| **Mean** | **Qwen3** | **75.79** | **74.16** | **78.32** | **79.04** | **70.00** | **62.04** | **70.61** | **77.86** | **44.89** | **63.36** |
+| **Mean** | **Aya** | **75.90** | **74.25** | **79.03** | **79.18** | **69.48** | **61.56** | **69.15** | **77.15** | **46.38** | **61.14** |
+| **MARBERTv2** | **Mean** | **77.92** | **76.86** | **81.36** | **80.03** | **72.37** | **63.09** | **71.71** | **78.45** | **45.86** | **64.97** |
+| **MARBERT** | **Mean** | **77.98** | **76.92** | **80.10** | **80.11** | **73.74** | **63.75** | **72.18** | **78.91** | **46.89** | **65.45** |
+| **AraBERTv02-Tw** | **Mean** | **76.36** | **74.59** | **79.55** | **79.92** | **69.62** | **62.18** | **69.73** | **77.69** | **47.07** | **61.76** |
+| **CAMeLBERT-mix** | **Mean** | **74.85** | **73.04** | **76.86** | **78.48** | **69.22** | **60.43** | **68.58** | **77.11** | **44.12** | **60.05** |
+| **CAMeLBERT-DA** | **Mean** | **74.01** | **72.09** | **75.01** | **77.85** | **69.17** | **60.36** | **68.24** | **76.52** | **44.57** | **59.98** |
+| **ARBERT** | **Mean** | **75.37** | **73.47** | **79.92** | **79.15** | **67.03** | **60.98** | **68.59** | **77.40** | **45.77** | **59.78** |
+| **ARBERTv2** | **Mean** | **74.64** | **72.68** | **79.09** | **78.56** | **66.27** | **60.65** | **69.03** | **77.41** | **43.87** | **60.65** |
+| **Mean** | **All** | **75.88** | **74.23** | **78.84** | **79.16** | **69.63** | **61.63** | **69.72** | **77.64** | **45.45** | **61.80** |
 
 # which part of SG04 caused the damage, and can we undo it without generating new data?
 
@@ -1235,20 +974,24 @@ removed the 200 prayer pairs per generator. Errors on real POS prayers jumped in
 
 **All classifiers and classes, SR08 (S1 train + SG04 without prayer pairs)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 78.49 ± 0.39 | 81.07 | 80.70 | 73.69 | 63.54 ± 0.22 | 78.28 | 47.02 | 65.33 | 77.38 ± 0.34 | 71.80 ± 0.71 |
-| MARBERTv2 | Qwen3 | 77.65 ± 0.36 | 80.45 | 80.04 | 72.47 | 63.65 ± 1.14 | 78.56 | 45.77 | 66.62 | 76.46 ± 0.39 | 72.59 ± 1.22 |
-| MARBERTv2 | Aya | 78.16 ± 0.52 | 80.82 | 80.78 | 72.89 | 63.67 ± 0.73 | 77.31 | 47.88 | 65.80 | 76.86 ± 0.69 | 71.56 ± 1.02 |
-| AraBERTv02-Tw | Fanar | 77.30 ± 0.28 | 79.69 | 80.51 | 71.70 | 63.20 ± 0.48 | 77.68 | 48.03 | 63.90 | 75.70 ± 0.32 | 70.79 ± 0.91 |
-| AraBERTv02-Tw | Qwen3 | 76.52 ± 0.20 | 78.07 | 79.57 | 71.93 | 62.81 ± 0.27 | 76.73 | 47.01 | 64.69 | 75.00 ± 0.21 | 70.71 ± 0.37 |
-| AraBERTv02-Tw | Aya | 77.90 ± 0.32 | 80.39 | 80.90 | 72.39 | 62.75 ± 0.94 | 76.61 | 48.17 | 63.46 | 76.39 ± 0.32 | 70.03 ± 1.16 |
-| CAMeLBERT-mix | Fanar | 76.19 ± 0.66 | 77.99 | 79.66 | 70.93 | 60.96 ± 0.43 | 77.37 | 44.40 | 61.11 | 74.46 ± 0.74 | 69.24 ± 0.61 |
-| CAMeLBERT-mix | Qwen3 | 75.75 ± 0.34 | 77.81 | 78.80 | 70.63 | 61.27 ± 0.63 | 77.50 | 43.72 | 62.58 | 74.22 ± 0.42 | 70.04 ± 0.54 |
-| CAMeLBERT-mix | Aya | 75.67 ± 0.33 | 77.05 | 78.96 | 71.01 | 60.75 ± 0.92 | 76.82 | 44.89 | 60.54 | 74.03 ± 0.32 | 68.68 ± 0.55 |
-| **Mean** | **Fanar** | **77.33** | **79.58** | **80.29** | **72.11** | **62.57** | **77.78** | **46.48** | **63.45** | **75.85** | **70.61** |
-| **Mean** | **Qwen3** | **76.64** | **78.78** | **79.47** | **71.68** | **62.58** | **77.60** | **45.50** | **64.63** | **75.23** | **71.11** |
-| **Mean** | **Aya** | **77.24** | **79.42** | **80.21** | **72.10** | **62.39** | **76.91** | **46.98** | **63.27** | **75.76** | **70.09** |
+| MARBERTv2 | Fanar | 78.49 ± 0.39 | 77.38 ± 0.34 | 81.07 | 80.70 | 73.69 | 63.54 ± 0.22 | 71.80 ± 0.71 | 78.28 | 47.02 | 65.33 |
+| MARBERTv2 | Qwen3 | 77.65 ± 0.36 | 76.46 ± 0.39 | 80.45 | 80.04 | 72.47 | 63.65 ± 1.14 | 72.59 ± 1.22 | 78.56 | 45.77 | 66.62 |
+| MARBERTv2 | Aya | 78.16 ± 0.52 | 76.86 ± 0.69 | 80.82 | 80.78 | 72.89 | 63.67 ± 0.73 | 71.56 ± 1.02 | 77.31 | 47.88 | 65.80 |
+| AraBERTv02-Tw | Fanar | 77.30 ± 0.28 | 75.70 ± 0.32 | 79.69 | 80.51 | 71.70 | 63.20 ± 0.48 | 70.79 ± 0.91 | 77.68 | 48.03 | 63.90 |
+| AraBERTv02-Tw | Qwen3 | 76.52 ± 0.20 | 75.00 ± 0.21 | 78.07 | 79.57 | 71.93 | 62.81 ± 0.27 | 70.71 ± 0.37 | 76.73 | 47.01 | 64.69 |
+| AraBERTv02-Tw | Aya | 77.90 ± 0.32 | 76.39 ± 0.32 | 80.39 | 80.90 | 72.39 | 62.75 ± 0.94 | 70.03 ± 1.16 | 76.61 | 48.17 | 63.46 |
+| CAMeLBERT-mix | Fanar | 76.19 ± 0.66 | 74.46 ± 0.74 | 77.99 | 79.66 | 70.93 | 60.96 ± 0.43 | 69.24 ± 0.61 | 77.37 | 44.40 | 61.11 |
+| CAMeLBERT-mix | Qwen3 | 75.75 ± 0.34 | 74.22 ± 0.42 | 77.81 | 78.80 | 70.63 | 61.27 ± 0.63 | 70.04 ± 0.54 | 77.50 | 43.72 | 62.58 |
+| CAMeLBERT-mix | Aya | 75.67 ± 0.33 | 74.03 ± 0.32 | 77.05 | 78.96 | 71.01 | 60.75 ± 0.92 | 68.68 ± 0.55 | 76.82 | 44.89 | 60.54 |
+| **Mean** | **Fanar** | **77.33** | **75.85** | **79.58** | **80.29** | **72.11** | **62.57** | **70.61** | **77.78** | **46.48** | **63.45** |
+| **Mean** | **Qwen3** | **76.64** | **75.23** | **78.78** | **79.47** | **71.68** | **62.58** | **71.11** | **77.60** | **45.50** | **64.63** |
+| **Mean** | **Aya** | **77.24** | **75.76** | **79.42** | **80.21** | **72.10** | **62.39** | **70.09** | **76.91** | **46.98** | **63.27** |
+| **MARBERTv2** | **Mean** | **78.10** | **76.90** | **80.78** | **80.51** | **73.02** | **63.62** | **71.98** | **78.05** | **46.89** | **65.92** |
+| **AraBERTv02-Tw** | **Mean** | **77.24** | **75.70** | **79.38** | **80.33** | **72.01** | **62.92** | **70.51** | **77.01** | **47.74** | **64.02** |
+| **CAMeLBERT-mix** | **Mean** | **75.87** | **74.24** | **77.62** | **79.14** | **70.86** | **60.99** | **69.32** | **77.23** | **44.34** | **61.41** |
+| **Mean** | **All** | **77.07** | **75.61** | **79.26** | **79.99** | **71.96** | **62.51** | **70.60** | **77.43** | **46.32** | **63.78** |
 
 **F1-PN, SR08** (official metric: mean F1 of POS and NEG; mean ± std over seeds)
 
@@ -1267,12 +1010,12 @@ removes the 116 Qwen3 pairs where A and B have the same words. Qwen3 only. with 
 
 **All classifiers and classes, SR09 (S1 train + SG04 Qwen3 without same-word pairs)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Qwen3 | 77.64 ± 0.48 | 80.58 | 80.06 | 72.29 | 63.14 ± 0.24 | 78.05 | 45.97 | 65.40 | 76.43 ± 0.68 | 71.72 ± 0.17 |
-| AraBERTv02-Tw | Qwen3 | 76.77 ± 0.12 | 79.34 | 79.72 | 71.25 | 62.14 ± 0.24 | 77.40 | 46.09 | 62.93 | 75.29 ± 0.22 | 70.17 ± 0.48 |
-| CAMeLBERT-mix | Qwen3 | 75.70 ± 1.20 | 77.40 | 78.47 | 71.22 | 60.76 ± 0.16 | 77.48 | 43.20 | 61.61 | 74.31 ± 1.71 | 69.54 ± 0.60 |
-| **Mean** | **Qwen3** | **76.70** | **79.11** | **79.42** | **71.59** | **62.01** | **77.64** | **45.09** | **63.31** | **75.34** | **70.48** |
+| MARBERTv2 | Qwen3 | 77.64 ± 0.48 | 76.43 ± 0.68 | 80.58 | 80.06 | 72.29 | 63.14 ± 0.24 | 71.72 ± 0.17 | 78.05 | 45.97 | 65.40 |
+| AraBERTv02-Tw | Qwen3 | 76.77 ± 0.12 | 75.29 ± 0.22 | 79.34 | 79.72 | 71.25 | 62.14 ± 0.24 | 70.17 ± 0.48 | 77.40 | 46.09 | 62.93 |
+| CAMeLBERT-mix | Qwen3 | 75.70 ± 1.20 | 74.31 ± 1.71 | 77.40 | 78.47 | 71.22 | 60.76 ± 0.16 | 69.54 ± 0.60 | 77.48 | 43.20 | 61.61 |
+| **Mean** | **Qwen3** | **76.70** | **75.34** | **79.11** | **79.42** | **71.59** | **62.01** | **70.48** | **77.64** | **45.09** | **63.31** |
 
 **F1-PN, SR09** (official metric: mean F1 of POS and NEG; mean ± std over seeds)
 
@@ -1291,20 +1034,24 @@ same data, but the last epoch uses real tweets only. SG04 fixed some hard cases 
 
 **All classifiers and classes, SR10 (S1 train + SG04, two-stage training)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 78.17 ± 0.57 | 81.47 | 80.19 | 72.85 | 62.86 ± 0.33 | 78.58 | 45.58 | 64.43 | 77.16 ± 0.83 | 71.50 ± 0.56 |
-| MARBERTv2 | Qwen3 | 78.64 ± 0.87 | 81.22 | 80.81 | 73.89 | 63.14 ± 0.23 | 78.79 | 45.17 | 65.46 | 77.55 ± 0.86 | 72.12 ± 0.90 |
-| MARBERTv2 | Aya | 78.27 ± 0.58 | 81.37 | 80.21 | 73.23 | 63.61 ± 0.25 | 78.25 | 46.86 | 65.72 | 77.30 ± 0.57 | 71.99 ± 0.35 |
-| AraBERTv02-Tw | Fanar | 76.71 ± 0.42 | 79.79 | 80.07 | 70.28 | 62.99 ± 0.26 | 77.51 | 48.35 | 63.12 | 75.04 ± 0.56 | 70.32 ± 0.28 |
-| AraBERTv02-Tw | Qwen3 | 76.13 ± 0.43 | 78.55 | 79.60 | 70.24 | 63.20 ± 0.53 | 77.34 | 48.08 | 64.19 | 74.39 ± 0.62 | 70.77 ± 0.50 |
-| AraBERTv02-Tw | Aya | 77.48 ± 0.46 | 80.88 | 80.12 | 71.46 | 62.94 ± 0.21 | 77.34 | 48.61 | 62.86 | 76.17 ± 0.50 | 70.10 ± 0.33 |
-| CAMeLBERT-mix | Fanar | 75.57 ± 0.22 | 77.17 | 78.86 | 70.68 | 61.56 ± 0.49 | 76.78 | 46.62 | 61.28 | 73.92 ± 0.19 | 69.03 ± 0.45 |
-| CAMeLBERT-mix | Qwen3 | 75.64 ± 0.64 | 76.42 | 78.44 | 72.04 | 61.67 ± 0.33 | 76.74 | 46.18 | 62.10 | 74.23 ± 0.93 | 69.42 ± 0.63 |
-| CAMeLBERT-mix | Aya | 75.17 ± 0.25 | 76.34 | 78.82 | 70.35 | 61.00 ± 0.11 | 76.47 | 46.05 | 60.48 | 73.34 ± 0.45 | 68.47 ± 0.28 |
-| **Mean** | **Fanar** | **76.82** | **79.48** | **79.71** | **71.27** | **62.47** | **77.62** | **46.85** | **62.94** | **75.37** | **70.28** |
-| **Mean** | **Qwen3** | **76.80** | **78.73** | **79.62** | **72.06** | **62.67** | **77.62** | **46.48** | **63.92** | **75.39** | **70.77** |
-| **Mean** | **Aya** | **76.97** | **79.53** | **79.72** | **71.68** | **62.52** | **77.35** | **47.17** | **63.02** | **75.60** | **70.19** |
+| MARBERTv2 | Fanar | 78.17 ± 0.57 | 77.16 ± 0.83 | 81.47 | 80.19 | 72.85 | 62.86 ± 0.33 | 71.50 ± 0.56 | 78.58 | 45.58 | 64.43 |
+| MARBERTv2 | Qwen3 | 78.64 ± 0.87 | 77.55 ± 0.86 | 81.22 | 80.81 | 73.89 | 63.14 ± 0.23 | 72.12 ± 0.90 | 78.79 | 45.17 | 65.46 |
+| MARBERTv2 | Aya | 78.27 ± 0.58 | 77.30 ± 0.57 | 81.37 | 80.21 | 73.23 | 63.61 ± 0.25 | 71.99 ± 0.35 | 78.25 | 46.86 | 65.72 |
+| AraBERTv02-Tw | Fanar | 76.71 ± 0.42 | 75.04 ± 0.56 | 79.79 | 80.07 | 70.28 | 62.99 ± 0.26 | 70.32 ± 0.28 | 77.51 | 48.35 | 63.12 |
+| AraBERTv02-Tw | Qwen3 | 76.13 ± 0.43 | 74.39 ± 0.62 | 78.55 | 79.60 | 70.24 | 63.20 ± 0.53 | 70.77 ± 0.50 | 77.34 | 48.08 | 64.19 |
+| AraBERTv02-Tw | Aya | 77.48 ± 0.46 | 76.17 ± 0.50 | 80.88 | 80.12 | 71.46 | 62.94 ± 0.21 | 70.10 ± 0.33 | 77.34 | 48.61 | 62.86 |
+| CAMeLBERT-mix | Fanar | 75.57 ± 0.22 | 73.92 ± 0.19 | 77.17 | 78.86 | 70.68 | 61.56 ± 0.49 | 69.03 ± 0.45 | 76.78 | 46.62 | 61.28 |
+| CAMeLBERT-mix | Qwen3 | 75.64 ± 0.64 | 74.23 ± 0.93 | 76.42 | 78.44 | 72.04 | 61.67 ± 0.33 | 69.42 ± 0.63 | 76.74 | 46.18 | 62.10 |
+| CAMeLBERT-mix | Aya | 75.17 ± 0.25 | 73.34 ± 0.45 | 76.34 | 78.82 | 70.35 | 61.00 ± 0.11 | 68.47 ± 0.28 | 76.47 | 46.05 | 60.48 |
+| **Mean** | **Fanar** | **76.82** | **75.37** | **79.48** | **79.71** | **71.27** | **62.47** | **70.28** | **77.62** | **46.85** | **62.94** |
+| **Mean** | **Qwen3** | **76.80** | **75.39** | **78.73** | **79.62** | **72.06** | **62.67** | **70.77** | **77.62** | **46.48** | **63.92** |
+| **Mean** | **Aya** | **76.97** | **75.60** | **79.53** | **79.72** | **71.68** | **62.52** | **70.19** | **77.35** | **47.17** | **63.02** |
+| **MARBERTv2** | **Mean** | **78.36** | **77.34** | **81.35** | **80.40** | **73.32** | **63.20** | **71.87** | **78.54** | **45.87** | **65.20** |
+| **AraBERTv02-Tw** | **Mean** | **76.77** | **75.20** | **79.74** | **79.93** | **70.66** | **63.04** | **70.40** | **77.40** | **48.35** | **63.39** |
+| **CAMeLBERT-mix** | **Mean** | **75.46** | **73.83** | **76.64** | **78.71** | **71.02** | **61.41** | **68.97** | **76.66** | **46.28** | **61.29** |
+| **Mean** | **All** | **76.86** | **75.46** | **79.25** | **79.68** | **71.67** | **62.55** | **70.41** | **77.53** | **46.83** | **63.29** |
 
 **F1-PN, SR10** (official metric: mean F1 of POS and NEG; mean ± std over seeds)
 
@@ -1345,20 +1092,24 @@ both the SR08 and SR10 changes: the prayer rule and the loss on ordinary tweets.
 
 **All classifiers and classes, SR11 (S1 train + SG04 without prayer pairs, two-stage training)**
 
-| Classifier | Generator | Dev macro F1 | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test NEG | Test NEU | Test POS | Dev F1-PN | Test F1-PN |
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MARBERTv2 | Fanar | 78.06 ± 0.44 | 80.61 | 79.91 | 73.66 | 63.39 ± 0.34 | 78.34 | 46.81 | 65.03 | 77.14 ± 0.38 | 71.68 ± 0.19 |
-| MARBERTv2 | Qwen3 | 77.54 ± 0.15 | 80.30 | 80.22 | 72.10 | 63.19 ± 0.27 | 77.88 | 46.06 | 65.64 | 76.20 ± 0.15 | 71.76 ± 0.31 |
-| MARBERTv2 | Aya | 78.27 ± 0.59 | 81.56 | 80.77 | 72.48 | 64.05 ± 0.68 | 77.90 | 48.14 | 66.11 | 77.02 ± 0.81 | 72.01 ± 0.79 |
-| AraBERTv02-Tw | Fanar | 77.47 ± 0.38 | 80.51 | 80.65 | 71.24 | 63.01 ± 0.71 | 77.75 | 47.20 | 64.07 | 75.88 ± 0.57 | 70.91 ± 0.52 |
-| AraBERTv02-Tw | Qwen3 | 76.46 ± 0.55 | 78.29 | 79.66 | 71.44 | 63.13 ± 0.40 | 76.96 | 47.85 | 64.58 | 74.87 ± 0.74 | 70.77 ± 0.50 |
-| AraBERTv02-Tw | Aya | 77.77 ± 0.19 | 80.25 | 80.36 | 72.70 | 63.14 ± 0.17 | 76.96 | 48.44 | 64.03 | 76.47 ± 0.19 | 70.49 ± 0.13 |
-| CAMeLBERT-mix | Fanar | 76.37 ± 0.26 | 78.13 | 79.53 | 71.45 | 61.29 ± 0.76 | 77.48 | 44.90 | 61.51 | 74.79 ± 0.26 | 69.49 ± 0.19 |
-| CAMeLBERT-mix | Qwen3 | 75.97 ± 0.11 | 77.79 | 78.86 | 71.26 | 60.93 ± 0.64 | 77.18 | 43.62 | 61.99 | 74.52 ± 0.21 | 69.58 ± 0.52 |
-| CAMeLBERT-mix | Aya | 75.77 ± 0.26 | 77.31 | 79.02 | 70.99 | 60.92 ± 0.79 | 77.10 | 45.20 | 60.46 | 74.15 ± 0.29 | 68.78 ± 0.32 |
-| **Mean** | **Fanar** | **77.30** | **79.75** | **80.03** | **72.12** | **62.56** | **77.86** | **46.30** | **63.54** | **75.94** | **70.69** |
-| **Mean** | **Qwen3** | **76.66** | **78.79** | **79.58** | **71.60** | **62.42** | **77.34** | **45.84** | **64.07** | **75.20** | **70.70** |
-| **Mean** | **Aya** | **77.27** | **79.71** | **80.05** | **72.06** | **62.70** | **77.32** | **47.26** | **63.53** | **75.88** | **70.43** |
+| MARBERTv2 | Fanar | 78.06 ± 0.44 | 77.14 ± 0.38 | 80.61 | 79.91 | 73.66 | 63.39 ± 0.34 | 71.68 ± 0.19 | 78.34 | 46.81 | 65.03 |
+| MARBERTv2 | Qwen3 | 77.54 ± 0.15 | 76.20 ± 0.15 | 80.30 | 80.22 | 72.10 | 63.19 ± 0.27 | 71.76 ± 0.31 | 77.88 | 46.06 | 65.64 |
+| MARBERTv2 | Aya | 78.27 ± 0.59 | 77.02 ± 0.81 | 81.56 | 80.77 | 72.48 | 64.05 ± 0.68 | 72.01 ± 0.79 | 77.90 | 48.14 | 66.11 |
+| AraBERTv02-Tw | Fanar | 77.47 ± 0.38 | 75.88 ± 0.57 | 80.51 | 80.65 | 71.24 | 63.01 ± 0.71 | 70.91 ± 0.52 | 77.75 | 47.20 | 64.07 |
+| AraBERTv02-Tw | Qwen3 | 76.46 ± 0.55 | 74.87 ± 0.74 | 78.29 | 79.66 | 71.44 | 63.13 ± 0.40 | 70.77 ± 0.50 | 76.96 | 47.85 | 64.58 |
+| AraBERTv02-Tw | Aya | 77.77 ± 0.19 | 76.47 ± 0.19 | 80.25 | 80.36 | 72.70 | 63.14 ± 0.17 | 70.49 ± 0.13 | 76.96 | 48.44 | 64.03 |
+| CAMeLBERT-mix | Fanar | 76.37 ± 0.26 | 74.79 ± 0.26 | 78.13 | 79.53 | 71.45 | 61.29 ± 0.76 | 69.49 ± 0.19 | 77.48 | 44.90 | 61.51 |
+| CAMeLBERT-mix | Qwen3 | 75.97 ± 0.11 | 74.52 ± 0.21 | 77.79 | 78.86 | 71.26 | 60.93 ± 0.64 | 69.58 ± 0.52 | 77.18 | 43.62 | 61.99 |
+| CAMeLBERT-mix | Aya | 75.77 ± 0.26 | 74.15 ± 0.29 | 77.31 | 79.02 | 70.99 | 60.92 ± 0.79 | 68.78 ± 0.32 | 77.10 | 45.20 | 60.46 |
+| **Mean** | **Fanar** | **77.30** | **75.94** | **79.75** | **80.03** | **72.12** | **62.56** | **70.69** | **77.86** | **46.30** | **63.54** |
+| **Mean** | **Qwen3** | **76.66** | **75.20** | **78.79** | **79.58** | **71.60** | **62.42** | **70.70** | **77.34** | **45.84** | **64.07** |
+| **Mean** | **Aya** | **77.27** | **75.88** | **79.71** | **80.05** | **72.06** | **62.70** | **70.43** | **77.32** | **47.26** | **63.53** |
+| **MARBERTv2** | **Mean** | **77.96** | **76.79** | **80.82** | **80.30** | **72.75** | **63.54** | **71.82** | **78.04** | **47.00** | **65.59** |
+| **AraBERTv02-Tw** | **Mean** | **77.23** | **75.74** | **79.68** | **80.22** | **71.79** | **63.09** | **70.72** | **77.22** | **47.83** | **64.23** |
+| **CAMeLBERT-mix** | **Mean** | **76.04** | **74.49** | **77.74** | **79.14** | **71.23** | **61.05** | **69.28** | **77.25** | **44.57** | **61.32** |
+| **Mean** | **All** | **77.08** | **75.67** | **79.42** | **79.89** | **71.92** | **62.56** | **70.61** | **77.51** | **46.47** | **63.71** |
 
 **F1-PN, SR11** (official metric: mean F1 of POS and NEG; mean ± std over seeds)
 
@@ -1368,3 +1119,49 @@ both the SR08 and SR10 changes: the prayer rule and the loss on ordinary tweets.
 | AraBERTv02-Tw | 75.88 ± 0.57 | 74.87 ± 0.74 | 76.47 ± 0.19 | 70.91 ± 0.52 | 70.77 ± 0.50 | 70.49 ± 0.13 |
 | CAMeLBERT-mix | 74.79 ± 0.26 | 74.52 ± 0.21 | 74.15 ± 0.29 | 69.49 ± 0.19 | 69.58 ± 0.52 | 68.78 ± 0.32 |
 | **Mean** | **75.94** | **75.20** | **75.88** | **70.69** | **70.70** | **70.43** |
+
+## SR12
+
+**All classifiers and classes, SR12 (S1 train + SG04 POS/NEG pairs only, two-stage training)**
+
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| MARBERTv2 | Fanar | 78.22 ± 0.41 | 77.41 ± 0.43 | 81.31 | 79.84 | 73.51 | 62.77 ± 0.52 | 71.34 ± 0.51 | 77.73 | 45.62 | 64.96 |
+| MARBERTv2 | Qwen3 | 78.06 ± 0.81 | 77.07 ± 1.10 | 80.57 | 80.04 | 73.58 | 63.09 ± 0.72 | 71.01 ± 0.75 | 76.89 | 47.25 | 65.13 |
+| MARBERTv2 | Aya | 78.82 ± 0.39 | 78.05 ± 0.52 | 81.21 | 80.37 | 74.89 | 63.56 ± 0.47 | 72.17 ± 0.14 | 78.42 | 46.32 | 65.93 |
+| AraBERTv02-Tw | Fanar | 77.72 ± 0.57 | 76.60 ± 0.36 | 80.03 | 79.95 | 73.17 | 62.96 ± 0.61 | 70.81 ± 0.05 | 77.69 | 47.27 | 63.92 |
+| AraBERTv02-Tw | Qwen3 | 77.37 ± 0.14 | 76.01 ± 0.25 | 80.01 | 80.10 | 72.01 | 62.96 ± 1.22 | 71.65 ± 0.81 | 78.35 | 45.57 | 64.95 |
+| AraBERTv02-Tw | Aya | 78.02 ± 0.61 | 76.90 ± 0.55 | 80.20 | 80.25 | 73.60 | 63.30 ± 0.07 | 70.90 ± 0.18 | 77.47 | 48.09 | 64.34 |
+| CAMeLBERT-mix | Fanar | 76.08 ± 0.24 | 74.73 ± 0.56 | 78.23 | 78.79 | 71.23 | 61.63 ± 0.83 | 70.15 ± 0.39 | 77.80 | 44.60 | 62.50 |
+| CAMeLBERT-mix | Qwen3 | 76.07 ± 0.27 | 74.73 ± 0.69 | 77.86 | 78.73 | 71.61 | 61.87 ± 1.10 | 70.01 ± 0.52 | 77.41 | 45.61 | 62.60 |
+| CAMeLBERT-mix | Aya | 76.57 ± 0.11 | 75.22 ± 0.07 | 78.95 | 79.28 | 71.49 | 61.37 ± 0.95 | 69.35 ± 0.78 | 77.29 | 45.39 | 61.42 |
+| **Mean** | **Fanar** | **77.34** | **76.25** | **79.86** | **79.53** | **72.64** | **62.45** | **70.77** | **77.74** | **45.83** | **63.79** |
+| **Mean** | **Qwen3** | **77.17** | **75.94** | **79.48** | **79.62** | **72.40** | **62.64** | **70.89** | **77.55** | **46.14** | **64.23** |
+| **Mean** | **Aya** | **77.80** | **76.72** | **80.12** | **79.97** | **73.33** | **62.74** | **70.81** | **77.73** | **46.60** | **63.90** |
+| **MARBERTv2** | **Mean** | **78.37** | **77.51** | **81.03** | **80.08** | **73.99** | **63.14** | **71.51** | **77.68** | **46.40** | **65.34** |
+| **AraBERTv02-Tw** | **Mean** | **77.70** | **76.50** | **80.08** | **80.10** | **72.93** | **63.07** | **71.12** | **77.84** | **46.98** | **64.40** |
+| **CAMeLBERT-mix** | **Mean** | **76.24** | **74.89** | **78.35** | **78.93** | **71.44** | **61.62** | **69.84** | **77.50** | **45.20** | **62.17** |
+| **Mean** | **All** | **77.44** | **76.30** | **79.82** | **79.71** | **72.79** | **62.61** | **70.82** | **77.67** | **46.19** | **63.97** |
+
+## SR13
+
+**All classifiers and classes, SR13 (S1 train + SG04 POS/NEG pairs + NEG sides of jab and remark, two-stage training)**
+
+| Classifier | Generator | Dev macro F1 | Dev F1-PN | Dev NEG | Dev NEU | Dev POS | Test macro F1 | Test F1-PN | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| MARBERTv2 | Fanar | 78.23 ± 0.24 | 77.27 ± 0.22 | 81.01 | 80.16 | 73.53 | 63.03 ± 0.57 | 71.62 ± 0.36 | 77.70 | 45.85 | 65.55 |
+| MARBERTv2 | Qwen3 | 77.54 ± 0.69 | 76.38 ± 0.93 | 80.25 | 79.87 | 72.50 | 63.31 ± 0.24 | 71.36 ± 0.67 | 77.14 | 47.20 | 65.58 |
+| MARBERTv2 | Aya | 78.23 ± 0.39 | 77.22 ± 0.55 | 81.55 | 80.25 | 72.90 | 63.73 ± 0.26 | 72.86 ± 0.76 | 79.14 | 45.49 | 66.57 |
+| AraBERTv02-Tw | Fanar | 78.15 ± 0.58 | 76.94 ± 0.76 | 79.64 | 80.57 | 74.24 | 63.47 ± 0.38 | 71.21 ± 0.38 | 77.69 | 47.98 | 64.72 |
+| AraBERTv02-Tw | Qwen3 | 77.17 ± 0.24 | 75.91 ± 0.24 | 79.20 | 79.69 | 72.62 | 63.23 ± 0.12 | 71.72 ± 1.39 | 78.25 | 46.26 | 65.19 |
+| AraBERTv02-Tw | Aya | 78.03 ± 0.60 | 76.78 ± 0.79 | 80.07 | 80.52 | 73.50 | 63.41 ± 0.16 | 71.20 ± 0.13 | 77.68 | 47.82 | 64.73 |
+| CAMeLBERT-mix | Fanar | 75.99 ± 0.05 | 74.57 ± 0.40 | 77.45 | 78.84 | 71.68 | 62.11 ± 0.17 | 70.03 ± 0.05 | 77.59 | 46.28 | 62.46 |
+| CAMeLBERT-mix | Qwen3 | 76.13 ± 0.79 | 74.71 ± 0.86 | 77.45 | 78.97 | 71.96 | 62.39 ± 0.43 | 70.14 ± 0.52 | 77.65 | 46.89 | 62.63 |
+| CAMeLBERT-mix | Aya | 76.01 ± 0.50 | 74.57 ± 0.59 | 77.60 | 78.88 | 71.54 | 61.81 ± 0.43 | 69.74 ± 0.23 | 77.13 | 45.94 | 62.35 |
+| **Mean** | **Fanar** | **77.46** | **76.26** | **79.37** | **79.86** | **73.15** | **62.87** | **70.95** | **77.66** | **46.70** | **64.24** |
+| **Mean** | **Qwen3** | **76.95** | **75.67** | **78.97** | **79.51** | **72.36** | **62.98** | **71.07** | **77.68** | **46.78** | **64.47** |
+| **Mean** | **Aya** | **77.42** | **76.19** | **79.74** | **79.88** | **72.65** | **62.98** | **71.27** | **77.98** | **46.42** | **64.55** |
+| **MARBERTv2** | **Mean** | **78.00** | **76.96** | **80.94** | **80.09** | **72.98** | **63.36** | **71.95** | **77.99** | **46.18** | **65.90** |
+| **AraBERTv02-Tw** | **Mean** | **77.78** | **76.54** | **79.64** | **80.26** | **73.45** | **63.37** | **71.38** | **77.87** | **47.35** | **64.88** |
+| **CAMeLBERT-mix** | **Mean** | **76.04** | **74.62** | **77.50** | **78.90** | **71.73** | **62.10** | **69.97** | **77.46** | **46.37** | **62.48** |
+| **Mean** | **All** | **77.28** | **76.04** | **79.36** | **79.75** | **72.72** | **62.94** | **71.10** | **77.77** | **46.63** | **64.42** |

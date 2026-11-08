@@ -3,7 +3,7 @@
 Post-hoc, on finished runs only; SR07 is test-contaminated (the SG04 types came from the SR02
 test errors), so every number here is leakage analysis, not an unbiased result.
 
-Tables (macro F1 from docs/sentiment/tables/sentiment_summary.csv; the rest from the runs'
+Tables (macro F1 and F1-PN from docs/sentiment/tables/sentiment_summary.csv; the rest from the runs'
 test_predictions.jsonl; BERTs only, seeds 42/43/44):
   1. performance     SR07 per BERT x generator, mean +- std over seeds
   2. deltas          SR07 - SR01 / SR05 / SR06 per BERT x generator, and a summary over the 21
@@ -16,9 +16,14 @@ test_predictions.jsonl; BERTs only, seeds 42/43/44):
   5. error types     gold -> predicted shares on the non-hard test tweets, mean over runs
   6. groups          error rate by gold label, by sarcasm, and by gold label inside the hard cases
   7. flips           per tweet, majority label over a condition's runs: SR01 -> SR07 fixed / broken
+  8. flips by run    the same for SR05 / SR06 / SR07 by error type, with a noise reference: two halves
+                     of the SR01 runs (fewer runs per side, so it overstates the noise somewhat)
+  9. religious       error rate of test tweets with the rough `religious` cue of src.sentiment.hard_cases,
+                     by gold label, and the cue's label counts in S1 train, test and the SG04 sets
 Conditions: SR01 (real only), SR05 (+ SG03), SR06 (+ SG03-random), SR07 (+ SG04).
 
-Outputs: docs/sentiment/tables/sg04_analysis.md, results/sentiment/analysis/sg04_analysis.json.
+Outputs: docs/sentiment/tables/sg04_analysis.md, results/sentiment/analysis/sg04_analysis.json,
+data/inspect/hard_cases/sr07_broken_tweets.csv (the tweets broken from SR01 to SR07, for reading).
 
 Usage:
   python -m src.sentiment.sg04_analysis
@@ -33,6 +38,8 @@ import sys
 from collections import Counter
 from math import comb
 from pathlib import Path
+
+from src.sentiment.hard_cases import CUES
 
 TEST = Path("data/processed/sentiment/arsarcasm_v2_test.jsonl")
 RUNS_DIR = Path("results/sentiment/runs")
@@ -89,7 +96,10 @@ def main() -> None:
         for r in csv.DictReader(f):
             cand.setdefault(r["n"].split(".")[0], set()).add(r["text_id"])
     with open(SUMMARY, encoding="utf-8") as f:
-        f1 = {(r["folder"], r["split"]): (float(r["macro_f1"]), float(r["macro_f1_std"])) for r in csv.DictReader(f)}
+        summary = [r for r in csv.DictReader(f) if r["eval_corpus"] == r["train_corpus"]]
+    # Macro F1 and the official F1-PN: (mean, std) per run folder and split.
+    metrics = {name: {(r["folder"], r["split"]): (float(r[k]), float(r[f"{k}_std"])) for r in summary}
+               for name, k in (("Macro F1", "macro_f1"), ("F1-PN", "f1_pn"))}
     preds = {c: cell_predictions(c) for c in CONDITIONS}
     out: dict = {}
     md = ["# SG04 / SR07 analysis (test-contaminated, D-023)", "",
@@ -99,17 +109,19 @@ def main() -> None:
     # 1. Performance per BERT x generator.
     cols = [(s, g, gn) for s in ("dev", "test") for g, gn in GENS]
     header = ["BERT"] + [f"{s.capitalize()} {gn}" for s, _, gn in cols]
-    rows, means = [], {c: [] for c in cols}
-    for b, bn in BERTS:
-        row = [bn]
-        for c in cols:
-            m, sd = f1[(f"sr07_{b}_{c[1]}", c[0])]
-            means[c].append(m)
-            row.append(f"{m:.2f} ± {sd:.2f}")
-        rows.append(row)
-    rows.append(["**Mean**"] + [f"**{statistics.fmean(means[c]):.2f}**" for c in cols])
-    md += ["## 1. SR07 performance", "", "Macro F1, mean ± std over seeds; columns = generator of the SG04 set.", ""]
-    md += table(header, rows) + [""]
+    md += ["## 1. SR07 performance", "", "Mean ± std over seeds; columns = generator of the SG04 set. F1-PN = mean F1 of "
+           "POS and NEG, the official ArSarcasm-v2 metric.", ""]
+    for metric, f1 in metrics.items():
+        rows, means = [], {c: [] for c in cols}
+        for b, bn in BERTS:
+            row = [bn]
+            for c in cols:
+                m, sd = f1[(f"sr07_{b}_{c[1]}", c[0])]
+                means[c].append(m)
+                row.append(f"{m:.2f} ± {sd:.2f}")
+            rows.append(row)
+        rows.append(["**Mean**"] + [f"**{statistics.fmean(means[c]):.2f}**" for c in cols])
+        md += [f"**{metric}**", ""] + table(header, rows) + [""]
 
     # 2. Deltas against earlier runs, per cell and summarised.
     bases = {"SR01": lambda b, g: f"sr01_{b}", "SR05": lambda b, g: f"sr05_{b}_{g}", "SR06": lambda b, g: f"sr06_{b}_{g}"}
@@ -117,19 +129,21 @@ def main() -> None:
     md += ["## 2. Comparison with earlier runs", ""]
     summary_rows, out["deltas"] = [], {}
     for base, name in bases.items():
-        ds = {c: [f1[(f"sr07_{b}_{c[1]}", c[0])][0] - f1[(name(b, c[1]), c[0])][0] for b, _ in BERTS] for c in cols}
-        rows = [[bn] + [f"{ds[c][i]:+.2f}" for c in cols] for i, (_, bn) in enumerate(BERTS)]
-        rows.append(["**Mean**"] + [f"**{statistics.fmean(ds[c]):+.2f}**" for c in cols])
-        rows.append(["Better in"] + [f"{sum(x > 0 for x in ds[c])}/7" for c in cols])
-        md += [f"**Δ SR07 − {base}** (SG04 vs {labels[base]}; + = SG04 better)", ""] + table(header, rows) + [""]
         cells = []
-        for s in ("dev", "test"):
-            xs = [x for c in cols if c[0] == s for x in ds[c]]
-            cells.append(f"{statistics.fmean(xs):+.2f} (better in {sum(x > 0 for x in xs)}/21, p = {sign_p(xs):.3f})")
-            out["deltas"][f"{base}_{s}"] = {"mean": statistics.fmean(xs), "better": sum(x > 0 for x in xs), "p": sign_p(xs)}
+        for metric, f1 in metrics.items():
+            ds = {c: [f1[(f"sr07_{b}_{c[1]}", c[0])][0] - f1[(name(b, c[1]), c[0])][0] for b, _ in BERTS] for c in cols}
+            rows = [[bn] + [f"{ds[c][i]:+.2f}" for c in cols] for i, (_, bn) in enumerate(BERTS)]
+            rows.append(["**Mean**"] + [f"**{statistics.fmean(ds[c]):+.2f}**" for c in cols])
+            rows.append(["Better in"] + [f"{sum(x > 0 for x in ds[c])}/7" for c in cols])
+            md += [f"**Δ SR07 − {base}, {metric}** (SG04 vs {labels[base]}; + = SG04 better)", ""] + table(header, rows) + [""]
+            for s in ("dev", "test"):
+                xs = [x for c in cols if c[0] == s for x in ds[c]]
+                cells.append(f"{statistics.fmean(xs):+.2f} (better in {sum(x > 0 for x in xs)}/21, p = {sign_p(xs):.3f})")
+                key = f"{base}_{s}" if metric == "Macro F1" else f"{base}_{s}_f1_pn"
+                out["deltas"][key] = {"mean": statistics.fmean(xs), "better": sum(x > 0 for x in xs), "p": sign_p(xs)}
         summary_rows.append([f"SR07 − {base} ({labels[base]})"] + cells)
     md += ["**Summary over the 21 BERT × generator cells** (two-sided sign test; SR01 has one value per BERT, so "
-           "its 21 cells are not independent)", ""] + table(["Comparison", "Dev", "Test"], summary_rows) + [""]
+           "its 21 cells are not independent)", ""] + table(["Comparison", "Dev macro F1", "Test macro F1", "Dev F1-PN", "Test F1-PN"], summary_rows) + [""]
 
     # 3. Error rate on test subsets: mean over seeds per cell, then over cells.
     def subset_error(cond: str, idx: list[int]) -> float:
@@ -202,6 +216,61 @@ def main() -> None:
     md += table(["", "Tweets", "Of which"], rows) + [""]
     md += table(["Broken as (gold → SR07)", "Tweets"], [[k.replace("->", " → "), str(v)] for k, v in
                                                           Counter(f"{gold[i]}->{m7[i]}" for i in broken).most_common()]) + [""]
+
+    # 8. Flips per condition, against the noise between two halves of the SR01 runs.
+    def flips(a: list[str], b: list[str]) -> tuple[list[int], list[int]]:
+        return ([i for i in range(len(test)) if a[i] != gold[i] and b[i] == gold[i]],
+                [i for i in range(len(test)) if a[i] == gold[i] and b[i] != gold[i]])
+
+    def vote(runs: list[list[str]]) -> list[str]:
+        return [Counter(p[i] for p in runs).most_common(1)[0][0] for i in range(len(test))]
+    sr01_runs = [p for seeds in preds["SR01"] for p in seeds]
+    half = flips(vote(sr01_runs[0::2]), vote(sr01_runs[1::2]))
+    rows = [["SR01 half vs half (noise)", str(len(half[0])), str(len(half[1])), str(len(half[0]) + len(half[1]))]
+            + [str(sum(gold[i] == g and vote(sr01_runs[1::2])[i] == q for i in half[1])) for g, q in kinds]]
+    out["flips_by_run"] = {"noise": {"fixed": len(half[0]), "broken": len(half[1])}}
+    for c in ("SR05", "SR06", "SR07"):
+        mc = vote([p for seeds in preds[c] for p in seeds])
+        fx, br = flips(m1, mc)
+        out["flips_by_run"][c] = {"fixed": len(fx), "broken": len(br)}
+        rows.append([f"SR01 → {c}", str(len(fx)), str(len(br)), str(len(fx) + len(br))]
+                    + [str(sum(gold[i] == g and mc[i] == q for i in br)) for g, q in kinds])
+    md += ["## 8. Flips by run, with a noise reference", "",
+           "Majority label per tweet. The noise row compares two halves of the SR01 runs; each half has few runs, so it "
+           "overstates the noise somewhat. Error columns count broken tweets (gold → predicted).", ""]
+    md += table(["Comparison", "Fixed", "Broken", "All flips"] + [f"{g} → {q}" for g, q in kinds], rows) + [""]
+
+    # 9. Religious tweets: the prayer type teaches NEU, while POS is the common label of real ones.
+    def religious(text: str) -> bool:
+        return bool(re.search(CUES["religious"], text))
+    rel = [i for i, r in enumerate(test) if religious(r["text"])]
+    groups = {"All": rel} | {f"Gold {l}": [i for i in rel if gold[i] == l] for l in LABELS}
+    all_conds = ["SR01", "SR05", "SR06", "SR07"]
+    rows, out["religious"] = [], {}
+    for name, idx in groups.items():
+        e = {c: subset_error(c, idx) for c in all_conds}
+        out["religious"][name] = {"n": len(idx)} | e
+        rows.append([name, str(len(idx))] + [f"{100 * e[c]:.1f}%" for c in all_conds] + [f"{100 * (e['SR07'] - e['SR01']):+.1f}"])
+    md += ["## 9. Test tweets with the religious cue", "", "Error rate as table 3; the cue is a rough keyword rule.", ""]
+    md += table(["Group", "Tweets", *all_conds, "SR07 − SR01"], rows) + [""]
+    rows = []
+    sources = {"S1 train": Path("data/processed/sentiment/arsarcasm_v2_train.jsonl"), "S1 test": TEST}
+    sources |= {f"SG04 {gn}": Path(f"data/synthetic/sentiment/sg04_{g}.selected.jsonl") for g, gn in GENS}
+    for name, path in sources.items():
+        with open(path, encoding="utf-8") as f:
+            cnt = Counter(r["sentiment"] for r in map(json.loads, f) if religious(r["text"]))
+        rows.append([name] + [str(cnt[l]) for l in LABELS])
+    md += ["Texts with the cue, by label:", ""] + table(["Source", *LABELS], rows) + [""]
+
+    # Broken tweets for reading; "all generators" = also broken by each generator's own majority.
+    gen_votes = [vote([p for k, seeds in enumerate(preds["SR07"]) if k % len(GENS) == j for p in seeds]) for j in range(len(GENS))]
+    with open("data/inspect/hard_cases/sr07_broken_tweets.csv", "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["error", "broken_by_all_generators", "hard_case", "sarcasm", "dialect", "religious_cue", "text_id", "text"])
+        for i in sorted(broken, key=lambda i: (gold[i], m7[i])):
+            w.writerow([f"{gold[i]} -> {m7[i]}", all(v[i] != gold[i] for v in gen_votes), hard[i], test[i]["sarcasm"],
+                        test[i]["dialect"], religious(test[i]["text"]), test[i]["text_id"], test[i]["text"]])
+    out["flips"]["broken_by_all_generators"] = sum(all(v[i] != gold[i] for v in gen_votes) for i in broken)
 
     Path("docs/sentiment/tables/sg04_analysis.md").write_text("\n".join(md), encoding="utf-8", newline="\n")
     Path("results/sentiment/analysis").mkdir(parents=True, exist_ok=True)

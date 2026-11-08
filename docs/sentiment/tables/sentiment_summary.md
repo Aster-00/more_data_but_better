@@ -341,3 +341,159 @@ Per-class F1 (mean over seeds):
 | SR07-camelbert_da_aya | 75.8 | 77.9 | 68.9 | 76.0 | 44.6 | 59.7 |
 | SR07-camelbert_da_qwen3 | 73.9 | 77.5 | 69.1 | 77.1 | 43.7 | 61.2 |
 
+## SR08: Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 without the prayer pairs (3,600 texts); 3 BERTs (MARBERTv2, AraBERTv02-Tw, CAMeLBERT-mix), 3 seeds, SR07 recipe. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR08-marbertv2_fanar | 3 | **78.49 ± 0.39** | 78.66 ± 0.35 | 78.37 ± 0.48 | 79.64 ± 0.38 | 77.38 ± 0.34 | 78.04 / 78.74 / 78.68 | **63.54 ± 0.22** | 68.29 ± 0.48 | 71.80 ± 0.71 | 2 / 3 / 2 | 3 | `sr08_marbertv2_fanar` |
+| SR08-marbertv2_aya | 3 | **78.16 ± 0.52** | 78.47 ± 0.39 | 77.90 ± 0.64 | 79.45 ± 0.42 | 76.86 ± 0.69 | 77.59 / 78.29 / 78.61 | **63.67 ± 0.73** | 67.78 ± 0.90 | 71.56 ± 1.02 | 3 / 2 / 3 | 3 | `sr08_marbertv2_aya` |
+| SR08-arabertv02_twitter_aya | 3 | **77.90 ± 0.32** | 78.01 ± 0.20 | 77.84 ± 0.59 | 79.24 ± 0.20 | 76.39 ± 0.32 | 77.55 / 77.97 / 78.17 | **62.75 ± 0.94** | 67.03 ± 1.10 | 70.03 ± 1.16 | 2 / 3 / 3 | 3 | `sr08_arabertv02_twitter_aya` |
+| SR08-marbertv2_qwen3 | 3 | **77.65 ± 0.36** | 77.61 ± 0.75 | 77.75 ± 0.30 | 78.87 ± 0.33 | 76.46 ± 0.39 | 77.25 / 77.75 / 77.95 | **63.65 ± 1.14** | 68.67 ± 1.07 | 72.59 ± 1.22 | 2 / 2 / 3 | 3 | `sr08_marbertv2_qwen3` |
+| SR08-arabertv02_twitter_fanar | 3 | **77.30 ± 0.28** | 77.65 ± 0.41 | 77.04 ± 0.39 | 78.71 ± 0.33 | 75.70 ± 0.32 | 77.35 / 77.00 / 77.55 | **63.20 ± 0.48** | 67.96 ± 0.86 | 70.79 ± 0.91 | 2 / 2 / 3 | 3 | `sr08_arabertv02_twitter_fanar` |
+| SR08-arabertv02_twitter_qwen3 | 3 | **76.52 ± 0.20** | 76.84 ± 0.12 | 76.29 ± 0.48 | 77.72 ± 0.23 | 75.00 ± 0.21 | 76.55 / 76.31 / 76.72 | **62.81 ± 0.27** | 67.33 ± 0.55 | 70.71 ± 0.37 | 2 / 2 / 3 | 3 | `sr08_arabertv02_twitter_qwen3` |
+| SR08-camelbert_mix_fanar | 3 | **76.19 ± 0.66** | 76.79 ± 0.79 | 75.74 ± 0.70 | 77.58 ± 0.53 | 74.46 ± 0.74 | 76.56 / 75.44 / 76.58 | **60.96 ± 0.43** | 66.94 ± 0.65 | 69.24 ± 0.61 | 2 / 3 / 3 | 3 | `sr08_camelbert_mix_fanar` |
+| SR08-camelbert_mix_qwen3 | 3 | **75.75 ± 0.34** | 76.16 ± 0.97 | 75.50 ± 0.82 | 77.05 ± 0.42 | 74.22 ± 0.42 | 75.91 / 75.36 / 75.98 | **61.27 ± 0.63** | 67.26 ± 0.51 | 70.04 ± 0.54 | 2 / 3 / 2 | 3 | `sr08_camelbert_mix_qwen3` |
+| SR08-camelbert_mix_aya | 3 | **75.67 ± 0.33** | 76.04 ± 0.53 | 75.41 ± 0.31 | 76.91 ± 0.33 | 74.03 ± 0.32 | 75.97 / 75.32 / 75.74 | **60.75 ± 0.92** | 66.43 ± 0.35 | 68.68 ± 0.55 | 2 / 3 / 3 | 3 | `sr08_camelbert_mix_aya` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR08-marbertv2_fanar | 81.1 | 80.7 | 73.7 | 78.3 | 47.0 | 65.3 |
+| SR08-marbertv2_aya | 80.8 | 80.8 | 72.9 | 77.3 | 47.9 | 65.8 |
+| SR08-arabertv02_twitter_aya | 80.4 | 80.9 | 72.4 | 76.6 | 48.2 | 63.5 |
+| SR08-marbertv2_qwen3 | 80.4 | 80.0 | 72.5 | 78.6 | 45.8 | 66.6 |
+| SR08-arabertv02_twitter_fanar | 79.7 | 80.5 | 71.7 | 77.7 | 48.0 | 63.9 |
+| SR08-arabertv02_twitter_qwen3 | 78.1 | 79.6 | 71.9 | 76.7 | 47.0 | 64.7 |
+| SR08-camelbert_mix_fanar | 78.0 | 79.7 | 70.9 | 77.4 | 44.4 | 61.1 |
+| SR08-camelbert_mix_qwen3 | 77.8 | 78.8 | 70.6 | 77.5 | 43.7 | 62.6 |
+| SR08-camelbert_mix_aya | 77.1 | 79.0 | 71.0 | 76.8 | 44.9 | 60.5 |
+
+## SR09: Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 Qwen3 without the pairs whose sides have the same words; 3 BERTs, 3 seeds, SR07 recipe. Member = <classifier>_qwen3.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR09-marbertv2_qwen3 | 3 | **77.64 ± 0.48** | 77.43 ± 0.24 | 77.92 ± 0.91 | 78.87 ± 0.30 | 76.43 ± 0.68 | 78.02 / 77.80 / 77.10 | **63.14 ± 0.24** | 68.02 ± 0.20 | 71.72 ± 0.17 | 3 / 3 / 3 | 3 | `sr09_marbertv2_qwen3` |
+| SR09-arabertv02_twitter_qwen3 | 3 | **76.77 ± 0.12** | 76.88 ± 0.27 | 76.69 ± 0.33 | 78.12 ± 0.19 | 75.29 ± 0.22 | 76.89 / 76.64 / 76.77 | **62.14 ± 0.24** | 67.19 ± 0.37 | 70.17 ± 0.48 | 2 / 3 / 3 | 3 | `sr09_arabertv02_twitter_qwen3` |
+| SR09-camelbert_mix_qwen3 | 3 | **75.70 ± 1.20** | 76.17 ± 0.99 | 75.36 ± 1.50 | 76.86 ± 0.98 | 74.31 ± 1.71 | 75.27 / 77.05 / 74.77 | **60.76 ± 0.16** | 66.76 ± 0.48 | 69.54 ± 0.60 | 3 / 2 / 3 | 3 | `sr09_camelbert_mix_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR09-marbertv2_qwen3 | 80.6 | 80.1 | 72.3 | 78.0 | 46.0 | 65.4 |
+| SR09-arabertv02_twitter_qwen3 | 79.3 | 79.7 | 71.2 | 77.4 | 46.1 | 62.9 |
+| SR09-camelbert_mix_qwen3 | 77.4 | 78.5 | 71.2 | 77.5 | 43.2 | 61.6 |
+
+## SR10: Repair test on SR07 (D-025, test-contaminated like SR07): two-stage training, epochs 1-2 on S1 train + SG04, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR10-marbertv2_qwen3 | 3 | **78.64 ± 0.87** | 78.29 ± 1.09 | 79.10 ± 0.63 | 79.72 ± 0.93 | 77.55 ± 0.86 | 79.07 / 77.64 / 79.21 | **63.14 ± 0.23** | 68.53 ± 0.76 | 72.12 ± 0.90 | 2 / 3 / 3 | 3 | `sr10_marbertv2_qwen3` |
+| SR10-marbertv2_aya | 3 | **78.27 ± 0.58** | 78.11 ± 0.66 | 78.53 ± 0.50 | 79.43 ± 0.59 | 77.30 ± 0.57 | 77.74 / 78.19 / 78.89 | **63.61 ± 0.25** | 68.41 ± 0.10 | 71.99 ± 0.35 | 3 / 2 / 3 | 3 | `sr10_marbertv2_aya` |
+| SR10-marbertv2_fanar | 3 | **78.17 ± 0.57** | 77.95 ± 0.63 | 78.46 ± 0.64 | 79.37 ± 0.49 | 77.16 ± 0.83 | 77.77 / 77.92 / 78.82 | **62.86 ± 0.33** | 68.22 ± 0.47 | 71.50 ± 0.56 | 3 / 2 / 3 | 3 | `sr10_marbertv2_fanar` |
+| SR10-arabertv02_twitter_aya | 3 | **77.48 ± 0.46** | 77.74 ± 0.29 | 77.27 ± 0.63 | 78.92 ± 0.44 | 76.17 ± 0.50 | 77.56 / 77.91 / 76.99 | **62.94 ± 0.21** | 67.54 ± 0.25 | 70.10 ± 0.33 | 2 / 3 / 3 | 3 | `sr10_arabertv02_twitter_aya` |
+| SR10-arabertv02_twitter_fanar | 3 | **76.71 ± 0.42** | 76.93 ± 0.43 | 76.53 ± 0.47 | 78.28 ± 0.32 | 75.04 ± 0.56 | 77.19 / 76.48 / 76.47 | **62.99 ± 0.26** | 67.64 ± 0.33 | 70.32 ± 0.28 | 3 / 3 / 3 | 3 | `sr10_arabertv02_twitter_fanar` |
+| SR10-arabertv02_twitter_qwen3 | 3 | **76.13 ± 0.43** | 76.41 ± 0.40 | 75.89 ± 0.47 | 77.61 ± 0.28 | 74.39 ± 0.62 | 76.60 / 75.76 / 76.02 | **63.20 ± 0.53** | 67.76 ± 0.55 | 70.77 ± 0.50 | 3 / 3 / 3 | 3 | `sr10_arabertv02_twitter_qwen3` |
+| SR10-camelbert_mix_qwen3 | 3 | **75.64 ± 0.64** | 76.05 ± 0.78 | 75.38 ± 0.45 | 76.62 ± 0.48 | 74.23 ± 0.93 | 76.25 / 75.67 / 74.98 | **61.67 ± 0.33** | 66.77 ± 0.59 | 69.42 ± 0.63 | 3 / 3 / 3 | 2 | `sr10_camelbert_mix_qwen3` |
+| SR10-camelbert_mix_fanar | 3 | **75.57 ± 0.22** | 76.17 ± 0.24 | 75.16 ± 0.22 | 76.86 ± 0.20 | 73.92 ± 0.19 | 75.72 / 75.68 / 75.31 | **61.56 ± 0.49** | 66.68 ± 0.50 | 69.03 ± 0.45 | 3 / 3 / 3 | 2 | `sr10_camelbert_mix_fanar` |
+| SR10-camelbert_mix_aya | 3 | **75.17 ± 0.25** | 75.62 ± 0.22 | 74.85 ± 0.32 | 76.48 ± 0.21 | 73.34 ± 0.45 | 74.99 / 75.06 / 75.46 | **61.00 ± 0.11** | 66.11 ± 0.34 | 68.47 ± 0.28 | 3 / 3 / 3 | 2 | `sr10_camelbert_mix_aya` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR10-marbertv2_qwen3 | 81.2 | 80.8 | 73.9 | 78.8 | 45.2 | 65.5 |
+| SR10-marbertv2_aya | 81.4 | 80.2 | 73.2 | 78.3 | 46.9 | 65.7 |
+| SR10-marbertv2_fanar | 81.5 | 80.2 | 72.8 | 78.6 | 45.6 | 64.4 |
+| SR10-arabertv02_twitter_aya | 80.9 | 80.1 | 71.5 | 77.3 | 48.6 | 62.9 |
+| SR10-arabertv02_twitter_fanar | 79.8 | 80.1 | 70.3 | 77.5 | 48.3 | 63.1 |
+| SR10-arabertv02_twitter_qwen3 | 78.5 | 79.6 | 70.2 | 77.3 | 48.1 | 64.2 |
+| SR10-camelbert_mix_qwen3 | 76.4 | 78.4 | 72.0 | 76.7 | 46.2 | 62.1 |
+| SR10-camelbert_mix_fanar | 77.2 | 78.9 | 70.7 | 76.8 | 46.6 | 61.3 |
+| SR10-camelbert_mix_aya | 76.3 | 78.8 | 70.3 | 76.5 | 46.1 | 60.5 |
+
+## SR11: Repair test on SR07 (D-025, test-contaminated like SR07): SR08 + SR10 together: SG04 without the prayer pairs, epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR11-marbertv2_aya | 3 | **78.27 ± 0.59** | 78.41 ± 0.51 | 78.17 ± 0.68 | 79.64 ± 0.32 | 77.02 ± 0.81 | 77.94 / 77.92 / 78.94 | **64.05 ± 0.68** | 68.38 ± 0.85 | 72.01 ± 0.79 | 3 / 2 / 3 | 3 | `sr11_marbertv2_aya` |
+| SR11-marbertv2_fanar | 3 | **78.06 ± 0.44** | 77.90 ± 0.37 | 78.32 ± 0.70 | 79.08 ± 0.38 | 77.14 ± 0.38 | 77.56 / 78.38 / 78.25 | **63.39 ± 0.34** | 68.36 ± 0.16 | 71.68 ± 0.19 | 2 / 3 / 3 | 3 | `sr11_marbertv2_fanar` |
+| SR11-arabertv02_twitter_aya | 3 | **77.77 ± 0.19** | 77.72 ± 0.08 | 77.85 ± 0.35 | 78.97 ± 0.16 | 76.47 ± 0.19 | 77.57 / 77.80 / 77.94 | **63.14 ± 0.17** | 67.49 ± 0.05 | 70.49 ± 0.13 | 3 / 3 / 3 | 3 | `sr11_arabertv02_twitter_aya` |
+| SR11-marbertv2_qwen3 | 3 | **77.54 ± 0.15** | 77.35 ± 0.35 | 77.76 ± 0.08 | 78.81 ± 0.21 | 76.20 ± 0.15 | 77.61 / 77.37 / 77.64 | **63.19 ± 0.27** | 67.96 ± 0.21 | 71.76 ± 0.31 | 3 / 3 / 2 | 3 | `sr11_marbertv2_qwen3` |
+| SR11-arabertv02_twitter_fanar | 3 | **77.47 ± 0.38** | 77.58 ± 0.48 | 77.40 ± 0.33 | 78.97 ± 0.45 | 75.88 ± 0.57 | 77.60 / 77.04 / 77.77 | **63.01 ± 0.71** | 67.93 ± 0.47 | 70.91 ± 0.52 | 2 / 3 / 2 | 3 | `sr11_arabertv02_twitter_fanar` |
+| SR11-arabertv02_twitter_qwen3 | 3 | **76.46 ± 0.55** | 76.69 ± 0.58 | 76.32 ± 0.70 | 77.74 ± 0.48 | 74.87 ± 0.74 | 77.01 / 75.92 / 76.46 | **63.13 ± 0.40** | 67.62 ± 0.54 | 70.77 ± 0.50 | 2 / 2 / 3 | 3 | `sr11_arabertv02_twitter_qwen3` |
+| SR11-camelbert_mix_fanar | 3 | **76.37 ± 0.26** | 76.74 ± 0.69 | 76.10 ± 0.19 | 77.64 ± 0.30 | 74.79 ± 0.26 | 76.61 / 76.10 / 76.40 | **61.29 ± 0.76** | 67.13 ± 0.18 | 69.49 ± 0.19 | 2 / 3 / 3 | 3 | `sr11_camelbert_mix_fanar` |
+| SR11-camelbert_mix_qwen3 | 3 | **75.97 ± 0.11** | 76.44 ± 0.66 | 75.64 ± 0.70 | 77.18 ± 0.12 | 74.52 ± 0.21 | 75.85 / 76.06 / 76.00 | **60.93 ± 0.64** | 66.87 ± 0.48 | 69.58 ± 0.52 | 2 / 3 / 2 | 2 | `sr11_camelbert_mix_qwen3` |
+| SR11-camelbert_mix_aya | 3 | **75.77 ± 0.26** | 76.09 ± 0.52 | 75.58 ± 0.44 | 77.02 ± 0.26 | 74.15 ± 0.29 | 75.75 / 75.53 / 76.04 | **60.92 ± 0.79** | 66.66 ± 0.42 | 68.78 ± 0.32 | 2 / 3 / 3 | 2 | `sr11_camelbert_mix_aya` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR11-marbertv2_aya | 81.6 | 80.8 | 72.5 | 77.9 | 48.1 | 66.1 |
+| SR11-marbertv2_fanar | 80.6 | 79.9 | 73.7 | 78.3 | 46.8 | 65.0 |
+| SR11-arabertv02_twitter_aya | 80.2 | 80.4 | 72.7 | 77.0 | 48.4 | 64.0 |
+| SR11-marbertv2_qwen3 | 80.3 | 80.2 | 72.1 | 77.9 | 46.1 | 65.6 |
+| SR11-arabertv02_twitter_fanar | 80.5 | 80.7 | 71.2 | 77.8 | 47.2 | 64.1 |
+| SR11-arabertv02_twitter_qwen3 | 78.3 | 79.7 | 71.4 | 77.0 | 47.9 | 64.6 |
+| SR11-camelbert_mix_fanar | 78.1 | 79.5 | 71.5 | 77.5 | 44.9 | 61.5 |
+| SR11-camelbert_mix_qwen3 | 77.8 | 78.9 | 71.3 | 77.2 | 43.6 | 62.0 |
+| SR11-camelbert_mix_aya | 77.3 | 79.0 | 71.0 | 77.1 | 45.2 | 60.5 |
+
+## SR12: SR11 without the NEU generations (D-026, test-contaminated like SR07): S1 train + the whole POS/NEG pairs of SG04 (sarcastic praise, emoji in context; 1,600 texts), epochs 1-2 on S1 train + the set, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR11 recipe. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR12-marbertv2_aya | 3 | **78.82 ± 0.39** | 78.40 ± 0.69 | 79.45 ± 0.54 | 79.70 ± 0.29 | 78.05 ± 0.52 | 78.37 / 79.08 / 79.02 | **63.56 ± 0.47** | 68.60 ± 0.24 | 72.17 ± 0.14 | 1 / 3 / 3 | 3 | `sr12_marbertv2_aya` |
+| SR12-marbertv2_fanar | 3 | **78.22 ± 0.41** | 77.76 ± 0.74 | 78.88 ± 0.55 | 79.24 ± 0.41 | 77.41 ± 0.43 | 77.84 / 78.17 / 78.65 | **62.77 ± 0.52** | 67.73 ± 0.84 | 71.34 ± 0.51 | 1 / 2 / 3 | 3 | `sr12_marbertv2_fanar` |
+| SR12-marbertv2_qwen3 | 3 | **78.06 ± 0.81** | 77.75 ± 0.78 | 78.52 ± 1.32 | 79.08 ± 0.68 | 77.07 ± 1.10 | 77.42 / 78.98 / 77.79 | **63.09 ± 0.72** | 67.34 ± 0.92 | 71.01 ± 0.75 | 1 / 3 / 3 | 3 | `sr12_marbertv2_qwen3` |
+| SR12-arabertv02_twitter_aya | 3 | **78.02 ± 0.61** | 77.78 ± 0.84 | 78.28 ± 0.37 | 79.05 ± 0.77 | 76.90 ± 0.55 | 78.72 / 77.58 / 77.75 | **63.30 ± 0.07** | 68.07 ± 0.26 | 70.90 ± 0.18 | 3 / 3 / 3 | 2 | `sr12_arabertv02_twitter_aya` |
+| SR12-arabertv02_twitter_fanar | 3 | **77.72 ± 0.57** | 77.50 ± 0.76 | 78.02 ± 0.38 | 78.79 ± 0.72 | 76.60 ± 0.36 | 78.38 / 77.43 / 77.35 | **62.96 ± 0.61** | 68.08 ± 0.11 | 70.81 ± 0.05 | 3 / 2 / 3 | 2 | `sr12_arabertv02_twitter_fanar` |
+| SR12-arabertv02_twitter_qwen3 | 3 | **77.37 ± 0.14** | 77.63 ± 0.69 | 77.48 ± 0.12 | 78.68 ± 0.30 | 76.01 ± 0.25 | 77.42 / 77.48 / 77.21 | **62.96 ± 1.22** | 68.72 ± 0.88 | 71.65 ± 0.81 | 3 / 1 / 3 | 2 | `sr12_arabertv02_twitter_qwen3` |
+| SR12-camelbert_mix_aya | 3 | **76.57 ± 0.11** | 76.53 ± 0.14 | 76.71 ± 0.33 | 77.80 ± 0.05 | 75.22 ± 0.07 | 76.69 / 76.50 / 76.53 | **61.37 ± 0.95** | 67.16 ± 0.60 | 69.35 ± 0.78 | 3 / 2 / 3 | 2 | `sr12_camelbert_mix_aya` |
+| SR12-camelbert_mix_fanar | 3 | **76.08 ± 0.24** | 76.24 ± 0.20 | 76.00 ± 0.39 | 77.29 ± 0.16 | 74.73 ± 0.56 | 76.26 / 76.18 / 75.81 | **61.63 ± 0.83** | 67.62 ± 0.44 | 70.15 ± 0.39 | 3 / 2 / 3 | 2 | `sr12_camelbert_mix_fanar` |
+| SR12-camelbert_mix_qwen3 | 3 | **76.07 ± 0.27** | 76.11 ± 0.18 | 76.10 ± 0.60 | 77.18 ± 0.17 | 74.73 ± 0.69 | 75.99 / 76.36 / 75.85 | **61.87 ± 1.10** | 67.46 ± 0.34 | 70.01 ± 0.52 | 3 / 2 / 3 | 2 | `sr12_camelbert_mix_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR12-marbertv2_aya | 81.2 | 80.4 | 74.9 | 78.4 | 46.3 | 65.9 |
+| SR12-marbertv2_fanar | 81.3 | 79.8 | 73.5 | 77.7 | 45.6 | 65.0 |
+| SR12-marbertv2_qwen3 | 80.6 | 80.0 | 73.6 | 76.9 | 47.3 | 65.1 |
+| SR12-arabertv02_twitter_aya | 80.2 | 80.2 | 73.6 | 77.5 | 48.1 | 64.3 |
+| SR12-arabertv02_twitter_fanar | 80.0 | 80.0 | 73.2 | 77.7 | 47.3 | 63.9 |
+| SR12-arabertv02_twitter_qwen3 | 80.0 | 80.1 | 72.0 | 78.4 | 45.6 | 65.0 |
+| SR12-camelbert_mix_aya | 78.9 | 79.3 | 71.5 | 77.3 | 45.4 | 61.4 |
+| SR12-camelbert_mix_fanar | 78.2 | 78.8 | 71.2 | 77.8 | 44.6 | 62.5 |
+| SR12-camelbert_mix_qwen3 | 77.9 | 78.7 | 71.6 | 77.4 | 45.6 | 62.6 |
+
+## SR13: SR12 + the NEG sides of the SG04 public jab and personal remark pairs (D-026, test-contaminated like SR07): 2,600 texts, pairs of those types broken, NEU sides dropped; otherwise SR12 recipe. SR13 - SR12 = effect of those 1,000 NEG sides. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR13-marbertv2_fanar | 3 | **78.23 ± 0.24** | 77.96 ± 0.26 | 78.53 ± 0.27 | 79.29 ± 0.29 | 77.27 ± 0.22 | 78.18 / 78.03 / 78.49 | **63.03 ± 0.57** | 67.83 ± 0.35 | 71.62 ± 0.36 | 3 / 3 / 3 | 3 | `sr13_marbertv2_fanar` |
+| SR13-marbertv2_aya | 3 | **78.23 ± 0.39** | 78.14 ± 0.53 | 78.49 ± 0.40 | 79.45 ± 0.40 | 77.22 ± 0.55 | 78.23 / 77.84 / 78.62 | **63.73 ± 0.26** | 69.19 ± 0.67 | 72.86 ± 0.76 | 1 / 3 / 3 | 3 | `sr13_marbertv2_aya` |
+| SR13-arabertv02_twitter_fanar | 3 | **78.15 ± 0.58** | 78.29 ± 0.67 | 78.03 ± 0.50 | 79.13 ± 0.42 | 76.94 ± 0.76 | 77.75 / 77.88 / 78.82 | **63.47 ± 0.38** | 68.26 ± 0.34 | 71.21 ± 0.38 | 3 / 3 / 3 | 3 | `sr13_arabertv02_twitter_fanar` |
+| SR13-arabertv02_twitter_aya | 3 | **78.03 ± 0.60** | 78.05 ± 0.57 | 78.02 ± 0.66 | 79.13 ± 0.42 | 76.78 ± 0.79 | 77.98 / 77.45 / 78.65 | **63.41 ± 0.16** | 68.24 ± 0.11 | 71.20 ± 0.13 | 3 / 3 / 3 | 3 | `sr13_arabertv02_twitter_aya` |
+| SR13-marbertv2_qwen3 | 3 | **77.54 ± 0.69** | 77.48 ± 0.31 | 77.68 ± 0.99 | 78.71 ± 0.61 | 76.38 ± 0.93 | 77.72 / 76.78 / 78.12 | **63.31 ± 0.24** | 67.59 ± 0.59 | 71.36 ± 0.67 | 3 / 2 / 3 | 3 | `sr13_marbertv2_qwen3` |
+| SR13-arabertv02_twitter_qwen3 | 3 | **77.17 ± 0.24** | 77.48 ± 0.46 | 77.04 ± 0.54 | 78.30 ± 0.17 | 75.91 ± 0.24 | 76.93 / 77.17 / 77.41 | **63.23 ± 0.12** | 68.68 ± 1.46 | 71.72 ± 1.39 | 1 / 3 / 3 | 2 | `sr13_arabertv02_twitter_qwen3` |
+| SR13-camelbert_mix_qwen3 | 3 | **76.13 ± 0.79** | 76.33 ± 0.95 | 75.98 ± 0.64 | 77.21 ± 0.77 | 74.71 ± 0.86 | 76.74 / 75.24 / 76.40 | **62.39 ± 0.43** | 67.77 ± 0.26 | 70.14 ± 0.52 | 3 / 3 / 3 | 2 | `sr13_camelbert_mix_qwen3` |
+| SR13-camelbert_mix_aya | 3 | **76.01 ± 0.50** | 75.98 ± 0.65 | 76.06 ± 0.35 | 77.13 ± 0.48 | 74.57 ± 0.59 | 76.11 / 75.47 / 76.45 | **61.81 ± 0.43** | 67.33 ± 0.34 | 69.74 ± 0.23 | 3 / 3 / 3 | 2 | `sr13_camelbert_mix_aya` |
+| SR13-camelbert_mix_fanar | 3 | **75.99 ± 0.05** | 76.18 ± 0.11 | 75.86 ± 0.18 | 77.10 ± 0.28 | 74.57 ± 0.40 | 75.98 / 76.04 / 75.95 | **62.11 ± 0.17** | 67.69 ± 0.05 | 70.03 ± 0.05 | 3 / 3 / 3 | 2 | `sr13_camelbert_mix_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR13-marbertv2_fanar | 81.0 | 80.2 | 73.5 | 77.7 | 45.9 | 65.5 |
+| SR13-marbertv2_aya | 81.5 | 80.2 | 72.9 | 79.1 | 45.5 | 66.6 |
+| SR13-arabertv02_twitter_fanar | 79.6 | 80.6 | 74.2 | 77.7 | 48.0 | 64.7 |
+| SR13-arabertv02_twitter_aya | 80.1 | 80.5 | 73.5 | 77.7 | 47.8 | 64.7 |
+| SR13-marbertv2_qwen3 | 80.3 | 79.9 | 72.5 | 77.1 | 47.2 | 65.6 |
+| SR13-arabertv02_twitter_qwen3 | 79.2 | 79.7 | 72.6 | 78.2 | 46.3 | 65.2 |
+| SR13-camelbert_mix_qwen3 | 77.5 | 79.0 | 72.0 | 77.7 | 46.9 | 62.6 |
+| SR13-camelbert_mix_aya | 77.6 | 78.9 | 71.5 | 77.1 | 45.9 | 62.4 |
+| SR13-camelbert_mix_fanar | 77.4 | 78.8 | 71.7 | 77.6 | 46.3 | 62.5 |
+
