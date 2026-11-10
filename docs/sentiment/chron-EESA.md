@@ -49,18 +49,6 @@ EESA train only, 7 BERTs, 3 seeds, SR01 recipe; EESA dev chooses the epoch, EESA
 | SR01-EESA-camelbert_da | dev | `sr01_eesa_camelbert_da` | 3 | 80.68 | 79.53 | 79.59 | 79.65 | 0.04 | 76.18 | 75.53 | 86.88 |
 | SR01-EESA-camelbert_da | test | `sr01_eesa_camelbert_da` | 3 | 80.20 | 79.20 | 79.47 | 79.61 | 0.74 | 74.71 | 77.03 | 85.86 |
 
-**SX01 vs SR01-EESA** (EESA test, same BERTs; micro F1 from `sentiment_summary_EESA.csv` `accuracy`, mean of 7 computed from those rows)
-
-| BERT | Micro F1, trained on ArSarcasm-v2 (SX01) | Micro F1, trained on EESA (SR01-EESA) | Δ micro | Macro F1, SX01 | Macro F1, SR01-EESA | Δ macro |
-|---|---|---|---|---|---|---|
-| marbert | 82.64 | 88.88 | +6.24 | 81.33 | 87.89 | +6.56 |
-| marbertv2 | 81.01 | 86.06 | +5.05 | 79.83 | 85.09 | +5.26 |
-| arabertv02_twitter | 77.14 | 84.27 | +7.13 | 76.12 | 83.36 | +7.24 |
-| arbert | 77.26 | 84.39 | +7.13 | 75.84 | 83.20 | +7.36 |
-| arbertv2 | 77.14 | 82.36 | +5.22 | 75.61 | 80.85 | +5.24 |
-| camelbert_mix | 74.53 | 81.58 | +7.05 | 73.20 | 80.28 | +7.08 |
-| camelbert_da | 71.15 | 80.20 | +9.05 | 69.82 | 79.20 | +9.38 |
-| **mean of 7** | 77.27 | 83.96 | +6.70 | 75.96 | 82.84 | +6.87 |
 
 **Takeaways**
 - 
@@ -68,3 +56,22 @@ EESA train only, 7 BERTs, 3 seeds, SR01 recipe; EESA dev chooses the epoch, EESA
 **Future Runs**
 - SG01-EESA: zero-shot generation for EESA (prompt `prompts/sentiment/open_eesa_v1.json`, accepted 2026-11-08), 1,320 per generator, code-switched like EESA; then SR02-EESA
 - SG03-EESA and SG03-random-EESA: minimal pairs for the types of the SR02-EESA dev errors; then SR05-EESA and SR06-EESA
+
+## SR02-EASA results (EASA test macro F1, mean ± std over 3 seeds)
+
+| BERT | SR01-EASA (real only) | + Aya | + Fanar | + Qwen3 |
+|---|---|---|---|---|
+| MARBERT | 87.89 ± 0.29 | 87.65 (−0.24) | 87.59 (−0.30) | 87.35 (−0.54) |
+| MARBERTv2 | 85.09 ± 0.32 | 85.55 (+0.45) | 85.56 (+0.46) | 84.86 (−0.23) |
+| AraBERTv02-Twitter | 83.36 ± 1.07 | 83.86 (+0.50) | 83.43 (+0.07) | 83.24 (−0.12) |
+| ARBERT | 83.20 ± 0.46 | 83.85 (+0.65) | 82.65 (−0.55) | 83.39 (+0.19) |
+| ARBERTv2 | 80.85 ± 0.85 | 81.91 (+1.07) | 81.44 (+0.60) | 82.12 (+1.28) |
+| CAMeLBERT-mix | 80.28 ± 0.12 | 81.37 (+1.10) | 81.53 (+1.25) | 81.63 (+1.35) |
+| CAMeLBERT-DA | 79.20 ± 0.49 | 79.80 (+0.60) | 80.81 (+1.60) | 81.17 (+1.97) |
+| **Mean of 7** | **82.84** | **83.43 (+0.59)** | **83.29 (+0.45)** | **83.39 (+0.56)** |
+
+- **Breadth:** Aya improves 6 of 7 BERTs, Fanar 5 and Qwen3 4.
+- **Where it helps:** the gain grows as the BERT gets weaker. The best BERT, MARBERT, gets slightly worse with every set.
+- **By class:** test NEU F1 rises by 0.73–1.05.
+
+**Takeaway: EESA-generated data adds about +0.5 on average, which is roughly the size of the seed spread. It helps the weak BERTs by 1–2 points and does nothing for MARBERT.**
