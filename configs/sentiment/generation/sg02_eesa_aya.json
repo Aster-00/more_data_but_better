@@ -1,0 +1,91 @@
+{
+  "set_name": "sg02_eesa_aya",
+  "condition": "fewshot",
+  "generator": "CohereLabs/aya-expanse-8b",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "varieties": [
+    "egypt"
+  ],
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "strip_translation": false,
+  "template": "prompts/sentiment/fewshot_eesa_v1.json",
+  "few_shot": {
+    "k": 5,
+    "source": "data/inspect/hard_cases/sg01_most_errors_eesa.jsonl",
+    "splits": [
+      "dev"
+    ],
+    "match": "type_sentiment",
+    "use_all_if_fewer": true
+  },
+  "sentiments": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "cells": [
+    {
+      "type": "\"Why the dislikes?\" questions",
+      "sentiment": "NEU",
+      "target": 330
+    },
+    {
+      "type": "Hype and fandom comments",
+      "sentiment": "NEG",
+      "target": 90
+    },
+    {
+      "type": "Hype and fandom comments",
+      "sentiment": "NEU",
+      "target": 45
+    },
+    {
+      "type": "Hype and fandom comments",
+      "sentiment": "POS",
+      "target": 195
+    },
+    {
+      "type": "Long opinion with a question or advice",
+      "sentiment": "NEG",
+      "target": 82
+    },
+    {
+      "type": "Long opinion with a question or advice",
+      "sentiment": "NEU",
+      "target": 165
+    },
+    {
+      "type": "Long opinion with a question or advice",
+      "sentiment": "POS",
+      "target": 83
+    },
+    {
+      "type": "Indirect praise and wishes",
+      "sentiment": "NEG",
+      "target": 24
+    },
+    {
+      "type": "Indirect praise and wishes",
+      "sentiment": "NEU",
+      "target": 118
+    },
+    {
+      "type": "Indirect praise and wishes",
+      "sentiment": "POS",
+      "target": 188
+    }
+  ],
+  "request_margin": 1.6,
+  "output": "data/synthetic/sentiment/sg02_eesa_aya.jsonl",
+  "_notes": "SG02-EESA (D-034): few-shot generation aimed at the 4 most frequent SG01-most-errors types (330 texts each, class mix = the type's gold mix). Examples: 5 SG01-most-errors texts (EESA dev; dev contamination accepted by Ammar, 2026-11-10) of the request's type and class, drawn per request; all of them if a group has fewer than 5. Sampling, batch and seed as sg01_eesa. 1.6x requests; top up with --margin if a cell falls short after filtering (no duplicates allowed)."
+}

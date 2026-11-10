@@ -1,0 +1,20 @@
+{
+  "id": "sentiment_fewshot_eesa_v1",
+  "version": 1,
+  "condition": "fewshot",
+  "description": "Sentiment track, EESA few-shot generation (D-034): SG02-EESA (examples = SG01-most-errors dev texts of the request's error type and class) and SG02-random-EESA (examples = random EESA train comments of the request's class). One template for both, so the two sets differ only in where the examples come from. Structure of open_fewshot_v1 (ArSarcasm-v2 SG02): examples, then the request, then a do-not-copy line; 'write about something else' dropped (Ammar, 2026-11-10). System prompt, dialect instruction and class definitions from open_eesa_v1 (SG01-EASA). A group with fewer than 5 examples shows all it has. Placeholders: {variety_name} {variety_instruction} {sentiment_name} {sentiment_definition} {few_shot_block}.",
+  "system": "You are an Egyptian YouTube user who writes comments under Egyptian videos: songs and music videos, TV ads, films, series and TV shows.",
+  "user": "{few_shot_block}Write one new YouTube comment in {variety_name}. {variety_instruction}\nThe comment must express a {sentiment_name} sentiment: {sentiment_definition}\nDo not copy or rephrase the examples.\nOutput only the comment itself, on one line, with no quotes, translation or explanation.",
+  "few_shot_header": "Here are some real YouTube comments written in {variety_name} that express a {sentiment_name} sentiment:",
+  "few_shot_item": "- {text}",
+  "options": {
+    "variety": {
+      "egypt": {"name": "Egyptian Arabic", "instruction": "Write it the way Egyptians comment on YouTube: mostly in Arabic script, mixing in English words where they come naturally (for example like, dislike, subscribe, views, love, nice, or the names of songs, films, brands and stars)."}
+    },
+    "sentiment": {
+      "NEG": {"name": "negative", "definition": "the writer criticises, mocks or insults something or someone (the video, a singer or actor, an ad, a company, or the people who disliked the video), or says it is bad, boring, fake or copied."},
+      "NEU": {"name": "neutral", "definition": "the writer asks a question, shares information, makes a remark, or asks for something (for example to subscribe to their channel or like their comment), without praising or criticising."},
+      "POS": {"name": "positive", "definition": "the writer praises, loves, admires or thanks someone or something (the song, a star, an ad, a film), or sends greetings and good wishes."}
+    }
+  }
+}

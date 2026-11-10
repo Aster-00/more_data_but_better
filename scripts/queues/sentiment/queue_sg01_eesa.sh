@@ -23,6 +23,9 @@ say() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
 
 # Wait (up to 60 min) while another process holds the GPU (it is shared with other chats).
 gpu_free() {
+  # Windows frees a finished model's memory late; loading the next one at once failed twice with
+  # "paging file is too small" (os error 1455, 2026-11-08). Pause before every load.
+  sleep 60
   for i in $(seq 1 12); do
     free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
     [ "$free" -ge 6000 ] && return 0
@@ -44,8 +47,11 @@ for g in $GENS; do
   # 0. Smoke test (kept apart from the full set).
   if [ ! -f "$SYN/${sg}_limit24.jsonl" ]; then
     gpu_free; say "$sg: smoke test (24 requests)"
-    $PY -m src.sentiment.generate --config "$cfg" --limit 24 > "$LOGS/${sg}_limit24.console.log" 2>&1 \
-      || { say "SKIP $sg: smoke test failed (see $LOGS/${sg}_limit24.console.log)"; continue; }
+    if ! $PY -m src.sentiment.generate --config "$cfg" --limit 24 > "$LOGS/${sg}_limit24.console.log" 2>&1; then
+      say "$sg: smoke test failed, retrying in 2 min ($(grep -hE 'Error' "$LOGS/${sg}_limit24.console.log" | tail -1))"; sleep 120
+      $PY -m src.sentiment.generate --config "$cfg" --limit 24 > "$LOGS/${sg}_limit24.console.log" 2>&1 \
+        || { say "SKIP $sg: smoke test failed twice (see $LOGS/${sg}_limit24.console.log)"; continue; }
+    fi
   fi
   parsed=$(grep -c '"parse_ok": true' "$SYN/${sg}_limit24.jsonl" 2>/dev/null); parsed=${parsed:-0}
   say "$sg: smoke test $parsed/24 parsed"
@@ -60,7 +66,7 @@ for g in $GENS; do
       [ "$n" -ge "$want" ] && break
       gpu_free; say "$sg: generating ($n/$want done, attempt $attempt)"
       $PY -m src.sentiment.generate --config "$cfg" --per-cell $target >> "$LOGS/$sg.console.log" 2>&1 \
-        || say "$sg: generation exited with an error ($(grep -hE 'Error' "$LOGS/$sg.console.log" | tail -1))"
+        || { say "$sg: generation exited with an error ($(grep -hE 'Error' "$LOGS/$sg.console.log" | tail -1))"; sleep 120; }
     done
     n=$( [ -f "$SYN/$sg.jsonl" ] && wc -l < "$SYN/$sg.jsonl" || echo 0 )
     if [ "$n" -lt "$want" ]; then say "$sg: only $n/$want generated"; break; fi

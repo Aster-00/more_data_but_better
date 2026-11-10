@@ -1,0 +1,48 @@
+{
+  "set_name": "sg02r_eesa_aya",
+  "condition": "fewshot",
+  "generator": "CohereLabs/aya-expanse-8b",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "varieties": [
+    "egypt"
+  ],
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "strip_translation": false,
+  "template": "prompts/sentiment/fewshot_eesa_v1.json",
+  "few_shot": {
+    "k": 5,
+    "source": "data/processed/sentiment/eesa_train.jsonl"
+  },
+  "sentiments": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "cells": [
+    {
+      "sentiment": "NEG",
+      "target": 196
+    },
+    {
+      "sentiment": "NEU",
+      "target": 658
+    },
+    {
+      "sentiment": "POS",
+      "target": 466
+    }
+  ],
+  "request_margin": 1.6,
+  "output": "data/synthetic/sentiment/sg02r_eesa_aya.jsonl",
+  "_notes": "SG02-random-EESA (D-034): size-matched control of SG02-EESA. Same template, generator, sampling, size and class mix (NEG 196 / NEU 658 / POS 466), but the 5 examples are random EESA train comments of the request's class, drawn per request. No error types."
+}
