@@ -20,6 +20,13 @@ gets k real tweets of its own (variety, sentiment) cell from S1 train, drawn afr
 and reproducibly from (seed, request_id). Only S1 train is allowed as the source (never dev or
 test); the example ids are stored in the record (few_shot_ids).
 
+Typed cells (optional, SG06-EESA, D-034): with a `cells` list [{type, sentiment, target}] in the config,
+the plan has one cell per entry (type None = sentiment only) and ceil(target x request_margin) requests
+in it, instead of per_cell requests in every variety x sentiment cell. The variety is varieties[0].
+With few_shot.match "type_sentiment" the examples come from the source records whose error_type and
+sentiment equal the request's; few_shot.splits names the splits allowed as source (default train;
+SG06-EESA uses dev, D-034); few_shot.use_all_if_fewer gives a cell with fewer than k candidates all of them.
+
 Steering (optional, SD-009): with a `steering` block {vectors, mode, layer, alpha, strength,
 token_budget, by_sentiment} in the config, every row of a batch gets the vector of its sentiment
 added during generation (src/sentiment/steering/hook.py). With a `neuron_steering` block, the chosen
@@ -47,6 +54,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import platform
 import random
 import re
@@ -78,15 +86,32 @@ class Request:
     variety: str
     sentiment: str
     index: int
+    type: str | None = None
     few_shot_ids: list[str] = field(default_factory=list)
     few_shot_texts: list[str] = field(default_factory=list)
 
 
 def build_plan(cfg: dict) -> list[Request]:
     """Every request of a run, interleaved over cells: index 0 of every cell, then index 1, ..."""
+    if cfg.get("cells"):
+        return build_typed_plan(cfg)
     cells = [(v, s) for v in cfg["varieties"] for s in cfg["sentiments"]]
     return [Request(f"{cfg['set_name']}:{v}:{s}:{j}", v, s, j)
             for j in range(cfg["per_cell"]) for v, s in cells]
+
+
+def cell_requests(cfg: dict) -> dict[tuple[str | None, str], int]:
+    """Requests per typed cell: ceil(target x request_margin)."""
+    m = cfg.get("request_margin", 1.0)
+    return {(c.get("type"), c["sentiment"]): math.ceil(c["target"] * m) for c in cfg["cells"]}
+
+
+def build_typed_plan(cfg: dict) -> list[Request]:
+    """Typed plan (D-034), interleaved: index 0 of every cell, then index 1, ...; small cells end early."""
+    v, n = cfg["varieties"][0], cell_requests(cfg)
+    slug = lambda t: (t or "any").lower().replace(" ", "_").replace('"', "").replace("?", "")
+    return [Request(f"{cfg['set_name']}:{slug(t)}:{s}:{j}", v, s, j, type=t)
+            for j in range(max(n.values())) for (t, s), k in n.items() if j < k]
 
 
 def assign_few_shot(plan: list[Request], cfg: dict) -> None:
@@ -94,19 +119,25 @@ def assign_few_shot(plan: list[Request], cfg: dict) -> None:
     fs = cfg.get("few_shot") or {}
     if not fs.get("k"):
         return
-    # Per (variety, sentiment) cell, every S1 train tweet is a candidate.
+    # Per cell, every real record of the allowed splits is a candidate: (variety, sentiment) by
+    # default, (error_type, sentiment) with match "type_sentiment" (D-034).
+    by_type = fs.get("match") == "type_sentiment"
+    splits = set(fs.get("splits", ["train"]))
     pool: dict[tuple[str, str], list[dict]] = {}
     with open(Path(fs["source"]), encoding="utf-8") as f:
         for line in f:
             r = json.loads(line)
-            if r.get("source") != "real" or r.get("split") != "train":
-                raise ValueError("few-shot source must be real S1 train data")
-            pool.setdefault((r["dialect"], r["sentiment"]), []).append(r)
+            if r.get("source") != "real" or r.get("split") not in splits:
+                raise ValueError(f"few-shot source must be real data from {sorted(splits)}")
+            pool.setdefault((r["error_type"] if by_type else r["dialect"], r["sentiment"]), []).append(r)
     for req in plan:
-        candidates = pool.get((req.variety, req.sentiment), [])
-        if len(candidates) < fs["k"]:
-            raise ValueError(f"only {len(candidates)} few-shot candidates for {req.variety}/{req.sentiment}")
-        chosen = random.Random(f"{cfg['seed']}:{req.request_id}").sample(candidates, fs["k"])
+        candidates = pool.get((req.type if by_type else req.variety, req.sentiment), [])
+        k = fs["k"]
+        if len(candidates) < k:
+            if not (fs.get("use_all_if_fewer") and candidates):
+                raise ValueError(f"only {len(candidates)} few-shot candidates for {req.type or req.variety}/{req.sentiment}")
+            k = len(candidates)
+        chosen = random.Random(f"{cfg['seed']}:{req.request_id}").sample(candidates, k)
         req.few_shot_ids = [c["text_id"] for c in chosen]
         req.few_shot_texts = [c["text"] for c in chosen]
 
@@ -148,7 +179,7 @@ def make_record(req: Request, text: str | None, text_raw: str | None, stripped: 
         "template_id": template.id,
         "template_version": template.version,
         "template_sha256": template.sha256,
-        "controls": {"variety": req.variety, "sentiment": req.sentiment},
+        "controls": {"variety": req.variety, "sentiment": req.sentiment, **({"type": req.type} if req.type else {})},
         "dialect": req.variety,
         "target_dialect": req.variety,
         "sentiment": req.sentiment,
@@ -187,7 +218,8 @@ def run(cfg: dict, config_file: str, limit: int | None, dry_run: bool) -> dict:
             print(f"--- {req.request_id}")
             for m in render_messages(template, req):
                 print(f"[{m['role']}] {m['content']}")
-        print(f"plan: {len(plan)} requests over {len(cfg['varieties']) * len(cfg['sentiments'])} cells")
+        n_cells = len(cfg["cells"]) if cfg.get("cells") else len(cfg["varieties"]) * len(cfg["sentiments"])
+        print(f"plan: {len(plan)} requests over {n_cells} cells")
         return {"dry_run": True, "requests": len(plan)}
 
     # Resume: skip requests that already have a record.
@@ -273,6 +305,8 @@ def main() -> None:
     p.add_argument("--limit", type=int, default=None, help="tiny mode: first N requests, output gets _limitN")
     p.add_argument("--per-cell", type=int, default=None,
                    help="top-up: raise requests per cell (same set; existing records are kept)")
+    p.add_argument("--margin", type=float, default=None,
+                   help="top-up for typed cells: raise request_margin (existing records are kept)")
     p.add_argument("--dry-run", action="store_true", help="print rendered prompts and plan size; no model")
     args = p.parse_args()
 
@@ -280,6 +314,8 @@ def main() -> None:
         cfg = json.load(f)
     if args.per_cell is not None:
         cfg["per_cell"] = args.per_cell
+    if args.margin is not None:
+        cfg["request_margin"] = args.margin
     # Tiny runs write to their own file so they never mix with the real set.
     if args.limit is not None:
         cfg["set_name"] += f"_limit{args.limit}"

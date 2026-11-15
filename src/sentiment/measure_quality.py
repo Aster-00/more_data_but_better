@@ -22,7 +22,7 @@ sample; fidelity = the same classifiers' accuracy on S1 dev (on train it would b
 The official test set is not used. Size-dependent measures use equal-size samples.
 
 Outputs: results/quality/sentiment/<set>_quality.json; then the combined table
-docs/sentiment/datasets/dataset_quality.{csv,md} is rebuilt (src.sentiment.summarize_quality)
+docs/sentiment/datasets/{AsSarcasm-V2,EESA}/dataset_quality.csv and dataset_quality.md are rebuilt (src.sentiment.summarize_quality)
 (<set> = sg01, the default, sg02, sg03, sg03r, sg04 or sg04pn: same measures, k-means seed and sample seed, so rows compare).
 
 EESA sets (sg01_eesa, sg03_eesa, sg03r_eesa; D-032) use the EESA corpus instead of S1: EESA train as the real
@@ -58,7 +58,8 @@ SET_GENERATORS = {"sg01": ["jais2", "fanar", "qwen3", "aya"], "sg02": ["fanar", 
                   "sg03": ["fanar", "qwen3", "aya"], "sg03r": ["fanar", "qwen3", "aya"],
                   "sg04": ["fanar", "qwen3", "aya"], "sg04pn": ["fanar", "qwen3", "aya"],
                   "sg01_eesa": ["fanar", "qwen3", "aya"], "sg03_eesa": ["fanar", "qwen3", "aya"],
-                  "sg03r_eesa": ["fanar", "qwen3", "aya"]}
+                  "sg03r_eesa": ["fanar", "qwen3", "aya"],
+                  "sg02_eesa": ["fanar", "qwen3", "aya"], "sg02r_eesa": ["fanar", "qwen3", "aya"]}  # D-034
 # Minimal-pair sets request only some variety x sentiment cells (e.g. no msa complaints); their
 # imbalance is over the requested (non-empty) cells only.
 PAIR_SETS = {"sg03", "sg03r", "sg04", "sg04pn", "sg03_eesa", "sg03r_eesa"}

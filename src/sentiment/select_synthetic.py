@@ -3,7 +3,9 @@
 Input is the filter's <set>.filtered.jsonl (src.filtering.filter_synthetic with
 configs/filtering/sentiment.json). From each cell a seeded random sample of `per_cell`
 texts is kept; a cell with fewer survivors keeps all of them and the shortfall is reported,
-so set sizes are never padded silently. Sampling is random (not "first N"), so later
+so set sizes are never padded silently.
+Typed sets (SG06-EESA, D-034): with --config <generation config> that has `cells`, a cell is
+(type, sentiment) and each cell has its own target (the config's `target`). Sampling is random (not "first N"), so later
 requests are not favoured over earlier ones.
 
 Also reported, never used to drop anything: exact matches (dedup key) between the selected
@@ -38,25 +40,34 @@ def main() -> None:
     p.add_argument("--data", type=Path, required=True, help="<set>.filtered.jsonl")
     p.add_argument("--per-cell", type=int, default=500)
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--config", type=Path, default=None, help="generation config with typed cells (per-cell targets)")
     p.add_argument("--test", type=Path, default=TEST, help="test set for the report-only overlap (EESA sets: eesa_test)")
     args = p.parse_args()
 
     # Group the filtered records by cell, in file order.
+    targets: dict[tuple[str, str], int] = {}
+    if args.config:
+        gen_cfg = json.loads(args.config.read_text(encoding="utf-8"))
+        targets = {(c.get("type") or gen_cfg["varieties"][0], c["sentiment"]): c["target"] for c in gen_cfg["cells"]}
     cells: dict[tuple[str, str], list[dict]] = defaultdict(list)
     with open(args.data, encoding="utf-8") as f:
         for line in f:
             r = json.loads(line)
-            cells[(r["controls"]["variety"], r["controls"]["sentiment"])].append(r)
+            c = r["controls"]
+            cells[(c.get("type") or c["variety"], c["sentiment"])].append(r)
+    for key in targets:
+        cells.setdefault(key, [])
 
     # Seeded sample per cell; own RNG per cell so cells do not influence each other.
     selected, per_cell = [], {}
     for (v, s), recs in sorted(cells.items()):
         rng = random.Random(f"{args.seed}:{v}:{s}")
-        chosen = recs if len(recs) <= args.per_cell else rng.sample(recs, args.per_cell)
+        want = targets.get((v, s), args.per_cell)
+        chosen = recs if len(recs) <= want else rng.sample(recs, want)
         chosen.sort(key=lambda r: r["request_id"])
         selected += chosen
-        per_cell[f"{v}/{s}"] = {"filtered": len(recs), "selected": len(chosen),
-                                "shortfall": max(0, args.per_cell - len(recs))}
+        per_cell[f"{v}/{s}"] = {"filtered": len(recs), "selected": len(chosen), "target": want,
+                                "shortfall": max(0, want - len(recs))}
 
     # Report-only overlap with the official test set.
     with open(args.test, encoding="utf-8") as f:
@@ -69,7 +80,7 @@ def main() -> None:
         for r in selected:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     stats = {"data": str(args.data), "data_sha256": sha256(args.data), "output": str(out),
-             "output_sha256": sha256(out), "per_cell_target": args.per_cell, "seed": args.seed,
+             "output_sha256": sha256(out), "per_cell_target": args.per_cell, "typed_targets_from": str(args.config) if args.config else None, "seed": args.seed,
              "n_selected": len(selected), "cells": per_cell,
              "test_set": str(args.test), "exact_matches_with_test": len(test_hits), "test_match_ids": test_hits,
              "git_commit": git_commit(), "finished": time.strftime("%Y-%m-%d %H:%M")}

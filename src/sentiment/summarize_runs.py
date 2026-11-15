@@ -5,6 +5,8 @@ configs/sentiment/runs.json maps result folders to members. This script reads
 results/sentiment/runs/*/train_log.json and results/sentiment/cross_eval/*/scores.json, groups folders
 that differ only in their seed (name ends in _seed<N>; tiny-subset "_limit<N>" folders are skipped), and writes:
   docs/sentiment/tables/sentiment_summary_<corpus>.csv  one row per model x split, one file per evaluation
+                                                        (EESA: micro F1 is the main metric, D-033: micro_f1 and
+                                                        seed_micro_f1 columns, order by dev micro F1, no F1-PN)
                                                         corpus (SUMMARY_FILES): ar_sarcv2, EESA, Mawqif
   docs/sentiment/tables/sentiment_summary.md   per run: score table, per-class F1 on dev and test
   docs/sentiment/tables/cross_eval.md          scores on other corpora: mean over the BERTs, then every member
@@ -52,6 +54,25 @@ BERTS = {"marbertv2", "arabertv02_twitter", "marbert", "camelbert_mix", "camelbe
 REAL_ONLY_LABELS = {"SR01": "real only", "SR03": "NEG vs POS only"}
 
 
+# Corpora whose main metric is micro F1 (= accuracy on single-label data; D-033). Their CSV has micro_f1 in
+# place of accuracy, per-seed values and member order by micro F1, and no F1-PN columns.
+MICRO_CORPORA = {"EESA"}
+
+
+def micro_view(row: dict, seed_micro: dict) -> dict:
+    """A CSV row for a micro-F1 corpus: micro_f1 first among the scores, seed values in micro F1, no F1-PN."""
+    out = {}
+    for k, v in row.items():
+        if k in ("f1_pn", "f1_pn_std", "accuracy", "accuracy_std"):
+            continue
+        if k == "seed_f1":
+            out["seed_micro_f1"] = seed_micro[(row["id"], row["eval_corpus"], row["split"])]
+            out["micro_f1"], out["micro_f1_std"] = row["accuracy"], row["accuracy_std"]
+            continue
+        out[k] = v
+    return out
+
+
 def load_logs() -> dict[str, list[dict]]:
     """Train logs of every finished run folder, grouped by folder name without "_seed<N>"."""
     groups: dict[str, list[dict]] = defaultdict(list)
@@ -88,7 +109,10 @@ def mean_std(values: list[float]) -> tuple[float, float]:
 def row_labels(member: dict, folder: str, logs: list[dict], run_data: dict) -> dict:
     """The columns that say what a model is: run, corpus, generation, classifier and generator."""
     data = run_data.get(member["run"], {})
-    generation = data.get("generation", "")
+    # A member can override the run's generation ("" = real only): SR03-EESA holds both kinds.
+    generation = member.get("generation", data.get("generation", ""))
+    if not generation:
+        data = {}
     classifier, generator = member["model"].rsplit("_", 1) if generation else (member["model"], "")
     return {"run": member["run"], "id": f"{member['run']}-{member['model']}",
             "train_corpus": corpus_of(logs[0]["config"]["train_data"]), "generation": generation,
@@ -99,7 +123,8 @@ def row_labels(member: dict, folder: str, logs: list[dict], run_data: dict) -> d
 def score_row(labels: dict, eval_corpus: str, split: str, scores: list[dict]) -> dict:
     """One CSV row: one model on one evaluation set, mean and std over seeds."""
     row = {**labels, "eval_corpus": eval_corpus, "split": split, "seeds": len(scores),
-           "seed_f1": " / ".join(f"{s['macro']['f1']:.2f}" for s in scores)}
+           "seed_f1": " / ".join(f"{s['macro']['f1']:.2f}" for s in scores),
+           "_seed_micro": " / ".join(f"{s['accuracy']:.2f}" for s in scores)}
     # Macro scores, accuracy and F1-PN, each as mean and std.
     metrics = {"macro_f1": lambda s: s["macro"]["f1"], "macro_precision": lambda s: s["macro"]["precision"],
                "macro_recall": lambda s: s["macro"]["recall"], "accuracy": lambda s: s["accuracy"],
@@ -247,14 +272,22 @@ def main() -> None:
     rows.sort(key=lambda r: (r["run"] == "unassigned", r["run"], -dev_f1[r["id"]], r["id"],
                              r["eval_corpus"] != r["train_corpus"], r["eval_corpus"], r["split"]))
     # The CSV and cross_eval.md use 2 decimals; sentiment_summary.md rounds the full values itself.
+    seed_micro = {(r["id"], r["eval_corpus"], r["split"]): r.pop("_seed_micro") for r in rows}
     rounded = [{k: round(v, 2) if isinstance(v, float) else v for k, v in r.items()} for r in rows]
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     for corpus in dict.fromkeys(r["eval_corpus"] for r in rounded):
+        part = [r for r in rounded if r["eval_corpus"] == corpus]
+        if corpus in MICRO_CORPORA:
+            # Main metric micro F1: members of a run best on dev micro F1 first (models trained on this corpus).
+            dev_micro = {r["id"]: r["accuracy"] for r in part if r["split"] == "dev"}
+            part.sort(key=lambda r: (r["run"] == "unassigned", r["run"], -dev_micro.get(r["id"], dev_f1[r["id"]]), r["id"],
+                                     r["eval_corpus"] != r["train_corpus"], r["split"]))
+            part = [micro_view(r, seed_micro) for r in part]
         with open(args.out_dir / SUMMARY_FILES[corpus], "w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+            writer = csv.DictWriter(f, fieldnames=list(part[0]))
             writer.writeheader()
-            writer.writerows(r for r in rounded if r["eval_corpus"] == corpus)
+            writer.writerows(part)
     write_markdown(registry, [r for r in rows if r["eval_corpus"] == r["train_corpus"]], args.out_dir)
     write_cross_markdown([r for r in rounded if r["eval_corpus"] != r["train_corpus"]], args.out_dir)
     print(f"wrote {len(rows)} rows to {', '.join(SUMMARY_FILES[c] for c in dict.fromkeys(r['eval_corpus'] for r in rows))}, "

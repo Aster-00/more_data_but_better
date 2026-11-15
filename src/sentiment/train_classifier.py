@@ -13,6 +13,9 @@ Conditions 2/3: an optional `synthetic_data` file (kept separate from the real d
 "synthetic") is appended to the real training texts; dev and test stay real only.
 Two-stage training (SR10, opt-in): with `finish_real_epochs` = k, the last k of the `epochs` use the
 real texts only, so the epoch budget is unchanged; the epoch is still chosen on dev over all epochs.
+Epoch rule (opt-in, EESA from D-035): `epoch_selection` = "train_loss" keeps the epoch with the lowest
+training loss (in practice the last one) instead of the best dev macro F1, so dev chooses nothing;
+dev is still scored every epoch for the log. Default "dev_macro_f1" (all earlier runs).
 
 Outputs in results/sentiment/runs/<run_name>/:
   model/                    best checkpoint (gitignored)
@@ -106,7 +109,8 @@ def train(cfg: dict, device: str) -> dict:
 
     log = {"config": cfg, "device": device, "n_train": len(train_texts), "n_train_real": n_real,
            "n_train_synthetic": len(train_texts) - n_real, "n_dev": len(dev_texts), "epochs": []}
-    best_f1, epochs_without_gain = -1.0, 0
+    best_f1, best_crit, epochs_without_gain = -1.0, float("-inf"), 0
+    log["epoch_selection"] = cfg.get("epoch_selection", "dev_macro_f1")
     for epoch in range(1, cfg["epochs"] + 1):
         # One pass over the training data (the model computes cross-entropy from the labels).
         model.train()
@@ -135,8 +139,10 @@ def train(cfg: dict, device: str) -> dict:
               f"acc {scores['accuracy']:.2f}  ({time.time() - start:.0f} s)", flush=True)
 
         # Keep the best checkpoint on disk; stop after `patience` epochs without improvement.
-        if f1 > best_f1:
-            best_f1, epochs_without_gain = f1, 0
+        # The criterion is dev macro F1 (default) or, with epoch_selection "train_loss", lower training loss.
+        crit = -running_loss / len(batches) if cfg.get("epoch_selection") == "train_loss" else f1
+        if crit > best_crit:
+            best_crit, best_f1, epochs_without_gain = crit, f1, 0
             model.save_pretrained(model_dir)
             tokenizer.save_pretrained(model_dir)
             log["best_epoch"] = epoch

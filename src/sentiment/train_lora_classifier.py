@@ -121,6 +121,12 @@ def train(cfg: dict) -> dict:
         log = state["log"]
         print(f"resumed from checkpoint: epoch {state['epoch']} step {state['step']}", flush=True)
     best_f1, epochs_without_gain = state["best_f1"], state["epochs_without_gain"]
+    # Epoch rule (D-035): best so far of the criterion; restored from a checkpoint if there is one.
+    by_loss = cfg.get("epoch_selection") == "train_loss"
+    best_crit = state.get("best_crit")
+    if best_crit is None:
+        best_crit = float("-inf") if by_loss else best_f1
+    log["epoch_selection"] = cfg.get("epoch_selection", "dev_macro_f1")
     every = cfg.get("checkpoint_minutes", 30) * 60
 
     for epoch in range(state["epoch"], cfg["epochs"] + 1):
@@ -155,7 +161,7 @@ def train(cfg: dict) -> dict:
                     save_checkpoint(ckpt_path, cfg, model, optimizer, scheduler, {
                         "epoch": epoch, "step": step, "running_loss": running_loss,
                         "seconds": seconds_before + time.time() - start, "log": log,
-                        "best_f1": best_f1, "epochs_without_gain": epochs_without_gain})
+                        "best_f1": best_f1, "best_crit": best_crit, "epochs_without_gain": epochs_without_gain})
                     last_ckpt = time.time()
                     print(f"  checkpoint saved at epoch {epoch} step {step}", flush=True)
             if step % 200 == 0:
@@ -174,9 +180,11 @@ def train(cfg: dict) -> dict:
               f"acc {scores['accuracy']:.2f}  ({epoch_seconds / 60:.1f} min)", flush=True)
 
         # Keep the best adapter on disk; stop after `patience` epochs without improvement.
+        # The criterion is dev macro F1 (default) or, with epoch_selection "train_loss" (D-035), lower training loss.
         stop = False
-        if f1 > best_f1:
-            best_f1, epochs_without_gain = f1, 0
+        crit = -running_loss / micro_per_epoch if by_loss else f1
+        if crit > best_crit:
+            best_f1, best_crit, epochs_without_gain = f1, crit, 0
             if custom:
                 decoder_head.save(model, model_dir)
             else:
@@ -189,7 +197,7 @@ def train(cfg: dict) -> dict:
         # End-of-epoch checkpoint: a resume starts the next epoch without redoing the dev pass.
         save_checkpoint(ckpt_path, cfg, model, optimizer, scheduler, {
             "epoch": epoch + 1, "step": 0, "running_loss": 0.0, "seconds": 0.0, "log": log,
-            "best_f1": best_f1, "epochs_without_gain": epochs_without_gain})
+            "best_f1": best_f1, "best_crit": best_crit, "epochs_without_gain": epochs_without_gain})
         if stop:
             print("early stopping")
             break
