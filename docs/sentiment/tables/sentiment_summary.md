@@ -1303,6 +1303,58 @@ Per-class F1 (mean over seeds):
 | SR09-arabertv02_twitter_qwen3 | 79.3 | 79.7 | 71.2 | 77.4 | 46.1 | 62.9 |
 | SR09-camelbert_mix_qwen3 | 77.4 | 78.5 | 71.2 | 77.5 | 43.2 | 61.6 |
 
+## SR09-EESA: EESA real + SG04-EESA (D-038): EESA train + 2,640 generated dislike comments (1,320 NEG / 1,320 NEU; few-shot examples = the 15 EESA dev dislike comments most 8-epoch BERT runs get wrong, dev-contaminated); 7 BERTs, 3 seeds, 8 epochs, epoch by training loss (SR05-EASA recipe); baseline SR05-EESA real only. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR09-EESA-marbert_fanar | 3 | **91.98 ± 0.09** | 92.12 ± 0.35 | 91.87 ± 0.19 | 92.26 ± 0.07 | 92.99 ± 0.13 | 91.88 / 92.03 / 92.03 | **88.64 ± 0.33** | 89.32 ± 0.37 | 90.36 ± 0.43 | 8 / 8 / 8 | 3 | `sr09_eesa_marbert_fanar` |
+| SR09-EESA-marbert_qwen3 | 3 | **91.56 ± 0.50** | 91.71 ± 0.45 | 91.45 ± 0.57 | 91.97 ± 0.49 | 92.43 ± 0.55 | 91.31 / 92.14 / 91.24 | **88.23 ± 0.87** | 89.12 ± 0.76 | 89.78 ± 0.72 | 8 / 8 / 8 | 3 | `sr09_eesa_marbert_qwen3` |
+| SR09-EESA-marbert_aya | 3 | **91.54 ± 0.57** | 91.75 ± 0.83 | 91.42 ± 0.32 | 91.89 ± 0.60 | 92.47 ± 0.59 | 90.89 / 91.85 / 91.89 | **89.02 ± 0.85** | 89.85 ± 0.80 | 90.35 ± 0.77 | 8 / 8 / 8 | 3 | `sr09_eesa_marbert_aya` |
+| SR09-EESA-marbertv2_qwen3 | 3 | **90.64 ± 0.22** | 90.63 ± 0.17 | 90.66 ± 0.26 | 91.04 ± 0.19 | 91.76 ± 0.16 | 90.70 / 90.82 / 90.40 | **86.80 ± 0.41** | 87.65 ± 0.32 | 88.94 ± 0.34 | 8 / 7 / 8 | 3 | `sr09_eesa_marbertv2_qwen3` |
+| SR09-EESA-marbertv2_aya | 3 | **90.57 ± 0.71** | 90.47 ± 0.90 | 90.74 ± 0.46 | 90.79 ± 0.60 | 92.16 ± 0.72 | 91.12 / 90.83 / 89.77 | **88.25 ± 0.17** | 89.00 ± 0.21 | 89.93 ± 0.15 | 8 / 8 / 8 | 3 | `sr09_eesa_marbertv2_aya` |
+| SR09-EESA-marbertv2_fanar | 3 | **90.40 ± 0.11** | 90.37 ± 0.12 | 90.46 ± 0.22 | 90.59 ± 0.12 | 92.07 ± 0.04 | 90.43 / 90.28 / 90.50 | **88.15 ± 0.07** | 88.79 ± 0.14 | 89.97 ± 0.24 | 8 / 8 / 8 | 3 | `sr09_eesa_marbertv2_fanar` |
+| SR09-EESA-arabertv02_twitter_aya | 3 | **88.36 ± 0.94** | 88.34 ± 1.04 | 88.39 ± 0.83 | 88.75 ± 0.80 | 89.73 ± 1.07 | 88.55 / 89.18 / 87.34 | **85.51 ± 0.54** | 86.27 ± 0.60 | 87.24 ± 0.55 | 8 / 8 / 8 | 3 | `sr09_eesa_arabertv02_twitter_aya` |
+| SR09-EESA-arabertv02_twitter_qwen3 | 3 | **88.19 ± 0.75** | 88.13 ± 0.63 | 88.27 ± 0.88 | 88.63 ± 0.73 | 89.21 ± 0.65 | 88.94 / 87.44 / 88.20 | **86.35 ± 0.35** | 87.08 ± 0.31 | 88.09 ± 0.38 | 8 / 8 / 8 | 3 | `sr09_eesa_arabertv02_twitter_qwen3` |
+| SR09-EESA-arabertv02_twitter_fanar | 3 | **88.00 ± 0.72** | 88.01 ± 0.75 | 88.04 ± 0.71 | 88.51 ± 0.65 | 89.45 ± 0.64 | 87.17 / 88.52 / 88.30 | **86.43 ± 0.61** | 87.08 ± 0.58 | 87.83 ± 0.81 | 8 / 8 / 8 | 3 | `sr09_eesa_arabertv02_twitter_fanar` |
+| SR09-EESA-camelbert_mix_aya | 3 | **86.28 ± 0.74** | 86.05 ± 0.65 | 86.58 ± 0.87 | 86.80 ± 0.68 | 87.42 ± 0.59 | 85.50 / 86.98 / 86.37 | **83.77 ± 0.52** | 84.76 ± 0.55 | 84.92 ± 0.60 | 8 / 8 / 8 | 2 | `sr09_eesa_camelbert_mix_aya` |
+| SR09-EESA-arbert_aya | 3 | **86.24 ± 0.74** | 86.87 ± 0.79 | 86.00 ± 0.66 | 87.04 ± 0.68 | 87.65 ± 0.76 | 85.54 / 87.02 / 86.17 | **85.26 ± 0.87** | 86.31 ± 0.85 | 86.57 ± 0.90 | 8 / 8 / 8 | 3 | `sr09_eesa_arbert_aya` |
+| SR09-EESA-arbert_qwen3 | 3 | **85.76 ± 0.49** | 86.50 ± 0.39 | 85.36 ± 0.61 | 86.55 ± 0.44 | 86.95 ± 0.51 | 85.78 / 86.24 / 85.26 | **84.32 ± 0.54** | 85.57 ± 0.53 | 85.73 ± 0.70 | 8 / 8 / 8 | 3 | `sr09_eesa_arbert_qwen3` |
+| SR09-EESA-arbert_fanar | 3 | **85.68 ± 0.39** | 86.20 ± 0.34 | 85.58 ± 0.49 | 86.23 ± 0.31 | 87.04 ± 0.39 | 86.13 / 85.48 / 85.44 | **84.86 ± 0.48** | 85.86 ± 0.55 | 86.25 ± 0.36 | 8 / 8 / 8 | 3 | `sr09_eesa_arbert_fanar` |
+| SR09-EESA-camelbert_mix_qwen3 | 3 | **85.61 ± 0.52** | 85.57 ± 0.63 | 85.66 ± 0.43 | 86.15 ± 0.43 | 86.93 ± 0.40 | 85.09 / 85.60 / 86.13 | **83.57 ± 1.23** | 84.72 ± 1.04 | 84.69 ± 1.04 | 8 / 8 / 8 | 3 | `sr09_eesa_camelbert_mix_qwen3` |
+| SR09-EESA-camelbert_mix_fanar | 3 | **84.96 ± 0.48** | 84.85 ± 0.39 | 85.08 ± 0.60 | 85.62 ± 0.43 | 86.76 ± 0.38 | 84.50 / 85.45 / 84.92 | **84.57 ± 0.94** | 85.53 ± 0.90 | 85.63 ± 0.93 | 8 / 8 / 8 | 2 | `sr09_eesa_camelbert_mix_fanar` |
+| SR09-EESA-arbertv2_fanar | 3 | **84.86 ± 0.15** | 85.01 ± 0.23 | 84.76 ± 0.10 | 85.66 ± 0.19 | 86.72 ± 0.09 | 84.98 / 84.70 / 84.90 | **83.75 ± 0.76** | 84.64 ± 0.78 | 85.29 ± 0.94 | 8 / 8 / 8 | 3 | `sr09_eesa_arbertv2_fanar` |
+| SR09-EESA-arbertv2_qwen3 | 3 | **84.79 ± 1.52** | 85.26 ± 1.38 | 84.43 ± 1.60 | 85.62 ± 1.34 | 86.53 ± 1.27 | 86.54 / 83.89 / 83.95 | **83.34 ± 0.42** | 84.64 ± 0.46 | 84.86 ± 0.55 | 8 / 8 / 7 | 3 | `sr09_eesa_arbertv2_qwen3` |
+| SR09-EESA-arbertv2_aya | 3 | **84.63 ± 1.07** | 84.58 ± 0.99 | 84.73 ± 1.19 | 85.53 ± 1.04 | 86.72 ± 0.89 | 85.42 / 85.07 / 83.41 | **83.60 ± 0.33** | 84.56 ± 0.31 | 85.33 ± 0.09 | 8 / 8 / 8 | 3 | `sr09_eesa_arbertv2_aya` |
+| SR09-EESA-camelbert_da_qwen3 | 3 | **83.94 ± 0.40** | 83.89 ± 0.53 | 84.01 ± 0.28 | 84.64 ± 0.43 | 85.37 ± 0.55 | 83.86 / 83.58 / 84.38 | **82.48 ± 0.60** | 83.54 ± 0.58 | 84.12 ± 0.51 | 8 / 8 / 8 | 3 | `sr09_eesa_camelbert_da_qwen3` |
+| SR09-EESA-camelbert_da_aya | 3 | **83.81 ± 0.89** | 83.68 ± 0.81 | 84.03 ± 0.99 | 84.43 ± 0.79 | 84.96 ± 0.78 | 84.81 / 83.47 / 83.14 | **81.92 ± 0.26** | 83.09 ± 0.19 | 83.18 ± 0.23 | 8 / 8 / 8 | 2 | `sr09_eesa_camelbert_da_aya` |
+| SR09-EESA-camelbert_da_fanar | 3 | **83.31 ± 0.36** | 83.28 ± 0.46 | 83.41 ± 0.33 | 84.03 ± 0.25 | 84.63 ± 0.14 | 83.45 / 83.58 / 82.90 | **82.04 ± 0.25** | 83.05 ± 0.19 | 83.52 ± 0.07 | 8 / 8 / 8 | 2 | `sr09_eesa_camelbert_da_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR09-EESA-marbert_fanar | 91.9 | 89.9 | 94.1 | 87.6 | 85.2 | 93.1 |
+| SR09-EESA-marbert_qwen3 | 90.6 | 89.8 | 94.2 | 86.2 | 85.1 | 93.4 |
+| SR09-EESA-marbert_aya | 90.9 | 89.7 | 94.0 | 86.9 | 86.4 | 93.9 |
+| SR09-EESA-marbertv2_qwen3 | 90.1 | 88.4 | 93.4 | 85.3 | 82.5 | 92.6 |
+| SR09-EESA-marbertv2_aya | 91.6 | 87.4 | 92.8 | 86.7 | 84.9 | 93.2 |
+| SR09-EESA-marbertv2_fanar | 91.6 | 87.1 | 92.6 | 87.2 | 84.5 | 92.7 |
+| SR09-EESA-arabertv02_twitter_aya | 88.1 | 85.6 | 91.4 | 83.6 | 82.0 | 90.9 |
+| SR09-EESA-arabertv02_twitter_qwen3 | 87.3 | 86.2 | 91.1 | 84.7 | 82.9 | 91.5 |
+| SR09-EESA-arabertv02_twitter_fanar | 87.1 | 85.1 | 91.8 | 84.5 | 83.6 | 91.2 |
+| SR09-EESA-camelbert_mix_aya | 85.1 | 84.0 | 89.8 | 80.1 | 81.5 | 89.7 |
+| SR09-EESA-arbert_aya | 83.8 | 83.4 | 91.5 | 81.6 | 82.6 | 91.6 |
+| SR09-EESA-arbert_qwen3 | 83.3 | 83.4 | 90.5 | 80.1 | 81.5 | 91.4 |
+| SR09-EESA-arbert_fanar | 84.3 | 83.0 | 89.8 | 81.4 | 82.1 | 91.1 |
+| SR09-EESA-camelbert_mix_qwen3 | 84.6 | 83.0 | 89.3 | 79.7 | 81.3 | 89.7 |
+| SR09-EESA-camelbert_mix_fanar | 83.9 | 81.3 | 89.6 | 81.1 | 82.5 | 90.1 |
+| SR09-EESA-arbertv2_fanar | 83.2 | 81.1 | 90.2 | 81.4 | 80.7 | 89.2 |
+| SR09-EESA-arbertv2_qwen3 | 83.3 | 81.3 | 89.7 | 79.5 | 80.3 | 90.3 |
+| SR09-EESA-arbertv2_aya | 83.0 | 80.4 | 90.5 | 81.3 | 80.1 | 89.4 |
+| SR09-EESA-camelbert_da_qwen3 | 82.3 | 81.1 | 88.5 | 79.3 | 79.2 | 88.9 |
+| SR09-EESA-camelbert_da_aya | 81.9 | 81.5 | 88.0 | 77.5 | 79.4 | 88.9 |
+| SR09-EESA-camelbert_da_fanar | 81.3 | 80.7 | 88.0 | 78.8 | 79.1 | 88.2 |
+
 ## SR10: Repair test on SR07 (D-025, test-contaminated like SR07): two-stage training, epochs 1-2 on S1 train + SG04, epoch 3 on S1 train only; 3 BERTs, 3 seeds, otherwise SR07 recipe. Member = <classifier>_<generator>.
 
 | ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |

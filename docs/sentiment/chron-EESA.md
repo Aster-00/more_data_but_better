@@ -413,3 +413,60 @@ The SR07-EASA runs repeated with 8 epochs instead of 3 (D-036 recipe); nothing e
 **Takeaway: with BERTs trained for 8 epochs, none of the matrix-language sets improves on real data alone (−0.02 to −0.40 micro F1 over 21 pairs, none significant), and stating the matrix language gives no advantage over the plain zero-shot prompt. The one clear difference is negative: the reworded dialect-matrix prompt (DM3) is worse than no instruction. As in SR05-EASA and SR06-EASA, the 3-epoch gains came from undertrained baselines.**
 
 Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (runs SR08-EESA-NM / -DM / -DM3 / -EM).
+
+## SR09-EASA results: dislike comments, targeted examples (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
+Can generated dislike comments fix the dislike errors that remain after 8 epochs (D-038)? EESA train + SG04-EASA: 2,640 generated comments about dislikes per generator (1,320 NEG / 1,320 NEU, twice the size of SG01–SG03), few-shot with 5 examples per request from the 15 EESA dev dislike comments that most of the 210 eight-epoch runs get wrong (8 NEG, 7 NEU; **dev-contaminated**). Prompt `prompts/sentiment/fewshot_eesa_v1.json`, type "Dislike comments". Training as SR05-EASA: 8 epochs, epoch by training loss, baseline SR05-EASA (real only, 8 epochs). 63 runs, no failure. Registry run SR09-EESA (folders `sr09_eesa_*`). The size-matched control with random train dislike comments as examples (SR09-random-EASA) is running.
+
+**The sets** (code-switching from `src/sentiment/cmi.py`; "mention dislikes" = the dislike regex of `src/sentiment/dislike_pools_eesa.py`)
+
+| Set | Requests | Rejected by filter (of them copies of dev texts) | Mention dislikes | Latin-script words | CMI | Texts with no switch | Words per text | MTLD | Fidelity (NEG / NEU) |
+|---|---|---|---|---|---|---|---|---|---|
+| EESA train (real) | – | – | 23% of NEG + NEU | 22.8% | 22.6 | 1% | 12.6 | 1,226 | 93 / 80 |
+| SG04-EASA Aya | 4,224 | 4 (0) | 50% | 0.4% | 0.6 | 94% | 19.7 | 192 | 99 / 44 |
+| SG04-EASA Fanar | 4,224 | 3 (0) | 37% | 3.3% | 4.2 | 58% | 14.2 | 459 | 94 / 43 |
+| SG04-EASA Qwen3 | 4,224 | 189 (87) | 65% | 5.2% | 6.7 | 41% | 12.7 | 92 | 71 / 34 |
+
+**SR09-EASA (+ SG04-EASA, targeted dislike comments)**
+
+| Classifier | SR05-EASA (real only, 8 epochs) | + Aya | + Fanar | + Qwen3 |
+|---|---|---|---|---|
+| MARBERT | 89.98 ± 0.53 | 89.85 (−0.13) | 89.32 (−0.66) | 89.12 (−0.86) |
+| MARBERTv2 | 89.28 ± 0.39 | 89.00 (−0.28) | 88.79 (−0.49) | 87.65 (−1.63) |
+| AraBERTv02-Twitter | 86.88 ± 0.07 | 86.27 (−0.61) | 87.08 (+0.20) | 87.08 (+0.20) |
+| ARBERT | 86.10 ± 0.25 | 86.31 (+0.21) | 85.86 (−0.24) | 85.57 (−0.53) |
+| ARBERTv2 | 84.84 ± 0.42 | 84.56 (−0.28) | 84.64 (−0.20) | 84.64 (−0.20) |
+| CAMeLBERT-mix | 84.43 ± 0.58 | 84.76 (+0.33) | 85.53 (+1.10) | 84.72 (+0.29) |
+| CAMeLBERT-DA | 82.76 ± 0.86 | 83.09 (+0.33) | 83.05 (+0.29) | 83.54 (+0.78) |
+| **Mean of 7 BERTs** | **86.32** | **86.26 (−0.06)** | **86.32 (+0.00)** | **86.05 (−0.28)** |
+
+**Paired comparisons, 8 epochs** (per BERT × generator pair: mean Δ, wins / losses / ties, two-sided sign test)
+
+| Comparison | Test micro F1 (21 pairs) | Test macro F1 (21 pairs) |
+|---|---|---|
+| SR09-EASA vs real only | −0.11, 9 / 12 / 0 (p = 0.66) | −0.08, 10 / 11 / 0 (p = 1.00) |
+| SR09-EASA vs zero-shot (+ SG01) | −0.03, 12 / 8 / 1 (p = 0.50) | −0.13, 9 / 11 / 1 (p = 0.82) |
+| SR09-EASA vs random few-shot (+ SG02-random, SR06-random-EASA) | −0.16, 8 / 12 / 1 (p = 0.50) | −0.26, 8 / 13 / 0 (p = 0.38) |
+| SR09-EASA vs targeted few-shot (+ SG02, SR06-EASA) | +0.07, 11 / 10 / 0 (p = 1.00) | +0.04, 11 / 10 / 0 (p = 1.00) |
+
+**Error rate on dislike comments** (share of the comments a run gets wrong, mean over the runs; dislike regex as above)
+
+| Condition | Runs | Dev: the 15 example texts | Dev: all 117 dislike comments | Dev: NEG (93) / NEU (22) | Test: all 106 dislike comments | Test: NEG (85) / NEU (19) |
+|---|---|---|---|---|---|---|
+| SR05-EASA real only | 21 | 65.4% | 18.1% | 7.2% / 61.9% | 17.8% | 6.9% / 64.9% |
+| SR05-EASA + SG01-EASA | 63 | 66.9% | 17.4% | 9.8% / 47.8% | 17.1% | 8.7% / 52.6% |
+| SR06-random-EASA | 63 | 67.8% | 17.6% | 9.3% / 50.2% | 17.7% | 8.7% / 55.8% |
+| SR06-EASA (dev-contaminated) | 63 | 57.9% | 16.8% | 14.7% / 23.4% | 18.3% | 11.9% / 42.7% |
+| **SR09-EASA (dev-contaminated)** | 63 | **26.2%** | **14.1%** | 13.2% / 15.3% | **17.4%** | 11.3% / 41.5% |
+
+- **No gain on average:** against real only the dislike sets give −0.11 micro F1 over the 21 pairs (9 better, 12 worse, p = 0.66); per generator −0.06 (Aya), +0.00 (Fanar), −0.28 (Qwen3).
+- **Same split by BERT strength:** the three strongest BERTs lose (−0.47; 2 of 9 cells up), the four weaker gain a little (+0.16; 7 of 12 up). The Qwen3 set lowers MARBERTv2 by 1.63.
+- **Not better than the earlier sets:** level with zero-shot SG01-EASA (−0.03) and targeted SG02-EASA (+0.07), slightly below random-example SG02-random-EASA (−0.16); none significant. SG04-EASA is twice their size.
+- **The dev drop is contamination:** errors on the 15 example texts fall from 65% to 26%, but these texts were the examples.
+- **On test the dislike errors do not fall:** 17.4% against 17.8% for real only. The errors move from NEU to NEG: NEU dislike comments 64.9% → 41.5% wrong, NEG dislike comments 6.9% → 11.3% wrong, and 83% of the wrong NEG ones are read as NEU. SR06-EASA showed the same trade (11.9% / 42.7%).
+- **By class:** test NEU F1 +0.60, NEG −0.57, POS −0.27 against real only; the Qwen3 set lowers NEG by 1.06.
+- **The sets are narrow and their NEU is weak:** the judge confirms 34–44% of the NEU comments; only 37–65% mention dislikes at all; 89–96% fall in the unclustered universal topic; almost no code-switching (CMI 0.6–6.7 against 22.6). Qwen3 copied 87 dev example texts closely enough to be filtered out, and its MTLD is 92.
+- **Epoch kept:** 8 in 61 of the 63 runs, 7 in 2.
+
+**Takeaway: 2,640 generated dislike comments per generator, made from the dev dislike errors, do not improve the 8-epoch BERTs (−0.11 micro F1, 9 of 21 pairs, not significant) and do not lower the error on test dislike comments (17.4% against 17.8%). They shift the errors from NEU to NEG, as the SG02-EASA dislike type did. EESA labels a dislike comment NEG when it insults the dislikers and NEU when it only asks about them; the generated sets carry that line weakly (the judge confirms 34–44% of their NEU comments). The dev improvement on the example texts is contamination. Random-example control (SR09-random-EASA) pending.**
+
+Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (run SR09-EESA). Numbers: `python -m src.sentiment.compare_eesa_sr09`.

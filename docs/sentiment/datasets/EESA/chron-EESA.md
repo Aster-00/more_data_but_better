@@ -343,3 +343,38 @@ Same measures as the SG01-EASA table. Quality rows from `src.sentiment.measure_q
 - **Dialectness and MSA share are not comparable for EM:** Sentence-ALDi scores Arabic, and the EM texts are largely English (dialectness 0.48–0.60 against 0.70–0.85 for the other arms).
 - **Weak NEU:** the judge confirms 15–44% of the NEU comments in 8 of the 9 three-generator sets (76% for Qwen3 NM; real dev 80%). NEG and POS are confirmed at 63–100%.
 - **Too long:** 16–28 words per text against 12.6.
+
+
+## Generation (SG04-EASA) dislike comments, few shot
+**Setup (D-038):** few-shot generation of one comment type, "Dislike comments" (comments about the people who pressed dislike). It is the type the 8-epoch runs still get wrong (see "Dev errors: 3 epochs against 8 epochs").
+- 2,640 texts per generator (twice SG01–SG03): NEG 1,320 / NEU 1,320; POS dropped (one POS text in the error pool).
+- Examples: 5 per request from the 15 EESA dev dislike comments that a majority of the 210 eight-epoch runs get wrong (8 NEG, 7 NEU; `data/inspect/hard_cases/sg04_dislike_errors_eesa.jsonl`, `python -m src.sentiment.dislike_pools_eesa`), so **dev-contaminated**. Prompt `prompts/sentiment/fewshot_eesa_v1.json`.
+- Control **SG04-random-EASA**: same prompt, size and classes, 5 random EESA train dislike comments per request (pool of 311: 258 NEG, 53 NEU).
+- 4,224 requests per set; filter `configs/filtering/sentiment_eesa.json`; no top-up needed; no exact match with EESA test.
+- Training: SR09-EASA (+ SG04-EASA) and SR09-random-EASA (+ SG04-random-EASA), 8 epochs; results in `docs/sentiment/chron-EESA.md`.
+
+**Quality rows**
+
+| Dataset | Texts | MSA share | Dialectness | MTLD | Self-BLEU | Topics (of 30) | Universal clusters (topics of 19) | Vendi | Repeats | Fidelity (NEG / NEU) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| EESA real (train) | 2,463 | 10.3% | 0.61 | 1,226 | 0.106 | 30 | 4.6 | 3.8 | 0.2% | 89.4% (93 / 80) |
+| SG04-EASA Fanar | 2,640 | 0.7% | 0.84 | 459 | 0.135 | 11 | 1.7 | 2.9 | 0.0% | 68.4% (94 / 43) |
+| SG04-EASA Qwen3 | 2,640 | 0.1% | 0.91 | 92 | 0.231 | 8 | 1.3 | 2.6 | 4.2% | 52.3% (71 / 34) |
+| SG04-EASA Aya | 2,640 | 0.5% | 0.87 | 192 | 0.434 | 8 | 1.3 | 2.4 | 0.1% | 71.7% (99 / 44) |
+
+**Code-switching and content** (`results/quality/sentiment/cmi_sg04_eesa.json`; "mention dislikes" = the dislike regex of `src/sentiment/dislike_pools_eesa.py`, from `python -m src.sentiment.compare_eesa_sr09`)
+
+| Dataset | Rejected by filter (copies of dev texts) | Mention dislikes (NEG / NEU) | Latin-script words | CMI | Texts with no switch | Switch-point fraction | Words per text |
+|---|---|---|---|---|---|---|---|
+| EESA real (train) | – | 23% of NEG + NEU | 22.8% | 22.6 | 1% | 0.23 | 12.6 |
+| SG04-EASA Fanar | 3 (0) | 37% (40% / 34%) | 3.3% | 4.2 | 58% | 0.05 | 14.2 |
+| SG04-EASA Qwen3 | 189 (87) | 65% (59% / 71%) | 5.2% | 6.7 | 41% | 0.12 | 12.7 |
+| SG04-EASA Aya | 4 (0) | 50% (70% / 29%) | 0.4% | 0.6 | 94% | 0.01 | 19.7 |
+
+**What the quality rows say:**
+- **One topic only:** 89–96% of the texts fall in the unclustered universal topic (effective 1.3–1.7 of 19, EESA 4.6); 8–11 of 30 topics. This is by design (one comment type), but it is far narrower than any earlier set.
+- **Many do not mention dislikes:** only 37% (Fanar) to 65% (Qwen3) contain the word; the rest are general criticism (NEG) or questions about the video (NEU).
+- **Weak NEU:** the judge confirms 34–44% of the NEU comments (real dev 80%). Aya's NEU comments mention dislikes in only 29%.
+- **Qwen3 copies its examples:** 87 outputs were removed as near-copies of the dev example texts, 177 as near-duplicates of each other, and 4.2% of the kept set are still repeats; MTLD 92.
+- **Aya repeats phrasing most:** Self-BLEU 0.434, the highest EESA set.
+- **More dialectal than EESA, almost no English:** dialectness 0.84–0.91 (EESA 0.61), MSA share under 1%; CMI 0.6–6.7 against 22.6, and 94% of Aya's texts have no switch.
