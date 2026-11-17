@@ -37,21 +37,26 @@ OUT_DIR = Path("docs/sentiment/datasets")   # moved from tables/ in commit ddc76
 # Per-corpus CSV folders under OUT_DIR (split by Ammar in commit 2dc287c).
 CSV_FOLDERS = {"ArSarcasm-v2": "AsSarcasm-V2", "EESA": "EESA"}
 SETS = ["sg01", "sg02", "sg03", "sg03r", "sg04", "sg04pn", "sg01_eesa", "sg03_eesa", "sg03r_eesa", "sg02_eesa", "sg02r_eesa",
-        "sg03dm_eesa", "sg03em_eesa", "sg03nm_eesa"]   # matrix-language pilot (D-037)
+        "sg03dm_eesa", "sg03dm3_eesa", "sg03em_eesa", "sg03nm_eesa",   # matrix-language pilot (D-037)
+        "sg04_eesa", "sg04r_eesa"]   # dislike comments (D-038)
 SET_NAMES = {"sg01": "SG01", "sg02": "SG02", "sg03": "SG03", "sg03r": "SG03-random", "sg04": "SG04 (test-contaminated)",
              "sg04pn": "SG04-PN (test-contaminated)", "sg01_eesa": "SG01-EESA", "sg03_eesa": "SG03-EESA",
              "sg03r_eesa": "SG03-random-EESA",
              "sg02_eesa": "SG02-EESA (dev-contaminated)", "sg02r_eesa": "SG02-random-EESA",
-             "sg03dm_eesa": "SG03-EESA-DM", "sg03em_eesa": "SG03-EESA-EM", "sg03nm_eesa": "SG03-EESA-NM"}
+             "sg03dm_eesa": "SG03-EESA-DM", "sg03em_eesa": "SG03-EESA-EM", "sg03nm_eesa": "SG03-EESA-NM",
+             "sg03dm3_eesa": "SG03-EESA-DM3",
+             "sg04_eesa": "SG04-EESA dislikes (dev-contaminated)", "sg04r_eesa": "SG04-random-EESA dislikes"}
 TRAIN_RUN = {"real": "sr01", "sg01": "sr02", "sg02": "sr04", "sg03": "sr05", "sg03r": "sr06", "sg04": "sr07", "sg04pn": "sr12_3600",
              "real_eesa": "sr01_eesa_tl", "sg01_eesa": "sr02_eesa_tl", "sg03_eesa": "sr05_eesa", "sg03r_eesa": "sr06_eesa",
              "sg02_eesa": "sr04_eesa", "sg02r_eesa": "sr04r_eesa",
-             "sg03dm_eesa": "sr07dm_eesa", "sg03em_eesa": "sr07em_eesa", "sg03nm_eesa": "sr07nm_eesa"}
+             "sg03dm_eesa": "sr07dm_eesa", "sg03em_eesa": "sr07em_eesa", "sg03nm_eesa": "sr07nm_eesa", "sg03dm3_eesa": "sr07dm3_eesa",
+             "sg04_eesa": "sr09_eesa", "sg04r_eesa": "sr09r_eesa"}   # 8 epochs (D-038)
 # Run labels as in the registry (EESA runs: SR02-EESA etc.); the others keep their old label.
 RUN_LABEL = {k: v.upper().replace("_EESA", "-EESA") for k, v in TRAIN_RUN.items()}
 # Registry names where the rule above does not give them (configs/sentiment/runs.json).
 RUN_LABEL.update({"real_eesa": "SR03-EESA", "sg01_eesa": "SR03-EESA", "sg02r_eesa": "SR04-random-EESA"})
-RUN_LABEL.update({f"sg03{a}_eesa": f"SR07-EESA-{a.upper()}" for a in ("dm", "em", "nm")})
+RUN_LABEL.update({f"sg03{a}_eesa": f"SR07-EESA-{a.upper()}" for a in ("dm", "dm3", "em", "nm")})
+RUN_LABEL.update({"sg04r_eesa": "SR09-random-EESA"})
 # Real set and real-only run per corpus; EESA sets end in _eesa.
 REAL = {"ArSarcasm-v2": ("real", "S1 real (train)", "arsarcasm_v2_train.jsonl"),
         "EESA": ("real_eesa", "EESA real (train)", "eesa_train.jsonl")}

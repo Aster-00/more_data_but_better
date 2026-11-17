@@ -1,0 +1,114 @@
+# Connective lexicon for the compositional code-switched pipeline (Stage 0 counting, Stage 2-3 templates).
+#
+# REVIEW NEEDED: every entry was drafted by Claude and has `reviewed: false`.
+# Ammar: check each entry, fix or delete it, then set `reviewed: true`. Add missing ones.
+#
+# Fields
+#   id          unique name
+#   text        the connective, as written (spelling variants are separate entries: no hidden normalisation)
+#   script      arabic | english   (Franco dropped, Ammar 2026-11-17)
+#   pattern     contrast | concession | expectation_violation | counterfactual | reinforcement
+#               reason | time | condition | relative   (other subordinators, Stage 0 counting only)
+#               (mixed_balanced has no connective of its own; it reuses the contrast ones)
+#   position    medial = joins two clauses, needs words on both sides
+#               any    = may also open the sentence (subordinators, frames)
+#   later       optional; the entry only counts if one of these words comes later in the text
+#   note        known ambiguity
+#   reviewed    false until Ammar has checked the entry
+
+connectives:
+  # ---------------------------------------------------------------- contrast (overall = polarity of c2)
+  - {id: bas_ar, text: "بس", script: arabic, pattern: contrast, position: medial, reviewed: false, note: "also means 'only / enough'"}
+  - {id: lakin_ar, text: "لكن", script: arabic, pattern: contrast, position: medial, reviewed: false}
+  - {id: walakin_ar, text: "ولكن", script: arabic, pattern: contrast, position: medial, reviewed: false}
+  - {id: lakin2_ar, text: "لاكن", script: arabic, pattern: contrast, position: medial, reviewed: false, note: "informal spelling"}
+  - {id: innama_ar, text: "إنما", script: arabic, pattern: contrast, position: medial, reviewed: false}
+  - {id: innama2_ar, text: "انما", script: arabic, pattern: contrast, position: medial, reviewed: false}
+  - {id: but_en, text: "but", script: english, pattern: contrast, position: medial, reviewed: false}
+  - {id: however_en, text: "however", script: english, pattern: contrast, position: medial, reviewed: false}
+
+  # ---------------------------------------------------------------- concession (overall = polarity of the main clause)
+  - {id: raghm_in_ar, text: "رغم إن", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: raghm_in2_ar, text: "رغم ان", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: raghm_inn_ar, text: "رغم انه", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: birraghm_ar, text: "بالرغم", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: maa_in_ar, text: "مع إن", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: maa_in2_ar, text: "مع ان", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: maa_inn_ar, text: "مع انه", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: hatta_law_ar, text: "حتى لو", script: arabic, pattern: concession, position: any, reviewed: false}
+  - {id: although_en, text: "although", script: english, pattern: concession, position: any, reviewed: false}
+  - {id: even_though_en, text: "even though", script: english, pattern: concession, position: any, reviewed: false}
+  - {id: though_en, text: "though", script: english, pattern: concession, position: any, reviewed: false, note: "sentence-final 'though' is not a subordinator"}
+  - {id: despite_en, text: "despite", script: english, pattern: concession, position: any, reviewed: false}
+
+  # ---------------------------------------------------------------- expectation violation (overall = the actual outcome)
+  - {id: kont_faker_ar, text: "كنت فاكر", script: arabic, pattern: expectation_violation, position: any, reviewed: false}
+  - {id: kont_fakra_ar, text: "كنت فاكرة", script: arabic, pattern: expectation_violation, position: any, reviewed: false}
+  - {id: kont_fakro_ar, text: "كنت فاكره", script: arabic, pattern: expectation_violation, position: any, reviewed: false, note: "feminine with ه, or 'thought him'"}
+  - {id: iftakart_ar, text: "افتكرت", script: arabic, pattern: expectation_violation, position: any, reviewed: false, note: "also 'I remembered'"}
+  - {id: kont_mutawaqqi_ar, text: "كنت متوقع", script: arabic, pattern: expectation_violation, position: any, reviewed: false}
+  - {id: kont_mistanni_ar, text: "كنت مستني", script: arabic, pattern: expectation_violation, position: any, reviewed: false, note: "also plain 'I was waiting'"}
+  - {id: tili_ar, text: "طلع", script: arabic, pattern: expectation_violation, position: medial, reviewed: false, note: "also 'went up / came out'"}
+  - {id: tilit_ar, text: "طلعت", script: arabic, pattern: expectation_violation, position: medial, reviewed: false, note: "also 'went up / came out'"}
+  - {id: i_thought_en, text: "i thought", script: english, pattern: expectation_violation, position: any, reviewed: false}
+  - {id: turned_out_en, text: "turned out", script: english, pattern: expectation_violation, position: medial, reviewed: false}
+
+  # ---------------------------------------------------------------- counterfactual (overall = NEG)
+  - {id: law_kan_ar, text: "لو كان", script: arabic, pattern: counterfactual, position: any, reviewed: false}
+  - {id: law_kanit_ar, text: "لو كانت", script: arabic, pattern: counterfactual, position: any, reviewed: false}
+  - {id: law_kont_ar, text: "لو كنت", script: arabic, pattern: counterfactual, position: any, reviewed: false}
+  - {id: law_kanu_ar, text: "لو كانوا", script: arabic, pattern: counterfactual, position: any, reviewed: false}
+  - {id: yaret_ar, text: "ياريت", script: arabic, pattern: counterfactual, position: any, reviewed: false, note: "also a plain wish or request"}
+  - {id: ya_ret_ar, text: "يا ريت", script: arabic, pattern: counterfactual, position: any, reviewed: false, note: "also a plain wish or request"}
+  - {id: if_only_en, text: "if only", script: english, pattern: counterfactual, position: any, reviewed: false}
+  - {id: i_wish_en, text: "i wish", script: english, pattern: counterfactual, position: any, reviewed: false, note: "also a plain wish"}
+  - {id: would_have_en, text: "would have", script: english, pattern: counterfactual, position: medial, reviewed: false}
+
+  # ---------------------------------------------------------------- reinforcement (control; overall = the shared polarity)
+  # Plain "و" / "and" / "w" are left out: too frequent to mark a compound sentence.
+  - {id: kaman_ar, text: "كمان", script: arabic, pattern: reinforcement, position: medial, reviewed: false, note: "also 'again / more'"}
+  - {id: wakaman_ar, text: "وكمان", script: arabic, pattern: reinforcement, position: medial, reviewed: false}
+  - {id: wabardo_ar, text: "وبرضه", script: arabic, pattern: reinforcement, position: medial, reviewed: false}
+  - {id: wabardo2_ar, text: "وبرضو", script: arabic, pattern: reinforcement, position: medial, reviewed: false}
+  - {id: wafoq_da_ar, text: "وفوق ده", script: arabic, pattern: reinforcement, position: medial, reviewed: false}
+  - {id: also_en, text: "also", script: english, pattern: reinforcement, position: medial, reviewed: false}
+  - {id: and_also_en, text: "and also", script: english, pattern: reinforcement, position: medial, reviewed: false}
+  - {id: plus_en, text: "plus", script: english, pattern: reinforcement, position: medial, reviewed: false, note: "also a brand or number word"}
+
+  # ================================================================ other subordinators (added 2026-11-17)
+  # Complex sentences without a sentiment composition rule. Counted in Stage 0 only; the pipeline has no
+  # template for them yet. A text is in this group only if it has none of the five patterns above.
+
+  # ---------------------------------------------------------------- reason
+  - {id: ashan_ar, text: "عشان", script: arabic, pattern: reason, position: any, reviewed: false, note: "also 'for / in order to'"}
+  - {id: alashan_ar, text: "علشان", script: arabic, pattern: reason, position: any, reviewed: false, note: "also 'for / in order to'"}
+  - {id: lianna_ar, text: "لأن", script: arabic, pattern: reason, position: any, reviewed: false}
+  - {id: lianna2_ar, text: "لان", script: arabic, pattern: reason, position: any, reviewed: false}
+  - {id: liannu_ar, text: "لأنه", script: arabic, pattern: reason, position: any, reviewed: false}
+  - {id: liannu2_ar, text: "لانه", script: arabic, pattern: reason, position: any, reviewed: false}
+  - {id: liannaha_ar, text: "لأنها", script: arabic, pattern: reason, position: any, reviewed: false}
+  - {id: liannaha2_ar, text: "لانها", script: arabic, pattern: reason, position: any, reviewed: false}
+  - {id: bisabab_ar, text: "بسبب", script: arabic, pattern: reason, position: any, reviewed: false, note: "takes a noun, not always a clause"}
+  - {id: because_en, text: "because", script: english, pattern: reason, position: any, reviewed: false}
+  - {id: cuz_en, text: "cuz", script: english, pattern: reason, position: any, reviewed: false}
+
+  # ---------------------------------------------------------------- time
+  - {id: lamma_ar, text: "لما", script: arabic, pattern: time, position: any, reviewed: false}
+  - {id: abl_ma_ar, text: "قبل ما", script: arabic, pattern: time, position: any, reviewed: false}
+  - {id: baad_ma_ar, text: "بعد ما", script: arabic, pattern: time, position: any, reviewed: false}
+  - {id: lihadd_ma_ar, text: "لحد ما", script: arabic, pattern: time, position: any, reviewed: false}
+  - {id: when_en, text: "when", script: english, pattern: time, position: any, reviewed: false, note: "also a question word"}
+  - {id: while_en, text: "while", script: english, pattern: time, position: any, reviewed: false}
+
+  # ---------------------------------------------------------------- condition
+  - {id: law_ar, text: "لو", script: arabic, pattern: condition, position: any, reviewed: false, note: "'لو كان' etc. are counted as counterfactual first"}
+  - {id: iza_ar, text: "إذا", script: arabic, pattern: condition, position: any, reviewed: false}
+  - {id: iza2_ar, text: "اذا", script: arabic, pattern: condition, position: any, reviewed: false}
+  - {id: if_en, text: "if", script: english, pattern: condition, position: any, reviewed: false}
+
+  # ---------------------------------------------------------------- relative clause
+  - {id: illi_ar, text: "اللي", script: arabic, pattern: relative, position: any, reviewed: false}
+  - {id: illi2_ar, text: "الي", script: arabic, pattern: relative, position: any, reviewed: false, note: "also a spelling of إلى or 'to me'"}
+  - {id: that_en, text: "that", script: english, pattern: relative, position: any, reviewed: false, note: "also a demonstrative"}
+  - {id: who_en, text: "who", script: english, pattern: relative, position: any, reviewed: false, note: "also a question word"}
+  - {id: which_en, text: "which", script: english, pattern: relative, position: any, reviewed: false}

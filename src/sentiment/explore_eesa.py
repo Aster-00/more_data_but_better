@@ -50,9 +50,12 @@ COMPARE = {
     "SG01-EASA Aya": ROOT / "data/synthetic/sentiment/sg01_eesa_aya.selected.jsonl",
     "ArSarcasm-v2 train (S1)": PROC / "arsarcasm_v2_train.jsonl",
 }
-# SG02-EESA and SG02-random-EESA (D-034), once generated.
+# SG02-EESA and SG02-random-EESA (D-034), SG04-EESA and SG04-random-EESA (D-038), SG03-EESA matrix arms (D-037).
 for _g, _n in [("fanar", "Fanar"), ("qwen3", "Qwen3"), ("aya", "Aya")]:
-    for _tag, _name in [("sg02_eesa", "SG02-EESA"), ("sg02r_eesa", "SG02-random-EESA")]:
+    for _tag, _name in [("sg02_eesa", "SG02-EESA"), ("sg02r_eesa", "SG02-random-EESA"),
+                        ("sg04_eesa", "SG04-EESA"), ("sg04r_eesa", "SG04-random-EESA"),
+                        ("sg03nm_eesa", "SG03-EESA-NM"), ("sg03dm_eesa", "SG03-EESA-DM"),
+                        ("sg03dm3_eesa", "SG03-EESA-DM3"), ("sg03em_eesa", "SG03-EESA-EM")]:
         if (ROOT / f"data/synthetic/sentiment/{_tag}_{_g}.selected.jsonl").exists():
             COMPARE[f"{_name} {_n}"] = ROOT / f"data/synthetic/sentiment/{_tag}_{_g}.selected.jsonl"
 
@@ -168,11 +171,15 @@ def universal19() -> dict:
 
     exp(entropy) of the whole-set shares stored by src.quality.topic_spread; no texts are re-embedded.
     """
-    d = json.loads((ROOT / "results/quality/sentiment/universal_topics_sg01_eesa.json").read_text(encoding="utf-8"))
     out = {}
-    for k, s in d["sets"].items():
-        sh = [p for p in s["topic_shares"].values() if p > 0]     # "unnamed" is one share = Unclustered
-        out[k] = {"n_scored": s["n_scored"], "effective": math.exp(-sum(p * math.log(p) for p in sh))}
+    # One topic_spread file per generation round; the real set is the same in each (first one kept).
+    for f in sorted((ROOT / "results/quality/sentiment").glob("universal_topics_sg0*_eesa*.json")):
+        d = json.loads(f.read_text(encoding="utf-8"))
+        for k, s in d["sets"].items():
+            if k in out:
+                continue
+            sh = [p for p in s["topic_shares"].values() if p > 0]     # "unnamed" is one share = Unclustered
+            out[k] = {"n_scored": s["n_scored"], "effective": math.exp(-sum(p * math.log(p) for p in sh))}
     return out
 
 

@@ -59,7 +59,13 @@ SET_GENERATORS = {"sg01": ["jais2", "fanar", "qwen3", "aya"], "sg02": ["fanar", 
                   "sg04": ["fanar", "qwen3", "aya"], "sg04pn": ["fanar", "qwen3", "aya"],
                   "sg01_eesa": ["fanar", "qwen3", "aya"], "sg03_eesa": ["fanar", "qwen3", "aya"],
                   "sg03r_eesa": ["fanar", "qwen3", "aya"],
-                  "sg02_eesa": ["fanar", "qwen3", "aya"], "sg02r_eesa": ["fanar", "qwen3", "aya"]}  # D-034
+                  "sg02_eesa": ["fanar", "qwen3", "aya"], "sg02r_eesa": ["fanar", "qwen3", "aya"],  # D-034
+                  # Matrix-language pilot (D-037): dialect matrix, English matrix, no matrix instruction.
+                  "sg03dm_eesa": ["fanar", "qwen3", "aya"], "sg03em_eesa": ["fanar", "qwen3", "aya"],
+                  "sg03nm_eesa": ["fanar", "qwen3", "aya"],
+                  "sg03dm3_eesa": ["fanar", "qwen3", "aya"],   # dialect matrix, prompt v3
+                  # Dislike comments (D-038): targeted (8-epoch dev errors as examples) and random control.
+                  "sg04_eesa": ["fanar", "qwen3", "aya"], "sg04r_eesa": ["fanar", "qwen3", "aya"]}
 # Minimal-pair sets request only some variety x sentiment cells (e.g. no msa complaints); their
 # imbalance is over the requested (non-empty) cells only.
 PAIR_SETS = {"sg03", "sg03r", "sg04", "sg04pn", "sg03_eesa", "sg03r_eesa"}
@@ -135,10 +141,12 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--set", default="sg01", choices=sorted(SET_GENERATORS))
     p.add_argument("--device", default="cuda")
+    p.add_argument("--generators", nargs="+", default=None,
+                   help="measure only these generators of the set (a set generated in stages, D-037)")
     args = p.parse_args()
     started = time.time()
     tag = args.set
-    GENERATORS = {g: GENERATOR_NAMES[g] for g in SET_GENERATORS[tag]}
+    GENERATORS = {g: GENERATOR_NAMES[g] for g in SET_GENERATORS[tag] if not args.generators or g in args.generators}
     corpus = CORPORA[corpus_of(tag)]
 
     # Real data: the corpus's train set (S1: restricted to the four varieties used for generation).

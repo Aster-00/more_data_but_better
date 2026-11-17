@@ -290,3 +290,56 @@ Each 8-epoch run is paired with the 3-epoch run of the same BERT, generator and 
 Run results (SR04-EASA, SR04-random-EASA, BERTs and LLMs) are in `docs/sentiment/chron-EESA.md`.
 
 ## Generation (SG03-EASA) (*most frequently errored clusters*) Minimal Pairs
+
+
+## Generation (SG03-EASA) matrix-language pilot
+**Setup (D-037):** zero-shot generation as SG01-EASA, with one instruction that states (or does not state) the matrix language, the language that supplies the grammar of the code-switched comment. Arms: **NM** = mix Egyptian Arabic and English, no matrix stated; **DM3** = Egyptian Arabic sentence with English words inserted (prompt v3); **DM** = the same with prompt v2 (Qwen3 only, replaced by v3 because it inserted almost no English); **EM** = English sentence with Egyptian Arabic words inserted. Every arm asks for about 1 English word in 5 (EESA train: 23% Latin-script words).
+- 1,320 texts per set (= SG01-EASA), NEG 440 / NEU 440 / POS 440 requested; Qwen3, Aya and Fanar; 10 sets.
+- Prompts: `prompts/sentiment/matrix_eesa_{nm,dm,em}_v2.json`, `matrix_eesa_dm_v3.json`; the arms differ only in the writing instruction.
+- Filter `configs/filtering/sentiment_eesa.json` (duplicates against EESA train and dev, at least 10% Arabic letters).
+- Training: SR07-EASA (3 epochs) and SR08-EASA (8 epochs); results in `docs/sentiment/chron-EESA.md`.
+
+**Quality rows**
+
+| Dataset | Texts | MSA share | Dialectness | MTLD | Self-BLEU | Topics (of 30) | Universal clusters (topics of 19) | Vendi | Repeats | Fidelity (NEG / NEU / POS) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| EESA real (train) | 2,463 | 10.3% | 0.61 | 1,226 | 0.106 | 30 | 4.6 | 3.8 | 0.2% | 89.4% (93 / 80 / 94) |
+| SG03-EASA-NM Aya | 1,320 | 3.9% | 0.70 | 402 | 0.392 | 9 | 3.3 | 2.4 | 0.0% | 75.0% (100 / 25 / 100) |
+| SG03-EASA-NM Fanar | 1,320 | 1.6% | 0.74 | 1,045 | 0.110 | 14 | 3.1 | 2.9 | 0.0% | 78.9% (96 / 41 / 99) |
+| SG03-EASA-NM Qwen3 | 1,320 | 1.3% | 0.79 | 73 | 0.106 | 12 | 2.9 | 3.2 | 1.4% | 79.2% (65 / 76 / 96) |
+| SG03-EASA-DM3 Aya | 1,320 | 2.2% | 0.74 | 320 | 0.448 | 8 | 3.2 | 2.2 | 0.1% | 71.1% (99 / 15 / 100) |
+| SG03-EASA-DM3 Fanar | 1,320 | 0.4% | 0.79 | 850 | 0.119 | 11 | 3.3 | 2.9 | 0.0% | 74.5% (97 / 26 / 100) |
+| SG03-EASA-DM3 Qwen3 | 1,320 | 1.0% | 0.81 | 90 | 0.103 | 13 | 2.4 | 2.9 | 1.0% | 70.2% (78 / 44 / 88) |
+| SG03-EASA-DM Qwen3 (prompt v2) | 1,320 | 0.9% | 0.85 | 42 | 0.088 | 10 | 2.4 | 3.3 | 1.7% | 74.2% (63 / 71 / 89) |
+| SG03-EASA-EM Aya | 1,320 | 10.1% | 0.60 | 513 | 0.380 | 9 | 3.9 | 2.5 | 0.0% | 75.8% (100 / 28 / 100) |
+| SG03-EASA-EM Fanar | 1,320 | 4.7% | 0.48 | 514 | 0.208 | 12 | 4.0 | 3.4 | 0.0% | 65.2% (75 / 22 / 99) |
+| SG03-EASA-EM Qwen3 | 1,320 | 2.0% | 0.57 | 73 | 0.650 | 9 | 2.7 | 2.8 | 0.5% | 71.5% (100 / 15 / 100) |
+
+Same measures as the SG01-EASA table. Quality rows from `src.sentiment.measure_quality` (`docs/sentiment/datasets/EESA/dataset_quality.csv`); Self-BLEU and universal clusters from `src.sentiment.explore_eesa`.
+
+**Code-switching** (script per word, `src/sentiment/cmi.py`; CMI = code-mixing index, 0 = one language only; `results/quality/sentiment/cmi_sg03_eesa_*.json`)
+
+| Set | Requests | Not parsed | Rejected by script filter | Latin-script words | CMI | Texts with no switch | Switch-point fraction | Words per text |
+|---|---|---|---|---|---|---|---|---|
+| EESA train (real) | – | – | – | 22.8% | 22.6 | 1% | 0.23 | 12.6 |
+| SG03-EASA-NM Aya | 1,716 | 0 | 0 | 7.7% | 7.2 | 80% | 0.01 | 23.7 |
+| SG03-EASA-NM Fanar | 2,400 | 299 | 48 | 21.0% | 18.2 | 28% | 0.09 | 16.0 |
+| SG03-EASA-NM Qwen3 | 1,716 | 7 | 6 | 4.8% | 5.2 | 64% | 0.04 | 21.0 |
+| SG03-EASA-DM3 Aya | 1,716 | 0 | 0 | 6.8% | 6.6 | 81% | 0.01 | 23.5 |
+| SG03-EASA-DM3 Fanar | 1,716 | 75 | 20 | 25.1% | 23.7 | 9% | 0.10 | 20.1 |
+| SG03-EASA-DM3 Qwen3 | 1,716 | 32 | 3 | 4.8% | 5.6 | 56% | 0.07 | 20.2 |
+| SG03-EASA-DM Qwen3 (prompt v2) | 1,716 | 98 | 3 | 2.5% | 2.9 | 75% | 0.02 | 27.1 |
+| SG03-EASA-EM Aya | 1,716 | 0 | 0 | 12.0% | 11.2 | 72% | 0.03 | 28.4 |
+| SG03-EASA-EM Fanar | 3,300 | 825 | 615 | 63.6% | 23.4 | 2% | 0.19 | 16.7 |
+| SG03-EASA-EM Qwen3 | 3,300 | 845 | 475 | 66.2% | 25.3 | 0% | 0.10 | 22.4 |
+
+**What the quality rows say:**
+- **Only Fanar code-switches like EESA:** 21–25% Latin-script words and CMI 18–24 in NM and DM3 (EESA 22.8%, 22.6). Aya stays at 7–12% in every arm, Qwen3 at 2.5–4.8% outside EM.
+- **The English-matrix arm is the mirror of EESA:** Fanar and Qwen3 write mostly English (64–66% Latin-script words; 83% and 87% of texts mostly English). It cost 3,300 requests each, with 825–845 not parsed and 475–615 under the 10% Arabic-letter rule.
+- **The dialect-matrix prompt v2 removed English with Qwen3:** 2.5% Latin-script words and 75% of texts with no switch, against 4.8% and 64% with no instruction. The reworded v3 only brings Qwen3 back to the NM level.
+- **Little lexical variety except Fanar:** MTLD 42–90 for Qwen3, 320–513 for Aya, 514–1,045 for Fanar (EESA 1,226). Fanar NM is the closest generated set to EESA so far.
+- **Aya and Qwen3 EM repeat phrasing:** Self-BLEU 0.38–0.45 for every Aya set (as SG01-EASA Aya, 0.376) and 0.650 for Qwen3 EM. Qwen3 NM and DM have low MTLD but EESA-level Self-BLEU (0.09–0.11): a small vocabulary in varied word order.
+- **Few topics:** 8–14 of 30 (EESA 30). The universal clusters of the English-matrix Aya and Fanar sets (3.9–4.0) are close to EESA's 4.6, but the topic list was built on Arabic-script texts, so mostly-English texts are placed less reliably.
+- **Dialectness and MSA share are not comparable for EM:** Sentence-ALDi scores Arabic, and the EM texts are largely English (dialectness 0.48–0.60 against 0.70–0.85 for the other arms).
+- **Weak NEU:** the judge confirms 15–44% of the NEU comments in 8 of the 9 three-generator sets (76% for Qwen3 NM; real dev 80%). NEG and POS are confirmed at 63–100%.
+- **Too long:** 16–28 words per text against 12.6.

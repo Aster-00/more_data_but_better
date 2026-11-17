@@ -1,0 +1,94 @@
+{
+  "name": "stage0",
+  "seed": 0,
+  "splits": {
+    "train": "data/processed/sentiment/eesa_train.jsonl",
+    "dev": "data/processed/sentiment/eesa_dev.jsonl",
+    "test": "data/processed/sentiment/eesa_test.jsonl"
+  },
+  "text_field": "text_raw",
+  "classes": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "ratio": {
+    "analysis_method": "char_letters",
+    "methods": [
+      "char_letters",
+      "char_franco_digits",
+      "token"
+    ],
+    "strict_arabic_letters": false
+  },
+  "target_bins": {
+    "source": "docs/sentiment/datasets/EESA/chron-EESA.md (script mix, all splits)",
+    "counts": [
+      273,
+      983,
+      1014,
+      622,
+      482,
+      317,
+      235,
+      110,
+      43,
+      18,
+      2
+    ],
+    "tolerance": 2
+  },
+  "merge_bins_from": 8,
+  "connectives": "configs/sentiment/compositional/connectives.yaml",
+  "connective_min_side_words": 2,
+  "connective_strip_diacritics": true,
+  "contrastive_patterns": [
+    "contrast",
+    "concession",
+    "expectation_violation",
+    "counterfactual"
+  ],
+  "franco_lexicon": "configs/sentiment/compositional/franco_lexicon.yaml",
+  "english_wordlist": "data/resources/english_wordlist/google-20k.txt",
+  "baselines": [
+    {
+      "name": "SR01-EESA MARBERTv2 (real only, 3 epochs)",
+      "run_regex": "sr01_eesa_marbertv2_seed4[234]"
+    },
+    {
+      "name": "SR02-EESA MARBERTv2 (+ SG01-EESA, 3 generators)",
+      "run_regex": "sr02_eesa_marbertv2_(aya|fanar|qwen3)_seed4[234]"
+    },
+    {
+      "name": "SR01-EESA all 7 BERTs (real only)",
+      "run_regex": "sr01_eesa_(marbert|marbertv2|arabertv02_twitter|arbert|arbertv2|camelbert_mix|camelbert_da)_seed4[234]"
+    },
+    {
+      "name": "SR02-EESA all 7 BERTs (+ SG01-EESA, 3 generators)",
+      "run_regex": "sr02_eesa_(marbert|marbertv2|arabertv02_twitter|arbert|arbertv2|camelbert_mix|camelbert_da)_(aya|fanar|qwen3)_seed4[234]"
+    }
+  ],
+  "runs_dir": "results/sentiment/runs",
+  "eval_splits": [
+    "dev",
+    "test"
+  ],
+  "review_samples": {
+    "split": "train",
+    "tokens": 200,
+    "compound_texts": 120
+  },
+  "out_dir": "results/quality/sentiment/compositional",
+  "inspect_dir": "data/inspect/compositional",
+  "compositional_patterns": [
+    "contrast",
+    "concession",
+    "expectation_violation",
+    "counterfactual",
+    "reinforcement"
+  ],
+  "length_bands": [
+    10,
+    20
+  ]
+}

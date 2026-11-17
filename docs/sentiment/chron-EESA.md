@@ -248,115 +248,23 @@ SR04-EASA and SR04-random-EASA repeated with 8 epochs, baseline SR05-EASA (real 
 
 Full per-classifier rows (dev and test, all metrics): `docs/sentiment/tables/sentiment_summary_EESA.csv`.
 
-## SR07-EASA results: matrix-language pilot, Qwen3 sets (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
-Does stating the matrix language (the language that supplies the grammar of a code-switched comment) in the prompt change the generated code-switching and the BERT scores? (D-037; idea from Yoo et al. 2025.) Three zero-shot sets from Qwen3, 1,320 texts each, identical except one instruction in the prompt (`prompts/sentiment/matrix_eesa_{nm,dm,em}_v2.json`): **NM** = mix Egyptian Arabic and English, no matrix stated; **DM** = Egyptian Arabic sentence with English words inserted; **EM** = English sentence with Egyptian Arabic words inserted. Every arm asks for about 1 switched word in 5 (EESA train: 23% Latin-script words). Training as SR03-EASA: 3 epochs, epoch by training loss, baseline SR03-EASA (real only). Registry runs SR07-EESA-NM / -DM / -EM (folders `sr07{nm,dm,em}_eesa_*_qwen3`). One generator only; Aya and Fanar are not generated yet.
+## SR07-EASA results: matrix-language pilot (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
+Does stating the matrix language (the language that supplies the grammar of a code-switched comment) in the prompt change the generated code-switching and the BERT scores? (D-037; idea from Yoo et al. 2025.) Zero-shot sets of 1,320 texts from Qwen3, Aya and Fanar, identical except one instruction in the prompt: **NM** = mix Egyptian Arabic and English, no matrix stated; **DM3** = Egyptian Arabic sentence with English words inserted (prompt v3); **EM** = English sentence with Egyptian Arabic words inserted. Every arm asks for about 1 switched word in 5 (EESA train: 23% Latin-script words). Prompts: `prompts/sentiment/matrix_eesa_{nm,dm,em}_v2.json`, `matrix_eesa_dm_v3.json`. Training as SR03-EASA: 3 epochs, epoch by training loss, baseline SR03-EASA (real only). 10 sets, 210 runs, no failure. Registry runs SR07-EESA-NM / -DM / -DM3 / -EM (folders `sr07{nm,dm,dm3,em}_eesa_*`).
+
+**Why DM3:** the first dialect-matrix prompt (**DM**, prompt v2) inserted almost no English with Qwen3, so it was reworded before Aya and Fanar were generated: "Every comment must contain English words written in Latin letters, placed inside the Egyptian sentence where an Egyptian would say them in English (for example like, video, song, nice, fake, subscribe)". Three rewordings were tried on 48 Qwen3 requests each (4%, 7% and 4% Latin-script words); v3 is the 7% one. DM prompt v2 exists for Qwen3 only. **Limit:** v3 names example words and says "must"; the NM and EM prompts do not, so DM3 differs from them in more than the matrix statement.
 
 **The sets** (code-switching read from the script per word, `src/sentiment/cmi.py`; CMI = code-mixing index, 0 = one language only)
 
 | Set | Requests | Not parsed | Rejected by script filter | Latin-script words | CMI | Texts with no switch | Switch-point fraction | Words per text | MTLD | Fidelity (NEG / NEU / POS) |
 |---|---|---|---|---|---|---|---|---|---|---|
 | EESA train (real) | – | – | – | 22.8% | 22.6 | 1% | 0.23 | 12.6 | 1,226 | 89.4% (93 / 80 / 94) |
-| SG03-EASA-NM Qwen3 | 1,716 | 7 | 6 | 4.8% | 5.2 | 64% | 0.04 | 21.0 | 73 | 79.2% (65 / 76 / 96) |
-| SG03-EASA-DM Qwen3 | 1,716 | 98 | 3 | 2.5% | 2.9 | 75% | 0.02 | 27.1 | 42 | 74.2% (63 / 71 / 89) |
-| SG03-EASA-EM Qwen3 | 3,300 | 845 | 475 | 66.2% | 25.3 | 0% | 0.10 | 22.4 | 73 | 71.5% (100 / 15 / 100) |
-
-**Scores**
-
-| Classifier | SR03-EASA (real only) | + SG01-EASA Qwen3 (zero-shot) | + NM | + DM | + EM |
-|---|---|---|---|---|---|
-| MARBERT | 88.67 ± 0.39 | 88.22 (−0.45) | 87.98 (−0.69) | 88.43 (−0.24) | 88.75 (+0.08) |
-| MARBERTv2 | 86.06 ± 0.32 | 86.10 (+0.04) | 85.86 (−0.20) | 84.47 (−1.59) | 86.27 (+0.21) |
-| AraBERTv02-Twitter | 84.27 ± 1.03 | 84.03 (−0.24) | 84.52 (+0.25) | 84.27 (+0.00) | 84.92 (+0.65) |
-| ARBERT | 84.39 ± 0.46 | 84.80 (+0.41) | 84.84 (+0.45) | 85.33 (+0.94) | 83.78 (−0.61) |
-| ARBERTv2 | 82.36 ± 0.79 | 83.41 (+1.05) | 82.80 (+0.44) | 83.54 (+1.18) | 83.37 (+1.01) |
-| CAMeLBERT-mix | 81.83 ± 0.31 | 82.76 (+0.93) | 82.64 (+0.81) | 82.31 (+0.48) | 81.70 (−0.13) |
-| CAMeLBERT-DA | 81.50 ± 0.60 | 82.44 (+0.94) | 82.27 (+0.77) | 81.78 (+0.28) | 80.97 (−0.53) |
-| **Mean of 7 BERTs** | **84.15** | **84.54 (+0.38)** | **84.42 (+0.26)** | **84.30 (+0.15)** | **84.25 (+0.10)** |
-
-**Paired comparisons** (test micro F1, per BERT: mean Δ, wins / losses / ties, two-sided sign test; 7 pairs only)
-
-| Comparison | BERTs (7 pairs) |
-|---|---|
-| NM vs real only | +0.26, 5 / 2 / 0 (p = 0.45) |
-| DM vs real only | +0.15, 4 / 2 / 1 (p = 0.69) |
-| EM vs real only | +0.10, 4 / 3 / 0 (p = 1.00) |
-| DM vs NM | −0.11, 3 / 4 / 0 (p = 1.00) |
-| EM vs NM | −0.16, 4 / 3 / 0 (p = 1.00) |
-| DM vs EM | +0.05, 4 / 3 / 0 (p = 1.00) |
-| NM vs SG01-EASA Qwen3 | −0.12, 2 / 5 / 0 (p = 0.45) |
-
-- **The instruction changed the text, not in the intended way:** naming Egyptian Arabic as the matrix gave less English than no instruction (2.5% against 4.8% Latin-script words; 75% of DM texts have no switch at all). Neither comes near EESA's 22.8%.
-- **Only the English-matrix arm mixes:** its CMI (25.3) is close to EESA's (22.6), but 87% of its texts are mostly English and it switches less often (0.10 against 0.23). It is the mirror of EESA, not EESA.
-- **The English-matrix arm is expensive and off-label:** 845 of 3,300 outputs were not parsed (mostly no Arabic word) and 475 fell under the 10% Arabic-letter rule, so it needed two top-ups. The judge confirms only 15% of its NEU comments.
-- **Little variety in all three:** MTLD 42–73 against 216 for SG01-EASA Qwen3 and 1,226 for EESA; comments are 1.7–2.2 times longer than real ones and often repeat a phrase.
-- **Scores do not separate the arms:** the three means lie within 0.2 of each other (84.25–84.42), less than the seed spread of a single BERT (0.3–1.0). No comparison is significant.
-- **No arm beats the plain zero-shot set:** SG01-EASA Qwen3 (+0.38) is above all three (+0.10 to +0.26).
-- **Where it helps:** as before, the weaker BERTs (ARBERTv2 +0.4 to +1.2). DM lowers MARBERTv2 by 1.59; EM lowers ARBERT, CAMeLBERT-mix and CAMeLBERT-DA.
-- **By class:** test NEU F1 rises by 0.64 with NM, 0.22 with DM and 0.00 with EM (0.82 with SG01-EASA Qwen3).
-- **Epoch kept:** 3 in all 63 runs.
-
-**Takeaway: with Qwen3, stating the matrix language does not produce EESA-like code-switching and does not change the BERT scores (+0.10 to +0.26 micro F1 over real only, not significant, all below the plain zero-shot set). The dialect-matrix instruction even removes most of the English. One generator and 3 epochs, so this is a pilot result, not a conclusion about matrix language.**
-
-Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (runs SR07-EESA-NM / -DM / -EM). Code-switching per text: `results/quality/sentiment/cmi_sg03_eesa_qwen3.json`.
-
-## SR07-EASA results: dialect-matrix prompt reworded (DM3), Qwen3 set (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
-The dialect-matrix arm inserted almost no English, so its prompt was reworded (prompt v3, `prompts/sentiment/matrix_eesa_dm_v3.json`): "Every comment must contain English words written in Latin letters, placed inside the Egyptian sentence where an Egyptian would say them in English (for example like, video, song, nice, fake, subscribe)". Three rewordings were tried on 48 Qwen3 requests each (4%, 7% and 4% Latin-script words); v3 is the 7% one. Set SG03-EASA-DM3 Qwen3, 1,320 texts; training as before (3 epochs, epoch by training loss, baseline SR03-EASA). Registry run SR07-EESA-DM3 (folders `sr07dm3_eesa_*_qwen3`). **Limit:** v3 names example words and says "must"; the NM and EM prompts do not, so DM3 differs from them in more than the matrix statement.
-
-**The set**
-
-| Set | Requests | Not parsed | Rejected by script filter | Latin-script words | CMI | Texts with no switch | Switch-point fraction | Words per text | MTLD | Fidelity (NEG / NEU / POS) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| EESA train (real) | – | – | – | 22.8% | 22.6 | 1% | 0.23 | 12.6 | 1,226 | 89.4% (93 / 80 / 94) |
-| SG03-EASA-DM Qwen3 (prompt v2) | 1,716 | 98 | 3 | 2.5% | 2.9 | 75% | 0.02 | 27.1 | 42 | 74.2% (63 / 71 / 89) |
-| SG03-EASA-DM3 Qwen3 (prompt v3) | 1,716 | 32 | 3 | 4.8% | 5.6 | 56% | 0.07 | 20.2 | 90 | 70.2% (78 / 44 / 88) |
-| SG03-EASA-NM Qwen3 | 1,716 | 7 | 6 | 4.8% | 5.2 | 64% | 0.04 | 21.0 | 73 | 79.2% (65 / 76 / 96) |
-
-**Scores**
-
-| Classifier | SR03-EASA (real only) | + DM3 (prompt v3) | + DM (prompt v2) | + NM | + EM |
-|---|---|---|---|---|---|
-| MARBERT | 88.67 ± 0.39 | 87.53 (−1.14) | 88.43 (−0.24) | 87.98 (−0.69) | 88.75 (+0.08) |
-| MARBERTv2 | 86.06 ± 0.32 | 85.21 (−0.85) | 84.47 (−1.59) | 85.86 (−0.20) | 86.27 (+0.21) |
-| AraBERTv02-Twitter | 84.27 ± 1.03 | 84.31 (+0.04) | 84.27 (+0.00) | 84.52 (+0.25) | 84.92 (+0.65) |
-| ARBERT | 84.39 ± 0.46 | 84.84 (+0.45) | 85.33 (+0.94) | 84.84 (+0.45) | 83.78 (−0.61) |
-| ARBERTv2 | 82.36 ± 0.79 | 82.56 (+0.20) | 83.54 (+1.18) | 82.80 (+0.44) | 83.37 (+1.01) |
-| CAMeLBERT-mix | 81.83 ± 0.31 | 82.72 (+0.89) | 82.31 (+0.48) | 82.64 (+0.81) | 81.70 (−0.13) |
-| CAMeLBERT-DA | 81.50 ± 0.60 | 80.77 (−0.73) | 81.78 (+0.28) | 82.27 (+0.77) | 80.97 (−0.53) |
-| **Mean of 7 BERTs** | **84.15** | **83.99 (−0.16)** | **84.30 (+0.15)** | **84.42 (+0.26)** | **84.25 (+0.10)** |
-
-**Paired comparisons** (test micro F1, per BERT: mean Δ, wins / losses / ties, two-sided sign test; 7 pairs only)
-
-| Comparison | BERTs (7 pairs) |
-|---|---|
-| DM3 vs real only | −0.16, 4 / 3 / 0 (p = 1.00) |
-| DM3 vs DM (prompt v2) | −0.31, 3 / 4 / 0 (p = 1.00) |
-| DM3 vs NM | −0.42, 1 / 5 / 1 (p = 0.22) |
-| DM3 vs EM | −0.26, 2 / 5 / 0 (p = 0.45) |
-
-- **The rewording doubled the English, from very little to little:** 4.8% Latin-script words against 2.5%, and 56% of texts without a switch against 75%. That is the level of the no-instruction arm (4.8%), still a fifth of EESA's 22.8%.
-- **Less noise in the output:** 32 outputs not parsed against 98, shorter comments (20 words against 27), MTLD 90 against 42.
-- **Weaker labels:** the judge confirms only 44% of the DM3 NEU comments (71% with prompt v2).
-- **Scores are not better:** DM3 is the only arm below real only on average (−0.16), and below every other arm. It lowers MARBERT by 1.14 and MARBERTv2 by 0.85. None of the differences is significant.
-- **By class:** test NEU F1 falls by 0.14 and POS by 0.29; NEG rises by 0.34.
-- **Epoch kept:** 3 in all 21 runs.
-
-**Takeaway: on Qwen3 the rewording does not solve the problem. The reworded dialect-matrix prompt reaches the code-switching of the no-instruction arm, not of EESA, and its set is the least useful for the BERTs (−0.16 micro F1 against real only, not significant). Qwen3 does not write Egyptian sentences with inserted English when asked zero-shot. One generator, 3 epochs.**
-
-Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (run SR07-EESA-DM3). Code-switching per text: `results/quality/sentiment/cmi_sg03_eesa_qwen3_dm3.json`.
-
-## SR07-EASA results: matrix-language pilot, all three generators (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
-The pilot repeated with Aya and Fanar (D-037): arms **NM** (no matrix stated), **DM3** (Egyptian Arabic sentence with English inserted, reworded prompt v3) and **EM** (English sentence with Egyptian Arabic inserted), 1,320 texts per set, 3 epochs, epoch by training loss, baseline SR03-EASA (real only). The Qwen3 columns are the runs reported above. 9 sets, 189 runs, no failure. **Limits:** DM3 names example words and says "must", so it differs from NM and EM in more than the matrix statement; the dialect-matrix prompt v2 exists for Qwen3 only.
-
-**The sets** (code-switching read from the script per word; EESA train: 22.8% Latin-script words, CMI 22.6, 1% of texts with no switch, switch-point fraction 0.23, 12.6 words, MTLD 1,226, fidelity 89.4% (93 / 80 / 94))
-
-| Set | Requests | Not parsed | Rejected by script filter | Latin-script words | CMI | Texts with no switch | Switch-point fraction | Words per text | MTLD | Fidelity (NEG / NEU / POS) |
-|---|---|---|---|---|---|---|---|---|---|---|
 | SG03-EASA-NM Aya | 1,716 | 0 | 0 | 7.7% | 7.2 | 80% | 0.01 | 23.7 | 402 | 75.0% (100 / 25 / 100) |
 | SG03-EASA-NM Fanar | 2,400 | 299 | 48 | 21.0% | 18.2 | 28% | 0.09 | 16.0 | 1,045 | 78.9% (96 / 41 / 99) |
 | SG03-EASA-NM Qwen3 | 1,716 | 7 | 6 | 4.8% | 5.2 | 64% | 0.04 | 21.0 | 73 | 79.2% (65 / 76 / 96) |
 | SG03-EASA-DM3 Aya | 1,716 | 0 | 0 | 6.8% | 6.6 | 81% | 0.01 | 23.5 | 320 | 71.1% (99 / 15 / 100) |
 | SG03-EASA-DM3 Fanar | 1,716 | 75 | 20 | 25.1% | 23.7 | 9% | 0.10 | 20.1 | 850 | 74.5% (97 / 26 / 100) |
 | SG03-EASA-DM3 Qwen3 | 1,716 | 32 | 3 | 4.8% | 5.6 | 56% | 0.07 | 20.2 | 90 | 70.2% (78 / 44 / 88) |
+| SG03-EASA-DM Qwen3 (prompt v2) | 1,716 | 98 | 3 | 2.5% | 2.9 | 75% | 0.02 | 27.1 | 42 | 74.2% (63 / 71 / 89) |
 | SG03-EASA-EM Aya | 1,716 | 0 | 0 | 12.0% | 11.2 | 72% | 0.03 | 28.4 | 513 | 75.8% (100 / 28 / 100) |
 | SG03-EASA-EM Fanar | 3,300 | 825 | 615 | 63.6% | 23.4 | 2% | 0.19 | 16.7 | 514 | 65.2% (75 / 22 / 99) |
 | SG03-EASA-EM Qwen3 | 3,300 | 845 | 475 | 66.2% | 25.3 | 0% | 0.10 | 22.4 | 73 | 71.5% (100 / 15 / 100) |
@@ -374,18 +282,18 @@ The pilot repeated with Aya and Fanar (D-037): arms **NM** (no matrix stated), *
 | CAMeLBERT-DA | 81.50 ± 0.60 | 81.38 (−0.12) | 81.74 (+0.24) | 82.27 (+0.77) |
 | **Mean of 7 BERTs** | **84.15** | **84.50 (+0.35)** | **84.11 (−0.05)** | **84.42 (+0.26)** |
 
-**SR07-EASA-DM3 (+ SG03-EASA-DM3, Egyptian Arabic as matrix, prompt v3)**
+**SR07-EASA-DM3 (+ SG03-EASA-DM3, Egyptian Arabic as matrix, prompt v3); last column: Qwen3 with DM prompt v2 (SR07-EASA-DM)**
 
-| Classifier | SR03-EASA (real only) | + Aya | + Fanar | + Qwen3 |
-|---|---|---|---|---|
-| MARBERT | 88.67 ± 0.39 | 88.75 (+0.08) | 87.57 (−1.10) | 87.53 (−1.14) |
-| MARBERTv2 | 86.06 ± 0.32 | 86.88 (+0.82) | 84.31 (−1.75) | 85.21 (−0.85) |
-| AraBERTv02-Twitter | 84.27 ± 1.03 | 85.29 (+1.02) | 84.27 (+0.00) | 84.31 (+0.04) |
-| ARBERT | 84.39 ± 0.46 | 84.68 (+0.29) | 83.37 (−1.02) | 84.84 (+0.45) |
-| ARBERTv2 | 82.36 ± 0.79 | 83.50 (+1.14) | 82.72 (+0.36) | 82.56 (+0.20) |
-| CAMeLBERT-mix | 81.83 ± 0.31 | 82.52 (+0.69) | 82.11 (+0.28) | 82.72 (+0.89) |
-| CAMeLBERT-DA | 81.50 ± 0.60 | 82.11 (+0.61) | 81.13 (−0.37) | 80.77 (−0.73) |
-| **Mean of 7 BERTs** | **84.15** | **84.82 (+0.66)** | **83.64 (−0.51)** | **83.99 (−0.16)** |
+| Classifier | SR03-EASA (real only) | + Aya | + Fanar | + Qwen3 | + Qwen3, DM prompt v2 |
+|---|---|---|---|---|---|
+| MARBERT | 88.67 ± 0.39 | 88.75 (+0.08) | 87.57 (−1.10) | 87.53 (−1.14) | 88.43 (−0.24) |
+| MARBERTv2 | 86.06 ± 0.32 | 86.88 (+0.82) | 84.31 (−1.75) | 85.21 (−0.85) | 84.47 (−1.59) |
+| AraBERTv02-Twitter | 84.27 ± 1.03 | 85.29 (+1.02) | 84.27 (+0.00) | 84.31 (+0.04) | 84.27 (+0.00) |
+| ARBERT | 84.39 ± 0.46 | 84.68 (+0.29) | 83.37 (−1.02) | 84.84 (+0.45) | 85.33 (+0.94) |
+| ARBERTv2 | 82.36 ± 0.79 | 83.50 (+1.14) | 82.72 (+0.36) | 82.56 (+0.20) | 83.54 (+1.18) |
+| CAMeLBERT-mix | 81.83 ± 0.31 | 82.52 (+0.69) | 82.11 (+0.28) | 82.72 (+0.89) | 82.31 (+0.48) |
+| CAMeLBERT-DA | 81.50 ± 0.60 | 82.11 (+0.61) | 81.13 (−0.37) | 80.77 (−0.73) | 81.78 (+0.28) |
+| **Mean of 7 BERTs** | **84.15** | **84.82 (+0.66)** | **83.64 (−0.51)** | **83.99 (−0.16)** | **84.30 (+0.15)** |
 
 **SR07-EASA-EM (+ SG03-EASA-EM, English as matrix)**
 
@@ -402,7 +310,7 @@ The pilot repeated with Aya and Fanar (D-037): arms **NM** (no matrix stated), *
 
 **Paired comparisons** (test micro F1, per BERT × generator pair: mean Δ, wins / losses / ties, two-sided sign test)
 
-| Comparison | BERTs (21 pairs) |
+| Comparison | BERTs |
 |---|---|
 | NM vs real only | +0.19, 14 / 7 / 0 (p = 0.19) |
 | DM3 vs real only | −0.00, 13 / 7 / 1 (p = 0.26) |
@@ -413,24 +321,30 @@ The pilot repeated with Aya and Fanar (D-037): arms **NM** (no matrix stated), *
 | NM vs zero-shot (SR03 + SG01) | −0.24, 5 / 16 / 0 (p = 0.03) |
 | DM3 vs zero-shot (SR03 + SG01) | −0.43, 7 / 14 / 0 (p = 0.19) |
 | EM vs zero-shot (SR03 + SG01) | −0.29, 5 / 14 / 2 (p = 0.06) |
+| DM prompt v2 vs real only (Qwen3 only, 7 pairs) | +0.15, 4 / 2 / 1 (p = 0.69) |
+| DM3 vs DM prompt v2 (Qwen3 only, 7 pairs) | −0.31, 3 / 4 / 0 (p = 1.00) |
+
+All rows are over 21 pairs unless marked.
 
 - **The matrix instruction does not separate the arms:** over the 21 pairs the three arms lie within 0.2 of each other (−0.00 to +0.19 against real only) and no comparison between arms is significant.
 - **The generator matters more than the arm:** the Aya sets help in every arm (+0.35 to +0.66), the Fanar sets hurt in every arm (−0.05 to −0.51), Qwen3 is in between (−0.16 to +0.26).
 - **Only Fanar code-switches like EESA:** 21–25% Latin-script words and CMI 18–24 in its NM and DM3 sets (EESA 22.8%, 22.6), and its MTLD is the highest (850–1,045). Its sets are still the least useful.
 - **Aya ignores the instruction and helps most:** 7–12% Latin-script words and 72–81% of texts without a switch in every arm; even its English-matrix set is mostly Arabic (13% of texts mostly English, against 83% for Fanar and 87% for Qwen3). So more EESA-like code-switching did not mean more useful data here.
-- **English-matrix is costly for Fanar and Qwen3:** both needed 3,300 requests (825–845 not parsed, 475–615 under the 10% Arabic-letter rule); Aya filled every set on the first pass with nothing rejected.
-- **Weak NEU labels almost everywhere:** the judge confirms 15–44% of the NEU comments in 8 of the 9 sets (76% for Qwen3 NM), against 80% on real EESA dev.
+- **The dialect-matrix prompt removed English with Qwen3:** prompt v2 gave less English than no instruction (2.5% against 4.8% Latin-script words; 75% of texts with no switch). The rewording (v3) brought Qwen3 only back to the NM level (4.8%), with fewer unparsed outputs (32 against 98) but weaker NEU labels (the judge confirms 44% against 71%), and its set is less useful than v2 (−0.31 over 7 pairs).
+- **English-matrix is costly for Fanar and Qwen3:** both needed 3,300 requests (825–845 not parsed, 475–615 under the 10% Arabic-letter rule); Aya filled every set on the first pass with nothing rejected. The Fanar and Qwen3 English-matrix sets are the mirror of EESA (mostly English with Arabic inserted), not EESA.
+- **Weak NEU labels almost everywhere:** the judge confirms 15–44% of the NEU comments in 8 of the 9 three-generator sets (76% for Qwen3 NM), against 80% on real EESA dev.
+- **Qwen3 has the least variety:** MTLD 42–90 against 216 for SG01-EASA Qwen3 and 1,226 for EESA; its comments are 1.6–2.2 times longer than real ones and often repeat a phrase.
 - **All below the plain zero-shot set:** SG01-EASA scored 84.54–84.61 per generator; NM is below it in 16 of 21 pairs (−0.24, p = 0.03), EM in 14 (−0.29, p = 0.06), DM3 in 14 (−0.43, p = 0.19).
 - **Split by BERT strength:** the three strongest BERTs lose on average in every arm (−0.05 to −0.32); the four weaker ones gain (+0.23 to +0.40). The Fanar sets lower MARBERT by 0.8–1.5 and MARBERTv2 by 0.5–1.8.
 - **By class:** test NEG F1 rises with every set (+0.3 to +1.4). NEU rises with Aya (+0.8 to +1.0) and falls or stays with Fanar (−0.55 to +0.29); POS falls with Fanar (−0.4 to −1.3).
 - **Epoch kept:** 3 in all runs.
 
-**Takeaway: stating the matrix language in the prompt does not change how useful the generated data is (three arms within 0.2 micro F1, none significant, all below the plain zero-shot SG01-EASA sets). What changes the result is the generator: the Aya sets help in every arm and the Fanar sets hurt in every arm, although Fanar is the only one whose code-switching looks like EESA. 3 epochs; the 8-epoch repeat (SR08-EASA) is running.**
+**Takeaway: stating the matrix language in the prompt does not change how useful the generated data is (three arms within 0.2 micro F1, none significant, all below the plain zero-shot SG01-EASA sets). What changes the result is the generator: the Aya sets help in every arm and the Fanar sets hurt in every arm, although Fanar is the only one whose code-switching looks like EESA. Qwen3 does not write Egyptian sentences with inserted English when asked zero-shot, even after rewording. 3 epochs; the 8-epoch repeat is SR08-EASA below.**
 
 Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (runs SR07-EESA-NM / -DM / -DM3 / -EM). Code-switching per text: `results/quality/sentiment/cmi_sg03_eesa_*.json`.
 
 ## SR08-EASA results: matrix-language pilot with 8 epochs (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
-The SR07-EASA runs repeated with 8 epochs instead of 3 (D-036 recipe); nothing else changes (epoch by training loss, learning rate 5e-5). Baseline SR05-EASA (real only, 8 epochs). Arms **NM** (no matrix stated), **DM3** (Egyptian Arabic as matrix, prompt v3) and **EM** (English as matrix), 3 generators, 189 runs, plus the Qwen3 dialect-matrix set with prompt v2 (21 runs). 210 runs, no failure. Registry runs SR08-EESA-NM / -DM / -DM3 / -EM (folders `sr08{nm,dm,dm3,em}_eesa_*`). The sets and their code-switching are in the SR07-EASA sections above.
+The SR07-EASA runs repeated with 8 epochs instead of 3 (D-036 recipe); nothing else changes (epoch by training loss, learning rate 5e-5). Baseline SR05-EASA (real only, 8 epochs). Arms **NM** (no matrix stated), **DM3** (Egyptian Arabic as matrix, prompt v3) and **EM** (English as matrix), 3 generators, 189 runs, plus the Qwen3 dialect-matrix set with prompt v2 (21 runs). 210 runs, no failure. Registry runs SR08-EESA-NM / -DM / -DM3 / -EM (folders `sr08{nm,dm,dm3,em}_eesa_*`). The sets and their code-switching are in the SR07-EASA section above.
 
 **SR08-EASA-NM (+ SG03-EASA-NM, no matrix stated)**
 

@@ -41,7 +41,7 @@ Per-class F1 (mean over seeds):
 | SR01-arbertv2 | 79.1 | 79.2 | 68.4 | 76.1 | 44.7 | 62.4 |
 | SR01-camelbert_da | 75.8 | 78.0 | 70.9 | 77.2 | 46.0 | 62.8 |
 
-## SR01-EESA: Real only on EESA (data version E2, D-032): EESA train 2,463 / dev 818 / test 818, the 7 BERTs, 3 seeds, SR01 recipe. Baseline for SR02-EESA, SR05-EESA and SR06-EESA.
+## SR01-EESA: Real only on EESA (data version E2, D-032): EESA train 2,463 / dev 818 / test 818, the 7 BERTs, 3 seeds, SR01 recipe. Baseline for SR02-EESA.
 
 | ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -585,6 +585,72 @@ Per-class F1 (mean over seeds):
 | SR05-camelbert_da_fanar | 75.9 | 78.0 | 68.4 | 76.6 | 46.6 | 59.4 |
 | SR05-camelbert_da_qwen3 | 75.4 | 78.0 | 68.3 | 76.8 | 45.1 | 59.8 |
 
+## SR05-EESA: SR03-EESA BERT runs repeated with 8 epochs instead of 3 (Ammar, 2026-11-14; every 3-epoch run kept its last epoch); nothing else changes (epoch by training loss, D-035). Members <classifier> = real only; <classifier>_<generator> = EESA train + 1,320 SG01-EESA texts. 7 BERTs x 3 seeds, no LLM classifiers. Baseline for SR06-EESA and SR06-random-EESA. The ID was first reserved for a minimal-pair plan (SG03-EESA) that was never run.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR05-EESA-marbert | 3 | **91.41 ± 1.16** | 91.51 ± 1.19 | 91.33 ± 1.14 | 91.89 ± 1.03 | 92.58 ± 0.93 | 90.07 / 92.01 / 92.15 | **89.12 ± 0.53** | 89.98 ± 0.53 | 90.72 ± 0.40 | 8 / 8 / 8 | 2 | `sr05_eesa_marbert` |
+| SR05-EESA-marbert_aya | 3 | **91.32 ± 0.22** | 91.41 ± 0.20 | 91.26 ± 0.27 | 91.77 ± 0.19 | 92.37 ± 0.28 | 91.41 / 91.07 / 91.48 | **88.41 ± 0.49** | 89.28 ± 0.46 | 90.13 ± 0.38 | 8 / 7 / 7 | 2 | `sr05_eesa_marbert_aya` |
+| SR05-EESA-marbert_qwen3 | 3 | **90.81 ± 0.56** | 91.03 ± 0.40 | 90.61 ± 0.69 | 91.24 ± 0.46 | 92.03 ± 0.44 | 91.16 / 90.16 / 91.10 | **88.16 ± 0.77** | 89.08 ± 0.75 | 89.88 ± 0.58 | 8 / 7 / 8 | 2 | `sr05_eesa_marbert_qwen3` |
+| SR05-EESA-marbert_fanar | 3 | **90.80 ± 0.31** | 90.83 ± 0.46 | 90.79 ± 0.21 | 91.16 ± 0.37 | 92.09 ± 0.15 | 91.15 / 90.54 / 90.71 | **88.16 ± 0.57** | 88.92 ± 0.51 | 90.03 ± 0.72 | 8 / 8 / 8 | 2 | `sr05_eesa_marbert_fanar` |
+| SR05-EESA-marbertv2_aya | 3 | **90.34 ± 0.43** | 90.14 ± 0.46 | 90.65 ± 0.25 | 90.67 ± 0.28 | 91.88 ± 0.33 | 89.85 / 90.62 / 90.56 | **88.25 ± 0.27** | 88.88 ± 0.24 | 90.38 ± 0.13 | 8 / 8 / 8 | 2 | `sr05_eesa_marbertv2_aya` |
+| SR05-EESA-marbertv2 | 3 | **89.30 ± 0.52** | 89.17 ± 0.56 | 89.74 ± 0.47 | 90.02 ± 0.49 | 91.05 ± 0.35 | 89.00 / 89.91 / 89.01 | **88.58 ± 0.50** | 89.28 ± 0.39 | 90.58 ± 0.43 | 7 / 8 / 8 | 2 | `sr05_eesa_marbertv2` |
+| SR05-EESA-marbertv2_fanar | 3 | **89.18 ± 0.72** | 89.09 ± 0.61 | 89.43 ± 0.76 | 89.65 ± 0.60 | 90.98 ± 0.43 | 88.64 / 90.01 / 88.91 | **88.58 ± 0.17** | 89.08 ± 0.07 | 90.72 ± 0.29 | 8 / 8 / 8 | 2 | `sr05_eesa_marbertv2_fanar` |
+| SR05-EESA-marbertv2_qwen3 | 3 | **88.93 ± 0.35** | 88.73 ± 0.46 | 89.34 ± 0.36 | 89.49 ± 0.37 | 90.76 ± 0.40 | 89.22 / 88.55 / 89.02 | **88.10 ± 0.59** | 88.79 ± 0.49 | 90.25 ± 0.34 | 8 / 8 / 8 | 2 | `sr05_eesa_marbertv2_qwen3` |
+| SR05-EESA-arabertv02_twitter | 3 | **87.65 ± 0.17** | 87.69 ± 0.37 | 87.70 ± 0.18 | 88.18 ± 0.19 | 88.95 ± 0.20 | 87.50 / 87.62 / 87.83 | **86.07 ± 0.10** | 86.88 ± 0.07 | 87.79 ± 0.11 | 8 / 8 / 8 | 2 | `sr05_eesa_arabertv02_twitter` |
+| SR05-EESA-arabertv02_twitter_qwen3 | 3 | **87.03 ± 0.84** | 86.84 ± 0.87 | 87.28 ± 0.82 | 87.69 ± 0.80 | 88.24 ± 0.73 | 87.02 / 87.89 / 86.20 | **85.92 ± 0.27** | 86.59 ± 0.25 | 87.66 ± 0.23 | 8 / 8 / 8 | 2 | `sr05_eesa_arabertv02_twitter_qwen3` |
+| SR05-EESA-arabertv02_twitter_aya | 3 | **86.44 ± 0.44** | 86.44 ± 0.39 | 86.57 ± 0.47 | 87.25 ± 0.46 | 87.69 ± 0.49 | 86.23 / 86.95 / 86.13 | **85.40 ± 0.23** | 86.15 ± 0.19 | 87.27 ± 0.19 | 8 / 8 / 8 | 2 | `sr05_eesa_arabertv02_twitter_aya` |
+| SR05-EESA-arabertv02_twitter_fanar | 3 | **86.12 ± 0.78** | 86.10 ± 0.71 | 86.19 ± 0.86 | 86.80 ± 0.68 | 87.50 ± 0.66 | 86.33 / 86.77 / 85.25 | **85.86 ± 0.43** | 86.39 ± 0.43 | 87.77 ± 0.30 | 8 / 8 / 8 | 2 | `sr05_eesa_arabertv02_twitter_fanar` |
+| SR05-EESA-arbert_qwen3 | 3 | **86.11 ± 0.78** | 86.24 ± 0.93 | 86.06 ± 0.72 | 86.96 ± 0.67 | 87.62 ± 0.67 | 86.64 / 85.22 / 86.47 | **86.17 ± 0.64** | 87.16 ± 0.56 | 87.65 ± 0.70 | 8 / 8 / 8 | 2 | `sr05_eesa_arbert_qwen3` |
+| SR05-EESA-arbert_aya | 3 | **86.09 ± 0.45** | 86.48 ± 0.63 | 85.89 ± 0.41 | 86.96 ± 0.37 | 87.50 ± 0.53 | 86.47 / 85.59 / 86.21 | **85.38 ± 0.51** | 86.43 ± 0.42 | 86.73 ± 0.58 | 8 / 8 / 8 | 2 | `sr05_eesa_arbert_aya` |
+| SR05-EESA-arbert | 3 | **85.88 ± 1.41** | 86.21 ± 1.11 | 85.67 ± 1.67 | 86.63 ± 1.35 | 87.83 ± 1.06 | 86.91 / 86.47 / 84.27 | **84.91 ± 0.32** | 86.10 ± 0.25 | 86.63 ± 0.64 | 8 / 8 / 8 | 2 | `sr05_eesa_arbert` |
+| SR05-EESA-arbert_fanar | 3 | **85.36 ± 0.38** | 85.64 ± 0.58 | 85.24 ± 0.46 | 85.98 ± 0.31 | 87.08 ± 0.71 | 85.27 / 85.03 / 85.77 | **85.92 ± 0.51** | 86.84 ± 0.49 | 87.29 ± 0.50 | 8 / 8 / 8 | 2 | `sr05_eesa_arbert_fanar` |
+| SR05-EESA-camelbert_mix_qwen3 | 3 | **85.07 ± 0.08** | 84.94 ± 0.19 | 85.54 ± 0.10 | 85.82 ± 0.12 | 86.56 ± 0.08 | 85.05 / 85.16 / 85.01 | **83.47 ± 0.69** | 84.52 ± 0.58 | 84.66 ± 0.66 | 8 / 8 / 8 | 2 | `sr05_eesa_camelbert_mix_qwen3` |
+| SR05-EESA-camelbert_mix_aya | 3 | **84.92 ± 0.47** | 84.70 ± 0.49 | 85.54 ± 0.51 | 85.66 ± 0.43 | 86.84 ± 0.65 | 84.42 / 84.97 / 85.36 | **83.35 ± 0.71** | 84.31 ± 0.60 | 84.70 ± 0.56 | 8 / 8 / 8 | 2 | `sr05_eesa_camelbert_mix_aya` |
+| SR05-EESA-camelbert_mix | 3 | **84.92 ± 0.49** | 84.89 ± 0.50 | 85.63 ± 0.46 | 85.74 ± 0.46 | 86.74 ± 0.34 | 84.36 / 85.11 / 85.28 | **83.38 ± 0.70** | 84.43 ± 0.58 | 84.99 ± 0.35 | 7 / 8 / 8 | 1 | `sr05_eesa_camelbert_mix` |
+| SR05-EESA-arbertv2_aya | 3 | **84.84 ± 0.36** | 84.84 ± 0.49 | 85.23 ± 0.08 | 85.70 ± 0.21 | 87.38 ± 0.33 | 84.66 / 84.59 / 85.26 | **83.70 ± 0.87** | 84.60 ± 0.88 | 85.67 ± 0.97 | 8 / 8 / 8 | 2 | `sr05_eesa_arbertv2_aya` |
+| SR05-EESA-arbertv2_fanar | 3 | **84.68 ± 1.24** | 84.57 ± 1.24 | 85.02 ± 1.18 | 85.41 ± 1.17 | 87.00 ± 1.14 | 84.55 / 83.51 / 85.99 | **83.94 ± 0.75** | 84.84 ± 0.68 | 85.81 ± 0.72 | 8 / 8 / 8 | 2 | `sr05_eesa_arbertv2_fanar` |
+| SR05-EESA-arbertv2 | 3 | **84.35 ± 0.42** | 84.92 ± 0.39 | 84.75 ± 0.35 | 85.33 ± 0.37 | 87.13 ± 0.49 | 84.76 / 83.93 / 84.37 | **83.68 ± 0.53** | 84.84 ± 0.42 | 85.96 ± 0.53 | 8 / 8 / 8 | 2 | `sr05_eesa_arbertv2` |
+| SR05-EESA-arbertv2_qwen3 | 3 | **84.21 ± 0.72** | 84.25 ± 0.72 | 84.44 ± 0.67 | 85.17 ± 0.63 | 86.28 ± 0.50 | 84.83 / 83.43 / 84.38 | **84.27 ± 0.34** | 85.29 ± 0.28 | 86.01 ± 0.67 | 7 / 8 / 8 | 2 | `sr05_eesa_arbertv2_qwen3` |
+| SR05-EESA-camelbert_mix_fanar | 3 | **84.13 ± 1.02** | 83.98 ± 0.99 | 84.67 ± 1.04 | 84.92 ± 0.99 | 86.20 ± 1.13 | 83.57 / 83.51 / 85.30 | **83.58 ± 0.58** | 84.52 ± 0.46 | 84.88 ± 0.47 | 8 / 8 / 8 | 2 | `sr05_eesa_camelbert_mix_fanar` |
+| SR05-EESA-camelbert_da_aya | 3 | **83.08 ± 0.83** | 82.77 ± 0.85 | 83.55 ± 0.71 | 83.82 ± 0.81 | 84.45 ± 0.71 | 82.83 / 82.39 / 84.00 | **82.10 ± 0.83** | 82.89 ± 0.80 | 83.85 ± 0.82 | 8 / 8 / 8 | 2 | `sr05_eesa_camelbert_da_aya` |
+| SR05-EESA-camelbert_da_fanar | 3 | **82.89 ± 1.04** | 82.59 ± 1.03 | 83.28 ± 1.04 | 83.62 ± 1.00 | 84.36 ± 0.94 | 83.75 / 81.74 / 83.18 | **82.12 ± 0.44** | 83.01 ± 0.44 | 83.68 ± 0.28 | 8 / 8 / 8 | 2 | `sr05_eesa_camelbert_da_fanar` |
+| SR05-EESA-camelbert_da | 3 | **82.54 ± 0.39** | 82.40 ± 0.33 | 83.12 ± 0.36 | 83.37 ± 0.32 | 84.81 ± 0.26 | 82.70 / 82.83 / 82.10 | **81.76 ± 0.98** | 82.76 ± 0.86 | 83.78 ± 0.80 | 8 / 8 / 8 | 1 | `sr05_eesa_camelbert_da` |
+| SR05-EESA-camelbert_da_qwen3 | 3 | **82.42 ± 0.59** | 82.07 ± 0.61 | 82.93 ± 0.58 | 83.21 ± 0.67 | 84.06 ± 0.41 | 83.10 / 81.99 / 82.19 | **82.67 ± 0.39** | 83.54 ± 0.39 | 84.33 ± 0.28 | 8 / 8 / 8 | 2 | `sr05_eesa_camelbert_da_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR05-EESA-marbert | 90.6 | 89.1 | 94.6 | 87.3 | 85.9 | 94.1 |
+| SR05-EESA-marbert_aya | 90.5 | 89.2 | 94.3 | 86.6 | 85.0 | 93.7 |
+| SR05-EESA-marbert_qwen3 | 90.3 | 88.4 | 93.8 | 86.1 | 84.7 | 93.7 |
+| SR05-EESA-marbert_fanar | 90.7 | 88.2 | 93.5 | 86.9 | 84.4 | 93.2 |
+| SR05-EESA-marbertv2_aya | 90.7 | 87.3 | 93.0 | 87.7 | 84.0 | 93.0 |
+| SR05-EESA-marbertv2 | 88.2 | 85.8 | 93.9 | 87.8 | 84.6 | 93.4 |
+| SR05-EESA-marbertv2_fanar | 89.4 | 85.6 | 92.6 | 88.8 | 84.3 | 92.7 |
+| SR05-EESA-marbertv2_qwen3 | 88.6 | 85.3 | 92.9 | 87.6 | 83.8 | 92.9 |
+| SR05-EESA-arabertv02_twitter | 86.5 | 85.1 | 91.4 | 84.0 | 82.6 | 91.6 |
+| SR05-EESA-arabertv02_twitter_qwen3 | 85.1 | 84.6 | 91.4 | 84.5 | 82.4 | 90.9 |
+| SR05-EESA-arabertv02_twitter_aya | 83.7 | 83.9 | 91.7 | 83.5 | 81.7 | 91.1 |
+| SR05-EESA-arabertv02_twitter_fanar | 84.4 | 83.4 | 90.6 | 85.1 | 82.1 | 90.4 |
+| SR05-EESA-arbert_qwen3 | 83.6 | 83.1 | 91.6 | 83.2 | 83.2 | 92.1 |
+| SR05-EESA-arbert_aya | 83.5 | 83.3 | 91.5 | 81.8 | 82.7 | 91.6 |
+| SR05-EESA-arbert | 85.1 | 82.0 | 90.6 | 81.7 | 81.5 | 91.5 |
+| SR05-EESA-arbert_fanar | 84.3 | 81.9 | 89.9 | 83.1 | 83.2 | 91.5 |
+| SR05-EESA-camelbert_mix_qwen3 | 83.3 | 82.1 | 89.8 | 79.8 | 81.1 | 89.6 |
+| SR05-EESA-camelbert_mix_aya | 83.8 | 81.1 | 89.9 | 80.0 | 80.7 | 89.4 |
+| SR05-EESA-camelbert_mix | 83.3 | 81.3 | 90.2 | 80.1 | 80.1 | 89.9 |
+| SR05-EESA-arbertv2_aya | 84.3 | 79.8 | 90.5 | 81.9 | 79.8 | 89.4 |
+| SR05-EESA-arbertv2_fanar | 84.3 | 80.0 | 89.7 | 81.9 | 80.2 | 89.7 |
+| SR05-EESA-arbertv2 | 84.3 | 78.8 | 90.0 | 81.7 | 79.1 | 90.2 |
+| SR05-EESA-arbertv2_qwen3 | 82.5 | 80.1 | 90.1 | 81.8 | 80.8 | 90.3 |
+| SR05-EESA-camelbert_mix_fanar | 83.0 | 80.0 | 89.4 | 80.4 | 81.0 | 89.3 |
+| SR05-EESA-camelbert_da_aya | 80.9 | 80.3 | 88.0 | 80.1 | 78.6 | 87.6 |
+| SR05-EESA-camelbert_da_fanar | 80.9 | 79.9 | 87.8 | 79.3 | 79.0 | 88.0 |
+| SR05-EESA-camelbert_da | 81.5 | 78.0 | 88.1 | 79.4 | 77.7 | 88.1 |
+| SR05-EESA-camelbert_da_qwen3 | 80.2 | 79.1 | 87.9 | 80.4 | 79.4 | 88.3 |
+
 ## SR05-EESA-XFER: TRANSFER RUN, not an EESA result (D-032 revised): EESA real + SG03 subset (D-032): EESA train + 880 SG03 texts (440 whole pairs, pair types in SR05 shares; synthetic = 0.36 x real as in SR05); 7 BERTs, 3 seeds. SG03 targets ArSarcasm-v2 dev hard cases, not EESA. Member = <classifier>_<generator>. Stopped 2026-11-08 07:08 after 15 runs (seed 42, MARBERTv2 and MARBERT); renamed from sr0N_eesa_* (results/sentiment/renames_2026-11-08.json).
 
 | ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
@@ -657,6 +723,58 @@ Per-class F1 (mean over seeds):
 | SR06-camelbert_da_fanar | 75.2 | 77.3 | 68.4 | 76.4 | 47.6 | 60.8 |
 | SR06-camelbert_da_aya | 75.1 | 76.9 | 68.6 | 75.0 | 45.5 | 60.2 |
 
+## SR06-EESA: SR04-EESA BERT runs repeated with 8 epochs instead of 3 (Ammar, 2026-11-14): EESA train + 1,320 SG02-EESA texts (targeted few-shot, DEV-CONTAMINATED, D-034); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. The ID was first reserved for a minimal-pair control (SG03-random-EESA) that was never run.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR06-EESA-marbert_qwen3 | 3 | **92.73 ± 0.39** | 92.74 ± 0.31 | 92.74 ± 0.46 | 93.07 ± 0.39 | 93.39 ± 0.13 | 93.18 / 92.51 / 92.51 | **88.10 ± 0.23** | 89.00 ± 0.24 | 89.63 ± 0.35 | 8 / 8 / 8 | 2 | `sr06_eesa_marbert_qwen3` |
+| SR06-EESA-marbertv2_qwen3 | 3 | **91.79 ± 0.17** | 91.87 ± 0.34 | 91.75 ± 0.03 | 92.05 ± 0.12 | 92.93 ± 0.26 | 91.62 / 91.79 / 91.96 | **87.59 ± 0.54** | 88.30 ± 0.55 | 89.53 ± 0.54 | 8 / 8 / 8 | 2 | `sr06_eesa_marbertv2_qwen3` |
+| SR06-EESA-marbert_aya | 3 | **91.40 ± 0.67** | 91.52 ± 0.75 | 91.31 ± 0.68 | 91.85 ± 0.60 | 92.31 ± 0.69 | 92.17 / 91.02 / 91.01 | **88.45 ± 0.55** | 89.28 ± 0.51 | 90.22 ± 0.54 | 8 / 7 / 8 | 2 | `sr06_eesa_marbert_aya` |
+| SR06-EESA-marbert_fanar | 3 | **90.90 ± 0.25** | 90.94 ± 0.16 | 90.90 ± 0.35 | 91.28 ± 0.25 | 92.21 ± 0.20 | 90.90 / 90.64 / 91.15 | **88.10 ± 0.33** | 88.88 ± 0.37 | 89.89 ± 0.49 | 8 / 7 / 8 | 2 | `sr06_eesa_marbert_fanar` |
+| SR06-EESA-marbertv2_aya | 3 | **90.50 ± 0.60** | 90.34 ± 0.64 | 90.70 ± 0.48 | 90.83 ± 0.53 | 91.78 ± 0.44 | 89.81 / 90.78 / 90.90 | **88.16 ± 0.22** | 88.71 ± 0.14 | 90.56 ± 0.08 | 8 / 8 / 8 | 2 | `sr06_eesa_marbertv2_aya` |
+| SR06-EESA-marbertv2_fanar | 3 | **90.00 ± 0.67** | 89.94 ± 0.66 | 90.07 ± 0.70 | 90.34 ± 0.64 | 91.53 ± 0.80 | 90.77 / 89.67 / 89.55 | **88.53 ± 0.67** | 89.16 ± 0.67 | 90.56 ± 0.53 | 8 / 8 / 8 | 2 | `sr06_eesa_marbertv2_fanar` |
+| SR06-EESA-arabertv02_twitter_qwen3 | 3 | **88.52 ± 0.52** | 88.57 ± 0.60 | 88.50 ± 0.44 | 89.16 ± 0.49 | 89.68 ± 0.37 | 88.20 / 89.13 / 88.24 | **85.58 ± 0.41** | 86.35 ± 0.31 | 87.23 ± 0.59 | 8 / 8 / 8 | 2 | `sr06_eesa_arabertv02_twitter_qwen3` |
+| SR06-EESA-arabertv02_twitter_aya | 3 | **87.22 ± 0.70** | 87.38 ± 0.73 | 87.18 ± 0.63 | 87.98 ± 0.56 | 88.12 ± 0.60 | 86.94 / 88.01 / 86.71 | **85.72 ± 0.53** | 86.55 ± 0.42 | 87.26 ± 0.60 | 8 / 8 / 8 | 2 | `sr06_eesa_arabertv02_twitter_aya` |
+| SR06-EESA-camelbert_mix_qwen3 | 3 | **87.06 ± 0.41** | 86.88 ± 0.36 | 87.28 ± 0.45 | 87.73 ± 0.39 | 87.75 ± 0.30 | 87.16 / 86.62 / 87.41 | **83.85 ± 0.19** | 84.80 ± 0.14 | 84.90 ± 0.20 | 8 / 8 / 8 | 2 | `sr06_eesa_camelbert_mix_qwen3` |
+| SR06-EESA-arabertv02_twitter_fanar | 3 | **86.54 ± 0.32** | 86.53 ± 0.35 | 86.58 ± 0.30 | 87.33 ± 0.25 | 87.73 ± 0.35 | 86.64 / 86.79 / 86.18 | **85.87 ± 0.19** | 86.59 ± 0.14 | 87.70 ± 0.25 | 8 / 8 / 8 | 2 | `sr06_eesa_arabertv02_twitter_fanar` |
+| SR06-EESA-arbert_qwen3 | 3 | **86.39 ± 0.58** | 87.20 ± 0.67 | 86.05 ± 0.55 | 87.29 ± 0.53 | 87.51 ± 0.90 | 86.72 / 86.73 / 85.73 | **84.70 ± 0.51** | 85.98 ± 0.39 | 85.96 ± 0.49 | 8 / 8 / 8 | 2 | `sr06_eesa_arbert_qwen3` |
+| SR06-EESA-arbert_aya | 3 | **85.82 ± 0.23** | 86.74 ± 0.38 | 85.45 ± 0.24 | 86.72 ± 0.19 | 87.00 ± 0.43 | 85.80 / 85.60 / 86.07 | **85.55 ± 0.71** | 86.67 ± 0.64 | 86.60 ± 0.80 | 8 / 8 / 8 | 2 | `sr06_eesa_arbert_aya` |
+| SR06-EESA-camelbert_mix_aya | 3 | **85.59 ± 0.49** | 85.34 ± 0.44 | 86.04 ± 0.43 | 86.23 ± 0.43 | 87.03 ± 0.54 | 85.57 / 85.12 / 86.10 | **84.08 ± 0.53** | 85.04 ± 0.51 | 85.08 ± 0.46 | 8 / 8 / 8 | 2 | `sr06_eesa_camelbert_mix_aya` |
+| SR06-EESA-arbertv2_qwen3 | 3 | **84.98 ± 0.37** | 85.42 ± 0.44 | 84.62 ± 0.32 | 85.98 ± 0.25 | 86.42 ± 0.30 | 85.21 / 84.56 / 85.17 | **83.88 ± 0.95** | 85.00 ± 0.92 | 85.64 ± 0.68 | 8 / 8 / 8 | 2 | `sr06_eesa_arbertv2_qwen3` |
+| SR06-EESA-camelbert_mix_fanar | 3 | **84.86 ± 0.69** | 84.58 ± 0.66 | 85.43 ± 0.71 | 85.57 ± 0.65 | 86.28 ± 0.83 | 84.37 / 84.57 / 85.65 | **83.60 ± 1.02** | 84.56 ± 0.92 | 84.86 ± 0.76 | 8 / 8 / 8 | 2 | `sr06_eesa_camelbert_mix_fanar` |
+| SR06-EESA-arbert_fanar | 3 | **84.70 ± 0.21** | 85.55 ± 0.26 | 84.41 ± 0.15 | 85.57 ± 0.12 | 85.97 ± 0.60 | 84.93 / 84.51 / 84.67 | **84.94 ± 0.12** | 86.02 ± 0.07 | 86.14 ± 0.24 | 8 / 8 / 8 | 2 | `sr06_eesa_arbert_fanar` |
+| SR06-EESA-arbertv2_aya | 3 | **84.67 ± 1.08** | 84.72 ± 1.17 | 84.65 ± 0.98 | 85.53 ± 0.92 | 86.37 ± 0.86 | 83.43 / 85.31 / 85.27 | **83.40 ± 0.11** | 84.35 ± 0.24 | 84.89 ± 0.02 | 8 / 8 / 8 | 2 | `sr06_eesa_arbertv2_aya` |
+| SR06-EESA-camelbert_da_qwen3 | 3 | **84.64 ± 0.36** | 84.53 ± 0.30 | 84.78 ± 0.40 | 85.33 ± 0.44 | 85.48 ± 0.19 | 84.30 / 84.62 / 85.01 | **82.17 ± 0.54** | 83.05 ± 0.49 | 83.66 ± 0.47 | 8 / 8 / 8 | 2 | `sr06_eesa_camelbert_da_qwen3` |
+| SR06-EESA-arbertv2_fanar | 3 | **83.98 ± 0.84** | 84.10 ± 0.91 | 83.88 ± 0.79 | 84.88 ± 0.63 | 85.83 ± 0.90 | 83.31 / 83.72 / 84.93 | **84.04 ± 0.48** | 84.96 ± 0.37 | 85.65 ± 0.47 | 8 / 8 / 8 | 2 | `sr06_eesa_arbertv2_fanar` |
+| SR06-EESA-camelbert_da_aya | 3 | **83.16 ± 1.18** | 82.91 ± 1.20 | 83.48 ± 1.17 | 83.86 ± 1.06 | 84.21 ± 0.93 | 82.49 / 82.47 / 84.52 | **81.89 ± 0.30** | 82.89 ± 0.21 | 83.23 ± 0.23 | 8 / 8 / 8 | 2 | `sr06_eesa_camelbert_da_aya` |
+| SR06-EESA-camelbert_da_fanar | 3 | **82.64 ± 0.85** | 82.50 ± 0.78 | 82.81 ± 0.92 | 83.46 ± 0.92 | 84.00 ± 0.56 | 83.07 / 81.66 / 83.18 | **81.90 ± 0.53** | 82.84 ± 0.46 | 83.43 ± 0.50 | 8 / 8 / 8 | 2 | `sr06_eesa_camelbert_da_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR06-EESA-marbert_qwen3 | 91.9 | 91.4 | 94.9 | 85.9 | 85.0 | 93.4 |
+| SR06-EESA-marbertv2_qwen3 | 92.0 | 89.5 | 93.8 | 86.7 | 83.7 | 92.4 |
+| SR06-EESA-marbert_aya | 90.4 | 89.6 | 94.2 | 86.8 | 84.9 | 93.6 |
+| SR06-EESA-marbert_fanar | 90.7 | 88.3 | 93.7 | 86.7 | 84.5 | 93.1 |
+| SR06-EESA-marbertv2_aya | 90.4 | 87.9 | 93.1 | 88.5 | 83.4 | 92.6 |
+| SR06-EESA-marbertv2_fanar | 90.3 | 86.9 | 92.8 | 87.9 | 84.5 | 93.2 |
+| SR06-EESA-arabertv02_twitter_qwen3 | 86.8 | 86.2 | 92.6 | 83.7 | 82.3 | 90.8 |
+| SR06-EESA-arabertv02_twitter_aya | 84.5 | 85.4 | 91.8 | 83.1 | 82.6 | 91.4 |
+| SR06-EESA-camelbert_mix_qwen3 | 84.5 | 85.7 | 91.0 | 80.4 | 81.7 | 89.4 |
+| SR06-EESA-arabertv02_twitter_fanar | 84.0 | 84.1 | 91.5 | 84.2 | 82.2 | 91.2 |
+| SR06-EESA-arbert_qwen3 | 83.4 | 84.1 | 91.7 | 80.4 | 82.2 | 91.5 |
+| SR06-EESA-arbert_aya | 82.8 | 83.5 | 91.2 | 81.4 | 83.4 | 91.8 |
+| SR06-EESA-camelbert_mix_aya | 84.2 | 82.7 | 89.8 | 80.2 | 82.1 | 90.0 |
+| SR06-EESA-arbertv2_qwen3 | 82.2 | 82.1 | 90.6 | 81.0 | 80.3 | 90.2 |
+| SR06-EESA-camelbert_mix_fanar | 83.0 | 82.0 | 89.6 | 80.1 | 81.1 | 89.6 |
+| SR06-EESA-arbert_fanar | 81.8 | 82.2 | 90.2 | 81.0 | 82.5 | 91.2 |
+| SR06-EESA-arbertv2_aya | 82.7 | 81.3 | 90.1 | 80.6 | 80.4 | 89.2 |
+| SR06-EESA-camelbert_da_qwen3 | 82.1 | 83.0 | 88.8 | 79.5 | 79.2 | 87.8 |
+| SR06-EESA-arbertv2_fanar | 82.0 | 80.3 | 89.6 | 81.5 | 80.8 | 89.8 |
+| SR06-EESA-camelbert_da_aya | 80.7 | 81.1 | 87.7 | 78.3 | 79.2 | 88.1 |
+| SR06-EESA-camelbert_da_fanar | 80.2 | 79.9 | 87.8 | 78.9 | 78.8 | 87.9 |
+
 ## SR06-EESA-XFER: TRANSFER RUN, not an EESA result (D-032 revised): EESA real + SG03-random subset (D-032), the size-matched control for SR05-EESA: EESA train + 880 SG03-random texts (440 whole pairs, 0.36 x real); 7 BERTs, 3 seeds. Member = <classifier>_<generator>. Stopped 2026-11-08 07:08 after 15 runs (seed 42, MARBERTv2 and MARBERT); renamed from sr0N_eesa_* (results/sentiment/renames_2026-11-08.json).
 
 | ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
@@ -676,6 +794,58 @@ Per-class F1 (mean over seeds):
 | SR06-EESA-XFER-marbertv2_fanar | 86.4 | 81.9 | 92.2 | 84.2 | 81.6 | 91.9 |
 | SR06-EESA-XFER-marbertv2_qwen3 | 85.4 | 81.2 | 91.9 | 82.9 | 80.7 | 91.0 |
 | SR06-EESA-XFER-marbertv2_aya | 85.0 | 80.8 | 91.9 | 84.6 | 81.9 | 91.5 |
+
+## SR06-random-EESA: SR04-random-EESA BERT runs repeated with 8 epochs instead of 3 (Ammar, 2026-11-14): EESA train + 1,320 SG02-random-EESA texts (random-example few-shot, D-034); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR06-random-EESA-marbert_qwen3 | 3 | **91.65 ± 0.77** | 91.72 ± 0.70 | 91.58 ± 0.83 | 92.01 ± 0.70 | 92.68 ± 0.43 | 92.50 / 91.01 / 91.43 | **88.35 ± 0.57** | 89.24 ± 0.56 | 89.53 ± 0.39 | 8 / 7 / 8 | 2 | `sr06r_eesa_marbert_qwen3` |
+| SR06-random-EESA-marbert_aya | 3 | **90.81 ± 0.74** | 90.83 ± 0.65 | 90.82 ± 0.83 | 91.24 ± 0.67 | 91.98 ± 0.67 | 91.33 / 89.97 / 91.14 | **88.06 ± 0.83** | 88.92 ± 0.81 | 89.69 ± 0.57 | 8 / 7 / 8 | 2 | `sr06r_eesa_marbert_aya` |
+| SR06-random-EESA-marbert_fanar | 3 | **90.50 ± 0.32** | 90.62 ± 0.44 | 90.41 ± 0.22 | 90.87 ± 0.28 | 91.68 ± 0.27 | 90.37 / 90.87 / 90.27 | **88.29 ± 0.74** | 89.12 ± 0.68 | 89.91 ± 0.60 | 8 / 7 / 8 | 2 | `sr06r_eesa_marbert_fanar` |
+| SR06-random-EESA-marbertv2_aya | 3 | **90.39 ± 0.47** | 90.18 ± 0.45 | 90.70 ± 0.40 | 90.75 ± 0.37 | 91.84 ± 0.38 | 89.86 / 90.57 / 90.73 | **87.97 ± 0.53** | 88.55 ± 0.51 | 90.07 ± 0.64 | 8 / 8 / 8 | 2 | `sr06r_eesa_marbertv2_aya` |
+| SR06-random-EESA-marbertv2_qwen3 | 3 | **89.96 ± 0.52** | 89.68 ± 0.46 | 90.37 ± 0.57 | 90.46 ± 0.44 | 91.52 ± 0.46 | 89.40 / 90.43 / 90.06 | **88.11 ± 0.26** | 88.75 ± 0.32 | 90.27 ± 0.27 | 8 / 8 / 8 | 2 | `sr06r_eesa_marbertv2_qwen3` |
+| SR06-random-EESA-marbertv2_fanar | 3 | **88.80 ± 0.92** | 88.66 ± 0.93 | 89.24 ± 0.86 | 89.41 ± 0.86 | 90.85 ± 0.43 | 88.84 / 89.70 / 87.85 | **88.12 ± 0.46** | 88.67 ± 0.49 | 90.43 ± 0.23 | 8 / 8 / 8 | 2 | `sr06r_eesa_marbertv2_fanar` |
+| SR06-random-EESA-arabertv02_twitter_aya | 3 | **87.51 ± 0.51** | 87.41 ± 0.46 | 87.70 ± 0.55 | 88.26 ± 0.44 | 88.45 ± 0.53 | 87.69 / 87.90 / 86.93 | **85.79 ± 0.72** | 86.47 ± 0.63 | 87.57 ± 0.77 | 8 / 8 / 8 | 2 | `sr06r_eesa_arabertv02_twitter_aya` |
+| SR06-random-EESA-arabertv02_twitter_qwen3 | 3 | **87.05 ± 0.62** | 87.06 ± 0.47 | 87.11 ± 0.74 | 87.86 ± 0.46 | 88.22 ± 0.40 | 86.66 / 87.76 / 86.74 | **85.10 ± 0.54** | 85.86 ± 0.60 | 86.82 ± 0.50 | 8 / 8 / 8 | 2 | `sr06r_eesa_arabertv02_twitter_qwen3` |
+| SR06-random-EESA-arabertv02_twitter_fanar | 3 | **85.95 ± 0.36** | 85.93 ± 0.24 | 86.02 ± 0.47 | 86.76 ± 0.25 | 87.21 ± 0.33 | 85.97 / 86.30 / 85.58 | **85.92 ± 0.56** | 86.59 ± 0.43 | 87.61 ± 0.60 | 8 / 8 / 8 | 2 | `sr06r_eesa_arabertv02_twitter_fanar` |
+| SR06-random-EESA-arbert_aya | 3 | **85.80 ± 0.35** | 86.16 ± 0.22 | 85.63 ± 0.45 | 86.63 ± 0.31 | 87.20 ± 0.38 | 85.41 / 85.94 / 86.06 | **86.16 ± 0.28** | 87.12 ± 0.19 | 87.38 ± 0.32 | 8 / 8 / 8 | 2 | `sr06r_eesa_arbert_aya` |
+| SR06-random-EESA-arbert_fanar | 3 | **85.71 ± 0.35** | 85.82 ± 0.15 | 85.71 ± 0.51 | 86.35 ± 0.35 | 87.32 ± 0.19 | 85.31 / 85.98 / 85.84 | **85.65 ± 0.32** | 86.63 ± 0.25 | 86.96 ± 0.34 | 8 / 8 / 8 | 2 | `sr06r_eesa_arbert_fanar` |
+| SR06-random-EESA-camelbert_mix_aya | 3 | **85.54 ± 0.42** | 85.31 ± 0.41 | 86.15 ± 0.51 | 86.23 ± 0.39 | 87.00 ± 0.66 | 85.24 / 85.35 / 86.02 | **83.57 ± 0.75** | 84.52 ± 0.71 | 84.73 ± 0.63 | 8 / 8 / 8 | 2 | `sr06r_eesa_camelbert_mix_aya` |
+| SR06-random-EESA-camelbert_mix_qwen3 | 3 | **85.46 ± 0.27** | 85.23 ± 0.32 | 85.85 ± 0.31 | 86.23 ± 0.28 | 86.87 ± 0.13 | 85.29 / 85.78 / 85.31 | **84.50 ± 0.37** | 85.37 ± 0.25 | 85.74 ± 0.15 | 8 / 8 / 8 | 2 | `sr06r_eesa_camelbert_mix_qwen3` |
+| SR06-random-EESA-arbert_qwen3 | 3 | **85.24 ± 0.58** | 85.35 ± 0.69 | 85.24 ± 0.49 | 86.02 ± 0.49 | 86.61 ± 0.80 | 85.88 / 84.76 / 85.07 | **85.68 ± 0.53** | 86.72 ± 0.39 | 87.01 ± 0.48 | 8 / 8 / 8 | 2 | `sr06r_eesa_arbert_qwen3` |
+| SR06-random-EESA-arbertv2_aya | 3 | **85.17 ± 0.43** | 85.09 ± 0.43 | 85.59 ± 0.47 | 86.02 ± 0.46 | 87.28 ± 0.40 | 85.65 / 84.81 / 85.05 | **84.41 ± 0.82** | 85.21 ± 0.80 | 86.02 ± 0.95 | 8 / 8 / 8 | 2 | `sr06r_eesa_arbertv2_aya` |
+| SR06-random-EESA-arbertv2_qwen3 | 3 | **84.75 ± 0.49** | 84.82 ± 0.43 | 85.04 ± 0.41 | 85.66 ± 0.35 | 86.70 ± 0.32 | 85.31 / 84.43 / 84.51 | **84.02 ± 0.60** | 85.04 ± 0.51 | 85.76 ± 0.81 | 8 / 8 / 8 | 2 | `sr06r_eesa_arbertv2_qwen3` |
+| SR06-random-EESA-arbertv2_fanar | 3 | **84.40 ± 0.85** | 84.28 ± 0.75 | 84.78 ± 0.83 | 85.25 ± 0.71 | 86.73 ± 0.77 | 84.01 / 83.82 / 85.38 | **84.34 ± 0.23** | 85.13 ± 0.19 | 86.21 ± 0.34 | 8 / 8 / 8 | 2 | `sr06r_eesa_arbertv2_fanar` |
+| SR06-random-EESA-camelbert_mix_fanar | 3 | **83.75 ± 0.58** | 83.50 ± 0.52 | 84.38 ± 0.54 | 84.56 ± 0.49 | 86.03 ± 0.79 | 83.64 / 83.23 / 84.38 | **84.12 ± 0.36** | 85.00 ± 0.25 | 85.45 ± 0.26 | 8 / 8 / 8 | 2 | `sr06r_eesa_camelbert_mix_fanar` |
+| SR06-random-EESA-camelbert_da_aya | 3 | **83.19 ± 0.44** | 82.84 ± 0.49 | 83.72 ± 0.28 | 83.90 ± 0.49 | 84.50 ± 0.30 | 83.53 / 82.69 / 83.36 | **82.16 ± 0.37** | 83.09 ± 0.37 | 83.55 ± 0.08 | 8 / 8 / 8 | 2 | `sr06r_eesa_camelbert_da_aya` |
+| SR06-random-EESA-camelbert_da_qwen3 | 3 | **82.71 ± 0.91** | 82.41 ± 0.94 | 83.12 ± 0.84 | 83.54 ± 0.88 | 84.00 ± 0.72 | 83.07 / 81.68 / 83.38 | **83.54 ± 0.55** | 84.35 ± 0.56 | 84.93 ± 0.14 | 8 / 8 / 8 | 2 | `sr06r_eesa_camelbert_da_qwen3` |
+| SR06-random-EESA-camelbert_da_fanar | 3 | **82.38 ± 1.33** | 82.15 ± 1.37 | 82.69 ± 1.22 | 83.09 ± 1.24 | 83.93 ± 1.14 | 83.09 / 80.86 / 83.21 | **82.55 ± 0.72** | 83.37 ± 0.76 | 84.01 ± 0.66 | 8 / 8 / 8 | 2 | `sr06r_eesa_camelbert_da_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR06-random-EESA-marbert_qwen3 | 91.1 | 89.6 | 94.2 | 85.7 | 86.0 | 93.4 |
+| SR06-random-EESA-marbert_aya | 90.2 | 88.5 | 93.8 | 86.0 | 84.8 | 93.4 |
+| SR06-random-EESA-marbert_fanar | 90.2 | 88.2 | 93.2 | 86.4 | 85.0 | 93.4 |
+| SR06-random-EESA-marbertv2_aya | 90.5 | 87.5 | 93.2 | 87.7 | 83.8 | 92.4 |
+| SR06-random-EESA-marbertv2_qwen3 | 89.4 | 86.9 | 93.6 | 87.8 | 83.8 | 92.7 |
+| SR06-random-EESA-marbertv2_fanar | 88.7 | 84.7 | 93.0 | 88.4 | 83.5 | 92.5 |
+| SR06-random-EESA-arabertv02_twitter_aya | 84.6 | 85.6 | 92.2 | 84.1 | 82.2 | 91.0 |
+| SR06-random-EESA-arabertv02_twitter_qwen3 | 84.4 | 84.7 | 92.1 | 83.0 | 81.7 | 90.6 |
+| SR06-random-EESA-arabertv02_twitter_fanar | 83.4 | 83.4 | 91.0 | 84.2 | 82.5 | 91.0 |
+| SR06-random-EESA-arbert_aya | 83.3 | 83.0 | 91.1 | 82.9 | 83.7 | 91.8 |
+| SR06-random-EESA-arbert_fanar | 84.3 | 82.5 | 90.3 | 82.4 | 83.0 | 91.5 |
+| SR06-random-EESA-camelbert_mix_aya | 83.9 | 82.6 | 90.1 | 79.9 | 81.2 | 89.6 |
+| SR06-random-EESA-camelbert_mix_qwen3 | 83.4 | 82.7 | 90.4 | 81.7 | 82.0 | 89.8 |
+| SR06-random-EESA-arbert_qwen3 | 82.9 | 82.5 | 90.4 | 82.3 | 83.0 | 91.7 |
+| SR06-random-EESA-arbertv2_aya | 83.8 | 80.9 | 90.7 | 82.5 | 81.2 | 89.5 |
+| SR06-random-EESA-arbertv2_qwen3 | 83.1 | 80.8 | 90.3 | 81.6 | 80.5 | 90.0 |
+| SR06-random-EESA-arbertv2_fanar | 83.4 | 79.7 | 90.0 | 82.8 | 80.6 | 89.6 |
+| SR06-random-EESA-camelbert_mix_fanar | 82.7 | 79.2 | 89.3 | 81.2 | 81.5 | 89.7 |
+| SR06-random-EESA-camelbert_da_aya | 81.0 | 80.6 | 88.0 | 79.0 | 79.4 | 88.1 |
+| SR06-random-EESA-camelbert_da_qwen3 | 79.9 | 80.1 | 88.1 | 81.1 | 80.8 | 88.8 |
+| SR06-random-EESA-camelbert_da_fanar | 80.6 | 79.3 | 87.2 | 80.1 | 79.6 | 87.9 |
 
 ## SR07: Real + SG04 (targeted minimal pairs for the SR02 TEST hard-case types, D-023: TEST-CONTAMINATED, test scores are leakage analysis, not a result): S1 train + 4,000 texts (2,000 complete pairs, fidelity-first selection, min 80%) from one SG04 generator; 7 BERTs, 3 seeds, SR05 recipe. No random control. Member = <classifier>_<generator>.
 
@@ -729,6 +899,186 @@ Per-class F1 (mean over seeds):
 | SR07-camelbert_da_aya | 75.8 | 77.9 | 68.9 | 76.0 | 44.6 | 59.7 |
 | SR07-camelbert_da_qwen3 | 73.9 | 77.5 | 69.1 | 77.1 | 43.7 | 61.2 |
 
+## SR07-EESA-DM: EESA real + SG03-EESA-DM (matrix-language pilot, D-037): EESA train + 1,320 zero-shot texts whose prompt asks for code-switched comments with Egyptian Arabic stated as the matrix language, English words inserted; 3 epochs, epoch by training loss (D-035); 7 BERTs, 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR03-EESA.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR07-EESA-DM-marbert_qwen3 | 3 | **88.94 ± 0.35** | 88.85 ± 0.27 | 89.21 ± 0.39 | 89.73 ± 0.24 | 90.55 ± 0.27 | 89.32 / 88.62 / 88.89 | **87.51 ± 0.63** | 88.43 ± 0.55 | 89.36 ± 0.53 | 3 / 3 / 3 | 2 | `sr07dm_eesa_marbert_qwen3` |
+| SR07-EESA-DM-marbertv2_qwen3 | 3 | **86.14 ± 0.56** | 86.14 ± 0.60 | 86.44 ± 0.64 | 87.08 ± 0.51 | 88.54 ± 0.62 | 86.00 / 85.66 / 86.76 | **83.46 ± 1.07** | 84.47 ± 0.92 | 86.19 ± 1.25 | 3 / 3 / 3 | 2 | `sr07dm_eesa_marbertv2_qwen3` |
+| SR07-EESA-DM-arabertv02_twitter_qwen3 | 3 | **84.22 ± 0.61** | 84.09 ± 0.61 | 84.41 ± 0.58 | 85.21 ± 0.56 | 85.79 ± 0.63 | 84.01 / 84.90 / 83.74 | **83.45 ± 0.03** | 84.27 ± 0.07 | 85.41 ± 0.08 | 3 / 3 / 3 | 2 | `sr07dm_eesa_arabertv02_twitter_qwen3` |
+| SR07-EESA-DM-arbert_qwen3 | 3 | **83.69 ± 0.48** | 83.70 ± 0.42 | 83.81 ± 0.44 | 84.52 ± 0.39 | 85.64 ± 0.19 | 83.52 / 84.23 / 83.33 | **84.29 ± 0.40** | 85.33 ± 0.49 | 85.95 ± 0.37 | 3 / 3 / 3 | 2 | `sr07dm_eesa_arbert_qwen3` |
+| SR07-EESA-DM-camelbert_mix_qwen3 | 3 | **82.93 ± 0.70** | 82.68 ± 0.65 | 83.44 ± 0.78 | 83.86 ± 0.68 | 84.72 ± 0.58 | 83.70 / 82.33 / 82.77 | **81.18 ± 0.29** | 82.31 ± 0.19 | 82.37 ± 0.21 | 3 / 3 / 3 | 1 | `sr07dm_eesa_camelbert_mix_qwen3` |
+| SR07-EESA-DM-arbertv2_qwen3 | 3 | **81.59 ± 0.55** | 82.08 ± 0.76 | 81.78 ± 0.39 | 82.80 ± 0.51 | 84.23 ± 0.28 | 81.24 / 82.22 / 81.31 | **82.32 ± 0.49** | 83.54 ± 0.49 | 84.61 ± 0.17 | 3 / 3 / 3 | 2 | `sr07dm_eesa_arbertv2_qwen3` |
+| SR07-EESA-DM-camelbert_da_qwen3 | 3 | **79.93 ± 0.18** | 79.69 ± 0.24 | 80.32 ± 0.23 | 80.93 ± 0.21 | 82.02 ± 0.23 | 79.77 / 80.12 / 79.91 | **81.02 ± 0.20** | 81.78 ± 0.32 | 82.67 ± 0.36 | 3 / 3 / 3 | 1 | `sr07dm_eesa_camelbert_da_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR07-EESA-DM-marbert_qwen3 | 87.2 | 85.7 | 93.9 | 85.5 | 83.8 | 93.2 |
+| SR07-EESA-DM-marbertv2_qwen3 | 85.0 | 81.3 | 92.1 | 82.3 | 78.0 | 90.1 |
+| SR07-EESA-DM-arabertv02_twitter_qwen3 | 81.0 | 81.1 | 90.5 | 81.3 | 79.5 | 89.5 |
+| SR07-EESA-DM-arbert_qwen3 | 82.2 | 79.8 | 89.1 | 81.2 | 81.0 | 90.7 |
+| SR07-EESA-DM-camelbert_mix_qwen3 | 80.4 | 79.4 | 89.0 | 76.8 | 78.8 | 88.0 |
+| SR07-EESA-DM-arbertv2_qwen3 | 80.0 | 76.3 | 88.5 | 79.7 | 77.7 | 89.5 |
+| SR07-EESA-DM-camelbert_da_qwen3 | 77.4 | 75.8 | 86.6 | 78.8 | 77.7 | 86.6 |
+
+## SR07-EESA-DM3: EESA real + SG03-EESA-DM3 (matrix-language pilot, D-037 addendum): EESA train + 1,320 zero-shot texts from the dialect-matrix prompt v3 (reworded to insert English: 'Every comment must contain English words ...' with example words); 3 epochs, epoch by training loss (D-035); 7 BERTs, 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR03-EESA.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR07-EESA-DM3-marbert_aya | 3 | **89.33 ± 0.43** | 89.08 ± 0.36 | 89.72 ± 0.52 | 90.02 ± 0.35 | 90.87 ± 0.39 | 89.62 / 88.83 / 89.53 | **87.97 ± 0.72** | 88.75 ± 0.68 | 89.84 ± 0.87 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_marbert_aya` |
+| SR07-EESA-DM3-marbert_qwen3 | 3 | **88.48 ± 0.36** | 88.33 ± 0.46 | 88.86 ± 0.26 | 89.28 ± 0.37 | 90.06 ± 0.33 | 88.08 / 88.58 / 88.78 | **86.65 ± 0.17** | 87.53 ± 0.21 | 88.81 ± 0.13 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_marbert_qwen3` |
+| SR07-EESA-DM3-marbert_fanar | 3 | **88.16 ± 0.31** | 87.96 ± 0.25 | 88.47 ± 0.36 | 88.83 ± 0.25 | 89.99 ± 0.18 | 88.51 / 87.93 / 88.04 | **86.89 ± 0.32** | 87.57 ± 0.25 | 89.21 ± 0.22 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_marbert_fanar` |
+| SR07-EESA-DM3-marbertv2_aya | 3 | **86.80 ± 0.39** | 86.67 ± 0.36 | 87.53 ± 0.24 | 87.57 ± 0.31 | 89.09 ± 0.20 | 86.44 / 87.21 / 86.75 | **86.03 ± 0.86** | 86.88 ± 0.83 | 88.35 ± 0.83 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_marbertv2_aya` |
+| SR07-EESA-DM3-marbertv2_qwen3 | 3 | **86.11 ± 0.35** | 86.11 ± 0.33 | 86.51 ± 0.34 | 87.00 ± 0.31 | 88.27 ± 0.37 | 86.24 / 86.38 / 85.71 | **84.20 ± 0.50** | 85.21 ± 0.44 | 86.71 ± 0.76 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_marbertv2_qwen3` |
+| SR07-EESA-DM3-marbertv2_fanar | 3 | **85.12 ± 0.59** | 84.97 ± 0.43 | 85.72 ± 0.63 | 85.94 ± 0.49 | 87.92 ± 0.42 | 85.65 / 85.24 / 84.48 | **83.57 ± 1.01** | 84.31 ± 0.99 | 86.46 ± 1.18 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_marbertv2_fanar` |
+| SR07-EESA-DM3-arbert_aya | 3 | **84.92 ± 0.32** | 84.63 ± 0.38 | 85.38 ± 0.17 | 85.66 ± 0.35 | 86.54 ± 0.04 | 84.78 / 85.28 / 84.69 | **83.73 ± 0.27** | 84.68 ± 0.49 | 85.75 ± 0.13 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arbert_aya` |
+| SR07-EESA-DM3-arabertv02_twitter_aya | 3 | **83.86 ± 0.06** | 83.79 ± 0.15 | 84.03 ± 0.11 | 84.92 ± 0.07 | 85.81 ± 0.38 | 83.81 / 83.85 / 83.93 | **84.51 ± 0.26** | 85.29 ± 0.19 | 86.28 ± 0.20 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arabertv02_twitter_aya` |
+| SR07-EESA-DM3-arabertv02_twitter_qwen3 | 3 | **83.61 ± 0.48** | 83.51 ± 0.44 | 83.75 ± 0.57 | 84.68 ± 0.35 | 85.33 ± 0.22 | 84.16 / 83.29 / 83.37 | **83.56 ± 0.39** | 84.31 ± 0.39 | 85.44 ± 0.48 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arabertv02_twitter_qwen3` |
+| SR07-EESA-DM3-arbert_qwen3 | 3 | **83.49 ± 0.41** | 83.37 ± 0.35 | 83.73 ± 0.53 | 84.39 ± 0.35 | 85.12 ± 0.10 | 83.79 / 83.65 / 83.02 | **83.66 ± 0.92** | 84.84 ± 0.92 | 85.26 ± 0.90 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arbert_qwen3` |
+| SR07-EESA-DM3-camelbert_mix_qwen3 | 3 | **83.31 ± 0.25** | 83.00 ± 0.24 | 83.89 ± 0.33 | 84.15 ± 0.19 | 85.10 ± 0.22 | 83.05 / 83.56 / 83.34 | **81.76 ± 0.76** | 82.72 ± 0.72 | 82.97 ± 0.71 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_camelbert_mix_qwen3` |
+| SR07-EESA-DM3-arabertv02_twitter_fanar | 3 | **83.28 ± 0.07** | 83.36 ± 0.18 | 83.28 ± 0.28 | 84.27 ± 0.07 | 85.15 ± 0.14 | 83.23 / 83.23 / 83.36 | **83.70 ± 0.45** | 84.27 ± 0.37 | 85.61 ± 0.56 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arabertv02_twitter_fanar` |
+| SR07-EESA-DM3-arbert_fanar | 3 | **83.01 ± 0.75** | 82.87 ± 0.74 | 83.29 ± 0.88 | 83.70 ± 0.58 | 84.80 ± 0.74 | 83.85 / 82.42 / 82.77 | **82.71 ± 0.79** | 83.37 ± 0.95 | 84.90 ± 0.67 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arbert_fanar` |
+| SR07-EESA-DM3-camelbert_mix_aya | 3 | **82.67 ± 0.26** | 82.51 ± 0.30 | 83.02 ± 0.35 | 83.66 ± 0.25 | 84.37 ± 0.38 | 82.85 / 82.38 / 82.78 | **81.33 ± 0.75** | 82.52 ± 0.74 | 82.51 ± 0.99 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_camelbert_mix_aya` |
+| SR07-EESA-DM3-arbertv2_aya | 3 | **82.28 ± 0.20** | 82.56 ± 0.21 | 82.70 ± 0.52 | 83.41 ± 0.14 | 84.91 ± 0.36 | 82.51 / 82.17 / 82.17 | **82.42 ± 0.52** | 83.50 ± 0.44 | 84.03 ± 0.53 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arbertv2_aya` |
+| SR07-EESA-DM3-camelbert_mix_fanar | 3 | **82.14 ± 0.12** | 81.93 ± 0.14 | 82.46 ± 0.18 | 82.97 ± 0.19 | 84.40 ± 0.12 | 82.20 / 82.23 / 82.00 | **81.09 ± 0.83** | 82.11 ± 0.81 | 82.46 ± 0.95 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_camelbert_mix_fanar` |
+| SR07-EESA-DM3-arbertv2_fanar | 3 | **81.87 ± 0.22** | 81.67 ± 0.25 | 82.25 ± 0.22 | 82.72 ± 0.19 | 84.50 ± 0.12 | 81.81 / 81.68 / 82.11 | **81.83 ± 0.29** | 82.72 ± 0.31 | 83.80 ± 0.44 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arbertv2_fanar` |
+| SR07-EESA-DM3-arbertv2_qwen3 | 3 | **81.80 ± 0.70** | 82.07 ± 0.89 | 82.06 ± 0.66 | 82.89 ± 0.65 | 84.20 ± 0.75 | 81.43 / 81.36 / 82.61 | **81.30 ± 0.64** | 82.56 ± 0.60 | 83.43 ± 0.79 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_arbertv2_qwen3` |
+| SR07-EESA-DM3-camelbert_da_aya | 3 | **80.10 ± 0.58** | 79.90 ± 0.50 | 80.52 ± 0.56 | 81.13 ± 0.58 | 82.43 ± 0.26 | 80.73 / 79.61 / 79.95 | **81.22 ± 0.12** | 82.11 ± 0.07 | 82.90 ± 0.77 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_camelbert_da_aya` |
+| SR07-EESA-DM3-camelbert_da_qwen3 | 3 | **79.94 ± 0.52** | 79.67 ± 0.48 | 80.40 ± 0.44 | 80.97 ± 0.49 | 82.06 ± 0.48 | 80.43 / 79.39 / 79.99 | **79.92 ± 0.25** | 80.77 ± 0.25 | 81.92 ± 0.14 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_camelbert_da_qwen3` |
+| SR07-EESA-DM3-camelbert_da_fanar | 3 | **79.90 ± 0.17** | 79.63 ± 0.22 | 80.31 ± 0.05 | 80.81 ± 0.24 | 82.24 ± 0.33 | 79.97 / 79.70 / 80.01 | **80.54 ± 0.90** | 81.13 ± 1.03 | 82.47 ± 0.51 | 3 / 3 / 3 | 2 | `sr07dm3_eesa_camelbert_da_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR07-EESA-DM3-marbert_aya | 87.8 | 86.2 | 93.9 | 86.4 | 84.2 | 93.2 |
+| SR07-EESA-DM3-marbert_qwen3 | 86.6 | 85.3 | 93.6 | 85.1 | 82.3 | 92.5 |
+| SR07-EESA-DM3-marbert_fanar | 87.2 | 84.5 | 92.8 | 86.3 | 82.3 | 92.1 |
+| SR07-EESA-DM3-marbertv2_aya | 86.2 | 82.2 | 92.0 | 84.9 | 81.4 | 91.8 |
+| SR07-EESA-DM3-marbertv2_qwen3 | 84.8 | 81.8 | 91.7 | 82.7 | 79.2 | 90.7 |
+| SR07-EESA-DM3-marbertv2_fanar | 85.1 | 79.5 | 90.8 | 83.6 | 77.8 | 89.3 |
+| SR07-EESA-DM3-arbert_aya | 83.0 | 81.7 | 90.1 | 80.8 | 79.7 | 90.7 |
+| SR07-EESA-DM3-arabertv02_twitter_aya | 80.8 | 80.0 | 90.8 | 82.3 | 81.0 | 90.3 |
+| SR07-EESA-DM3-arabertv02_twitter_qwen3 | 80.3 | 80.2 | 90.3 | 81.5 | 79.8 | 89.3 |
+| SR07-EESA-DM3-arbert_qwen3 | 81.0 | 80.2 | 89.2 | 79.5 | 80.5 | 91.0 |
+| SR07-EESA-DM3-camelbert_mix_qwen3 | 81.1 | 79.7 | 89.1 | 78.0 | 79.3 | 88.0 |
+| SR07-EESA-DM3-arabertv02_twitter_fanar | 80.5 | 79.5 | 89.8 | 82.5 | 79.9 | 88.7 |
+| SR07-EESA-DM3-arbert_fanar | 81.6 | 79.4 | 88.0 | 81.3 | 78.3 | 88.5 |
+| SR07-EESA-DM3-camelbert_mix_aya | 79.9 | 79.3 | 88.9 | 76.5 | 79.0 | 88.5 |
+| SR07-EESA-DM3-arbertv2_aya | 80.8 | 77.0 | 89.0 | 79.2 | 79.2 | 88.9 |
+| SR07-EESA-DM3-camelbert_mix_fanar | 80.9 | 77.6 | 87.9 | 77.5 | 78.3 | 87.4 |
+| SR07-EESA-DM3-arbertv2_fanar | 81.2 | 76.6 | 87.8 | 79.5 | 77.9 | 88.1 |
+| SR07-EESA-DM3-arbertv2_qwen3 | 80.2 | 77.0 | 88.2 | 77.9 | 77.0 | 88.9 |
+| SR07-EESA-DM3-camelbert_da_aya | 77.9 | 75.4 | 86.9 | 78.4 | 77.8 | 87.4 |
+| SR07-EESA-DM3-camelbert_da_qwen3 | 77.2 | 75.7 | 86.9 | 77.6 | 75.9 | 86.2 |
+| SR07-EESA-DM3-camelbert_da_fanar | 78.1 | 75.2 | 86.4 | 79.3 | 76.7 | 85.6 |
+
+## SR07-EESA-EM: EESA real + SG03-EESA-EM (matrix-language pilot, D-037): EESA train + 1,320 zero-shot texts whose prompt asks for code-switched comments with English stated as the matrix language, Egyptian Arabic words inserted; 3 epochs, epoch by training loss (D-035); 7 BERTs, 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR03-EESA.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR07-EESA-EM-marbert_qwen3 | 3 | **89.82 ± 0.75** | 89.62 ± 0.74 | 90.13 ± 0.76 | 90.46 ± 0.68 | 91.27 ± 0.66 | 90.50 / 89.02 / 89.94 | **87.94 ± 0.41** | 88.75 ± 0.32 | 89.86 ± 0.46 | 3 / 3 / 3 | 1 | `sr07em_eesa_marbert_qwen3` |
+| SR07-EESA-EM-marbert_aya | 3 | **89.22 ± 0.73** | 89.05 ± 0.65 | 89.52 ± 0.83 | 89.85 ± 0.65 | 90.80 ± 0.61 | 89.83 / 88.41 / 89.42 | **87.89 ± 0.63** | 88.67 ± 0.56 | 90.01 ± 0.64 | 3 / 3 / 3 | 2 | `sr07em_eesa_marbert_aya` |
+| SR07-EESA-EM-marbert_fanar | 3 | **88.20 ± 0.71** | 88.03 ± 0.70 | 88.66 ± 0.78 | 88.96 ± 0.60 | 90.26 ± 0.62 | 88.69 / 87.39 / 88.53 | **86.38 ± 0.34** | 87.20 ± 0.35 | 88.52 ± 0.08 | 3 / 3 / 3 | 2 | `sr07em_eesa_marbert_fanar` |
+| SR07-EESA-EM-marbertv2_aya | 3 | **86.45 ± 0.50** | 86.40 ± 0.36 | 87.04 ± 0.63 | 87.20 ± 0.49 | 88.82 ± 0.54 | 87.03 / 86.21 / 86.10 | **85.54 ± 0.29** | 86.31 ± 0.24 | 88.05 ± 0.22 | 3 / 3 / 3 | 2 | `sr07em_eesa_marbertv2_aya` |
+| SR07-EESA-EM-marbertv2_qwen3 | 3 | **86.04 ± 0.72** | 86.05 ± 0.67 | 86.49 ± 0.84 | 86.92 ± 0.76 | 88.27 ± 0.56 | 85.83 / 85.45 / 86.84 | **85.38 ± 0.26** | 86.27 ± 0.31 | 87.82 ± 0.30 | 3 / 3 / 3 | 1 | `sr07em_eesa_marbertv2_qwen3` |
+| SR07-EESA-EM-marbertv2_fanar | 3 | **85.40 ± 0.87** | 85.17 ± 0.88 | 86.15 ± 0.72 | 86.15 ± 0.78 | 88.12 ± 0.65 | 84.88 / 86.41 / 84.91 | **84.87 ± 0.44** | 85.57 ± 0.44 | 87.47 ± 0.25 | 3 / 3 / 3 | 2 | `sr07em_eesa_marbertv2_fanar` |
+| SR07-EESA-EM-arabertv02_twitter_qwen3 | 3 | **84.86 ± 1.15** | 84.70 ± 1.17 | 85.05 ± 1.12 | 85.78 ± 1.05 | 86.61 ± 1.00 | 84.63 / 86.10 / 83.84 | **84.02 ± 0.62** | 84.92 ± 0.67 | 85.76 ± 0.70 | 3 / 3 / 3 | 1 | `sr07em_eesa_arabertv02_twitter_qwen3` |
+| SR07-EESA-EM-arbert_aya | 3 | **84.13 ± 0.07** | 83.93 ± 0.06 | 84.47 ± 0.33 | 84.92 ± 0.07 | 85.60 ± 0.29 | 84.21 / 84.08 / 84.11 | **83.78 ± 0.18** | 84.72 ± 0.32 | 85.13 ± 0.19 | 3 / 3 / 3 | 2 | `sr07em_eesa_arbert_aya` |
+| SR07-EESA-EM-arabertv02_twitter_aya | 3 | **83.97 ± 0.08** | 83.99 ± 0.21 | 84.11 ± 0.25 | 84.96 ± 0.12 | 86.12 ± 0.41 | 83.96 / 83.90 / 84.05 | **83.97 ± 0.48** | 84.76 ± 0.51 | 85.70 ± 0.53 | 3 / 3 / 3 | 2 | `sr07em_eesa_arabertv02_twitter_aya` |
+| SR07-EESA-EM-arbert_qwen3 | 3 | **83.61 ± 0.79** | 83.47 ± 0.64 | 83.89 ± 0.93 | 84.43 ± 0.70 | 85.38 ± 0.80 | 84.51 / 83.35 / 82.99 | **82.56 ± 0.25** | 83.78 ± 0.19 | 84.51 ± 0.28 | 3 / 3 / 3 | 2 | `sr07em_eesa_arbert_qwen3` |
+| SR07-EESA-EM-arabertv02_twitter_fanar | 3 | **83.14 ± 0.51** | 83.22 ± 0.61 | 83.16 ± 0.49 | 84.15 ± 0.43 | 84.85 ± 0.40 | 83.69 / 83.05 / 82.69 | **83.15 ± 0.07** | 84.07 ± 0.19 | 85.21 ± 0.17 | 3 / 3 / 3 | 2 | `sr07em_eesa_arabertv02_twitter_fanar` |
+| SR07-EESA-EM-arbert_fanar | 3 | **82.98 ± 0.56** | 82.82 ± 0.45 | 83.29 ± 0.75 | 83.78 ± 0.37 | 84.75 ± 0.71 | 83.54 / 82.41 / 82.98 | **83.17 ± 0.41** | 84.19 ± 0.46 | 84.96 ± 0.38 | 3 / 3 / 3 | 2 | `sr07em_eesa_arbert_fanar` |
+| SR07-EESA-EM-camelbert_mix_aya | 3 | **82.56 ± 0.21** | 82.42 ± 0.22 | 82.85 ± 0.34 | 83.54 ± 0.19 | 84.43 ± 0.28 | 82.77 / 82.35 / 82.55 | **81.72 ± 0.11** | 82.97 ± 0.07 | 82.75 ± 0.19 | 3 / 3 / 3 | 2 | `sr07em_eesa_camelbert_mix_aya` |
+| SR07-EESA-EM-arbertv2_fanar | 3 | **82.15 ± 0.49** | 82.30 ± 0.23 | 82.37 ± 0.64 | 83.17 ± 0.46 | 84.64 ± 0.10 | 82.48 / 82.38 / 81.60 | **81.12 ± 0.94** | 82.44 ± 0.72 | 83.17 ± 0.78 | 3 / 3 / 3 | 2 | `sr07em_eesa_arbertv2_fanar` |
+| SR07-EESA-EM-camelbert_mix_qwen3 | 3 | **82.01 ± 0.30** | 82.14 ± 0.29 | 82.61 ± 0.32 | 83.09 ± 0.25 | 84.54 ± 0.36 | 81.79 / 82.35 / 81.90 | **80.39 ± 0.86** | 81.70 ± 0.81 | 82.22 ± 0.43 | 3 / 3 / 3 | 1 | `sr07em_eesa_camelbert_mix_qwen3` |
+| SR07-EESA-EM-arbertv2_aya | 3 | **81.97 ± 0.53** | 82.06 ± 0.65 | 82.31 ± 0.57 | 83.13 ± 0.53 | 84.36 ± 0.53 | 81.52 / 81.83 / 82.55 | **82.47 ± 0.71** | 83.41 ± 0.63 | 84.02 ± 0.34 | 3 / 3 / 3 | 2 | `sr07em_eesa_arbertv2_aya` |
+| SR07-EESA-EM-arbertv2_qwen3 | 3 | **81.88 ± 0.70** | 82.43 ± 0.40 | 82.24 ± 0.96 | 82.97 ± 0.58 | 84.69 ± 0.41 | 82.67 / 81.32 / 81.64 | **82.09 ± 0.89** | 83.37 ± 0.80 | 83.94 ± 0.98 | 3 / 3 / 3 | 1 | `sr07em_eesa_arbertv2_qwen3` |
+| SR07-EESA-EM-camelbert_mix_fanar | 3 | **81.68 ± 0.35** | 81.58 ± 0.51 | 81.98 ± 0.14 | 82.56 ± 0.25 | 83.57 ± 0.10 | 81.68 / 81.33 / 82.04 | **81.58 ± 0.13** | 82.56 ± 0.07 | 82.97 ± 0.20 | 3 / 3 / 3 | 2 | `sr07em_eesa_camelbert_mix_fanar` |
+| SR07-EESA-EM-camelbert_da_aya | 3 | **79.81 ± 0.06** | 79.55 ± 0.08 | 80.26 ± 0.18 | 80.81 ± 0.12 | 82.01 ± 0.12 | 79.85 / 79.74 / 79.85 | **80.42 ± 1.00** | 81.30 ± 0.97 | 81.92 ± 1.09 | 3 / 3 / 3 | 2 | `sr07em_eesa_camelbert_da_aya` |
+| SR07-EESA-EM-camelbert_da_fanar | 3 | **79.71 ± 0.43** | 79.55 ± 0.43 | 80.05 ± 0.24 | 80.68 ± 0.42 | 81.82 ± 0.32 | 79.94 / 79.22 / 79.98 | **81.44 ± 0.68** | 82.31 ± 0.67 | 82.89 ± 0.53 | 3 / 3 / 3 | 2 | `sr07em_eesa_camelbert_da_fanar` |
+| SR07-EESA-EM-camelbert_da_qwen3 | 3 | **79.53 ± 0.41** | 79.55 ± 0.41 | 79.87 ± 0.41 | 80.73 ± 0.37 | 82.10 ± 0.53 | 79.54 / 79.11 / 79.94 | **79.88 ± 0.37** | 80.97 ± 0.43 | 81.76 ± 0.60 | 3 / 3 / 3 | 1 | `sr07em_eesa_camelbert_da_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR07-EESA-EM-marbert_qwen3 | 88.5 | 86.9 | 94.1 | 86.5 | 84.1 | 93.3 |
+| SR07-EESA-EM-marbert_aya | 88.2 | 86.1 | 93.4 | 86.7 | 83.6 | 93.3 |
+| SR07-EESA-EM-marbert_fanar | 87.3 | 84.1 | 93.2 | 84.9 | 82.1 | 92.1 |
+| SR07-EESA-EM-marbertv2_aya | 86.2 | 81.7 | 91.5 | 85.0 | 80.5 | 91.1 |
+| SR07-EESA-EM-marbertv2_qwen3 | 84.9 | 81.6 | 91.6 | 84.3 | 80.5 | 91.3 |
+| SR07-EESA-EM-marbertv2_fanar | 85.5 | 80.0 | 90.7 | 84.7 | 79.7 | 90.2 |
+| SR07-EESA-EM-arabertv02_twitter_qwen3 | 82.4 | 81.3 | 90.9 | 81.2 | 80.5 | 90.3 |
+| SR07-EESA-EM-arbert_aya | 81.7 | 81.2 | 89.4 | 80.2 | 81.1 | 90.0 |
+| SR07-EESA-EM-arabertv02_twitter_aya | 81.7 | 79.7 | 90.5 | 81.7 | 80.5 | 89.7 |
+| SR07-EESA-EM-arbert_qwen3 | 81.8 | 80.1 | 89.0 | 78.8 | 78.6 | 90.3 |
+| SR07-EESA-EM-arabertv02_twitter_fanar | 80.3 | 79.7 | 89.4 | 80.6 | 79.0 | 89.8 |
+| SR07-EESA-EM-arbert_fanar | 81.2 | 79.4 | 88.3 | 79.9 | 79.6 | 90.0 |
+| SR07-EESA-EM-camelbert_mix_aya | 80.1 | 78.8 | 88.8 | 76.5 | 79.7 | 89.0 |
+| SR07-EESA-EM-arbertv2_fanar | 80.9 | 77.2 | 88.4 | 77.5 | 77.0 | 88.9 |
+| SR07-EESA-EM-camelbert_mix_qwen3 | 80.4 | 77.0 | 88.7 | 76.1 | 76.7 | 88.3 |
+| SR07-EESA-EM-arbertv2_aya | 79.7 | 77.2 | 89.0 | 79.5 | 79.4 | 88.5 |
+| SR07-EESA-EM-arbertv2_qwen3 | 81.3 | 76.2 | 88.1 | 78.5 | 78.4 | 89.4 |
+| SR07-EESA-EM-camelbert_mix_fanar | 79.8 | 77.9 | 87.3 | 78.3 | 78.8 | 87.7 |
+| SR07-EESA-EM-camelbert_da_aya | 77.5 | 75.4 | 86.5 | 77.4 | 77.4 | 86.4 |
+| SR07-EESA-EM-camelbert_da_fanar | 77.6 | 75.5 | 86.1 | 78.4 | 78.5 | 87.3 |
+| SR07-EESA-EM-camelbert_da_qwen3 | 77.4 | 74.4 | 86.8 | 76.7 | 76.1 | 86.8 |
+
+## SR07-EESA-NM: EESA real + SG03-EESA-NM (matrix-language pilot, D-037): EESA train + 1,320 zero-shot texts whose prompt asks for code-switched comments with no matrix language stated; 3 epochs, epoch by training loss (D-035); 7 BERTs, 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR03-EESA.
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR07-EESA-NM-marbert_aya | 3 | **89.03 ± 0.34** | 88.87 ± 0.32 | 89.39 ± 0.41 | 89.73 ± 0.24 | 90.61 ± 0.32 | 89.39 / 88.98 / 88.71 | **87.70 ± 0.56** | 88.55 ± 0.46 | 89.72 ± 0.72 | 3 / 3 / 3 | 2 | `sr07nm_eesa_marbert_aya` |
+| SR07-EESA-NM-marbert_qwen3 | 3 | **88.68 ± 0.27** | 88.54 ± 0.19 | 88.93 ± 0.38 | 89.41 ± 0.25 | 90.48 ± 0.13 | 88.85 / 88.37 / 88.82 | **86.93 ± 0.99** | 87.98 ± 0.92 | 88.69 ± 0.94 | 3 / 3 / 3 | 1 | `sr07nm_eesa_marbert_qwen3` |
+| SR07-EESA-NM-marbert_fanar | 3 | **87.85 ± 0.34** | 87.71 ± 0.25 | 88.22 ± 0.41 | 88.59 ± 0.19 | 89.91 ± 0.22 | 87.90 / 88.17 / 87.49 | **87.05 ± 0.30** | 87.86 ± 0.39 | 88.95 ± 0.19 | 3 / 3 / 3 | 2 | `sr07nm_eesa_marbert_fanar` |
+| SR07-EESA-NM-marbertv2_aya | 3 | **86.64 ± 0.29** | 86.49 ± 0.34 | 87.16 ± 0.41 | 87.41 ± 0.24 | 88.73 ± 0.45 | 86.42 / 86.53 / 86.96 | **85.69 ± 1.01** | 86.47 ± 1.04 | 87.95 ± 0.77 | 3 / 3 / 3 | 2 | `sr07nm_eesa_marbertv2_aya` |
+| SR07-EESA-NM-marbertv2_qwen3 | 3 | **85.50 ± 0.27** | 85.43 ± 0.29 | 85.81 ± 0.37 | 86.43 ± 0.24 | 87.66 ± 0.34 | 85.24 / 85.49 / 85.77 | **84.99 ± 0.17** | 85.86 ± 0.19 | 87.35 ± 0.34 | 3 / 3 / 3 | 1 | `sr07nm_eesa_marbertv2_qwen3` |
+| SR07-EESA-NM-marbertv2_fanar | 3 | **85.12 ± 0.26** | 85.06 ± 0.14 | 85.77 ± 0.18 | 85.94 ± 0.12 | 87.86 ± 0.05 | 85.10 / 85.38 / 84.87 | **84.64 ± 0.58** | 85.37 ± 0.49 | 87.28 ± 0.72 | 3 / 3 / 3 | 2 | `sr07nm_eesa_marbertv2_fanar` |
+| SR07-EESA-NM-arbert_aya | 3 | **84.51 ± 0.25** | 84.31 ± 0.15 | 84.80 ± 0.49 | 85.25 ± 0.14 | 86.07 ± 0.43 | 84.79 / 84.43 / 84.31 | **83.90 ± 0.50** | 84.96 ± 0.64 | 85.34 ± 0.37 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arbert_aya` |
+| SR07-EESA-NM-arabertv02_twitter_aya | 3 | **84.35 ± 0.56** | 84.36 ± 0.83 | 84.51 ± 0.42 | 85.33 ± 0.44 | 86.00 ± 0.29 | 84.81 / 84.53 / 83.72 | **84.04 ± 0.24** | 84.80 ± 0.19 | 85.71 ± 0.24 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arabertv02_twitter_aya` |
+| SR07-EESA-NM-arbert_qwen3 | 3 | **83.84 ± 0.57** | 83.80 ± 0.39 | 83.97 ± 0.81 | 84.76 ± 0.49 | 85.49 ± 0.79 | 84.40 / 83.26 / 83.87 | **83.74 ± 0.33** | 84.84 ± 0.37 | 85.55 ± 0.21 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arbert_qwen3` |
+| SR07-EESA-NM-arabertv02_twitter_qwen3 | 3 | **83.72 ± 0.44** | 83.68 ± 0.40 | 83.81 ± 0.52 | 84.80 ± 0.39 | 85.39 ± 0.42 | 83.84 / 83.23 / 84.09 | **83.65 ± 0.17** | 84.52 ± 0.19 | 85.29 ± 0.12 | 3 / 3 / 3 | 1 | `sr07nm_eesa_arabertv02_twitter_qwen3` |
+| SR07-EESA-NM-arbert_fanar | 3 | **83.69 ± 1.04** | 83.59 ± 0.99 | 83.96 ± 1.00 | 84.39 ± 0.93 | 85.64 ± 0.55 | 84.68 / 83.77 / 82.61 | **83.24 ± 1.22** | 84.19 ± 1.35 | 84.90 ± 0.99 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arbert_fanar` |
+| SR07-EESA-NM-arabertv02_twitter_fanar | 3 | **82.99 ± 0.26** | 82.96 ± 0.32 | 83.09 ± 0.32 | 83.99 ± 0.21 | 85.16 ± 0.28 | 83.28 / 82.77 / 82.91 | **84.02 ± 0.52** | 84.68 ± 0.49 | 85.76 ± 0.61 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arabertv02_twitter_fanar` |
+| SR07-EESA-NM-camelbert_mix_qwen3 | 3 | **82.76 ± 0.47** | 82.57 ± 0.40 | 83.17 ± 0.54 | 83.70 ± 0.49 | 84.35 ± 0.28 | 83.28 / 82.65 / 82.35 | **81.43 ± 0.16** | 82.64 ± 0.12 | 82.33 ± 0.20 | 3 / 3 / 3 | 1 | `sr07nm_eesa_camelbert_mix_qwen3` |
+| SR07-EESA-NM-camelbert_mix_aya | 3 | **82.76 ± 0.42** | 82.63 ± 0.40 | 83.02 ± 0.50 | 83.78 ± 0.37 | 84.22 ± 0.48 | 83.06 / 82.28 / 82.93 | **81.49 ± 0.05** | 82.68 ± 0.07 | 82.58 ± 0.26 | 3 / 3 / 3 | 2 | `sr07nm_eesa_camelbert_mix_aya` |
+| SR07-EESA-NM-camelbert_mix_fanar | 3 | **81.90 ± 0.11** | 81.76 ± 0.19 | 82.20 ± 0.17 | 82.84 ± 0.07 | 83.75 ± 0.29 | 81.94 / 81.78 / 81.99 | **81.07 ± 0.36** | 82.27 ± 0.32 | 82.33 ± 0.29 | 3 / 3 / 3 | 2 | `sr07nm_eesa_camelbert_mix_fanar` |
+| SR07-EESA-NM-arbertv2_aya | 3 | **81.66 ± 0.29** | 81.88 ± 0.09 | 82.07 ± 0.60 | 82.84 ± 0.25 | 84.23 ± 0.25 | 81.99 / 81.48 / 81.50 | **81.56 ± 0.38** | 82.68 ± 0.31 | 83.33 ± 0.11 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arbertv2_aya` |
+| SR07-EESA-NM-arbertv2_qwen3 | 3 | **81.43 ± 0.44** | 81.85 ± 0.14 | 81.56 ± 0.60 | 82.60 ± 0.39 | 84.06 ± 0.24 | 81.76 / 81.59 / 80.94 | **81.51 ± 0.73** | 82.80 ± 0.75 | 83.47 ± 0.59 | 3 / 3 / 3 | 1 | `sr07nm_eesa_arbertv2_qwen3` |
+| SR07-EESA-NM-arbertv2_fanar | 3 | **81.00 ± 0.20** | 81.17 ± 0.34 | 81.29 ± 0.32 | 82.15 ± 0.12 | 83.67 ± 0.26 | 81.08 / 81.14 / 80.77 | **81.56 ± 0.88** | 82.64 ± 0.95 | 83.34 ± 0.92 | 3 / 3 / 3 | 2 | `sr07nm_eesa_arbertv2_fanar` |
+| SR07-EESA-NM-camelbert_da_aya | 3 | **80.56 ± 0.40** | 80.35 ± 0.37 | 80.96 ± 0.34 | 81.54 ± 0.37 | 82.73 ± 0.41 | 80.93 / 80.14 / 80.62 | **80.39 ± 1.18** | 81.38 ± 1.16 | 82.15 ± 1.45 | 3 / 3 / 3 | 2 | `sr07nm_eesa_camelbert_da_aya` |
+| SR07-EESA-NM-camelbert_da_qwen3 | 3 | **80.19 ± 0.25** | 79.94 ± 0.18 | 80.64 ± 0.36 | 81.21 ± 0.19 | 82.16 ± 0.28 | 80.01 / 80.10 / 80.48 | **81.45 ± 0.16** | 82.27 ± 0.12 | 83.09 ± 0.12 | 3 / 3 / 3 | 1 | `sr07nm_eesa_camelbert_da_qwen3` |
+| SR07-EESA-NM-camelbert_da_fanar | 3 | **79.53 ± 0.54** | 79.31 ± 0.52 | 79.94 ± 0.52 | 80.52 ± 0.49 | 81.96 ± 0.55 | 79.40 / 79.08 / 80.12 | **81.00 ± 0.67** | 81.74 ± 0.74 | 82.75 ± 1.01 | 3 / 3 / 3 | 2 | `sr07nm_eesa_camelbert_da_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR07-EESA-NM-marbert_aya | 87.6 | 85.9 | 93.6 | 86.2 | 83.7 | 93.2 |
+| SR07-EESA-NM-marbert_qwen3 | 87.5 | 85.1 | 93.5 | 84.2 | 83.4 | 93.2 |
+| SR07-EESA-NM-marbert_fanar | 87.0 | 83.7 | 92.8 | 85.4 | 83.2 | 92.5 |
+| SR07-EESA-NM-marbertv2_aya | 85.7 | 82.4 | 91.8 | 84.7 | 81.2 | 91.2 |
+| SR07-EESA-NM-marbertv2_qwen3 | 83.9 | 81.2 | 91.4 | 83.8 | 80.3 | 90.9 |
+| SR07-EESA-NM-marbertv2_fanar | 85.1 | 79.6 | 90.6 | 84.4 | 79.4 | 90.1 |
+| SR07-EESA-NM-arbert_aya | 82.6 | 81.4 | 89.5 | 80.0 | 81.0 | 90.7 |
+| SR07-EESA-NM-arabertv02_twitter_aya | 81.3 | 81.1 | 90.7 | 81.7 | 80.7 | 89.7 |
+| SR07-EESA-NM-arbert_qwen3 | 81.4 | 80.5 | 89.5 | 80.4 | 80.1 | 90.7 |
+| SR07-EESA-NM-arabertv02_twitter_qwen3 | 80.3 | 80.4 | 90.5 | 80.9 | 80.4 | 89.7 |
+| SR07-EESA-NM-arbert_fanar | 82.5 | 79.8 | 88.7 | 80.2 | 79.9 | 89.6 |
+| SR07-EESA-NM-arabertv02_twitter_fanar | 80.8 | 78.6 | 89.5 | 82.4 | 80.5 | 89.1 |
+| SR07-EESA-NM-camelbert_mix_qwen3 | 80.0 | 79.6 | 88.7 | 76.2 | 79.6 | 88.5 |
+| SR07-EESA-NM-camelbert_mix_aya | 79.5 | 79.8 | 88.9 | 76.5 | 79.3 | 88.6 |
+| SR07-EESA-NM-camelbert_mix_fanar | 79.6 | 78.2 | 87.9 | 76.5 | 78.5 | 88.2 |
+| SR07-EESA-NM-arbertv2_aya | 79.7 | 76.5 | 88.7 | 78.2 | 78.0 | 88.5 |
+| SR07-EESA-NM-arbertv2_qwen3 | 80.0 | 76.2 | 88.1 | 78.2 | 77.6 | 88.8 |
+| SR07-EESA-NM-arbertv2_fanar | 79.4 | 75.6 | 87.9 | 78.4 | 78.0 | 88.3 |
+| SR07-EESA-NM-camelbert_da_aya | 78.5 | 76.2 | 87.0 | 77.3 | 76.9 | 87.0 |
+| SR07-EESA-NM-camelbert_da_qwen3 | 77.4 | 76.2 | 86.9 | 79.0 | 78.2 | 87.2 |
+| SR07-EESA-NM-camelbert_da_fanar | 77.7 | 74.7 | 86.2 | 79.1 | 77.5 | 86.4 |
+
 ## SR08: Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 without the prayer pairs (3,600 texts); 3 BERTs (MARBERTv2, AraBERTv02-Tw, CAMeLBERT-mix), 3 seeds, SR07 recipe. Member = <classifier>_<generator>.
 
 | ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
@@ -756,6 +1106,186 @@ Per-class F1 (mean over seeds):
 | SR08-camelbert_mix_fanar | 78.0 | 79.7 | 70.9 | 77.4 | 44.4 | 61.1 |
 | SR08-camelbert_mix_qwen3 | 77.8 | 78.8 | 70.6 | 77.5 | 43.7 | 62.6 |
 | SR08-camelbert_mix_aya | 77.1 | 79.0 | 71.0 | 76.8 | 44.9 | 60.5 |
+
+## SR08-EESA-DM: SR07-EESA-DM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-DM texts (Egyptian Arabic as matrix, prompt v2; Qwen3 set only); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR08-EESA-DM-marbert_qwen3 | 3 | **91.09 ± 0.76** | 91.18 ± 0.70 | 91.01 ± 0.83 | 91.48 ± 0.67 | 92.25 ± 0.57 | 91.10 / 90.32 / 91.84 | **88.12 ± 0.54** | 89.00 ± 0.53 | 89.80 ± 0.28 | 8 / 8 / 8 | 5 | `sr08dm_eesa_marbert_qwen3` |
+| SR08-EESA-DM-marbertv2_qwen3 | 3 | **89.50 ± 0.62** | 89.33 ± 0.62 | 89.85 ± 0.47 | 90.10 ± 0.53 | 91.29 ± 0.25 | 88.79 / 89.79 / 89.91 | **87.58 ± 0.33** | 88.26 ± 0.24 | 89.96 ± 0.35 | 8 / 8 / 8 | 5 | `sr08dm_eesa_marbertv2_qwen3` |
+| SR08-EESA-DM-arabertv02_twitter_qwen3 | 3 | **87.67 ± 0.28** | 87.61 ± 0.33 | 87.75 ± 0.24 | 88.30 ± 0.28 | 88.60 ± 0.30 | 87.53 / 87.49 / 87.99 | **85.05 ± 0.24** | 85.94 ± 0.21 | 87.03 ± 0.27 | 8 / 8 / 8 | 4 | `sr08dm_eesa_arabertv02_twitter_qwen3` |
+| SR08-EESA-DM-arbert_qwen3 | 3 | **86.06 ± 0.36** | 86.14 ± 0.41 | 86.02 ± 0.37 | 86.88 ± 0.43 | 87.77 ± 0.25 | 86.08 / 86.41 / 85.69 | **86.38 ± 0.26** | 87.33 ± 0.19 | 88.12 ± 0.41 | 8 / 8 / 8 | 4 | `sr08dm_eesa_arbert_qwen3` |
+| SR08-EESA-DM-camelbert_mix_qwen3 | 3 | **84.90 ± 0.35** | 84.72 ± 0.30 | 85.59 ± 0.33 | 85.74 ± 0.25 | 86.66 ± 0.29 | 85.07 / 85.12 / 84.50 | **83.87 ± 0.31** | 84.88 ± 0.25 | 85.15 ± 0.23 | 8 / 8 / 8 | 4 | `sr08dm_eesa_camelbert_mix_qwen3` |
+| SR08-EESA-DM-arbertv2_qwen3 | 3 | **84.40 ± 0.58** | 84.50 ± 0.63 | 84.72 ± 0.51 | 85.41 ± 0.62 | 87.02 ± 0.62 | 83.89 / 85.04 / 84.28 | **84.11 ± 0.71** | 85.21 ± 0.65 | 86.17 ± 0.94 | 8 / 8 / 8 | 5 | `sr08dm_eesa_arbertv2_qwen3` |
+| SR08-EESA-DM-camelbert_da_qwen3 | 3 | **82.65 ± 0.58** | 82.31 ± 0.59 | 83.14 ± 0.57 | 83.46 ± 0.55 | 83.88 ± 0.54 | 82.57 / 82.11 / 83.26 | **83.62 ± 0.47** | 84.35 ± 0.49 | 85.29 ± 0.59 | 8 / 8 / 8 | 4 | `sr08dm_eesa_camelbert_da_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR08-EESA-DM-marbert_qwen3 | 90.6 | 88.8 | 93.9 | 86.1 | 84.8 | 93.5 |
+| SR08-EESA-DM-marbertv2_qwen3 | 89.0 | 85.9 | 93.6 | 87.4 | 82.8 | 92.6 |
+| SR08-EESA-DM-arabertv02_twitter_qwen3 | 85.6 | 85.8 | 91.6 | 82.8 | 81.1 | 91.2 |
+| SR08-EESA-DM-arbert_qwen3 | 84.1 | 82.6 | 91.4 | 84.2 | 82.9 | 92.1 |
+| SR08-EESA-DM-camelbert_mix_qwen3 | 82.9 | 81.4 | 90.4 | 80.4 | 81.3 | 89.9 |
+| SR08-EESA-DM-arbertv2_qwen3 | 83.4 | 79.2 | 90.6 | 81.9 | 80.0 | 90.4 |
+| SR08-EESA-DM-camelbert_da_qwen3 | 79.8 | 80.2 | 87.9 | 81.9 | 80.3 | 88.6 |
+
+## SR08-EESA-DM3: SR07-EESA-DM3 BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-DM3 texts (Egyptian Arabic as matrix, prompt v3); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR08-EESA-DM3-marbert_aya | 3 | **91.31 ± 0.79** | 91.19 ± 0.74 | 91.45 ± 0.87 | 91.77 ± 0.74 | 92.32 ± 0.80 | 91.28 / 92.12 / 90.54 | **88.45 ± 0.77** | 89.24 ± 0.74 | 89.86 ± 0.71 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_marbert_aya` |
+| SR08-EESA-DM3-marbert_qwen3 | 3 | **91.10 ± 0.51** | 91.02 ± 0.54 | 91.19 ± 0.49 | 91.48 ± 0.51 | 92.32 ± 0.72 | 90.91 / 90.71 / 91.68 | **87.17 ± 0.33** | 88.06 ± 0.28 | 88.77 ± 0.38 | 8 / 8 / 8 | 5 | `sr08dm3_eesa_marbert_qwen3` |
+| SR08-EESA-DM3-marbert_fanar | 3 | **90.57 ± 0.45** | 90.67 ± 0.35 | 90.48 ± 0.56 | 90.99 ± 0.46 | 91.92 ± 0.38 | 90.90 / 90.06 / 90.75 | **87.63 ± 0.11** | 88.43 ± 0.07 | 89.64 ± 0.21 | 8 / 7 / 8 | 4 | `sr08dm3_eesa_marbert_fanar` |
+| SR08-EESA-DM3-marbertv2_aya | 3 | **90.34 ± 0.92** | 90.12 ± 1.02 | 90.72 ± 0.69 | 90.75 ± 0.81 | 91.95 ± 0.73 | 89.67 / 89.95 / 91.39 | **88.74 ± 0.62** | 89.41 ± 0.49 | 90.71 ± 0.65 | 8 / 8 / 8 | 5 | `sr08dm3_eesa_marbertv2_aya` |
+| SR08-EESA-DM3-marbertv2_qwen3 | 3 | **89.25 ± 0.40** | 89.06 ± 0.54 | 89.74 ± 0.26 | 89.81 ± 0.39 | 91.19 ± 0.40 | 89.35 / 88.81 / 89.58 | **86.42 ± 0.31** | 87.20 ± 0.25 | 88.67 ± 0.15 | 8 / 8 / 8 | 5 | `sr08dm3_eesa_marbertv2_qwen3` |
+| SR08-EESA-DM3-marbertv2_fanar | 3 | **88.98 ± 0.80** | 88.82 ± 0.68 | 89.36 ± 0.88 | 89.45 ± 0.72 | 91.08 ± 0.61 | 89.52 / 89.36 / 88.07 | **87.36 ± 0.34** | 87.98 ± 0.25 | 89.71 ± 0.22 | 8 / 8 / 8 | 5 | `sr08dm3_eesa_marbertv2_fanar` |
+| SR08-EESA-DM3-arabertv02_twitter_aya | 3 | **87.10 ± 0.50** | 86.96 ± 0.36 | 87.33 ± 0.68 | 87.78 ± 0.37 | 88.44 ± 0.56 | 87.61 / 87.08 / 86.62 | **85.88 ± 0.51** | 86.59 ± 0.43 | 87.64 ± 0.42 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_arabertv02_twitter_aya` |
+| SR08-EESA-DM3-arabertv02_twitter_fanar | 3 | **86.88 ± 0.98** | 86.81 ± 0.98 | 86.99 ± 0.98 | 87.41 ± 0.86 | 88.36 ± 0.99 | 86.87 / 87.87 / 85.90 | **85.35 ± 0.53** | 85.86 ± 0.56 | 87.27 ± 0.22 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_arabertv02_twitter_fanar` |
+| SR08-EESA-DM3-arabertv02_twitter_qwen3 | 3 | **86.69 ± 0.51** | 86.67 ± 0.48 | 86.73 ± 0.53 | 87.45 ± 0.46 | 87.97 ± 0.29 | 87.11 / 86.84 / 86.13 | **85.41 ± 0.32** | 86.19 ± 0.21 | 87.04 ± 0.29 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_arabertv02_twitter_qwen3` |
+| SR08-EESA-DM3-arbert_aya | 3 | **86.63 ± 0.35** | 87.01 ± 0.35 | 86.44 ± 0.37 | 87.37 ± 0.31 | 88.20 ± 0.47 | 86.64 / 86.28 / 86.98 | **85.88 ± 0.36** | 86.96 ± 0.25 | 87.12 ± 0.28 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_arbert_aya` |
+| SR08-EESA-DM3-arbert_qwen3 | 3 | **85.81 ± 0.30** | 86.01 ± 0.38 | 85.68 ± 0.27 | 86.55 ± 0.24 | 87.34 ± 0.14 | 86.14 / 85.71 / 85.58 | **85.63 ± 0.56** | 86.67 ± 0.53 | 87.16 ± 0.26 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_arbert_qwen3` |
+| SR08-EESA-DM3-arbertv2_aya | 3 | **85.13 ± 0.47** | 85.09 ± 0.50 | 85.52 ± 0.43 | 85.94 ± 0.44 | 87.66 ± 0.49 | 84.73 / 85.64 / 85.01 | **84.34 ± 0.18** | 85.29 ± 0.25 | 86.15 ± 0.21 | 8 / 8 / 8 | 5 | `sr08dm3_eesa_arbertv2_aya` |
+| SR08-EESA-DM3-arbert_fanar | 3 | **85.03 ± 0.56** | 85.31 ± 0.86 | 84.90 ± 0.52 | 85.66 ± 0.55 | 87.03 ± 0.09 | 85.53 / 85.13 / 84.43 | **84.68 ± 0.63** | 85.57 ± 0.68 | 86.18 ± 0.56 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_arbert_fanar` |
+| SR08-EESA-DM3-camelbert_mix_aya | 3 | **84.95 ± 0.57** | 84.73 ± 0.55 | 85.63 ± 0.55 | 85.70 ± 0.53 | 86.77 ± 0.57 | 84.59 / 84.66 / 85.61 | **83.19 ± 0.39** | 84.15 ± 0.31 | 84.56 ± 0.12 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_camelbert_mix_aya` |
+| SR08-EESA-DM3-camelbert_mix_qwen3 | 3 | **84.43 ± 0.58** | 84.18 ± 0.64 | 85.22 ± 0.67 | 85.29 ± 0.43 | 86.41 ± 0.58 | 83.84 / 85.00 / 84.44 | **82.84 ± 0.66** | 83.78 ± 0.63 | 84.04 ± 0.25 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_camelbert_mix_qwen3` |
+| SR08-EESA-DM3-camelbert_mix_fanar | 3 | **84.23 ± 0.50** | 83.99 ± 0.43 | 84.76 ± 0.50 | 84.96 ± 0.44 | 86.32 ± 0.45 | 84.65 / 83.68 / 84.37 | **83.89 ± 0.98** | 84.88 ± 0.86 | 85.37 ± 0.93 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_camelbert_mix_fanar` |
+| SR08-EESA-DM3-arbertv2_qwen3 | 3 | **84.20 ± 0.25** | 84.13 ± 0.34 | 84.69 ± 0.51 | 85.21 ± 0.32 | 86.55 ± 0.35 | 84.01 / 84.49 / 84.12 | **83.53 ± 1.06** | 84.52 ± 0.92 | 85.27 ± 0.80 | 7 / 8 / 8 | 5 | `sr08dm3_eesa_arbertv2_qwen3` |
+| SR08-EESA-DM3-arbertv2_fanar | 3 | **83.75 ± 0.17** | 83.54 ± 0.22 | 84.11 ± 0.15 | 84.52 ± 0.14 | 86.11 ± 0.29 | 83.57 / 83.79 / 83.90 | **83.82 ± 0.53** | 84.60 ± 0.56 | 86.10 ± 0.52 | 7 / 8 / 8 | 4 | `sr08dm3_eesa_arbertv2_fanar` |
+| SR08-EESA-DM3-camelbert_da_aya | 3 | **83.25 ± 0.56** | 82.92 ± 0.55 | 83.77 ± 0.52 | 84.03 ± 0.49 | 84.72 ± 0.48 | 83.30 / 82.67 / 83.78 | **82.26 ± 0.70** | 83.13 ± 0.61 | 83.84 ± 0.66 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_camelbert_da_aya` |
+| SR08-EESA-DM3-camelbert_da_fanar | 3 | **82.98 ± 0.81** | 82.70 ± 0.86 | 83.31 ± 0.73 | 83.62 ± 0.73 | 84.76 ± 0.80 | 82.82 / 82.26 / 83.85 | **81.78 ± 0.56** | 82.56 ± 0.49 | 83.45 ± 0.48 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_camelbert_da_fanar` |
+| SR08-EESA-DM3-camelbert_da_qwen3 | 3 | **82.95 ± 0.67** | 82.68 ± 0.63 | 83.40 ± 0.64 | 83.70 ± 0.55 | 84.35 ± 0.73 | 82.96 / 82.28 / 83.62 | **82.44 ± 0.98** | 83.29 ± 0.92 | 84.03 ± 0.77 | 8 / 8 / 8 | 4 | `sr08dm3_eesa_camelbert_da_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR08-EESA-DM3-marbert_aya | 90.3 | 89.3 | 94.4 | 86.4 | 85.6 | 93.4 |
+| SR08-EESA-DM3-marbert_qwen3 | 90.8 | 88.7 | 93.8 | 85.0 | 84.0 | 92.5 |
+| SR08-EESA-DM3-marbert_fanar | 90.2 | 87.9 | 93.6 | 86.4 | 83.6 | 92.9 |
+| SR08-EESA-DM3-marbertv2_aya | 90.4 | 87.1 | 93.5 | 88.0 | 84.8 | 93.4 |
+| SR08-EESA-DM3-marbertv2_qwen3 | 89.1 | 85.4 | 93.2 | 85.6 | 81.9 | 91.7 |
+| SR08-EESA-DM3-marbertv2_fanar | 89.6 | 84.8 | 92.5 | 87.4 | 82.7 | 92.0 |
+| SR08-EESA-DM3-arabertv02_twitter_aya | 85.2 | 84.4 | 91.7 | 84.1 | 82.4 | 91.2 |
+| SR08-EESA-DM3-arabertv02_twitter_fanar | 85.9 | 83.9 | 90.8 | 84.8 | 81.5 | 89.7 |
+| SR08-EESA-DM3-arabertv02_twitter_qwen3 | 84.5 | 84.1 | 91.5 | 83.2 | 82.1 | 90.8 |
+| SR08-EESA-DM3-arbert_aya | 84.8 | 83.5 | 91.6 | 82.2 | 83.4 | 92.1 |
+| SR08-EESA-DM3-arbert_qwen3 | 84.0 | 82.7 | 90.7 | 82.5 | 82.6 | 91.9 |
+| SR08-EESA-DM3-arbertv2_aya | 84.8 | 80.1 | 90.5 | 82.1 | 80.7 | 90.2 |
+| SR08-EESA-DM3-arbert_fanar | 84.3 | 81.0 | 89.8 | 82.0 | 81.7 | 90.4 |
+| SR08-EESA-DM3-camelbert_mix_aya | 83.6 | 81.3 | 90.0 | 79.7 | 80.5 | 89.4 |
+| SR08-EESA-DM3-camelbert_mix_qwen3 | 82.5 | 80.5 | 90.3 | 79.5 | 80.4 | 88.6 |
+| SR08-EESA-DM3-camelbert_mix_fanar | 83.4 | 80.0 | 89.3 | 80.7 | 80.9 | 90.0 |
+| SR08-EESA-DM3-arbertv2_qwen3 | 82.4 | 79.5 | 90.7 | 80.9 | 80.1 | 89.7 |
+| SR08-EESA-DM3-arbertv2_fanar | 83.1 | 79.0 | 89.2 | 82.7 | 79.3 | 89.4 |
+| SR08-EESA-DM3-camelbert_da_aya | 81.0 | 80.3 | 88.4 | 79.7 | 79.1 | 88.0 |
+| SR08-EESA-DM3-camelbert_da_fanar | 81.8 | 79.4 | 87.7 | 79.6 | 78.5 | 87.3 |
+| SR08-EESA-DM3-camelbert_da_qwen3 | 80.8 | 80.2 | 87.9 | 79.9 | 79.3 | 88.1 |
+
+## SR08-EESA-EM: SR07-EESA-EM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-EM texts (English as matrix); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR08-EESA-EM-marbert_qwen3 | 3 | **91.15 ± 0.52** | 91.34 ± 0.52 | 91.01 ± 0.51 | 91.56 ± 0.56 | 92.40 ± 0.26 | 91.39 / 91.50 / 90.56 | **87.76 ± 1.11** | 88.63 ± 1.06 | 89.76 ± 0.86 | 8 / 7 / 7 | 5 | `sr08em_eesa_marbert_qwen3` |
+| SR08-EESA-EM-marbert_aya | 3 | **90.91 ± 0.72** | 90.97 ± 0.65 | 90.87 ± 0.79 | 91.40 ± 0.62 | 91.95 ± 0.60 | 90.76 / 90.27 / 91.70 | **88.54 ± 0.23** | 89.41 ± 0.25 | 89.96 ± 0.13 | 8 / 7 / 8 | 4 | `sr08em_eesa_marbert_aya` |
+| SR08-EESA-EM-marbert_fanar | 3 | **90.79 ± 0.48** | 90.86 ± 0.60 | 90.77 ± 0.32 | 91.16 ± 0.43 | 92.13 ± 0.41 | 91.27 / 90.32 / 90.77 | **87.95 ± 0.21** | 88.79 ± 0.14 | 89.81 ± 0.31 | 8 / 8 / 7 | 4 | `sr08em_eesa_marbert_fanar` |
+| SR08-EESA-EM-marbertv2_aya | 3 | **90.35 ± 0.60** | 90.20 ± 0.56 | 90.57 ± 0.62 | 90.75 ± 0.49 | 91.79 ± 0.15 | 89.97 / 91.04 / 90.04 | **88.42 ± 0.77** | 89.08 ± 0.74 | 90.33 ± 0.65 | 8 / 8 / 8 | 5 | `sr08em_eesa_marbertv2_aya` |
+| SR08-EESA-EM-marbertv2_qwen3 | 3 | **89.95 ± 0.98** | 89.77 ± 0.92 | 90.28 ± 0.99 | 90.46 ± 0.85 | 91.61 ± 0.48 | 89.38 / 91.08 / 89.40 | **88.27 ± 0.22** | 88.88 ± 0.12 | 90.41 ± 0.29 | 8 / 8 / 8 | 5 | `sr08em_eesa_marbertv2_qwen3` |
+| SR08-EESA-EM-marbertv2_fanar | 3 | **88.56 ± 0.32** | 88.36 ± 0.25 | 88.99 ± 0.33 | 89.08 ± 0.25 | 90.76 ± 0.13 | 88.36 / 88.93 / 88.38 | **87.95 ± 0.14** | 88.43 ± 0.14 | 90.03 ± 0.27 | 8 / 8 / 8 | 5 | `sr08em_eesa_marbertv2_fanar` |
+| SR08-EESA-EM-arabertv02_twitter_qwen3 | 3 | **87.42 ± 0.98** | 87.47 ± 0.81 | 87.50 ± 1.06 | 88.14 ± 0.76 | 88.40 ± 0.92 | 87.70 / 88.23 / 86.33 | **85.98 ± 1.06** | 86.67 ± 0.80 | 87.57 ± 1.24 | 8 / 8 / 8 | 4 | `sr08em_eesa_arabertv02_twitter_qwen3` |
+| SR08-EESA-EM-arbert_qwen3 | 3 | **86.79 ± 0.28** | 86.95 ± 0.37 | 86.71 ± 0.40 | 87.41 ± 0.21 | 88.33 ± 0.08 | 86.95 / 86.96 / 86.48 | **85.18 ± 0.91** | 86.27 ± 0.80 | 86.72 ± 0.74 | 8 / 8 / 8 | 4 | `sr08em_eesa_arbert_qwen3` |
+| SR08-EESA-EM-arabertv02_twitter_aya | 3 | **86.77 ± 0.76** | 86.77 ± 0.73 | 86.85 ± 0.78 | 87.57 ± 0.67 | 87.89 ± 0.79 | 86.81 / 87.51 / 86.00 | **85.34 ± 0.35** | 86.15 ± 0.31 | 87.15 ± 0.44 | 8 / 8 / 8 | 4 | `sr08em_eesa_arabertv02_twitter_aya` |
+| SR08-EESA-EM-arabertv02_twitter_fanar | 3 | **86.54 ± 0.89** | 86.73 ± 0.76 | 86.46 ± 1.00 | 87.16 ± 0.76 | 87.68 ± 0.88 | 87.29 / 86.78 / 85.56 | **85.28 ± 0.63** | 85.98 ± 0.49 | 87.28 ± 0.58 | 8 / 8 / 8 | 4 | `sr08em_eesa_arabertv02_twitter_fanar` |
+| SR08-EESA-EM-arbert_aya | 3 | **86.13 ± 0.78** | 86.54 ± 0.42 | 85.91 ± 0.97 | 86.96 ± 0.62 | 87.65 ± 0.87 | 85.30 / 86.25 / 86.84 | **86.18 ± 1.05** | 87.08 ± 1.04 | 87.41 ± 0.86 | 8 / 8 / 8 | 4 | `sr08em_eesa_arbert_aya` |
+| SR08-EESA-EM-arbert_fanar | 3 | **85.84 ± 0.24** | 85.95 ± 0.40 | 85.77 ± 0.13 | 86.47 ± 0.14 | 87.53 ± 0.31 | 86.08 / 85.81 / 85.61 | **85.52 ± 1.23** | 86.63 ± 0.95 | 87.05 ± 0.92 | 8 / 8 / 8 | 4 | `sr08em_eesa_arbert_fanar` |
+| SR08-EESA-EM-arbertv2_fanar | 3 | **85.25 ± 0.94** | 85.24 ± 0.90 | 85.66 ± 0.71 | 86.02 ± 0.86 | 87.37 ± 0.50 | 85.18 / 84.35 / 86.22 | **84.03 ± 0.64** | 85.04 ± 0.55 | 85.91 ± 0.66 | 8 / 8 / 8 | 4 | `sr08em_eesa_arbertv2_fanar` |
+| SR08-EESA-EM-camelbert_mix_fanar | 3 | **84.90 ± 0.35** | 84.67 ± 0.40 | 85.52 ± 0.32 | 85.53 ± 0.37 | 86.76 ± 0.59 | 84.81 / 84.59 / 85.29 | **83.31 ± 0.34** | 84.19 ± 0.31 | 84.95 ± 0.23 | 8 / 8 / 8 | 4 | `sr08em_eesa_camelbert_mix_fanar` |
+| SR08-EESA-EM-arbertv2_aya | 3 | **84.88 ± 0.48** | 84.93 ± 0.50 | 85.17 ± 0.53 | 85.78 ± 0.46 | 87.10 ± 0.75 | 84.71 / 84.51 / 85.42 | **84.28 ± 0.17** | 85.25 ± 0.07 | 86.11 ± 0.50 | 8 / 8 / 8 | 5 | `sr08em_eesa_arbertv2_aya` |
+| SR08-EESA-EM-camelbert_mix_aya | 3 | **84.50 ± 0.42** | 84.25 ± 0.32 | 85.13 ± 0.37 | 85.25 ± 0.35 | 86.46 ± 0.43 | 84.75 / 84.01 / 84.74 | **83.91 ± 1.14** | 84.88 ± 1.02 | 85.04 ± 0.77 | 8 / 8 / 8 | 4 | `sr08em_eesa_camelbert_mix_aya` |
+| SR08-EESA-EM-arbertv2_qwen3 | 3 | **84.32 ± 0.49** | 84.45 ± 0.38 | 84.71 ± 0.64 | 85.21 ± 0.42 | 86.63 ± 0.36 | 84.62 / 84.58 / 83.76 | **83.64 ± 0.91** | 84.76 ± 0.83 | 85.41 ± 0.59 | 8 / 8 / 8 | 5 | `sr08em_eesa_arbertv2_qwen3` |
+| SR08-EESA-EM-camelbert_mix_qwen3 | 3 | **84.13 ± 0.75** | 84.20 ± 0.64 | 84.86 ± 0.68 | 85.09 ± 0.68 | 86.46 ± 0.71 | 84.03 / 83.44 / 84.93 | **83.27 ± 0.68** | 84.35 ± 0.61 | 84.94 ± 0.62 | 8 / 8 / 8 | 4 | `sr08em_eesa_camelbert_mix_qwen3` |
+| SR08-EESA-EM-camelbert_da_aya | 3 | **82.72 ± 0.80** | 82.38 ± 0.75 | 83.24 ± 0.84 | 83.46 ± 0.67 | 84.40 ± 0.65 | 82.31 / 82.21 / 83.64 | **82.07 ± 0.18** | 82.97 ± 0.19 | 83.55 ± 0.17 | 8 / 8 / 8 | 4 | `sr08em_eesa_camelbert_da_aya` |
+| SR08-EESA-EM-camelbert_da_fanar | 3 | **82.66 ± 0.48** | 82.47 ± 0.45 | 82.92 ± 0.50 | 83.37 ± 0.44 | 84.28 ± 0.31 | 83.01 / 82.11 / 82.84 | **82.82 ± 0.39** | 83.82 ± 0.39 | 84.03 ± 0.27 | 8 / 8 / 8 | 4 | `sr08em_eesa_camelbert_da_fanar` |
+| SR08-EESA-EM-camelbert_da_qwen3 | 3 | **82.54 ± 1.08** | 82.41 ± 1.04 | 83.10 ± 1.04 | 83.41 ± 1.00 | 84.65 ± 0.97 | 83.04 / 81.30 / 83.29 | **80.98 ± 0.61** | 81.99 ± 0.49 | 82.60 ± 0.44 | 8 / 8 / 8 | 4 | `sr08em_eesa_camelbert_da_qwen3` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR08-EESA-EM-marbert_qwen3 | 90.8 | 88.7 | 94.0 | 86.5 | 83.8 | 93.0 |
+| SR08-EESA-EM-marbert_aya | 89.9 | 88.8 | 94.0 | 86.2 | 85.7 | 93.7 |
+| SR08-EESA-EM-marbert_fanar | 90.8 | 88.1 | 93.5 | 86.4 | 84.2 | 93.2 |
+| SR08-EESA-EM-marbertv2_aya | 90.3 | 87.5 | 93.3 | 87.5 | 84.6 | 93.2 |
+| SR08-EESA-EM-marbertv2_qwen3 | 89.6 | 86.6 | 93.6 | 88.0 | 84.0 | 92.8 |
+| SR08-EESA-EM-marbertv2_fanar | 89.1 | 84.2 | 92.5 | 88.1 | 83.8 | 91.9 |
+| SR08-EESA-EM-arabertv02_twitter_qwen3 | 84.9 | 85.5 | 91.9 | 84.1 | 82.8 | 91.0 |
+| SR08-EESA-EM-arbert_qwen3 | 85.6 | 83.7 | 91.1 | 81.9 | 82.1 | 91.5 |
+| SR08-EESA-EM-arabertv02_twitter_aya | 84.0 | 84.5 | 91.7 | 83.2 | 81.7 | 91.1 |
+| SR08-EESA-EM-arabertv02_twitter_fanar | 84.8 | 84.3 | 90.6 | 83.9 | 81.3 | 90.6 |
+| SR08-EESA-EM-arbert_aya | 83.9 | 83.1 | 91.4 | 83.3 | 83.7 | 91.6 |
+| SR08-EESA-EM-arbert_fanar | 84.8 | 82.4 | 90.3 | 82.1 | 82.4 | 92.0 |
+| SR08-EESA-EM-arbertv2_fanar | 84.5 | 81.0 | 90.2 | 81.5 | 80.3 | 90.3 |
+| SR08-EESA-EM-camelbert_mix_fanar | 84.2 | 81.2 | 89.3 | 80.8 | 80.0 | 89.1 |
+| SR08-EESA-EM-arbertv2_aya | 83.7 | 80.4 | 90.5 | 82.0 | 80.6 | 90.2 |
+| SR08-EESA-EM-camelbert_mix_aya | 83.3 | 80.6 | 89.6 | 80.2 | 81.7 | 89.9 |
+| SR08-EESA-EM-arbertv2_qwen3 | 83.5 | 79.7 | 89.8 | 80.8 | 80.1 | 90.1 |
+| SR08-EESA-EM-camelbert_mix_qwen3 | 82.7 | 79.5 | 90.2 | 79.9 | 79.9 | 89.9 |
+| SR08-EESA-EM-camelbert_da_aya | 81.0 | 79.4 | 87.8 | 79.1 | 79.1 | 88.0 |
+| SR08-EESA-EM-camelbert_da_fanar | 81.1 | 79.4 | 87.4 | 79.3 | 80.4 | 88.7 |
+| SR08-EESA-EM-camelbert_da_qwen3 | 81.0 | 78.3 | 88.2 | 77.9 | 77.7 | 87.3 |
+
+## SR08-EESA-NM: SR07-EESA-NM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-NM texts (no matrix language stated); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SR08-EESA-NM-marbert_qwen3 | 3 | **90.66 ± 0.78** | 90.67 ± 0.76 | 90.66 ± 0.80 | 91.12 ± 0.67 | 91.79 ± 0.82 | 90.57 / 89.93 / 91.48 | **87.91 ± 0.23** | 88.83 ± 0.19 | 89.56 ± 0.22 | 8 / 7 / 8 | 5 | `sr08nm_eesa_marbert_qwen3` |
+| SR08-EESA-NM-marbert_aya | 3 | **90.63 ± 0.23** | 90.70 ± 0.27 | 90.58 ± 0.25 | 91.12 ± 0.19 | 91.78 ± 0.37 | 90.41 / 90.87 / 90.62 | **88.08 ± 0.49** | 89.00 ± 0.44 | 89.71 ± 0.28 | 8 / 7 / 8 | 4 | `sr08nm_eesa_marbert_aya` |
+| SR08-EESA-NM-marbert_fanar | 3 | **90.61 ± 0.19** | 90.72 ± 0.13 | 90.51 ± 0.24 | 90.99 ± 0.19 | 92.09 ± 0.19 | 90.57 / 90.44 / 90.81 | **87.76 ± 0.17** | 88.55 ± 0.19 | 89.75 ± 0.12 | 8 / 7 / 8 | 4 | `sr08nm_eesa_marbert_fanar` |
+| SR08-EESA-NM-marbertv2_aya | 3 | **90.32 ± 0.80** | 90.13 ± 0.81 | 90.61 ± 0.72 | 90.75 ± 0.63 | 91.84 ± 0.66 | 89.63 / 90.13 / 91.20 | **88.78 ± 0.26** | 89.41 ± 0.14 | 90.66 ± 0.51 | 8 / 8 / 8 | 5 | `sr08nm_eesa_marbertv2_aya` |
+| SR08-EESA-NM-marbertv2_qwen3 | 3 | **89.98 ± 0.94** | 89.83 ± 0.90 | 90.29 ± 0.83 | 90.51 ± 0.81 | 91.67 ± 0.46 | 89.32 / 91.05 / 89.56 | **88.08 ± 0.29** | 88.75 ± 0.24 | 90.14 ± 0.34 | 8 / 8 / 8 | 5 | `sr08nm_eesa_marbertv2_qwen3` |
+| SR08-EESA-NM-marbertv2_fanar | 3 | **89.47 ± 0.62** | 89.42 ± 0.64 | 89.66 ± 0.56 | 89.89 ± 0.55 | 91.56 ± 0.34 | 88.88 / 90.12 / 89.39 | **88.29 ± 0.76** | 88.88 ± 0.68 | 90.44 ± 0.55 | 8 / 8 / 8 | 5 | `sr08nm_eesa_marbertv2_fanar` |
+| SR08-EESA-NM-arabertv02_twitter_qwen3 | 3 | **87.08 ± 0.20** | 86.97 ± 0.21 | 87.20 ± 0.19 | 87.86 ± 0.19 | 88.26 ± 0.06 | 86.90 / 87.30 / 87.05 | **85.86 ± 0.47** | 86.59 ± 0.49 | 87.62 ± 0.39 | 8 / 8 / 8 | 4 | `sr08nm_eesa_arabertv02_twitter_qwen3` |
+| SR08-EESA-NM-arbert_qwen3 | 3 | **86.97 ± 0.80** | 87.01 ± 0.59 | 87.04 ± 1.00 | 87.82 ± 0.74 | 88.33 ± 0.84 | 86.10 / 87.11 / 87.69 | **86.15 ± 0.50** | 87.12 ± 0.55 | 87.84 ± 0.36 | 8 / 8 / 8 | 4 | `sr08nm_eesa_arbert_qwen3` |
+| SR08-EESA-NM-arabertv02_twitter_aya | 3 | **86.92 ± 0.56** | 86.99 ± 0.37 | 87.04 ± 0.65 | 87.65 ± 0.53 | 87.90 ± 0.74 | 86.60 / 87.57 / 86.59 | **85.56 ± 0.65** | 86.35 ± 0.55 | 87.10 ± 0.64 | 8 / 8 / 8 | 4 | `sr08nm_eesa_arabertv02_twitter_aya` |
+| SR08-EESA-NM-arabertv02_twitter_fanar | 3 | **86.63 ± 0.32** | 86.55 ± 0.29 | 86.70 ± 0.37 | 87.29 ± 0.24 | 88.04 ± 0.34 | 86.66 / 86.93 / 86.29 | **86.16 ± 0.11** | 86.84 ± 0.07 | 87.69 ± 0.22 | 8 / 8 / 8 | 4 | `sr08nm_eesa_arabertv02_twitter_fanar` |
+| SR08-EESA-NM-arbert_aya | 3 | **85.83 ± 0.32** | 86.35 ± 0.20 | 85.55 ± 0.46 | 86.76 ± 0.25 | 87.34 ± 0.43 | 85.52 / 85.81 / 86.17 | **85.80 ± 0.38** | 86.76 ± 0.46 | 87.15 ± 0.27 | 8 / 8 / 8 | 4 | `sr08nm_eesa_arbert_aya` |
+| SR08-EESA-NM-arbert_fanar | 3 | **85.25 ± 0.82** | 85.59 ± 0.62 | 85.15 ± 0.96 | 85.98 ± 0.58 | 87.04 ± 0.98 | 85.86 / 84.32 / 85.57 | **84.90 ± 0.33** | 85.86 ± 0.31 | 86.59 ± 0.22 | 8 / 8 / 8 | 4 | `sr08nm_eesa_arbert_fanar` |
+| SR08-EESA-NM-camelbert_mix_aya | 3 | **84.89 ± 0.15** | 84.67 ± 0.19 | 85.58 ± 0.34 | 85.62 ± 0.14 | 86.60 ± 0.30 | 84.71 / 84.95 / 84.99 | **83.59 ± 0.92** | 84.56 ± 0.83 | 84.62 ± 0.69 | 8 / 8 / 8 | 4 | `sr08nm_eesa_camelbert_mix_aya` |
+| SR08-EESA-NM-camelbert_mix_qwen3 | 3 | **84.57 ± 0.46** | 84.41 ± 0.57 | 85.33 ± 0.51 | 85.45 ± 0.44 | 86.29 ± 0.49 | 84.06 / 84.94 / 84.71 | **83.49 ± 0.40** | 84.47 ± 0.32 | 84.83 ± 0.27 | 8 / 8 / 8 | 4 | `sr08nm_eesa_camelbert_mix_qwen3` |
+| SR08-EESA-NM-arbertv2_aya | 3 | **84.39 ± 0.29** | 84.30 ± 0.13 | 84.92 ± 0.58 | 85.33 ± 0.24 | 86.82 ± 0.23 | 84.69 / 84.37 / 84.10 | **84.42 ± 0.40** | 85.41 ± 0.39 | 86.14 ± 0.22 | 7 / 8 / 8 | 5 | `sr08nm_eesa_arbertv2_aya` |
+| SR08-EESA-NM-arbertv2_fanar | 3 | **84.09 ± 0.30** | 84.14 ± 0.37 | 84.34 ± 0.18 | 84.84 ± 0.21 | 86.69 ± 0.25 | 84.31 / 83.76 / 84.21 | **83.85 ± 0.44** | 84.76 ± 0.39 | 85.75 ± 0.42 | 8 / 8 / 8 | 5 | `sr08nm_eesa_arbertv2_fanar` |
+| SR08-EESA-NM-arbertv2_qwen3 | 3 | **83.90 ± 0.53** | 83.99 ± 0.45 | 84.12 ± 0.52 | 84.88 ± 0.49 | 86.14 ± 0.43 | 84.11 / 84.29 / 83.30 | **84.67 ± 0.52** | 85.78 ± 0.46 | 86.38 ± 0.31 | 8 / 8 / 8 | 5 | `sr08nm_eesa_arbertv2_qwen3` |
+| SR08-EESA-NM-camelbert_mix_fanar | 3 | **83.58 ± 0.08** | 83.42 ± 0.02 | 84.23 ± 0.03 | 84.47 ± 0.12 | 85.66 ± 0.23 | 83.64 / 83.50 / 83.61 | **84.04 ± 0.50** | 84.96 ± 0.44 | 85.18 ± 0.63 | 8 / 8 / 8 | 4 | `sr08nm_eesa_camelbert_mix_fanar` |
+| SR08-EESA-NM-camelbert_da_qwen3 | 3 | **82.79 ± 0.38** | 82.43 ± 0.37 | 83.33 ± 0.36 | 83.50 ± 0.32 | 84.07 ± 0.29 | 83.00 / 82.35 / 83.02 | **83.03 ± 1.02** | 83.86 ± 0.95 | 84.61 ± 1.03 | 8 / 8 / 8 | 4 | `sr08nm_eesa_camelbert_da_qwen3` |
+| SR08-EESA-NM-camelbert_da_aya | 3 | **82.77 ± 0.65** | 82.44 ± 0.64 | 83.32 ± 0.52 | 83.50 ± 0.65 | 84.55 ± 0.85 | 82.94 / 82.05 / 83.32 | **82.21 ± 0.41** | 83.13 ± 0.37 | 83.83 ± 0.37 | 8 / 8 / 8 | 4 | `sr08nm_eesa_camelbert_da_aya` |
+| SR08-EESA-NM-camelbert_da_fanar | 3 | **82.28 ± 0.52** | 82.04 ± 0.58 | 82.65 ± 0.47 | 83.09 ± 0.51 | 84.03 ± 0.46 | 82.36 / 81.73 / 82.76 | **81.57 ± 0.80** | 82.48 ± 0.81 | 83.04 ± 0.70 | 8 / 8 / 8 | 4 | `sr08nm_eesa_camelbert_da_fanar` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| SR08-EESA-NM-marbert_qwen3 | 89.9 | 88.4 | 93.7 | 85.7 | 84.6 | 93.4 |
+| SR08-EESA-NM-marbert_aya | 89.8 | 88.3 | 93.8 | 85.9 | 84.8 | 93.5 |
+| SR08-EESA-NM-marbert_fanar | 90.7 | 87.6 | 93.5 | 86.6 | 83.8 | 92.9 |
+| SR08-EESA-NM-marbertv2_aya | 90.2 | 87.3 | 93.5 | 88.0 | 85.0 | 93.3 |
+| SR08-EESA-NM-marbertv2_qwen3 | 89.6 | 86.6 | 93.7 | 87.3 | 83.9 | 93.0 |
+| SR08-EESA-NM-marbertv2_fanar | 90.3 | 85.3 | 92.8 | 88.1 | 84.0 | 92.7 |
+| SR08-EESA-NM-arabertv02_twitter_qwen3 | 84.7 | 84.7 | 91.8 | 84.1 | 82.3 | 91.1 |
+| SR08-EESA-NM-arbert_qwen3 | 84.3 | 84.2 | 92.4 | 83.5 | 82.8 | 92.2 |
+| SR08-EESA-NM-arabertv02_twitter_aya | 84.3 | 85.0 | 91.5 | 83.1 | 82.5 | 91.1 |
+| SR08-EESA-NM-arabertv02_twitter_fanar | 85.1 | 83.8 | 91.0 | 84.5 | 83.1 | 90.9 |
+| SR08-EESA-NM-arbert_aya | 83.1 | 82.8 | 91.5 | 82.8 | 83.1 | 91.5 |
+| SR08-EESA-NM-arbert_fanar | 83.6 | 81.7 | 90.5 | 82.2 | 81.5 | 91.0 |
+| SR08-EESA-NM-camelbert_mix_aya | 83.4 | 81.5 | 89.8 | 79.5 | 81.5 | 89.7 |
+| SR08-EESA-NM-camelbert_mix_qwen3 | 82.2 | 81.1 | 90.3 | 80.0 | 80.8 | 89.7 |
+| SR08-EESA-NM-arbertv2_aya | 83.1 | 79.5 | 90.5 | 81.8 | 81.0 | 90.5 |
+| SR08-EESA-NM-arbertv2_fanar | 84.3 | 78.9 | 89.1 | 81.9 | 80.0 | 89.6 |
+| SR08-EESA-NM-arbertv2_qwen3 | 82.4 | 79.4 | 89.9 | 81.8 | 81.3 | 91.0 |
+| SR08-EESA-NM-camelbert_mix_fanar | 81.9 | 79.4 | 89.4 | 80.7 | 81.8 | 89.7 |
+| SR08-EESA-NM-camelbert_da_qwen3 | 80.6 | 80.2 | 87.6 | 80.7 | 79.9 | 88.5 |
+| SR08-EESA-NM-camelbert_da_aya | 81.2 | 79.2 | 87.9 | 79.6 | 79.0 | 88.1 |
+| SR08-EESA-NM-camelbert_da_fanar | 80.4 | 78.8 | 87.7 | 78.6 | 78.6 | 87.5 |
 
 ## SR09: Repair test on SR07 (D-025, test-contaminated like SR07): S1 train + SG04 Qwen3 without the pairs whose sides have the same words; 3 BERTs, 3 seeds, SR07 recipe. Member = <classifier>_qwen3.
 
@@ -884,4 +1414,62 @@ Per-class F1 (mean over seeds):
 | SR13-camelbert_mix_qwen3 | 77.5 | 79.0 | 72.0 | 77.7 | 46.9 | 62.6 |
 | SR13-camelbert_mix_aya | 77.6 | 78.9 | 71.5 | 77.1 | 45.9 | 62.4 |
 | SR13-camelbert_mix_fanar | 77.4 | 78.8 | 71.7 | 77.6 | 46.3 | 62.5 |
+
+## unassigned: not in configs/sentiment/runs.json
+
+| ID | Seeds | Dev F1 | Dev P | Dev R | Dev acc | Dev F1-PN | Dev F1 per seed | Test F1 | Test acc | Test F1-PN | Best epoch | Min/seed | Result folder |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| unassigned-sr05_eesa_marbert_seed44_10ep | 1 | **92.04** | 92.10 | 91.98 | 92.42 | 93.16 | 92.04 | **88.85** | 89.85 | 90.03 | 9 | 2 | `sr05_eesa_marbert_seed44_10ep` |
+| unassigned-sr05_eesa_marbert_seed43_10ep | 1 | **91.89** | 92.10 | 91.70 | 92.30 | 92.92 | 91.89 | **88.29** | 89.24 | 89.67 | 9 | 2 | `sr05_eesa_marbert_seed43_10ep` |
+| unassigned-sr05_eesa_marbertv2_seed44_10ep | 1 | **91.10** | 90.93 | 91.35 | 91.56 | 92.49 | 91.10 | **87.87** | 88.51 | 90.18 | 10 | 2 | `sr05_eesa_marbertv2_seed44_10ep` |
+| unassigned-sr05_eesa_marbertv2_seed42_10ep | 1 | **90.75** | 90.67 | 90.92 | 91.20 | 92.10 | 90.75 | **88.08** | 88.75 | 90.21 | 10 | 2 | `sr05_eesa_marbertv2_seed42_10ep` |
+| unassigned-sr05_eesa_marbert_seed42_10ep | 1 | **90.56** | 90.63 | 90.52 | 91.08 | 91.55 | 90.56 | **88.72** | 89.61 | 90.05 | 10 | 2 | `sr05_eesa_marbert_seed42_10ep` |
+| unassigned-sr05_eesa_marbertv2_seed43_10ep | 1 | **89.85** | 89.73 | 90.01 | 90.34 | 91.47 | 89.85 | **89.43** | 89.98 | 91.54 | 9 | 2 | `sr05_eesa_marbertv2_seed43_10ep` |
+| unassigned-sr05_eesa_arabertv02_twitter_seed43_10ep | 1 | **88.49** | 88.88 | 88.25 | 89.00 | 89.39 | 88.49 | **86.23** | 87.04 | 87.82 | 10 | 2 | `sr05_eesa_arabertv02_twitter_seed43_10ep` |
+| unassigned-sr05_eesa_arabertv02_twitter_seed44_10ep | 1 | **88.40** | 88.42 | 88.38 | 89.00 | 89.44 | 88.40 | **86.08** | 86.92 | 87.88 | 10 | 2 | `sr05_eesa_arabertv02_twitter_seed44_10ep` |
+| unassigned-sr05_eesa_arabertv02_twitter_seed42_10ep | 1 | **88.17** | 88.02 | 88.35 | 88.75 | 89.35 | 88.17 | **86.24** | 87.04 | 87.84 | 10 | 2 | `sr05_eesa_arabertv02_twitter_seed42_10ep` |
+| unassigned-sr05_eesa_marbertv2_qwen3_seed42_4ep | 1 | **87.20** | 87.08 | 87.90 | 88.02 | 89.56 | 87.20 | **86.68** | 87.53 | 88.56 | 4 | 1 | `sr05_eesa_marbertv2_qwen3_seed42_4ep` |
+| unassigned-sr05_eesa_marbertv2_seed42_5ep | 1 | **87.01** | 87.21 | 87.63 | 87.90 | 89.37 | 87.01 | **87.06** | 88.02 | 89.26 | 5 | 1 | `sr05_eesa_marbertv2_seed42_5ep` |
+| unassigned-sr05_eesa_marbertv2_seed42_4ep | 1 | **86.96** | 87.07 | 87.35 | 87.90 | 88.94 | 86.96 | **87.20** | 88.14 | 89.11 | 4 | 1 | `sr05_eesa_marbertv2_seed42_4ep` |
+| unassigned-sr05_eesa_arbert_seed42_10ep | 1 | **86.32** | 86.56 | 86.11 | 87.04 | 88.20 | 86.32 | **85.64** | 86.80 | 87.33 | 10 | 2 | `sr05_eesa_arbert_seed42_10ep` |
+| unassigned-sr05_eesa_camelbert_mix_seed43_10ep | 1 | **86.07** | 86.03 | 86.44 | 86.80 | 87.47 | 86.07 | **84.17** | 85.21 | 85.36 | 10 | 2 | `sr05_eesa_camelbert_mix_seed43_10ep` |
+| unassigned-sr05_eesa_arbert_seed43_10ep | 1 | **85.76** | 86.51 | 85.20 | 86.55 | 87.37 | 85.76 | **84.79** | 85.82 | 86.59 | 10 | 2 | `sr05_eesa_arbert_seed43_10ep` |
+| unassigned-sr05_eesa_camelbert_mix_seed44_10ep | 1 | **85.24** | 85.31 | 86.01 | 86.06 | 86.73 | 85.24 | **83.15** | 84.35 | 85.15 | 10 | 2 | `sr05_eesa_camelbert_mix_seed44_10ep` |
+| unassigned-sr05_eesa_arbert_seed44_10ep | 1 | **85.13** | 85.63 | 84.74 | 85.94 | 86.74 | 85.13 | **86.15** | 87.16 | 87.74 | 10 | 2 | `sr05_eesa_arbert_seed44_10ep` |
+| unassigned-sr05_eesa_camelbert_mix_seed42_10ep | 1 | **84.75** | 84.82 | 85.51 | 85.70 | 86.75 | 84.75 | **82.52** | 83.74 | 84.11 | 10 | 2 | `sr05_eesa_camelbert_mix_seed42_10ep` |
+| unassigned-sr05_eesa_arbertv2_seed44_10ep | 1 | **84.72** | 85.13 | 85.06 | 85.70 | 87.38 | 84.72 | **84.32** | 85.45 | 86.44 | 10 | 2 | `sr05_eesa_arbertv2_seed44_10ep` |
+| unassigned-sr05_eesa_arbertv2_seed42_10ep | 1 | **84.72** | 84.86 | 84.80 | 85.57 | 86.87 | 84.72 | **84.61** | 85.57 | 86.99 | 10 | 2 | `sr05_eesa_arbertv2_seed42_10ep` |
+| unassigned-sr05_eesa_arbertv2_seed43_10ep | 1 | **84.03** | 84.99 | 83.99 | 85.09 | 86.95 | 84.03 | **83.26** | 84.60 | 85.73 | 9 | 2 | `sr05_eesa_arbertv2_seed43_10ep` |
+| unassigned-sr05_eesa_camelbert_da_seed44_10ep | 1 | **83.27** | 82.91 | 84.06 | 83.99 | 84.78 | 83.27 | **82.04** | 82.89 | 83.89 | 10 | 2 | `sr05_eesa_camelbert_da_seed44_10ep` |
+| unassigned-sr05_eesa_camelbert_da_seed43_10ep | 1 | **82.73** | 82.61 | 83.28 | 83.50 | 85.07 | 82.73 | **83.43** | 84.35 | 85.35 | 10 | 2 | `sr05_eesa_camelbert_da_seed43_10ep` |
+| unassigned-sr05_eesa_camelbert_da_seed42_10ep | 1 | **82.71** | 82.47 | 83.37 | 83.62 | 84.79 | 82.71 | **82.44** | 83.37 | 84.18 | 10 | 2 | `sr05_eesa_camelbert_da_seed42_10ep` |
+
+Per-class F1 (mean over seeds):
+
+| ID | Dev NEG | Dev NEU | Dev POS | Test NEG | Test NEU | Test POS |
+|---|---|---|---|---|---|---|
+| unassigned-sr05_eesa_marbert_seed44_10ep | 91.6 | 89.8 | 94.8 | 85.6 | 86.5 | 94.4 |
+| unassigned-sr05_eesa_marbert_seed43_10ep | 91.3 | 89.8 | 94.6 | 85.8 | 85.5 | 93.5 |
+| unassigned-sr05_eesa_marbertv2_seed44_10ep | 90.6 | 88.3 | 94.3 | 87.9 | 83.3 | 92.5 |
+| unassigned-sr05_eesa_marbertv2_seed42_10ep | 90.4 | 88.0 | 93.8 | 87.7 | 83.8 | 92.7 |
+| unassigned-sr05_eesa_marbert_seed42_10ep | 89.4 | 88.6 | 93.7 | 86.6 | 86.1 | 93.5 |
+| unassigned-sr05_eesa_marbertv2_seed43_10ep | 89.6 | 86.6 | 93.4 | 89.6 | 85.2 | 93.5 |
+| unassigned-sr05_eesa_arabertv02_twitter_seed43_10ep | 87.1 | 86.7 | 91.7 | 84.0 | 83.1 | 91.6 |
+| unassigned-sr05_eesa_arabertv02_twitter_seed44_10ep | 86.7 | 86.3 | 92.1 | 84.1 | 82.5 | 91.7 |
+| unassigned-sr05_eesa_arabertv02_twitter_seed42_10ep | 86.6 | 85.8 | 92.1 | 84.1 | 83.0 | 91.6 |
+| unassigned-sr05_eesa_marbertv2_qwen3_seed42_4ep | 86.4 | 82.5 | 92.7 | 84.9 | 82.9 | 92.2 |
+| unassigned-sr05_eesa_marbertv2_seed42_5ep | 86.2 | 82.3 | 92.5 | 85.5 | 82.7 | 93.0 |
+| unassigned-sr05_eesa_marbertv2_seed42_4ep | 85.2 | 83.0 | 92.6 | 85.1 | 83.4 | 93.1 |
+| unassigned-sr05_eesa_arbert_seed42_10ep | 85.3 | 82.6 | 91.1 | 82.5 | 82.3 | 92.2 |
+| unassigned-sr05_eesa_camelbert_mix_seed43_10ep | 84.4 | 83.3 | 90.5 | 80.6 | 81.8 | 90.1 |
+| unassigned-sr05_eesa_arbert_seed43_10ep | 84.3 | 82.6 | 90.5 | 82.5 | 81.2 | 90.6 |
+| unassigned-sr05_eesa_camelbert_mix_seed44_10ep | 83.0 | 82.3 | 90.4 | 79.9 | 79.2 | 90.4 |
+| unassigned-sr05_eesa_arbert_seed44_10ep | 83.4 | 81.9 | 90.1 | 83.4 | 83.0 | 92.1 |
+| unassigned-sr05_eesa_camelbert_mix_seed42_10ep | 82.8 | 80.8 | 90.7 | 78.6 | 79.3 | 89.6 |
+| unassigned-sr05_eesa_arbertv2_seed44_10ep | 84.3 | 79.4 | 90.5 | 82.0 | 80.1 | 90.9 |
+| unassigned-sr05_eesa_arbertv2_seed42_10ep | 83.7 | 80.4 | 90.0 | 83.6 | 79.8 | 90.4 |
+| unassigned-sr05_eesa_arbertv2_seed43_10ep | 84.1 | 78.2 | 89.8 | 81.3 | 78.3 | 90.1 |
+| unassigned-sr05_eesa_camelbert_da_seed44_10ep | 81.3 | 80.2 | 88.3 | 79.7 | 78.3 | 88.1 |
+| unassigned-sr05_eesa_camelbert_da_seed43_10ep | 82.3 | 78.0 | 87.9 | 81.6 | 79.6 | 89.1 |
+| unassigned-sr05_eesa_camelbert_da_seed42_10ep | 80.8 | 78.5 | 88.8 | 79.7 | 78.9 | 88.6 |
 
