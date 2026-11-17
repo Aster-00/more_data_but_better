@@ -33,7 +33,9 @@
     "SR08-EESA-NM": "SR07-EESA-NM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-NM texts (no matrix language stated); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).",
     "SR08-EESA-DM": "SR07-EESA-DM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-DM texts (Egyptian Arabic as matrix, prompt v2; Qwen3 set only); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).",
     "SR08-EESA-DM3": "SR07-EESA-DM3 BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-DM3 texts (Egyptian Arabic as matrix, prompt v3); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).",
-    "SR08-EESA-EM": "SR07-EESA-EM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-EM texts (English as matrix); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs)."
+    "SR08-EESA-EM": "SR07-EESA-EM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-EM texts (English as matrix); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).",
+    "SR09-EESA": "EESA real + SG04-EESA (D-038): EESA train + 2,640 generated dislike comments (1,320 NEG / 1,320 NEU; few-shot examples = the 15 EESA dev dislike comments most 8-epoch BERT runs get wrong, dev-contaminated); 7 BERTs, 3 seeds, 8 epochs, epoch by training loss (SR05-EASA recipe); baseline SR05-EESA real only. Member = <classifier>_<generator>.",
+    "SR09-random-EESA": "EESA real + SG04-random-EESA (D-038), the size-matched control for SR09-EESA: 2,640 dislike comments with random EESA train dislike comments as examples; 7 BERTs, 3 seeds, 8 epochs. Member = <classifier>_<generator>."
   },
   "run_data": {
     "SR02": {
@@ -154,6 +156,14 @@
     },
     "SR08-EESA-EM": {
       "generation": "SG03-EM",
+      "generation_corpus": "EESA"
+    },
+    "SR09-EESA": {
+      "generation": "SG04",
+      "generation_corpus": "EESA"
+    },
+    "SR09-random-EESA": {
+      "generation": "SG04-random",
       "generation_corpus": "EESA"
     }
   },
@@ -2580,6 +2590,174 @@
     "sr08em_eesa_camelbert_da_fanar": {
       "run": "SR08-EESA-EM",
       "model": "camelbert_da_fanar"
+    },
+    "sr09_eesa_arabertv02_twitter_aya": {
+      "run": "SR09-EESA",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr09r_eesa_arabertv02_twitter_aya": {
+      "run": "SR09-random-EESA",
+      "model": "arabertv02_twitter_aya"
+    },
+    "sr09_eesa_arabertv02_twitter_fanar": {
+      "run": "SR09-EESA",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr09r_eesa_arabertv02_twitter_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "arabertv02_twitter_fanar"
+    },
+    "sr09_eesa_arabertv02_twitter_qwen3": {
+      "run": "SR09-EESA",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr09r_eesa_arabertv02_twitter_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "arabertv02_twitter_qwen3"
+    },
+    "sr09_eesa_arbert_aya": {
+      "run": "SR09-EESA",
+      "model": "arbert_aya"
+    },
+    "sr09r_eesa_arbert_aya": {
+      "run": "SR09-random-EESA",
+      "model": "arbert_aya"
+    },
+    "sr09_eesa_arbert_fanar": {
+      "run": "SR09-EESA",
+      "model": "arbert_fanar"
+    },
+    "sr09r_eesa_arbert_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "arbert_fanar"
+    },
+    "sr09_eesa_arbert_qwen3": {
+      "run": "SR09-EESA",
+      "model": "arbert_qwen3"
+    },
+    "sr09r_eesa_arbert_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "arbert_qwen3"
+    },
+    "sr09_eesa_arbertv2_aya": {
+      "run": "SR09-EESA",
+      "model": "arbertv2_aya"
+    },
+    "sr09r_eesa_arbertv2_aya": {
+      "run": "SR09-random-EESA",
+      "model": "arbertv2_aya"
+    },
+    "sr09_eesa_arbertv2_fanar": {
+      "run": "SR09-EESA",
+      "model": "arbertv2_fanar"
+    },
+    "sr09r_eesa_arbertv2_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "arbertv2_fanar"
+    },
+    "sr09_eesa_arbertv2_qwen3": {
+      "run": "SR09-EESA",
+      "model": "arbertv2_qwen3"
+    },
+    "sr09r_eesa_arbertv2_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "arbertv2_qwen3"
+    },
+    "sr09_eesa_camelbert_da_aya": {
+      "run": "SR09-EESA",
+      "model": "camelbert_da_aya"
+    },
+    "sr09r_eesa_camelbert_da_aya": {
+      "run": "SR09-random-EESA",
+      "model": "camelbert_da_aya"
+    },
+    "sr09_eesa_camelbert_da_fanar": {
+      "run": "SR09-EESA",
+      "model": "camelbert_da_fanar"
+    },
+    "sr09r_eesa_camelbert_da_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "camelbert_da_fanar"
+    },
+    "sr09_eesa_camelbert_da_qwen3": {
+      "run": "SR09-EESA",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr09r_eesa_camelbert_da_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "camelbert_da_qwen3"
+    },
+    "sr09_eesa_camelbert_mix_aya": {
+      "run": "SR09-EESA",
+      "model": "camelbert_mix_aya"
+    },
+    "sr09r_eesa_camelbert_mix_aya": {
+      "run": "SR09-random-EESA",
+      "model": "camelbert_mix_aya"
+    },
+    "sr09_eesa_camelbert_mix_fanar": {
+      "run": "SR09-EESA",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr09r_eesa_camelbert_mix_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "camelbert_mix_fanar"
+    },
+    "sr09_eesa_camelbert_mix_qwen3": {
+      "run": "SR09-EESA",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr09r_eesa_camelbert_mix_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "camelbert_mix_qwen3"
+    },
+    "sr09_eesa_marbert_aya": {
+      "run": "SR09-EESA",
+      "model": "marbert_aya"
+    },
+    "sr09r_eesa_marbert_aya": {
+      "run": "SR09-random-EESA",
+      "model": "marbert_aya"
+    },
+    "sr09_eesa_marbert_fanar": {
+      "run": "SR09-EESA",
+      "model": "marbert_fanar"
+    },
+    "sr09r_eesa_marbert_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "marbert_fanar"
+    },
+    "sr09_eesa_marbert_qwen3": {
+      "run": "SR09-EESA",
+      "model": "marbert_qwen3"
+    },
+    "sr09r_eesa_marbert_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "marbert_qwen3"
+    },
+    "sr09_eesa_marbertv2_aya": {
+      "run": "SR09-EESA",
+      "model": "marbertv2_aya"
+    },
+    "sr09r_eesa_marbertv2_aya": {
+      "run": "SR09-random-EESA",
+      "model": "marbertv2_aya"
+    },
+    "sr09_eesa_marbertv2_fanar": {
+      "run": "SR09-EESA",
+      "model": "marbertv2_fanar"
+    },
+    "sr09r_eesa_marbertv2_fanar": {
+      "run": "SR09-random-EESA",
+      "model": "marbertv2_fanar"
+    },
+    "sr09_eesa_marbertv2_qwen3": {
+      "run": "SR09-EESA",
+      "model": "marbertv2_qwen3"
+    },
+    "sr09r_eesa_marbertv2_qwen3": {
+      "run": "SR09-random-EESA",
+      "model": "marbertv2_qwen3"
     }
   }
 }

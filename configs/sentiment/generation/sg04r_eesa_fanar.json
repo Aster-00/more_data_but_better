@@ -1,0 +1,50 @@
+{
+  "set_name": "sg04r_eesa_fanar",
+  "condition": "fewshot",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "varieties": [
+    "egypt"
+  ],
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "strip_translation": false,
+  "template": "prompts/sentiment/fewshot_eesa_v1.json",
+  "few_shot": {
+    "k": 5,
+    "source": "data/inspect/hard_cases/sg04r_dislike_train_eesa.jsonl",
+    "splits": [
+      "train"
+    ],
+    "match": "type_sentiment",
+    "use_all_if_fewer": true
+  },
+  "sentiments": [
+    "NEG",
+    "NEU"
+  ],
+  "cells": [
+    {
+      "type": "Dislike comments",
+      "sentiment": "NEG",
+      "target": 1320
+    },
+    {
+      "type": "Dislike comments",
+      "sentiment": "NEU",
+      "target": 1320
+    }
+  ],
+  "request_margin": 1.6,
+  "output": "data/synthetic/sentiment/sg04r_eesa_fanar.jsonl",
+  "_notes": "SG04-random-EESA (D-038): size-matched control of SG04-EESA. Same template, generator, sampling, size and class mix, but the 5 examples are random EESA train dislike comments of the request's class (258 NEG, 53 NEU), drawn per request."
+}
