@@ -84,7 +84,7 @@ if [ ! -f results/quality/sentiment/universal_topics_sg02_eesa.json ]; then
 fi
 $PY -m src.sentiment.explore_eesa > "$LOGS/explore_eesa.console.log" 2>&1 || say "NOTE: explore_eesa (Self-BLEU) failed"
 $PY -m src.sentiment.summarize_quality > /dev/null 2>&1
-say "quality rows done: docs/sentiment/datasets/dataset_quality.md, results/quality/sentiment/eesa_explore.md (Self-BLEU)"
+say "quality rows done: docs/sentiment/datasets/EESA/dataset_quality.md, results/quality/sentiment/eesa_explore.md (Self-BLEU)"
 
 # 3. BERTs, interleaved (seed -> BERT -> generator -> condition) so a partial queue still has matched runs.
 bert_one() {
