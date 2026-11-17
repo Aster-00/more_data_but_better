@@ -1,0 +1,31 @@
+{
+  "id": "sentiment_matrix_eesa_nm_v1",
+  "version": 1,
+  "condition": "controlled",
+  "matrix_language": "not_stated",
+  "description": "Sentiment track, SG03-EESA-NM (D-037): matrix-language pilot, arm 'no matrix instruction'. Zero-shot, as open_eesa_v1 (system prompt and sentiment definitions unchanged); only the first line and the writing instruction differ. The three arms (dm = Egyptian Arabic supplies the grammar and English words are inserted; em = English supplies the grammar and Egyptian Arabic words are inserted; nm = code-switching asked for, matrix language not stated) share everything else. Switch rate 'about 1 word in 5' from EESA train (Latin-script words per comment: mean 23%, median 19%; quality row 8 rules; never test). Idea: Yoo et al. 2025 (Findings of ACL, arXiv 2411.02460). Placeholders: {variety_instruction} {sentiment_name} {sentiment_definition}.",
+  "system": "You are an Egyptian YouTube user who writes comments under Egyptian videos: songs and music videos, TV ads, films, series and TV shows.",
+  "user": "Write one YouTube comment that mixes Egyptian Arabic and English. {variety_instruction}\nThe comment must express a {sentiment_name} sentiment: {sentiment_definition}\nOutput only the comment itself, on one line, with no quotes, translation or explanation.",
+  "options": {
+    "variety": {
+      "egypt": {
+        "name": "Egyptian Arabic",
+        "instruction": "Write the Egyptian Arabic words in Arabic script, with no Modern Standard Arabic, and the English words in Latin letters: about 1 word in every 5 is English."
+      }
+    },
+    "sentiment": {
+      "NEG": {
+        "name": "negative",
+        "definition": "the writer criticises, mocks or insults something or someone (the video, a singer or actor, an ad, a company, or the people who disliked the video), or says it is bad, boring, fake or copied."
+      },
+      "NEU": {
+        "name": "neutral",
+        "definition": "the writer asks a question, shares information, makes a remark, or asks for something (for example to subscribe to their channel or like their comment), without praising or criticising."
+      },
+      "POS": {
+        "name": "positive",
+        "definition": "the writer praises, loves, admires or thanks someone or something (the song, a star, an ad, a film), or sends greetings and good wishes."
+      }
+    }
+  }
+}

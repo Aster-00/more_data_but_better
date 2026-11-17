@@ -30,5 +30,6 @@
   "patience": 2,
   "limit": null,
   "checkpoint_minutes": 30,
-  "synthetic_data": "data/synthetic/sentiment/sg01_eesa_fanar.selected.jsonl"
+  "synthetic_data": "data/synthetic/sentiment/sg01_eesa_fanar.selected.jsonl",
+  "epoch_selection": "train_loss"
 }

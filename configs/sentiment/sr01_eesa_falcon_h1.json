@@ -30,5 +30,6 @@
   ],
   "patience": 2,
   "limit": null,
-  "checkpoint_minutes": 30
+  "checkpoint_minutes": 30,
+  "epoch_selection": "train_loss"
 }

@@ -1,0 +1,31 @@
+{
+  "id": "sentiment_matrix_eesa_dm_v3",
+  "version": 3,
+  "condition": "controlled",
+  "matrix_language": "egyptian_arabic",
+  "description": "Sentiment track, SG03-EESA-DM (D-037): matrix-language pilot, arm 'dialect matrix'. Zero-shot, as open_eesa_v1 (system prompt and sentiment definitions unchanged); only the first line and the writing instruction differ. The three arms (dm = Egyptian Arabic supplies the grammar and English words are inserted; em = English supplies the grammar and Egyptian Arabic words are inserted; nm = code-switching asked for, matrix language not stated) share everything else. Switch rate 'about 1 word in 5' from EESA train (Latin-script words per comment: mean 23%, median 19%; quality row 8 rules; never test). Idea: Yoo et al. 2025 (Findings of ACL, arXiv 2411.02460). Placeholders: {variety_instruction} {sentiment_name} {sentiment_definition}. v2 (2026-11-15): one sentence added to every arm, 'Never write Arabic words in Latin letters or digits (no Franco-Arabic)', because in the v1 smoke test on Qwen3 (24 requests per arm) 7 dm and 2 em outputs were Franco-Arabic. v1 was only used for that smoke test (*_limit24 files). v3 (2026-11-15, Ammar: reword the arm so it inserts English): with v2, Qwen3 inserted almost no English (2.5% Latin-script words, 75% of texts without a switch). Three rewordings were smoke-tested on Qwen3, 48 requests each (drafts and outputs in data/synthetic/sentiment/drafts_dm_v3/): a = 'replace some of the words with English words ... a comment of 10 words has 2 English words' (4% Latin-script words), b = 'Every comment must contain English words ... (for example like, video, song, nice, fake, subscribe)' (7%), c = b plus 'never spell an English word in Arabic letters' (4%). v3 = b, the highest; it is still far below EESA's 23%. Unlike the nm and em arms, v3 names example words and says 'must', so dm v3 differs from them in more than the matrix statement.",
+  "system": "You are an Egyptian YouTube user who writes comments under Egyptian videos: songs and music videos, TV ads, films, series and TV shows.",
+  "user": "Write one YouTube comment that mixes Egyptian Arabic and English. {variety_instruction}\nThe comment must express a {sentiment_name} sentiment: {sentiment_definition}\nOutput only the comment itself, on one line, with no quotes, translation or explanation.",
+  "options": {
+    "variety": {
+      "egypt": {
+        "name": "Egyptian Arabic",
+        "instruction": "The sentence itself is Egyptian Arabic: Egyptian word order, verb forms and particles, written in Arabic script, with no Modern Standard Arabic. Every comment must contain English words written in Latin letters, placed inside the Egyptian sentence where an Egyptian would say them in English (for example like, video, song, nice, fake, subscribe): about 1 word in every 5 is English, so a comment of 10 words has 2 English words. Never write Arabic words in Latin letters or digits (no Franco-Arabic)."
+      }
+    },
+    "sentiment": {
+      "NEG": {
+        "name": "negative",
+        "definition": "the writer criticises, mocks or insults something or someone (the video, a singer or actor, an ad, a company, or the people who disliked the video), or says it is bad, boring, fake or copied."
+      },
+      "NEU": {
+        "name": "neutral",
+        "definition": "the writer asks a question, shares information, makes a remark, or asks for something (for example to subscribe to their channel or like their comment), without praising or criticising."
+      },
+      "POS": {
+        "name": "positive",
+        "definition": "the writer praises, loves, admires or thanks someone or something (the song, a star, an ad, a film), or sends greetings and good wishes."
+      }
+    }
+  }
+}

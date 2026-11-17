@@ -30,5 +30,6 @@
   "patience": 2,
   "limit": null,
   "checkpoint_minutes": 30,
-  "embeddings_16bit": true
+  "embeddings_16bit": true,
+  "epoch_selection": "train_loss"
 }

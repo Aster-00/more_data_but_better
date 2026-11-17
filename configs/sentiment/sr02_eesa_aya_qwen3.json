@@ -31,5 +31,6 @@
   "limit": null,
   "checkpoint_minutes": 30,
   "embeddings_16bit": true,
-  "synthetic_data": "data/synthetic/sentiment/sg01_eesa_qwen3.selected.jsonl"
+  "synthetic_data": "data/synthetic/sentiment/sg01_eesa_qwen3.selected.jsonl",
+  "epoch_selection": "train_loss"
 }

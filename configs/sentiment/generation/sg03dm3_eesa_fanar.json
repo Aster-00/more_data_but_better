@@ -1,0 +1,30 @@
+{
+  "set_name": "sg03dm3_eesa_fanar",
+  "condition": "controlled",
+  "generator": "QCRI/Fanar-1-9B-Instruct",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/matrix_eesa_dm_v3.json",
+  "varieties": [
+    "egypt"
+  ],
+  "sentiments": [
+    "NEG",
+    "NEU",
+    "POS"
+  ],
+  "per_cell": 572,
+  "batch_size": 8,
+  "seed": 42,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "repetition_penalty": 1.0,
+    "do_sample": true
+  },
+  "output": "data/synthetic/sentiment/sg03dm3_eesa_fanar.jsonl",
+  "_notes": "SG03-EESA-DM3 (D-037): matrix-language pilot, arm 'dialect matrix'. Identical to sg01_eesa_fanar (sampling, batch size, seed, 572 requests per sentiment cell = 440 kept + 30% margin, strip_translation off) except the template. DM3 = the dialect-matrix arm with prompt v3 (reworded to insert English; D-037 addendum).",
+  "strip_translation": false
+}
