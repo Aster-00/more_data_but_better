@@ -1,0 +1,15 @@
+{
+  "run_name": "sr00ar_eesa_aya_seed42",
+  "condition": "zero_shot",
+  "dev_data": "data/processed/sentiment/eesa_dev.jsonl",
+  "test_data": "data/processed/sentiment/eesa_test.jsonl",
+  "text_field": "text",
+  "model": "CohereLabs/aya-expanse-8b",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/zeroshot_cls_ar_v1.json",
+  "seed": 42,
+  "max_length": 128,
+  "limit": null,
+  "_notes": "SR00-ArPrompt (Ammar 2026-11-18): zero-shot, no training; prediction = answer word with the highest summed log-probability after the chat prompt (src/sentiment/zero_shot.py). Deterministic, so one run (seed only names the folder)."
+}

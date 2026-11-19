@@ -415,7 +415,7 @@ The SR07-EASA runs repeated with 8 epochs instead of 3 (D-036 recipe); nothing e
 Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (runs SR08-EESA-NM / -DM / -DM3 / -EM).
 
 ## SR09-EASA results: dislike comments, targeted examples (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
-Can generated dislike comments fix the dislike errors that remain after 8 epochs (D-038)? EESA train + SG04-EASA: 2,640 generated comments about dislikes per generator (1,320 NEG / 1,320 NEU, twice the size of SG01–SG03), few-shot with 5 examples per request from the 15 EESA dev dislike comments that most of the 210 eight-epoch runs get wrong (8 NEG, 7 NEU; **dev-contaminated**). Prompt `prompts/sentiment/fewshot_eesa_v1.json`, type "Dislike comments". Training as SR05-EASA: 8 epochs, epoch by training loss, baseline SR05-EASA (real only, 8 epochs). 63 runs, no failure. Registry run SR09-EESA (folders `sr09_eesa_*`). The size-matched control with random train dislike comments as examples (SR09-random-EASA) is running.
+Can generated dislike comments fix the dislike errors that remain after 8 epochs (D-038)? EESA train + SG04-EASA: 2,640 generated comments about dislikes per generator (1,320 NEG / 1,320 NEU, twice the size of SG01–SG03), few-shot with 5 examples per request from the 15 EESA dev dislike comments that most of the 210 eight-epoch runs get wrong (8 NEG, 7 NEU; **dev-contaminated**). Prompt `prompts/sentiment/fewshot_eesa_v1.json`, type "Dislike comments". Training as SR05-EASA: 8 epochs, epoch by training loss, baseline SR05-EASA (real only, 8 epochs). 63 runs, no failure. Registry run SR09-EESA (folders `sr09_eesa_*`). The size-matched control with random train dislike comments as examples is SR09-random-EASA (next section).
 
 **The sets** (code-switching from `src/sentiment/cmi.py`; "mention dislikes" = the dislike regex of `src/sentiment/dislike_pools_eesa.py`)
 
@@ -467,6 +467,104 @@ Can generated dislike comments fix the dislike errors that remain after 8 epochs
 - **The sets are narrow and their NEU is weak:** the judge confirms 34–44% of the NEU comments; only 37–65% mention dislikes at all; 89–96% fall in the unclustered universal topic; almost no code-switching (CMI 0.6–6.7 against 22.6). Qwen3 copied 87 dev example texts closely enough to be filtered out, and its MTLD is 92.
 - **Epoch kept:** 8 in 61 of the 63 runs, 7 in 2.
 
-**Takeaway: 2,640 generated dislike comments per generator, made from the dev dislike errors, do not improve the 8-epoch BERTs (−0.11 micro F1, 9 of 21 pairs, not significant) and do not lower the error on test dislike comments (17.4% against 17.8%). They shift the errors from NEU to NEG, as the SG02-EASA dislike type did. EESA labels a dislike comment NEG when it insults the dislikers and NEU when it only asks about them; the generated sets carry that line weakly (the judge confirms 34–44% of their NEU comments). The dev improvement on the example texts is contamination. Random-example control (SR09-random-EASA) pending.**
+**Takeaway: 2,640 generated dislike comments per generator, made from the dev dislike errors, do not improve the 8-epoch BERTs (−0.11 micro F1, 9 of 21 pairs, not significant) and do not lower the error on test dislike comments (17.4% against 17.8%). They shift the errors from NEU to NEG, as the SG02-EASA dislike type did. EESA labels a dislike comment NEG when it insults the dislikers and NEU when it only asks about them; the generated sets carry that line weakly (the judge confirms 34–44% of their NEU comments). The dev improvement on the example texts is contamination. The random-example control is in the next section.**
 
 Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (run SR09-EESA). Numbers: `python -m src.sentiment.compare_eesa_sr09`.
+
+## SR09-random-EASA results: dislike comments, random examples; targeted vs random (EASA test micro F1; BERTs only, mean ± std over 3 seeds)
+The size-matched control for SR09-EASA (D-038): EESA train + SG04-random-EASA, 2,640 generated dislike comments per generator (1,320 NEG / 1,320 NEU), same prompt, but the 5 examples per request are random EESA train dislike comments (pool of 311: 258 NEG, 53 NEU), so no dev text is used. Training as SR09-EASA (8 epochs, epoch by training loss), baseline SR05-EASA real only. 62 of 63 runs: `sr09r_eesa_marbert_fanar_seed43` was cut off by a PC shutdown and is not rerun, so MARBERT + Fanar is the mean of 2 seeds. Registry run SR09-random-EESA (folders `sr09r_eesa_*`).
+
+**The sets** (as for SR09-EASA)
+
+| Set | Requests | Rejected by filter (of them copies of dev texts) | Mention dislikes | Latin-script words | CMI | Texts with no switch | Words per text | MTLD | Fidelity (NEG / NEU) |
+|---|---|---|---|---|---|---|---|---|---|
+| EESA train (real) | – | – | 23% of NEG + NEU | 22.8% | 22.6 | 1% | 12.6 | 1,226 | 93 / 80 |
+| SG04-random-EASA Aya | 4,224 | 18 (0) | 32% | 0.7% | 0.9 | 90% | 20.6 | 207 | 98 / 57 |
+| SG04-random-EASA Fanar | 4,224 | 3 (0) | 38% | 3.7% | 4.6 | 54% | 14.7 | 516 | 97 / 46 |
+| SG04-random-EASA Qwen3 | 4,224 | 84 (0) | 67% | 6.1% | 7.3 | 29% | 13.8 | 121 | 87 / 46 |
+
+**SR09-random-EASA (+ SG04-random-EASA, random dislike examples)**
+
+| Classifier | SR05-EASA (real only, 8 epochs) | + Aya | + Fanar | + Qwen3 |
+|---|---|---|---|---|
+| MARBERT | 89.98 ± 0.53 | 89.16 (−0.82) | 88.69 (−1.29), 2 seeds | 88.43 (−1.55) |
+| MARBERTv2 | 89.28 ± 0.39 | 89.41 (+0.13) | 88.35 (−0.93) | 88.43 (−0.85) |
+| AraBERTv02-Twitter | 86.88 ± 0.07 | 86.92 (+0.04) | 86.84 (−0.04) | 86.88 (+0.00) |
+| ARBERT | 86.10 ± 0.25 | 86.02 (−0.08) | 86.02 (−0.08) | 86.15 (+0.05) |
+| ARBERTv2 | 84.84 ± 0.42 | 85.66 (+0.82) | 84.76 (−0.08) | 84.15 (−0.69) |
+| CAMeLBERT-mix | 84.43 ± 0.58 | 85.25 (+0.82) | 84.56 (+0.13) | 84.92 (+0.49) |
+| CAMeLBERT-DA | 82.76 ± 0.86 | 82.93 (+0.17) | 83.25 (+0.49) | 83.54 (+0.78) |
+| **Mean of 7 BERTs** | **86.32** | **86.48 (+0.15)** | **86.07 (−0.26)** | **86.07 (−0.25)** |
+
+**Paired comparisons, 8 epochs** (per BERT × generator pair: mean Δ, wins / losses / ties, two-sided sign test)
+
+| Comparison | Test micro F1 (21 pairs) | Test macro F1 (21 pairs) |
+|---|---|---|
+| Targeted vs random dislike examples (SR09-EASA − SR09-random-EASA) | +0.01, 10 / 10 / 1 (p = 1.00) | −0.01, 11 / 10 / 0 (p = 1.00) |
+| SR09-random-EASA vs real only | −0.12, 10 / 10 / 1 (p = 1.00) | −0.07, 14 / 7 / 0 (p = 0.19) |
+| SR09-EASA vs real only (above) | −0.11, 9 / 12 / 0 (p = 0.66) | −0.08, 10 / 11 / 0 (p = 1.00) |
+
+**Error rate on dislike comments** (mean over the runs; rows for the other conditions in the SR09-EASA section)
+
+| Condition | Runs | Dev: the 15 SR09-EASA example texts | Dev: all 117 dislike comments | Dev: NEG (93) / NEU (22) | Test: all 106 dislike comments | Test: NEG (85) / NEU (19) |
+|---|---|---|---|---|---|---|
+| SR05-EASA real only | 21 | 65.4% | 18.1% | 7.2% / 61.9% | 17.8% | 6.9% / 64.9% |
+| SR09-EASA (targeted, dev-contaminated) | 63 | 26.2% | 14.1% | 13.2% / 15.3% | 17.4% | 11.3% / 41.5% |
+| SR09-random-EASA (random) | 62 | 65.6% | 17.6% | 15.4% / 25.1% | 18.2% | 12.5% / 40.9% |
+
+- **Targeting makes no difference:** targeted and random dislike examples tie over the 21 pairs (+0.01 micro F1, 10 wins and 10 losses; −0.01 macro F1).
+- **Neither helps:** both are 0.1 below real only on average (−0.11 and −0.12). Per generator the random sets give +0.15 (Aya), −0.26 (Fanar) and −0.25 (Qwen3).
+- **Same split by BERT strength:** with random examples the three strongest BERTs lose (−0.59; 2 of 9 cells up) and the four weaker gain (+0.23; 8 of 12 up). MARBERT loses with every set (−0.82 to −1.55).
+- **The dev gain of SR09-EASA was contamination:** on the 15 example texts the random-example runs are as wrong as real only (65.6% against 65.4%), the targeted runs much less (26.2%). On test the two are the same (17.4% and 18.2%).
+- **The NEU-to-NEG trade comes from the dislike comments, not from the examples:** with random examples too, NEU dislike comments on test go from 64.9% to 40.9% wrong and NEG ones from 6.9% to 12.5% wrong; 84% of the wrong NEG ones are read as NEU.
+- **By class:** test NEU F1 +0.55, NEG −0.43, POS −0.34 against real only, close to SR09-EASA (+0.60, −0.57, −0.27).
+- **Random sets are slightly cleaner:** the judge confirms more of their NEU comments (46–57% against 34–44%), Qwen3 has fewer repeats (1.5% against 4.2%) and copied no dev text; they mention dislikes about as often (32–67%) and code-switch as little (CMI 0.9–7.3).
+- **Epoch kept:** 8 in 61 of the 62 runs, 7 in 1.
+
+**Takeaway: aiming the examples at the dev dislike errors gives exactly the same result as random train dislike comments (+0.01 micro F1 over 21 pairs). Neither set improves the 8-epoch BERTs (−0.11 and −0.12) or lowers the error on test dislike comments; both only move errors from NEU to NEG dislike comments. As with SG02-EASA, targeting the remaining error type does not work, and the only effect of the targeted examples is on the dev texts they were made from.**
+
+Full per-classifier rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (runs SR09-EESA, SR09-random-EESA). Numbers: `python -m src.sentiment.compare_eesa_sr09`.
+
+## SR00 results: zero-shot, no training, English vs Arabic prompt (EASA test micro F1; 5 LLMs, one deterministic run each)
+
+- **Question:** how well do the roster LLMs classify EASA sentiment with no training at all, and does the prompt language matter?
+- **Setup:** 4-bit LLMs, no examples, no class definitions. The prompt asks for the sentiment of the YouTube comment in one word; the prediction is the answer word with the highest log-probability (`src/sentiment/zero_shot.py`). SR00-EnPrompt: negative / neutral / positive (one token each). SR00-ArPrompt: سلبي / محايد / إيجابي (2–4 tokens, summed log-probability). Comments cut to 128 tokens (7–16 per split cut). Reference: the same LLMs trained on EASA train (SR03-EASA, QLoRA, seed 42).
+
+| Model | SR00-EnPrompt | SR00-ArPrompt | Ar − En | Trained, real only (SR03-EASA) | En − trained |
+|---|---|---|---|---|---|
+| Jais-2 | **85.57** | **82.40** | −3.17 | 91.08 | −5.51 |
+| Aya | 82.03 | 74.21 | −7.82 | 89.24 | −7.21 |
+| Fanar | 78.36 | 72.86 | −5.50 | 91.56 | −13.20 |
+| Falcon-H1 | 74.45 | 72.00 | −2.45 | 81.05 | −6.60 |
+| Qwen3 | 62.59 | 76.28 | +13.69 | 86.43 | −23.84 |
+| **Mean of 5 LLMs** | **76.60** | **75.55** | **−1.05** | **87.87** | **−11.27** |
+
+Floor: always POS = 44.38. Mean of the 7 trained BERTs (SR05-EASA, 8 epochs): 86.32.
+
+**Per-class test F1 and predicted counts** (gold NEG 197 / NEU 258 / POS 363)
+
+| Model | Prompt | NEG F1 | NEU F1 | POS F1 | Predicted NEG / NEU / POS |
+|---|---|---|---|---|---|
+| Jais-2 | En | 86.4 | 76.5 | 90.6 | 231 / 202 / 385 |
+| Jais-2 | Ar | 87.6 | 76.4 | 84.7 | 205 / 331 / 282 |
+| Aya | En | 84.0 | 71.1 | 87.5 | 234 / 195 / 389 |
+| Aya | Ar | 84.8 | 49.5 | 80.4 | 197 / 126 / 495 |
+| Fanar | En | 86.8 | 60.2 | 83.0 | 206 / 141 / 471 |
+| Fanar | Ar | 81.1 | 37.7 | 81.8 | 269 / 66 / 483 |
+| Falcon-H1 | En | 85.6 | 68.6 | 72.6 | 228 / 369 / 221 |
+| Falcon-H1 | Ar | 80.2 | 65.7 | 72.8 | 217 / 360 / 241 |
+| Qwen3 | En | 63.4 | 61.7 | 63.4 | 112 / 533 / 173 |
+| Qwen3 | Ar | 75.7 | 67.1 | 83.4 | 273 / 234 / 311 |
+
+- **Zero-shot Jais-2 is already a usable classifier:** 85.57 with the English prompt, about the mean of the 7 trained BERTs (86.32), 5.5 below trained Jais-2.
+- **Training still matters:** every LLM is 5.5 to 23.8 below its trained version (mean −11.3).
+- **The ranking changes with training:** zero-shot Jais-2 > Aya > Fanar > Falcon-H1 > Qwen3; trained Fanar is the best (91.56) but zero-shot it is third.
+- **English prompt is better for 4 of 5 LLMs** (−2.5 to −7.8 with Arabic). Qwen3 is the exception (+13.7 with Arabic).
+- **Qwen3 with the English prompt calls most comments neutral** (533 NEU predicted, 258 gold); with Arabic its counts are close to gold.
+- **NEU is the hard class everywhere** (37.7–76.5 F1). Fanar and Aya with the Arabic prompt rarely answer محايد (66 and 126 NEU) and over-predict POS.
+- **The expected Arabic length bias against POS did not show:** إيجابي has the most tokens, yet POS is over-predicted by Aya and Fanar.
+- **Dev agrees with test** (within 1–4 points; dev chose nothing here).
+
+**Takeaway: without training the LLMs reach 62.6–85.6 test micro F1 (mean 76.6 English, 75.6 Arabic). Only Jais-2 comes close to the trained BERTs; training adds 5.5–23.8 points for every LLM. English is the better prompt for 4 of 5 LLMs; Qwen3 is the exception.**
+
+Full rows: `docs/sentiment/tables/sentiment_summary_EESA.csv` (runs SR00-EnPrompt, SR00-ArPrompt).

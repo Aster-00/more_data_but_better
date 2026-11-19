@@ -115,7 +115,9 @@ def row_labels(member: dict, folder: str, logs: list[dict], run_data: dict) -> d
         data = {}
     classifier, generator = member["model"].rsplit("_", 1) if generation else (member["model"], "")
     return {"run": member["run"], "id": f"{member['run']}-{member['model']}",
-            "train_corpus": corpus_of(logs[0]["config"]["train_data"]), "generation": generation,
+            # Zero-shot runs (SR00) have no training file: their corpus is that of the splits they score.
+            "train_corpus": corpus_of(logs[0]["config"].get("train_data") or logs[0]["config"]["dev_data"]),
+            "generation": generation,
             "generation_corpus": data.get("generation_corpus", ""), "classifier": classifier,
             "generator": generator, "folder": folder}
 

@@ -35,7 +35,9 @@
     "SR08-EESA-DM3": "SR07-EESA-DM3 BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-DM3 texts (Egyptian Arabic as matrix, prompt v3); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).",
     "SR08-EESA-EM": "SR07-EESA-EM BERT runs repeated with 8 epochs instead of 3 (D-036 recipe; D-037): EESA train + 1,320 SG03-EESA-EM texts (English as matrix); epoch by training loss; 7 BERTs x 3 seeds, no LLM classifiers. Member = <classifier>_<generator>. Baseline SR05-EESA (real only, 8 epochs).",
     "SR09-EESA": "EESA real + SG04-EESA (D-038): EESA train + 2,640 generated dislike comments (1,320 NEG / 1,320 NEU; few-shot examples = the 15 EESA dev dislike comments most 8-epoch BERT runs get wrong, dev-contaminated); 7 BERTs, 3 seeds, 8 epochs, epoch by training loss (SR05-EASA recipe); baseline SR05-EESA real only. Member = <classifier>_<generator>.",
-    "SR09-random-EESA": "EESA real + SG04-random-EESA (D-038), the size-matched control for SR09-EESA: 2,640 dislike comments with random EESA train dislike comments as examples; 7 BERTs, 3 seeds, 8 epochs. Member = <classifier>_<generator>."
+    "SR09-random-EESA": "EESA real + SG04-random-EESA (D-038), the size-matched control for SR09-EESA: 2,640 dislike comments with random EESA train dislike comments as examples; 7 BERTs, 3 seeds, 8 epochs. Member = <classifier>_<generator>.",
+    "SR00-EnPrompt": "Zero-shot, no training (Ammar 2026-11-18): the 5 roster LLMs (4-bit) score EESA dev and test with an English prompt (prompts/sentiment/zeroshot_cls_en_v1.json); prediction = answer word (negative/neutral/positive, one token each) with the highest log-probability after the chat prompt (src/sentiment/zero_shot.py). Deterministic, one run per model. No class definitions or examples.",
+    "SR00-ArPrompt": "Zero-shot, no training (Ammar 2026-11-18): as SR00-EnPrompt, but with the Arabic (MSA) prompt (prompts/sentiment/zeroshot_cls_ar_v1.json) and answer words سلبي/محايد/إيجابي. These are 2-4 tokens each and scored as summed log-probability, so longer answer words (POS in most tokenizers) are at a disadvantage."
   },
   "run_data": {
     "SR02": {
@@ -2758,6 +2760,46 @@
     "sr09r_eesa_marbertv2_qwen3": {
       "run": "SR09-random-EESA",
       "model": "marbertv2_qwen3"
+    },
+    "sr00en_eesa_qwen3": {
+      "run": "SR00-EnPrompt",
+      "model": "qwen3"
+    },
+    "sr00en_eesa_aya": {
+      "run": "SR00-EnPrompt",
+      "model": "aya"
+    },
+    "sr00en_eesa_jais2": {
+      "run": "SR00-EnPrompt",
+      "model": "jais2"
+    },
+    "sr00en_eesa_fanar": {
+      "run": "SR00-EnPrompt",
+      "model": "fanar"
+    },
+    "sr00en_eesa_falcon_h1": {
+      "run": "SR00-EnPrompt",
+      "model": "falcon_h1"
+    },
+    "sr00ar_eesa_qwen3": {
+      "run": "SR00-ArPrompt",
+      "model": "qwen3"
+    },
+    "sr00ar_eesa_aya": {
+      "run": "SR00-ArPrompt",
+      "model": "aya"
+    },
+    "sr00ar_eesa_jais2": {
+      "run": "SR00-ArPrompt",
+      "model": "jais2"
+    },
+    "sr00ar_eesa_fanar": {
+      "run": "SR00-ArPrompt",
+      "model": "fanar"
+    },
+    "sr00ar_eesa_falcon_h1": {
+      "run": "SR00-ArPrompt",
+      "model": "falcon_h1"
     }
   }
 }

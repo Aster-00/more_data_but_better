@@ -1,0 +1,8 @@
+{
+  "id": "sentiment_zeroshot_cls_en_v1",
+  "version": 1,
+  "description": "SR00: zero-shot sentiment classification prompt, English wording. No examples, no class definitions, no information from EESA train/dev/test. The model's answer is read as the log-probability of each answer word right after the assistant turn starts (src/sentiment/zero_shot.py). DRAFT for Ammar's review. Placeholder: {text}.",
+  "system": "",
+  "user": "What is the sentiment of the following YouTube comment? Answer with one word: negative, neutral or positive.\n\nComment: {text}",
+  "answers": {"NEG": "negative", "NEU": "neutral", "POS": "positive"}
+}

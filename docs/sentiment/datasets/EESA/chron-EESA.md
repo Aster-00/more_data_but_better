@@ -361,8 +361,11 @@ Same measures as the SG01-EASA table. Quality rows from `src.sentiment.measure_q
 | SG04-EASA Fanar | 2,640 | 0.7% | 0.84 | 459 | 0.135 | 11 | 1.7 | 2.9 | 0.0% | 68.4% (94 / 43) |
 | SG04-EASA Qwen3 | 2,640 | 0.1% | 0.91 | 92 | 0.231 | 8 | 1.3 | 2.6 | 4.2% | 52.3% (71 / 34) |
 | SG04-EASA Aya | 2,640 | 0.5% | 0.87 | 192 | 0.434 | 8 | 1.3 | 2.4 | 0.1% | 71.7% (99 / 44) |
+| SG04-random-EASA Fanar | 2,640 | 0.9% | 0.83 | 516 | 0.119 | 10 | 1.9 | 2.9 | 0.0% | 71.2% (97 / 46) |
+| SG04-random-EASA Qwen3 | 2,640 | 0.3% | 0.92 | 121 | 0.184 | 11 | 1.4 | 2.6 | 1.5% | 66.5% (87 / 46) |
+| SG04-random-EASA Aya | 2,640 | 0.2% | 0.89 | 207 | 0.387 | 7 | 1.3 | 2.4 | 0.4% | 77.7% (98 / 57) |
 
-**Code-switching and content** (`results/quality/sentiment/cmi_sg04_eesa.json`; "mention dislikes" = the dislike regex of `src/sentiment/dislike_pools_eesa.py`, from `python -m src.sentiment.compare_eesa_sr09`)
+**Code-switching and content** (`results/quality/sentiment/cmi_sg04_eesa.json`, `cmi_sg04r_eesa.json`; "mention dislikes" = the dislike regex of `src/sentiment/dislike_pools_eesa.py`, from `python -m src.sentiment.compare_eesa_sr09`)
 
 | Dataset | Rejected by filter (copies of dev texts) | Mention dislikes (NEG / NEU) | Latin-script words | CMI | Texts with no switch | Switch-point fraction | Words per text |
 |---|---|---|---|---|---|---|---|
@@ -370,6 +373,9 @@ Same measures as the SG01-EASA table. Quality rows from `src.sentiment.measure_q
 | SG04-EASA Fanar | 3 (0) | 37% (40% / 34%) | 3.3% | 4.2 | 58% | 0.05 | 14.2 |
 | SG04-EASA Qwen3 | 189 (87) | 65% (59% / 71%) | 5.2% | 6.7 | 41% | 0.12 | 12.7 |
 | SG04-EASA Aya | 4 (0) | 50% (70% / 29%) | 0.4% | 0.6 | 94% | 0.01 | 19.7 |
+| SG04-random-EASA Fanar | 3 (0) | 38% (35% / 40%) | 3.7% | 4.6 | 54% | 0.06 | 14.7 |
+| SG04-random-EASA Qwen3 | 84 (0) | 67% (66% / 67%) | 6.1% | 7.3 | 29% | 0.14 | 13.8 |
+| SG04-random-EASA Aya | 18 (0) | 32% (41% / 24%) | 0.7% | 0.9 | 90% | 0.01 | 20.6 |
 
 **What the quality rows say:**
 - **One topic only:** 89–96% of the texts fall in the unclustered universal topic (effective 1.3–1.7 of 19, EESA 4.6); 8–11 of 30 topics. This is by design (one comment type), but it is far narrower than any earlier set.
@@ -378,3 +384,4 @@ Same measures as the SG01-EASA table. Quality rows from `src.sentiment.measure_q
 - **Qwen3 copies its examples:** 87 outputs were removed as near-copies of the dev example texts, 177 as near-duplicates of each other, and 4.2% of the kept set are still repeats; MTLD 92.
 - **Aya repeats phrasing most:** Self-BLEU 0.434, the highest EESA set.
 - **More dialectal than EESA, almost no English:** dialectness 0.84–0.91 (EESA 0.61), MSA share under 1%; CMI 0.6–6.7 against 22.6, and 94% of Aya's texts have no switch.
+- **Random examples give slightly cleaner sets:** the judge confirms more of their NEU comments (46–57% against 34–44%), Qwen3 repeats less (1.5% against 4.2%; MTLD 121 against 92) and copies no dev text. Otherwise the two sets look alike: one topic (1.3–1.9 of 19), 32–67% mention dislikes, CMI 0.9–7.3, Aya repeats phrasing (Self-BLEU 0.387).

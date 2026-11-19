@@ -1,0 +1,8 @@
+{
+  "id": "sentiment_zeroshot_cls_ar_v1",
+  "version": 1,
+  "description": "SR00: zero-shot sentiment classification prompt, Arabic (MSA) wording. No examples, no class definitions, no information from EESA train/dev/test. The model's answer is read as the log-probability of each answer word right after the assistant turn starts (src/sentiment/zero_shot.py). DRAFT for Ammar's review. Placeholder: {text}.",
+  "system": "",
+  "user": "ما المشاعر التي يعبّر عنها تعليق يوتيوب التالي؟ أجب بكلمة واحدة: سلبي أو محايد أو إيجابي.\n\nالتعليق: {text}",
+  "answers": {"NEG": "سلبي", "NEU": "محايد", "POS": "إيجابي"}
+}
