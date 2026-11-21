@@ -1,0 +1,23 @@
+{
+  "run_prefix": "sr14_eesa_bm25_jais2",
+  "condition": "rag_few_shot",
+  "train_data": "data/processed/sentiment/eesa_train.jsonl",
+  "dev_data": "data/processed/sentiment/eesa_dev.jsonl",
+  "test_data": "data/processed/sentiment/eesa_test.jsonl",
+  "text_field": "text",
+  "retriever": "bm25",
+  "search": "bm25",
+  "neighbours": "data/processed/sentiment/retrieval/eesa/neighbours_bm25_bm25.json",
+  "ks": [
+    4,
+    8,
+    16
+  ],
+  "model": "inception42/Jais-2-8B-Chat",
+  "cache_dir": "F:/Thesis/models",
+  "quantization": "nf4",
+  "template": "prompts/sentiment/rag_fewshot_cls_en_v1.json",
+  "seed": 42,
+  "max_length": 128,
+  "_notes": "SR14 (Ammar 2026-11-21): RAG few-shot, no training. Pool = EESA train; k chosen on dev, test run once with that k. k = 0 = SR00-En prompt. Deterministic, so one run per k (seed only fixes torch state)."
+}

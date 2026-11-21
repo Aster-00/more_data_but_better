@@ -1,0 +1,12 @@
+{
+  "id": "sentiment_rag_fewshot_cls_en_v1",
+  "version": 1,
+  "description": "SR14: retrieval-augmented few-shot sentiment classification, English wording. The k retrieved EESA train comments (with their gold labels) are shown before the comment, most similar last (next to the comment). With k = 0 the examples block is empty and the prompt is exactly SR00-En (zeroshot_cls_en_v1). Answer read as the log-probability of each answer word right after the assistant turn starts (src/sentiment/rag_few_shot.py). DRAFT for Ammar's review. Placeholders: {examples}, {text}; {example}, {label} inside example_format.",
+  "system": "",
+  "user": "What is the sentiment of the following YouTube comment? Answer with one word: negative, neutral or positive.\n\n{examples}Comment: {text}",
+  "examples_header": "Similar comments and their sentiment:\n\n",
+  "example_format": "Comment: {example}\nSentiment: {label}",
+  "example_separator": "\n\n",
+  "examples_footer": "\n\nNow the comment to classify:\n\n",
+  "answers": {"NEG": "negative", "NEU": "neutral", "POS": "positive"}
+}
